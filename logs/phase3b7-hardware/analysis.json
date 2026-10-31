@@ -1,0 +1,321 @@
+{
+  "export_sha256": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+  "export_bytes": 9024,
+  "packet_issues": [],
+  "decode_issues": [],
+  "session_issues": [],
+  "streams": {
+    "1": {
+      "count": 500,
+      "first_us": 111888414,
+      "last_us": 116877571,
+      "mean_hz": 100.01689664205797,
+      "spacing_min_us": 8833,
+      "spacing_max_us": 10782,
+      "spacing_mean_us": 9998.310621242485,
+      "spacing_stdev_us": 422.1119361979431,
+      "nonpositive_spacing": 0
+    },
+    "2": {
+      "count": 50,
+      "first_us": 111934966,
+      "last_us": 116850844,
+      "mean_hz": 9.967700581666184,
+      "spacing_min_us": 82726,
+      "spacing_max_us": 118073,
+      "spacing_mean_us": 100324.04081632652,
+      "spacing_stdev_us": 6836.805331526646,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 50,
+      "utc_steps_ms": [
+        100
+      ],
+      "valid_fix_count": 50,
+      "validity_masks": [
+        119,
+        127
+      ],
+      "first_record": {
+        "type": "GPS_RMC",
+        "type_id": 2,
+        "schema_version": 1,
+        "timestamp_us": 111934966,
+        "validity_mask": 127,
+        "receiver_status": "A",
+        "mode": "A",
+        "talker": "GN",
+        "utc": {
+          "date": "2026-10-31",
+          "time_of_day_ms": 61272100
+        },
+        "fix_valid": true,
+        "fields": {
+          "latitude_e7": 507752058,
+          "longitude_e7": 901213,
+          "speed_mm_s": 606,
+          "course_e5_deg": 18966000
+        },
+        "position": {
+          "latitude_deg": 50.7752058,
+          "longitude_deg": 0.0901213
+        },
+        "speed_m_s": 0.606,
+        "course_deg": 189.66
+      }
+    },
+    "3": {
+      "count": 5,
+      "first_us": 112452549,
+      "last_us": 116451457,
+      "mean_hz": 1.000273074549352,
+      "spacing_min_us": 999213,
+      "spacing_max_us": 1000719,
+      "spacing_mean_us": 999727,
+      "spacing_stdev_us": 606.0577530235877,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 5,
+      "utc_steps_ms": [
+        1000
+      ],
+      "valid_fix_count": 5,
+      "validity_masks": [
+        63
+      ],
+      "first_record": {
+        "type": "GPS_GGA_QUALITY",
+        "type_id": 3,
+        "schema_version": 1,
+        "timestamp_us": 112452549,
+        "validity_mask": 63,
+        "utc": {
+          "date": "2026-10-31",
+          "time_of_day_ms": 61272600
+        },
+        "date_is_associated": true,
+        "fix_quality": 1,
+        "talker": "GN",
+        "altitude_msl_mm": 22200,
+        "geoid_separation_mm": 45300,
+        "hdop": 1.36,
+        "satellites_used": 7
+      }
+    },
+    "4": {
+      "count": 0,
+      "first_us": null,
+      "last_us": null,
+      "mean_hz": null,
+      "spacing_min_us": null,
+      "spacing_max_us": null,
+      "spacing_mean_us": null,
+      "spacing_stdev_us": null,
+      "nonpositive_spacing": 0
+    }
+  },
+  "session_metadata": {
+    "start_us": 111888110,
+    "device_id": 1047801283069882557,
+    "availability_flags": 1,
+    "clock_hz": 1000000,
+    "imu_hz": 100,
+    "imu_odr_hz": 104,
+    "accel_ug_per_lsb": 61,
+    "gyro_udps_per_lsb": 8750,
+    "rmc_hz": 10,
+    "gga_hz": 1,
+    "uart_baud": 38400,
+    "block_us": 2000000,
+    "max_frame": 8228,
+    "build_id_hex": null
+  },
+  "footer": {
+    "reason": 0,
+    "stop_us": 116890708,
+    "offered": [
+      500,
+      50,
+      5,
+      0
+    ],
+    "committed": [
+      500,
+      50,
+      5,
+      0
+    ],
+    "lost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rejected": 0,
+    "crc_failures": 0,
+    "incomplete_writes": 0,
+    "full": 0,
+    "missed": 0
+  },
+  "frames": [
+    {
+      "sequence": 0,
+      "bytes": 1568
+    },
+    {
+      "sequence": 1,
+      "bytes": 1571
+    },
+    {
+      "sequence": 2,
+      "bytes": 855
+    }
+  ],
+  "sectors": [
+    0,
+    4096
+  ],
+  "programmed_pages": [
+    {
+      "address_hex": "0x000000",
+      "end_hex": "0x0000FF",
+      "magic": "TPH3",
+      "page_sequence": 0
+    },
+    {
+      "address_hex": "0x000100",
+      "end_hex": "0x0001FF",
+      "magic": "TPD3",
+      "page_sequence": 0
+    },
+    {
+      "address_hex": "0x000200",
+      "end_hex": "0x0002FF",
+      "magic": "TPD3",
+      "page_sequence": 1
+    },
+    {
+      "address_hex": "0x000300",
+      "end_hex": "0x0003FF",
+      "magic": "TPD3",
+      "page_sequence": 2
+    },
+    {
+      "address_hex": "0x000400",
+      "end_hex": "0x0004FF",
+      "magic": "TPD3",
+      "page_sequence": 3
+    },
+    {
+      "address_hex": "0x000500",
+      "end_hex": "0x0005FF",
+      "magic": "TPD3",
+      "page_sequence": 4
+    },
+    {
+      "address_hex": "0x000600",
+      "end_hex": "0x0006FF",
+      "magic": "TPD3",
+      "page_sequence": 5
+    },
+    {
+      "address_hex": "0x000700",
+      "end_hex": "0x0007FF",
+      "magic": "TPD3",
+      "page_sequence": 6
+    },
+    {
+      "address_hex": "0x000800",
+      "end_hex": "0x0008FF",
+      "magic": "TPD3",
+      "page_sequence": 7
+    },
+    {
+      "address_hex": "0x000900",
+      "end_hex": "0x0009FF",
+      "magic": "TPD3",
+      "page_sequence": 8
+    },
+    {
+      "address_hex": "0x000A00",
+      "end_hex": "0x000AFF",
+      "magic": "TPD3",
+      "page_sequence": 9
+    },
+    {
+      "address_hex": "0x000B00",
+      "end_hex": "0x000BFF",
+      "magic": "TPD3",
+      "page_sequence": 10
+    },
+    {
+      "address_hex": "0x000C00",
+      "end_hex": "0x000CFF",
+      "magic": "TPD3",
+      "page_sequence": 11
+    },
+    {
+      "address_hex": "0x000D00",
+      "end_hex": "0x000DFF",
+      "magic": "TPD3",
+      "page_sequence": 12
+    },
+    {
+      "address_hex": "0x000E00",
+      "end_hex": "0x000EFF",
+      "magic": "TPD3",
+      "page_sequence": 13
+    },
+    {
+      "address_hex": "0x001000",
+      "end_hex": "0x0010FF",
+      "magic": "TPH3",
+      "page_sequence": 14
+    },
+    {
+      "address_hex": "0x001100",
+      "end_hex": "0x0011FF",
+      "magic": "TPD3",
+      "page_sequence": 14
+    },
+    {
+      "address_hex": "0x001200",
+      "end_hex": "0x0012FF",
+      "magic": "TPD3",
+      "page_sequence": 15
+    },
+    {
+      "address_hex": "0x001300",
+      "end_hex": "0x0013FF",
+      "magic": "TPD3",
+      "page_sequence": 16
+    },
+    {
+      "address_hex": "0x001400",
+      "end_hex": "0x0014FF",
+      "magic": "TPD3",
+      "page_sequence": 17
+    },
+    {
+      "address_hex": "0x001500",
+      "end_hex": "0x0015FF",
+      "magic": "TPD3",
+      "page_sequence": 18
+    },
+    {
+      "address_hex": "0x001600",
+      "end_hex": "0x0016FF",
+      "magic": "TPD3",
+      "page_sequence": 19
+    },
+    {
+      "address_hex": "0x001F00",
+      "end_hex": "0x001FFF",
+      "magic": "TPE3",
+      "page_sequence": 20
+    }
+  ],
+  "max_committed_address_hex": "0x001FFF",
+  "programmed_page_count": 23,
+  "raw_bytes": 14400,
+  "all_records_monotonic": true,
+  "stop_minus_metadata_start_us": 5002598
+}

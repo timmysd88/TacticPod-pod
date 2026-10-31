@@ -1,0 +1,15 @@
+{
+  "completed_sectors": 4095,
+  "verified_ff_bytes": 16773120,
+  "elapsed_seconds": 478.15699999999197,
+  "errors": [],
+  "erase_pairs_sent": 1,
+  "diagnostic_sector_excluded": true,
+  "diagnostic_sector_byte_comparison_performed": false,
+  "final_record": "STOPPED; next_sector=0x0",
+  "final_obs": "OFF",
+  "final_comp": "OFF; fault=0; empty",
+  "final_tcb3": "DISABLED",
+  "serial_released": true,
+  "transcript_sha256": "ae1252bc79c04b111491cd72a4b32aa433e1613d57b85b555c636bc2e5e81f97"
+}

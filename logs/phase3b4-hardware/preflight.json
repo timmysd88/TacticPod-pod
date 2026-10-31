@@ -1,0 +1,9 @@
+{
+  "elf_sha256": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+  "bin_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6",
+  "zip_sha256": "d8ccaa11b734686fef5116d7be253fa3a2cef242bfc7b6831de44caa57559bb9",
+  "tcb3_enabled": false,
+  "diag_id_present": true,
+  "application_only_zip": true,
+  "usb_serial_number": "0E8A89B7289430BD"
+}

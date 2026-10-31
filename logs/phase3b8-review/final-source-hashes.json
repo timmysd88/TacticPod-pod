@@ -1,0 +1,18 @@
+{
+  "platformio.ini": "2ba04e498097d5f51768c657e55833c4ef8cd410903ec5598ebdd9d8927dc730",
+  "src/tcb3_test_limits.h": "1f49980cdda7152b08331db87ec56e3bf561648501af74893e9b87afb6edd3ab",
+  "src/tcb3_store.h": "2733a190f511c415ed798d140afd0153bc442f77a585f714cf35fa65ce4002c4",
+  "src/tcb3_store.cpp": "88425c6cc039b70625b6106b9b995be29174e9c2df2545520a2deb68e0aada97",
+  "src/tcb3_session.cpp": "bf8760802333b1354533c130bb700541ca3dc25f98492504651ac4dd3d3cd8fe",
+  "src/flash_write_test.cpp": "82bc5506ed5bc6c8fe6306953e3f5a1de7ba4697af70d50f3e0f655b9c8eaa72",
+  "src/recorder_format.h": "3eda601b69b4a454a1e0babbc5f129e047c3e6d2cc6dd1856580ec6d76457ca2",
+  "docs/recorder-v2-format.md": "3aaeebf3f1890bdf76dda1ac24d412f6bad7d4468dd1d59fcf8f3c4c55d27be6",
+  "docs/phase3b8-append-30s.md": "ea28533492f9a8f99044705e5ea71091b2c703b41ae8faac18e290d2cbc1e8e6",
+  "tests/tcb3/integration.cpp": "95f45551afab1bd7fc01a3ed659430e3654e729fba23e1eba562a86b55a5b886",
+  "tests/tcb3/append_30s.cpp": "6864c69a7ecbed8b70492dae42c65c248ce856feb2b1b5bfc6140f2e5d6b2992",
+  "tests/tcb3/append_30s_stress.cpp": "6e15ddd9cf726aebb8153ad8b1a9c27dceedf32193c566045dabb58ae47b994a",
+  "tests/tcb3/append_store.cpp": "907c5af8253d9f108626d17adb35106320b791e0bc0725f248d238cb6c938b02",
+  "tests/tcb3/append_30s_tests.py": "29b43ba9d1f2b7ecca5f181275c83524f85cdc255552622f06f08f523b4bb0dd",
+  "tests/tcb3/fixtures/phase3b7-session.bin": "8bf910507bac630695a28b2b7c42a9a34d0d06ebda9a30016cc82d0a898dc1bc",
+  "tests/tcb3/fixtures/phase3b7-session.manifest.json": "364145ab4bb3703e35e8fe905de415b15f8ef0716b6066f0df8bae6c05ac5e6f"
+}

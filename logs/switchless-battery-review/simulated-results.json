@@ -1,0 +1,38 @@
+[
+  {
+    "case": "USB start, disconnect, autonomous finalise, reconnect",
+    "counts": [
+      1001,
+      100,
+      10,
+      0
+    ],
+    "stop_elapsed_us": 10000096,
+    "programs": 75,
+    "next_address": "0x3e000",
+    "max_service_us": 544,
+    "max_block_ms": 356,
+    "min_imu_spacing_us": 9708,
+    "max_imu_spacing_us": 10084,
+    "export_bytes": 277824,
+    "export_sha256": "ee131a3bebd5c3bdf2a4972e8f8aca4eba5a6383d9221c20ded37bb8d537721c"
+  },
+  {
+    "case": "repeated USB monitor disconnect/reconnect during capture",
+    "counts": [
+      1001,
+      100,
+      10,
+      0
+    ],
+    "stop_elapsed_us": 10000096,
+    "programs": 75,
+    "next_address": "0x3e000",
+    "max_service_us": 544,
+    "max_block_ms": 356,
+    "min_imu_spacing_us": 9708,
+    "max_imu_spacing_us": 10084,
+    "export_bytes": 277824,
+    "export_sha256": "ee131a3bebd5c3bdf2a4972e8f8aca4eba5a6383d9221c20ded37bb8d537721c"
+  }
+]

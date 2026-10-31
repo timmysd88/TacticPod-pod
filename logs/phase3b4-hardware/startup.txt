@@ -1,0 +1,55 @@
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD START / RECORD STOP / RECORD STATUS - append binary IMU at 100 Hz
+  RECORD READ  - export committed recordings as CSV while stopped
+  RECORD ERASE - warn before explicitly confirmed recording-area erase
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - separate compact sessions (host simulation gate)
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+  ERASE FFF000 - confirm ONE destructive flash test (see warning below)
+IMU printing: OFF (default after boot)
+WARNING: destructive flash test is DISARMED.
+Confirmation permanently erases ALL 4096 bytes at 0xFFF000-0xFFFFFF.
+It then writes 256 test bytes at 0xFFF000-0xFFF0FF; data is not restored.
+To authorise exactly ONE test, send this exact line followed by Enter:
+ERASE FFF000
+IMU ON / IMU OFF control printing. Reboot never schedules a destructive test.
+FLASH JEDEC read 1/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 2/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 3/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 4/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 5/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+JEDEC consistency: PASS (5/5 identical)
+JEDEC 0B 40 18: possible XTX XT25F128B/F family; exact model/revision not confirmed by ID alone
+SFDP header: 0x53 0x46 0x44 0x50 0x00 0x01 0x01 0xFF
+SFDP revision 1.0
+SFDP BFPT valid, revision 1.0 | advertised capacity: 134217728 bits / 16777216 bytes / 128.000 Mibit / 16.000 MiB
+SFDP advertised commands (reported only; NOT executed):
+SFDP read 1-1-2: opcode=0x3B mode_clocks=0 wait_clocks=8
+SFDP read 1-2-2: opcode=0xBB mode_clocks=2 wait_clocks=2
+SFDP read 1-1-4: opcode=0x6B mode_clocks=0 wait_clocks=8
+SFDP read 1-4-4: opcode=0xEB mode_clocks=2 wait_clocks=4
+SFDP read 2-2-2: not advertised
+SFDP read 4-4-4: not advertised
+SFDP erase type 1: opcode=0x20 size_bytes=4096 (NOT executed)
+SFDP erase type 2: opcode=0x52 size_bytes=32768 (NOT executed)
+SFDP erase type 3: opcode=0xD8 size_bytes=65536 (NOT executed)
+SFDP erase type 4: not advertised
+SFDP summary covers BFPT read/erase descriptors, not every device command or optional table.
+GPS STARTUP: capturing rollback snapshot before RAM-only 10Hz configuration.
+RECORD scan complete. Recording OFF at startup; append position recovered without writes.
+GPS PROFILE: STARTUP 10HZ ALREADY VERIFIED (no writes; original snapshot unavailable)
+Reason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0
+First mismatch before recovery: NONE
+GPS PROFILE END | UART=38400 | snapshot=none | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.

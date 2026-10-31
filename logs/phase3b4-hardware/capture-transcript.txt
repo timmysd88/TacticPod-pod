@@ -1,0 +1,187 @@
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD START / RECORD STOP / RECORD STATUS - append binary IMU at 100 Hz
+  RECORD READ  - export committed recordings as CSV while stopped
+  RECORD ERASE - warn before explicitly confirmed recording-area erase
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - separate compact sessions (host simulation gate)
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+  ERASE FFF000 - confirm ONE destructive flash test (see warning below)
+IMU printing: OFF (default after boot)
+WARNING: destructive flash test is DISARMED.
+Confirmation permanently erases ALL 4096 bytes at 0xFFF000-0xFFFFFF.
+It then writes 256 test bytes at 0xFFF000-0xFFF0FF; data is not restored.
+To authorise exactly ONE test, send this exact line followed by Enter:
+ERASE FFF000
+IMU ON / IMU OFF control printing. Reboot never schedules a destructive test.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x10000
+
+HOST TX OBS STOP
+OBS STATUS | STOP: RAM capture stopped; V1 unchanged | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=484 accepted=256 overflow=228 | queue=256/256 high=256 | spacing_us_min=99362 max=100793
+OBS RMC | seen=485 accepted=32 overflow=453 | queue=32/32 high=32 | spacing_us_min=82845 max=118300
+OBS GGA | seen=49 accepted=8 overflow=41 | queue=8/8 high=8 | spacing_us_min=996889 max=1002579
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STOP
+COMP STOP: draining retained RAM blocks | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=2348019 max_block_step_us=0 max_slice_us=137 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x10000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=484 accepted=256 overflow=228 | queue=256/256 high=256 | spacing_us_min=99362 max=100793
+OBS RMC | seen=485 accepted=32 overflow=453 | queue=32/32 high=32 | spacing_us_min=82845 max=118300
+OBS GGA | seen=49 accepted=8 overflow=41 | queue=8/8 high=8 | spacing_us_min=996889 max=1002579
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=2348131 max_block_step_us=0 max_slice_us=137 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB DISABLED: simulated validation only; physical recording/export requires a separately approved build.
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=38227 | checksum_ok=534 | checksum_fail=0 | last_valid_message_age_ms=18
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)
+GPS fix=VALID | lat=50.775299 | lon=0.089975 | position=CURRENT | satellites=6 | HDOP=1.52
+GPS speed_km/h=0.370 | UTC=16:10:33Z | position_age_ms=18
+
+HOST TX DIAG ID
+BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2
+FLASH ID JEDEC 01 0B4018
+FLASH ID JEDEC 02 0B4018
+FLASH ID JEDEC 03 0B4018
+FLASH ID JEDEC 04 0B4018
+FLASH ID JEDEC 05 0B4018
+FLASH ID SR1 before=00 after=00 SR2=02
+FLASH ID REMS address=000000 0B17
+FLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+END_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED
+
+HOST TX DIAG ID
+BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2
+FLASH ID JEDEC 01 0B4018
+FLASH ID JEDEC 02 0B4018
+FLASH ID JEDEC 03 0B4018
+FLASH ID JEDEC 04 0B4018
+FLASH ID JEDEC 05 0B4018
+FLASH ID SR1 before=00 after=00 SR2=02
+FLASH ID REMS address=000000 0B17
+FLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+END_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x10000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=484 accepted=256 overflow=228 | queue=256/256 high=256 | spacing_us_min=99362 max=100793
+OBS RMC | seen=485 accepted=32 overflow=453 | queue=32/32 high=32 | spacing_us_min=82845 max=118300
+OBS GGA | seen=49 accepted=8 overflow=41 | queue=8/8 high=8 | spacing_us_min=996889 max=1002579
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=2348764 max_block_step_us=0 max_slice_us=137 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB DISABLED: simulated validation only; physical recording/export requires a separately approved build.
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=38227 | checksum_ok=534 | checksum_fail=0 | last_valid_message_age_ms=69
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)
+GPS fix=VALID | lat=50.775299 | lon=0.089975 | position=CURRENT | satellites=6 | HDOP=1.52
+GPS speed_km/h=0.370 | UTC=16:10:33Z | position_age_ms=69

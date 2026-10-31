@@ -1,0 +1,7 @@
+{
+  "port": "COM8",
+  "vid": "0x2886",
+  "pid": "0x8044",
+  "serial": "0E8A89B7289430BD",
+  "description": "USB Serial Device (COM8)"
+}

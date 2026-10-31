@@ -1,0 +1,289 @@
+{
+  "completed_at": "2026-10-31T18:08:40.685694+00:00",
+  "result": "PASS",
+  "recommendation": "GO to prepare a separately reviewed bounded two-minute append test; no further recording authorised or performed",
+  "firmware_zip": "logs/phase3b9-review/tcb3_append_30s-3b9.zip",
+  "firmware_zip_sha256": "8e17bab58b1d5b21fa6898c8d0e9b98902c7944f3c28b62455041a57dbe53f93",
+  "regression_suites_passed": 18,
+  "start_commands": 1,
+  "manual_stop_commands": 0,
+  "erase_commands": 0,
+  "automatic_stop": true,
+  "full_allocation_independently_prescanned": false,
+  "initial_sector_blank_check": "Passed in firmware before STARTED; all 4096 bytes, inferred from reviewed control flow; repeated before first header",
+  "old_recording_unchanged_byte_for_byte": true,
+  "old_export_sha256": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+  "exports": [
+    {
+      "file": "append-30s-1.tpx3",
+      "bytes": 49344,
+      "sha256": "8e22bf5ad18f8a98c8d9ef7535603f6d882c32d2a0fc97362375204b1cef3240"
+    },
+    {
+      "file": "append-30s-2.tpx3",
+      "bytes": 49344,
+      "sha256": "8e22bf5ad18f8a98c8d9ef7535603f6d882c32d2a0fc97362375204b1cef3240"
+    }
+  ],
+  "old_counts": [
+    500,
+    50,
+    5,
+    0
+  ],
+  "new_counts": [
+    3000,
+    300,
+    30,
+    0
+  ],
+  "new_session_id": 3,
+  "new_sectors": 9,
+  "new_allocation_range_inclusive": [
+    "0x002000",
+    "0x00AFFF"
+  ],
+  "write_fence_inclusive": [
+    "0x002000",
+    "0x03FFFF"
+  ],
+  "next_sector": "0x00B000",
+  "new_program_operations": 132,
+  "new_header_pages": 9,
+  "new_data_pages": 122,
+  "new_footer_pages": 1,
+  "new_footer_address": "0x00AF00",
+  "new_page_sequences": [
+    0,
+    121
+  ],
+  "footer_sequence": 122,
+  "block_sequences": [
+    0,
+    14
+  ],
+  "new_canonical_bytes": 86400,
+  "all_records_monotonic": true,
+  "footer": {
+    "reason": 0,
+    "stop_us": 79294225,
+    "offered": [
+      3000,
+      300,
+      30,
+      0
+    ],
+    "committed": [
+      3000,
+      300,
+      30,
+      0
+    ],
+    "lost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rejected": 0,
+    "crc_failures": 0,
+    "incomplete_writes": 0,
+    "full": 0,
+    "missed": 0
+  },
+  "timing": {
+    "host_start_command_to_stopped_notice_s": 31.843999999997322,
+    "metadata_to_capture_stop_us": 30002275,
+    "max_flash_service_us": 1189,
+    "max_store_block_ms": 393,
+    "max_compression_block_cpu_us": 54137,
+    "max_compression_slice_us": 247,
+    "input_high": 2,
+    "output_high": 1,
+    "backpressure_slices": 0,
+    "raw_fallbacks": 0
+  },
+  "streams": {
+    "1": {
+      "count": 3000,
+      "first_us": 49292268,
+      "last_us": 79280101,
+      "mean_hz": 100.00722626406517,
+      "spacing_min_us": 9267,
+      "spacing_max_us": 10796,
+      "spacing_mean_us": 9999.277425808603,
+      "spacing_stdev_us": 416.6248117973502,
+      "max_absolute_spacing_error_us": 796,
+      "nonpositive_spacing": 0
+    },
+    "2": {
+      "count": 300,
+      "first_us": 49405627,
+      "last_us": 79290494,
+      "mean_hz": 10.005063766889108,
+      "spacing_min_us": 79942,
+      "spacing_max_us": 118610,
+      "spacing_mean_us": 99949.38795986622,
+      "spacing_stdev_us": 7249.538603469846,
+      "max_absolute_spacing_error_us": 20058,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 300,
+      "unique_utc_epochs": 300,
+      "utc_step_ms": [
+        100
+      ],
+      "validity_masks": [
+        119,
+        127
+      ],
+      "valid_fix_count": 300
+    },
+    "3": {
+      "count": 30,
+      "first_us": 50010142,
+      "last_us": 79014108,
+      "mean_hz": 0.9998632600796732,
+      "spacing_min_us": 993849,
+      "spacing_max_us": 1004533,
+      "spacing_mean_us": 1000136.7586206896,
+      "spacing_stdev_us": 2832.0630552006746,
+      "max_absolute_spacing_error_us": 6151,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 30,
+      "unique_utc_epochs": 30,
+      "utc_step_ms": [
+        1000
+      ],
+      "validity_masks": [
+        63
+      ],
+      "fix_quality_values": [
+        2
+      ],
+      "satellites_used_values": [
+        7
+      ],
+      "hdop_values": [
+        1.5
+      ]
+    }
+  },
+  "address_map": [
+    {
+      "sector_start": "0x002000",
+      "header": "0x002000?0x0020FF",
+      "data": "0x002100?0x002EFF",
+      "data_page_sequence": [
+        0,
+        13
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x003000",
+      "header": "0x003000?0x0030FF",
+      "data": "0x003100?0x003EFF",
+      "data_page_sequence": [
+        14,
+        27
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x004000",
+      "header": "0x004000?0x0040FF",
+      "data": "0x004100?0x004EFF",
+      "data_page_sequence": [
+        28,
+        41
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x005000",
+      "header": "0x005000?0x0050FF",
+      "data": "0x005100?0x005EFF",
+      "data_page_sequence": [
+        42,
+        55
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x006000",
+      "header": "0x006000?0x0060FF",
+      "data": "0x006100?0x006EFF",
+      "data_page_sequence": [
+        56,
+        69
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x007000",
+      "header": "0x007000?0x0070FF",
+      "data": "0x007100?0x007EFF",
+      "data_page_sequence": [
+        70,
+        83
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x008000",
+      "header": "0x008000?0x0080FF",
+      "data": "0x008100?0x008EFF",
+      "data_page_sequence": [
+        84,
+        97
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x009000",
+      "header": "0x009000?0x0090FF",
+      "data": "0x009100?0x009EFF",
+      "data_page_sequence": [
+        98,
+        111
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x00A000",
+      "header": "0x00A000?0x00A0FF",
+      "data": "0x00A100?0x00AAFF",
+      "data_page_sequence": [
+        112,
+        121
+      ],
+      "footer": "0x00AF00?0x00AFFF"
+    }
+  ],
+  "out_of_fence_independent_bus_trace_or_byte_readback": false,
+  "diagnostic_sector_targeted": false,
+  "diagnostic_sector_independent_byte_readback": false,
+  "final_state": {
+    "RECORD": "STOPPED",
+    "OBS": "OFF",
+    "COMP": "OFF; fault=0; queues empty",
+    "TCB": "IDLE; single capture used; bounded corrected profile remains installed"
+  },
+  "obs_diagnostic_counters": "Historical startup RMC overflow=191/GGA=14 remained unchanged throughout; OBS OFF queues do not feed the recording path. No compressed-recording rejection, backpressure or loss.",
+  "serial_released": true,
+  "chip_identity_qualification": "JEDEC and both SFDP passes match archived XT25F128B-compatible fingerprint; DIAG ID retains static qualification=UNRESOLVED for exact physical model/revision.",
+  "evidence_sha256": {
+    "append-30s-1.tpx3": "8e22bf5ad18f8a98c8d9ef7535603f6d882c32d2a0fc97362375204b1cef3240",
+    "append-30s-2.tpx3": "8e22bf5ad18f8a98c8d9ef7535603f6d882c32d2a0fc97362375204b1cef3240",
+    "session-1.tpx3": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+    "session-3.tpx3": "790e72dd0102e15eb05ab1f07d349f49e5ad0bc15fc4da9f03df078f8dabb192",
+    "session-1.v2wire": "85b0c895d6a6149c94a2e10b4f95545de3b3c979995cb68c72ced3a84588e0de",
+    "session-3.v2wire": "e60d0257c63b188532ebd0961c4bae82f576fce852d9d092aff0e71d9bf37fd4",
+    "recovered-recording-image.bin": "ca12e165fa6ce7004f0ca00e60b2e975781834e56ed0d66b07511af70befc48e",
+    "preflight-transcript.txt": "c3074b1c2286af6c311ba42422ea7219d84c4556ce8f53235453d0c96da7d68e",
+    "record-transcript.txt": "d78e5466fd2df6e71b912ccce7268a509a56863af9c44af8c30ee69850ce5d7a",
+    "upload.txt": "ac7308d42737c9ed2dad2fb64bf4e6a8502910a02ac89825fd5c0a9fd8fc7ecf",
+    "startup.txt": "1bc2a23ccd142c5192b18cff502c1a8d25484834ff7f323e919baf2b10e10ac1",
+    "new-session-pages.csv": "e73c8e7ebbc4182ec0b5e9bd4f21e549928a755622a030110bdcbaa011bccad3"
+  }
+}

@@ -1,0 +1,41 @@
+Processing tacticpod_reusable_usb (platform: https://github.com/Seeed-Studio/platform-seeedboards.git; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 15 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+|-- TinyGPSPlus @ 1.0.3
+|-- Seeed Arduino LSM6DS3 @ 2.0.7
+Building in release mode
+Compiling .pio\build\tacticpod_reusable_usb\src\tcb3_store.cpp.o
+Linking .pio\build\tacticpod_reusable_usb\firmware.elf
+Building .pio\build\tacticpod_reusable_usb\firmware.hex
+Checking size .pio\build\tacticpod_reusable_usb\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=====     ]  50.9% (used 120836 bytes from 237568 bytes)
+Flash: [==        ]  23.4% (used 189424 bytes from 811008 bytes)
+Building .pio\build\tacticpod_reusable_usb\firmware.zip
+Zip created at .pio\build\tacticpod_reusable_usb\firmware.zip
+========================= [SUCCESS] Took 1.95 seconds =========================
+
+Environment             Status    Duration
+----------------------  --------  ------------
+tacticpod_reusable_usb  SUCCESS   00:00:01.946
+========================= 1 succeeded in 00:00:01.946 =========================

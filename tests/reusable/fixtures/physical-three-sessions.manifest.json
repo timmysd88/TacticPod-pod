@@ -1,0 +1,11 @@
+{
+  "source": "logs/phase3b10-hardware/recovered-recording-image.bin",
+  "bytes": 233472,
+  "sha256": "b9ad38d83ac27a61a79bf58cbbba68cc44a03d6dddeebcf287d9166eb76fb6f6",
+  "session_ids": [
+    1,
+    3,
+    12
+  ],
+  "next_address": "0x039000"
+}

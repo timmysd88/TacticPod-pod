@@ -1,0 +1,1 @@
+PASS: reusable actual USB parser and internal diagnostic guard reject all erases/V1 writes; boot never records

@@ -1,0 +1,5 @@
+{
+  "application_only": true,
+  "environment": "tcb3_movement_120s",
+  "no_automatic_repeat": true
+}

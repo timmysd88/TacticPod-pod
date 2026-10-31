@@ -1,0 +1,29 @@
+--- vendor/variant.cpp
++++ project/variant.cpp
+@@ -2,6 +2,12 @@
+ #include "wiring_constants.h"
+ #include "wiring_digital.h"
+ #include "nrf.h"
++
++// Project-owned copy of Seeed framework 1.10101.0; see ../README.md.
++// This corrects application-image variant init, NOT reset/bootloader states.
++#if !TACTICPOD_REUSABLE
++#error "Battery startup variant is restricted to the reviewed reusable build"
++#endif
+ 
+ const uint32_t g_ADigitalPinMap[] =
+ {
+@@ -57,10 +63,10 @@
+ 
+ void initVariant()
+ {
+-    // Disable reading of the BAT voltage.
+-    // https://wiki.seeedstudio.com/XIAO_BLE#q3-what-are-the-considerations-when-using-xiao-nrf52840-sense-for-battery-charging
++    // Core init() preloads OUT HIGH. Clear the latch BEFORE enabling the sink.
++    // Keep the divider enabled while charging, per Seeed's current guidance.
++    digitalWrite(VBAT_ENABLE, LOW);
+     pinMode(VBAT_ENABLE, OUTPUT);
+-    digitalWrite(VBAT_ENABLE, HIGH);
+ 
+     // Low charging current.
+     // https://wiki.seeedstudio.com/XIAO_BLE#battery-charging-current

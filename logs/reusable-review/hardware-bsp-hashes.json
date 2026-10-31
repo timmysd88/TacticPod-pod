@@ -1,0 +1,9 @@
+{
+  ".pio-core/platforms/SeeedStudio/boards/seeed-xiao-afruitnrf52-nrf52840.json": "2e86d96fde060fffdacd0f80b7cd796ef66e79ec0410d98446a6dfab38f1ab53",
+  ".pio-core/packages/framework-arduinoadafruitnrf52/package.json": "4500777ce1fd53d121c3e6cebad77ad48cc807abfcc688c093ddd627cb0dcc71",
+  ".pio-core/packages/framework-arduinoadafruitnrf52/variants/Seeed_XIAO_nRF52840/variant.cpp": "e4293e433980627dfe871a5c46115462774ec36a4efbf61fd1f025e7c66dab90",
+  ".pio-core/packages/framework-arduinoadafruitnrf52/variants/Seeed_XIAO_nRF52840/variant.h": "a74818f54005de7f6002b6e2b143686edb9d99a6b98411f469a50960c9d31a0d",
+  ".pio-core/packages/framework-arduinoadafruitnrf52/variants/Seeed_XIAO_nRF52840_Sense/variant.cpp": "808b26ec190cd802861bb0fbfa048623248c4c864c766b83ca8972bdfdade2ac",
+  ".pio-core/packages/framework-arduinoadafruitnrf52/variants/Seeed_XIAO_nRF52840_Sense/variant.h": "099cdf030482f2037ea92a1b79c87df87a0f7b3fea54abafba4ada923d4d8264",
+  ".pio-core/packages/framework-arduinoadafruitnrf52/cores/nRF5/wiring_analog_nRF52.c": "8178dd6e2a894ed166f153beebec2f431b6aafc5c13fd6071f16a5bc4b4cbfbc"
+}

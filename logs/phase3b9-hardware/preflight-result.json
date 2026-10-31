@@ -1,0 +1,58 @@
+{
+  "uploaded": true,
+  "regression_suites_passed": 18,
+  "preflight_passed": false,
+  "read_only_checks_passed": true,
+  "recording_started": false,
+  "start_commands_sent": 0,
+  "serial_released": true,
+  "firmware_environment": "tcb3_append_30s",
+  "host_artifact_hashes": {
+    "elf": "8b9999ea02f29be0140c98c0873420b68d5a7e27cbca815ffa1c9ba44a420c76",
+    "hex": "6d1dea4ba21809863cc22cdba9488fdf0155add6c6cb6b75763153e7434b8434",
+    "zip": "c415e67b2db67cfbc2beb0fe366f2106bfd40e870820031546485fbbca4bff6a",
+    "application_sha256": "1a65fbeb51c68b668f944fe98bc4ff2c5eae6612103acd0c1298de635fd8e7e7",
+    "regression_suites_passed": 18,
+    "test_environment": "tcb3_append_30s"
+  },
+  "identity": "0B4018; 16777216 bytes; SR1=00 SR2=02; SFDP matches both archived passes",
+  "old_export": {
+    "bytes": 9024,
+    "sha256": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+    "repeat_byte_identical": true,
+    "archive_byte_identical": true,
+    "counts": [
+      500,
+      50,
+      5,
+      0
+    ],
+    "sector_addresses": [
+      0,
+      4096
+    ],
+    "crc_issues": []
+  },
+  "new_external_flash_write_addresses": [],
+  "recording_timing_measurements": null,
+  "commands": [
+    "RECORD STATUS",
+    "OBS STOP",
+    "COMP STOP",
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "GPS STATUS",
+    "DIAG ID",
+    "TCB READ",
+    "TCB READ",
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS"
+  ],
+  "blocker": "Fresh full readback of proposed blank allocation unavailable via tested firmware commands; START withheld pending clarification. Firmware checks entire candidate before starting and each later sector immediately before programming.",
+  "observations": "OBS OFF status retains boot diagnostic queue overflow counters; COMP and TCB clean. No new recording was performed.",
+  "host_logging_issue": "JSON serialization of decoder raw bytes failed after successful checks and after serial close. Summary reconstructed from immutable binary exports and transcript; no upload or diagnostic retry."
+}

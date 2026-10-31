@@ -1,0 +1,5 @@
+{
+  "application_only": true,
+  "environment": "tcb3_append_30s",
+  "no_automatic_repeat": true
+}

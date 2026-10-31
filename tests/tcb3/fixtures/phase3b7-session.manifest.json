@@ -1,0 +1,11 @@
+{
+  "description": "Read-only host fixture copied from the successful Phase 3B.7 physical five-second recording; includes both complete sectors and FF padding.",
+  "source": "logs/phase3b7-hardware/recovered-recording-image.bin",
+  "container_version": "3.2.0",
+  "session_id": 1,
+  "bytes": 8192,
+  "sha256": "8bf910507bac630695a28b2b7c42a9a34d0d06ebda9a30016cc82d0a898dc1bc",
+  "committed_records": [500, 50, 5, 0],
+  "physical_recording": true,
+  "all_append_tests_are_host_simulations": true
+}

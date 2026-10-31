@@ -1,0 +1,14 @@
+{
+  "seeed_xiao_nrf52840_sense": {
+    "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+    "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+    "zip": "395c18493f8fa5da864439fe33a15fbd835dfc024061b2fbdc98e8269af44de1",
+    "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+  },
+  "tcb3_movement_120s": {
+    "elf": "52e5bf1923e7cf6da9b9c06f04cd5e996ad88af5ff1ce48f38f027c4f537f798",
+    "hex": "61bb4620e6f1721b4288305173db93f9aac42715ed3108cacea08dca19ec68cc",
+    "zip": "0bdd99698bd4535dfe02943a045d3c9b697a4f5f3d92b077857d7f4f8d9c059e",
+    "application_sha256": "d47576995adb23fb831502e4066148816c5aadd40328fe17ff2f189343868900"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "decision": "Conditional GO for separately authorised supervised 120-second movement hardware test; preparation complete, stop for review",
+  "hardware_access": false,
+  "upload": false,
+  "physical_flash_writes_or_erases": false,
+  "installed_firmware_changed": false,
+  "environment": "tcb3_movement_120s",
+  "marker": "test=120s,1MiB,180s profile=3B10 exact=B000",
+  "initial_session": 12,
+  "exact_initial_address": "0x00B000",
+  "preserved_sessions": [
+    1,
+    3
+  ],
+  "preserved_range_inclusive": [
+    "0x000000",
+    "0x00AFFF"
+  ],
+  "write_window_inclusive": [
+    "0x00B000",
+    "0x0FFFFF"
+  ],
+  "last_permitted_page": "0x0FFF00",
+  "diagnostic_sector_inclusive": [
+    "0xFFF000",
+    "0xFFFFFF"
+  ],
+  "capture_us": 120000000,
+  "total_deadline_us": 180000000,
+  "auto_recording": false,
+  "erase_enabled": false,
+  "repeated_start_enabled": false,
+  "candidate_skip_enabled": false,
+  "first_program_checks": {
+    "address": "0x00B000",
+    "session": 12,
+    "sector_sequence": 0,
+    "next_sector": "0x00C000",
+    "layers": [
+      "core allocation",
+      "core program dispatch",
+      "SPI adapter before WREN"
+    ]
+  },
+  "full_sector_blank_check_before_each_allocation": true,
+  "full_page_blank_check_before_program": true,
+  "full_allocation_independently_prescanned": false,
+  "capacity_budget": {
+    "chip_bytes": 16777216,
+    "window_sectors": 245,
+    "window_bytes": 1003520,
+    "nominal_canonical_bytes": 345600,
+    "blocks_budget": 61,
+    "max_frame_bytes": 8228,
+    "fragments_per_frame": 39,
+    "data_pages": 2379,
+    "allocated_sectors": 170,
+    "allocated_bytes": 696320,
+    "budget_end_exclusive": "0x0B5000",
+    "margin_sectors": 75,
+    "margin_bytes": 307200
+  },
+  "static_ram_bytes": 120692,
+  "available_ram_bytes": 237568,
+  "program_bytes": 182792,
+  "available_program_bytes": 811008,
+  "default_disabled_elf_byte_identical": true,
+  "v1_v2_formats_unchanged": true,
+  "regression_suites_passed": 20,
+  "model": {
+    "counts": [
+      12001,
+      1200,
+      120,
+      0
+    ],
+    "blocks": 60,
+    "programs": 898,
+    "allocation_inclusive": [
+      "0x00B000",
+      "0x046FFF"
+    ],
+    "combined_export_bytes": 318144,
+    "canonical_bytes": 345624,
+    "max_service_us": 544,
+    "max_block_ms": 358,
+    "input_output_high": [
+      2,
+      1
+    ],
+    "losses": 0,
+    "original_sector_bytes_preserved": 45056,
+    "independent_complete_sessions": 3,
+    "exact_source_reconstruction": true
+  },
+  "stress_model": {
+    "metrics": [
+      290816,
+      290816,
+      897,
+      345624,
+      120000076,
+      60,
+      544,
+      357,
+      2,
+      1,
+      12,
+      45056,
+      318144,
+      2286632,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "compression_unit_us": 100,
+    "program_busy_ms": 10
+  },
+  "maximum_raw_frame_fence_model": {
+    "metrics": [
+      88,
+      87,
+      1,
+      1770,
+      175657,
+      1370,
+      3676,
+      0,
+      1048576,
+      1,
+      400,
+      10,
+      0,
+      0,
+      0,
+      0
+    ],
+    "programs": 3676,
+    "highest_program_page": 1048320
+  },
+  "hardware_risks": [
+    "New 120-second movement workload not physically tested",
+    "Conditional program-BUSY/CPU assumptions are not electrical WCET",
+    "Live stack/heap high-water and power not instrumented",
+    "Exact chip revision, brownout and endurance remain unqualified"
+  ],
+  "firmware_archive": "logs/phase3b10-review/tcb3_movement_120s-3b10.zip",
+  "artifacts": {
+    "seeed_xiao_nrf52840_sense": {
+      "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+      "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+      "zip": "395c18493f8fa5da864439fe33a15fbd835dfc024061b2fbdc98e8269af44de1",
+      "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+    },
+    "tcb3_movement_120s": {
+      "elf": "52e5bf1923e7cf6da9b9c06f04cd5e996ad88af5ff1ce48f38f027c4f537f798",
+      "hex": "61bb4620e6f1721b4288305173db93f9aac42715ed3108cacea08dca19ec68cc",
+      "zip": "0bdd99698bd4535dfe02943a045d3c9b697a4f5f3d92b077857d7f4f8d9c059e",
+      "application_sha256": "d47576995adb23fb831502e4066148816c5aadd40328fe17ff2f189343868900"
+    }
+  }
+}

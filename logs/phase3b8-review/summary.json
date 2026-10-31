@@ -1,0 +1,47 @@
+{
+  "decision": "Conditional GO for separately authorised supervised 30-second hardware test; preparation only",
+  "hardware_access_this_phase": false,
+  "upload_performed": false,
+  "build": "tcb3_append_30s",
+  "capture_us": 30000000,
+  "total_deadline_us": 60000000,
+  "write_floor": "0x002000",
+  "write_ceiling_exclusive": "0x040000",
+  "expected_session_start": "0x002000",
+  "model_session_end_exclusive": "0x011000",
+  "conservative_budget_end_exclusive": "0x02F000",
+  "old_session_bytes_preserved": 8192,
+  "regression_suites_passed": 18,
+  "static_ram_bytes": 120692,
+  "program_bytes": 181928,
+  "model_counts": {
+    "IMU": 3000,
+    "RMC": 300,
+    "GGA": 30
+  },
+  "model_programs": 225,
+  "model_block_max_ms": 356,
+  "cpu_stressed_block_max_ms": 357,
+  "maximum_frame_fence_model_arrival_to_commit_ms": 1770,
+  "model_flash_service_max_us": 544,
+  "model_input_queue_high": 2,
+  "model_output_queue_high": 1,
+  "combined_export_bytes": 76224,
+  "combined_decoded_wire_bytes": 100800,
+  "hardware_timing_qualification": "Outstanding for this profile; model timings are conditional, not physical WCET",
+  "default_disabled_elf_unchanged": true,
+  "artifacts": {
+    "seeed_xiao_nrf52840_sense": {
+      "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+      "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+      "zip": "67dbf26bf85b6f9d1a11137ba4eea0af60653b9a0d6f80379b76a0d6480ac853",
+      "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+    },
+    "tcb3_append_30s": {
+      "elf": "8b9999ea02f29be0140c98c0873420b68d5a7e27cbca815ffa1c9ba44a420c76",
+      "hex": "6d1dea4ba21809863cc22cdba9488fdf0155add6c6cb6b75763153e7434b8434",
+      "zip": "c415e67b2db67cfbc2beb0fe366f2106bfd40e870820031546485fbbca4bff6a",
+      "application_sha256": "1a65fbeb51c68b668f944fe98bc4ff2c5eae6612103acd0c1298de635fd8e7e7"
+    }
+  }
+}

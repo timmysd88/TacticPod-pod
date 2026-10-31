@@ -1,0 +1,8 @@
+{
+  "authorised_start_count": 1,
+  "capture_seconds": 30,
+  "total_deadline_seconds": 60,
+  "write_start": 8192,
+  "write_end_exclusive": 262144,
+  "no_retry": true
+}

@@ -1,0 +1,12 @@
+{
+  "tests/reusable/switchless_tests.py": 0,
+  "tests/reusable/download_tests.py": 0,
+  "tests/reusable/startup_tests.py": 0,
+  "tests/reusable/compiled_startup_tests.py": 0,
+  "tests/reusable/policy_tests.py": 0,
+  "tests/reusable/adc_tests.py": 0,
+  "tests/reusable/console_tests.py": 0,
+  "tests/reusable/integration_tests.py": 0,
+  "logs/stock-battery-review/audit_sources.py": 0,
+  "tests/gps/run_tests.py": 0
+}

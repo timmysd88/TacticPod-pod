@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-31",
+  "hardware_decision": "NO-GO",
+  "physical_operations": false,
+  "normal_tcb3_enabled": false,
+  "protected_baseline_checks": {
+    "src/recorder.cpp": true,
+    "src/recorder_format.h": true,
+    "docs/recorder-v2-format.md": true,
+    "src/compact_recorder.cpp": false,
+    "src/gps_receiver.cpp": true,
+    "platformio.ini": true,
+    "tests/tcb3/fixtures/example.tpx3": true,
+    "tests/tcb3/fixtures/expected.json": true
+  },
+  "all_14_suites_passed": true,
+  "normal_static_ram": 118440,
+  "enabled_static_ram": 120140,
+  "normal_program_bytes": 161060,
+  "enabled_program_bytes": 178136,
+  "cli_raw_bytes": 17280,
+  "inline_seal_container_version": "3.2.0",
+  "page_programs_per_page": 1,
+  "full_capacity_tests": [
+    {
+      "mode": 0,
+      "produced": 1471,
+      "committed": 1470,
+      "queue_high": 1,
+      "max_arrival_to_commit_ms": 1118,
+      "elapsed_ms": 2940148,
+      "max_store_block_ms": 1118,
+      "programs": 61426,
+      "compression_blackout_ms": 0,
+      "program_busy_ms": 3
+    },
+    {
+      "mode": 1,
+      "produced": 1471,
+      "committed": 1470,
+      "queue_high": 1,
+      "max_arrival_to_commit_ms": 1518,
+      "elapsed_ms": 2940548,
+      "max_store_block_ms": 1118,
+      "programs": 61426,
+      "compression_blackout_ms": 400,
+      "program_busy_ms": 3
+    },
+    {
+      "mode": 3,
+      "produced": 1471,
+      "committed": 1470,
+      "queue_high": 1,
+      "max_arrival_to_commit_ms": 1770,
+      "elapsed_ms": 2940554,
+      "max_store_block_ms": 1370,
+      "programs": 61426,
+      "compression_blackout_ms": 400,
+      "program_busy_ms": 10
+    }
+  ],
+  "identity_verified": false
+}

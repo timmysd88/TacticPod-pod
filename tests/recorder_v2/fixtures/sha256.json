@@ -1,0 +1,14 @@
+{
+  "corrupt_crc.bin": "30b698c6d1200f1b6f1f1d71069178e3079bbaece853ae1a635c30d6346851fe",
+  "corrupt_crc.expected.json": "bb249d84c3732ac804221643e4276440dc1f269b39502709f86c1330c3bf1479",
+  "empty_session.bin": "4fe0363d5cf4f9b6eeebfa46aca723d1885463deaee836236526f0660ba154ec",
+  "empty_session.expected.json": "5c917b7e1c908c5cad4b9e74fa7979acf31087287fe2752c59665b1b15cdfae5",
+  "interrupted.bin": "f9657704d526e219374c7af70caebaeaa5e7c0a01fcb48f062ec6b19d5e90953",
+  "interrupted.expected.json": "b975b0a0435a888cdf9029ab52bd2e510ce4091d8afe64aba73d9fc435c8080a",
+  "missing_gps.bin": "2e56484274611ade0c1f19f4569a49b31ef401283631bcf3b7ad29a2c6c7b8c1",
+  "missing_gps.expected.json": "e06153cea4b1f21d1f413d29b3121f53f7b90214603d44b8313592ddba6b4597",
+  "mixed_v1_v2.bin": "3fa2e3efd63479eb99607fe216c040f0377ef39e6df8144e5534b60cb45b8cce",
+  "mixed_v1_v2.expected.json": "cbc2c230ff567977fd9f0c0c92f342004bba68705d26d46536b311dbc90be00b",
+  "timestamp_rollover.bin": "4403acff946ce2be8e37c9e8acb4aa2ab18e23fe0360a3e9aae1a5e00a7fbc83",
+  "timestamp_rollover.expected.json": "5ece212b96af4f78625f3a3933357d73d0423c23691057317361de7ce19a983c"
+}

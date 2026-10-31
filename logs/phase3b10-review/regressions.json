@@ -1,0 +1,142 @@
+{
+  "gps": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/gps/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "recording": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/recording/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "flash": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/flash_write/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "v2": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/recorder_v2/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "storage": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/storage_benchmark/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "compact-native": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/compact/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "compact-host": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/compact/test_decoder.py"
+    ],
+    "exit_code": 0
+  },
+  "timing": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/compact/test_timing_model.py"
+    ],
+    "exit_code": 0
+  },
+  "resources": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/compact/test_resources.py"
+    ],
+    "exit_code": 0
+  },
+  "tcb3-store": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "tcb3-integration": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/integration_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "tcb3-console": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/console_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "identity": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/flash_identity/run_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "sustained": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/sustained_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "long": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/long_integration_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "erase-review": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/recording/erase_review_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "first-write": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/first_write_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "append-30s": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/append_30s_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "movement-120s": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/movement_120s_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "movement-controls": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/tcb3/movement_controls_tests.py"
+    ],
+    "exit_code": 0
+  }
+}

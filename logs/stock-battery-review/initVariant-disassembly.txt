@@ -1,0 +1,36 @@
+   47b7c:	b508      	push	{r3, lr}
+   47b7e:	2100      	movs	r1, #0
+   47b80:	200e      	movs	r0, #14
+   47b82:	f003 fd13 	bl	4b5ac <digitalWrite>
+   47b86:	2101      	movs	r1, #1
+   47b88:	200e      	movs	r0, #14
+   47b8a:	f003 fc8b 	bl	4b4a4 <pinMode>
+   47b8e:	2100      	movs	r1, #0
+   47b90:	2016      	movs	r0, #22
+   47b92:	f003 fc87 	bl	4b4a4 <pinMode>
+   47b96:	2101      	movs	r1, #1
+   47b98:	2019      	movs	r0, #25
+   47b9a:	f003 fc83 	bl	4b4a4 <pinMode>
+   47b9e:	2101      	movs	r1, #1
+   47ba0:	2019      	movs	r0, #25
+   47ba2:	f003 fd03 	bl	4b5ac <digitalWrite>
+   47ba6:	2101      	movs	r1, #1
+   47ba8:	200b      	movs	r0, #11
+   47baa:	f003 fc7b 	bl	4b4a4 <pinMode>
+   47bae:	2101      	movs	r1, #1
+   47bb0:	200b      	movs	r0, #11
+   47bb2:	f003 fcfb 	bl	4b5ac <digitalWrite>
+   47bb6:	2101      	movs	r1, #1
+   47bb8:	200d      	movs	r0, #13
+   47bba:	f003 fc73 	bl	4b4a4 <pinMode>
+   47bbe:	2101      	movs	r1, #1
+   47bc0:	200d      	movs	r0, #13
+   47bc2:	f003 fcf3 	bl	4b5ac <digitalWrite>
+   47bc6:	2101      	movs	r1, #1
+   47bc8:	200c      	movs	r0, #12
+   47bca:	f003 fc6b 	bl	4b4a4 <pinMode>
+   47bce:	2101      	movs	r1, #1
+   47bd0:	200c      	movs	r0, #12
+   47bd2:	e8bd 4008 	ldmia.w	sp!, {r3, lr}
+   47bd6:	f003 bce9 	b.w	4b5ac <digitalWrite>
+   47bda:	bf00      	nop

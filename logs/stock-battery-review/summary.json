@@ -1,0 +1,86 @@
+{
+  "targeted_suites_passed": 7,
+  "previous_complete_suites_passed": 26,
+  "previous_complete_evidence": "logs/battery-startup-review/regressions.json",
+  "production_sources_unchanged": true,
+  "default_elf_unchanged": true,
+  "ram_bytes": 120836,
+  "program_bytes": 189424,
+  "hardware_modified": false,
+  "device_accessed": false,
+  "uploaded": false,
+  "bootloader_modified": false,
+  "battery_connection_qualified": false,
+  "decision": "GO for separately authorised battery-absent USB-only test; battery connection remains unqualified",
+  "artifacts": {
+    "elf": "c6f09813857a70bb38fafaa27ef16c1957ae6b63584793d8302bf7afebbc3654",
+    "hex": "fee831d0d665853f7203e46653724ff1ba4e4a08e01062eaed44d2bbf0c0ecdc",
+    "zip": "ffee03178a49e2b77130da9afdefd5f5c358c6b22ecb3e1e249b2157ca540c67",
+    "manifest": {
+      "application": {
+        "bin_file": "firmware.bin",
+        "dat_file": "firmware.dat",
+        "init_packet_data": {
+          "application_version": 4294967295,
+          "device_revision": 65535,
+          "device_type": 82,
+          "firmware_crc16": 62519,
+          "softdevice_req": [
+            291
+          ]
+        }
+      },
+      "dfu_version": 0.5
+    },
+    "default_elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089"
+  },
+  "protected_source_hashes": {
+    "src/battery_monitor.h": "cd9bcffd47fc9574468d4f3442eff5d773d4e978ff5df6dc3a7b02fcb7069fac",
+    "src/battery_runtime.cpp": "dedef2f761bdd3b74d6b43944f905590ce2a6079e43d1b7ac274d304dc07b5e4",
+    "src/battery_runtime.h": "935cc4fb9a4eb5b931a69cebaf63522469017363a184bea06d01ee8611b88024",
+    "src/compact_recorder.cpp": "5a30195463751c73ca4cece6ae3faf069dbda1272f67d8d76c6dcf82d142af99",
+    "src/compact_recorder.h": "f4a73fdef22e9722b85d6d8bd5cce64389d521a65a64f0aff4d498bb644d599f",
+    "src/flash_diagnostics.h": "2525f03de987009a3942f69586a3481274f1ffdf19e2fae2d72b793206dd20ee",
+    "src/flash_identity.h": "69e0fbb38896f60e2f85a5abce10a6283d74b144edbb2fab49783c5061b970fd",
+    "src/flash_write_test.cpp": "e71006b6b419ff093309c6ad1fdedfecd832b5ec88be57cbc1e5fd710c69ad9b",
+    "src/flash_write_test.h": "9fdceb71cac158b67d4afa1e1a0a5a4ace72b4f8c7ec14df409b4a9550fba086",
+    "src/gps_config.cpp": "33abb462a7e55078418b9227368c42a596dff2e3367b67538a2c6d7c59ca5a9e",
+    "src/gps_config.h": "ec62f7d5418beaf66ecabd5542fc9107f1cc522450b67b88630d13cb4200d2f7",
+    "src/gps_profile.cpp": "27b7719cc2f726d54edb1904a3c9a0f4966095f75cb35fee19f808f209ec8c5b",
+    "src/gps_profile.h": "f49c22b3708457b24e426d6560111531860bdc0ff38c80aae180c316a8b84d6f",
+    "src/gps_rate.cpp": "01ac99dd7d452b1f1631bd88d319890d27665e86f689a0bf652031476c572d15",
+    "src/gps_rate.h": "255c2292746d3384dc65f5440ab0b1c72a95474c4f23e7b093ffd9be0fa64f2d",
+    "src/gps_receiver.cpp": "18628be93f54f341b5d05a4ad290cdc79e3cec793b60fc028e6b9d1062d4d20e",
+    "src/gps_receiver.h": "760e201a2e350a3d9548c94b8c288c54b25d40a188430b45088dee20632eb4e2",
+    "src/gps_uart_config.h": "48ac396732ded5632e7049ffd0d669509b4b3bf6dff30ac22fcf38a6973732a3",
+    "src/gps_uart_scan.cpp": "ec8bc0c39637afade4727366248648686fb1fb4780c3666dd6fe00156d36fb20",
+    "src/gps_uart_scan.h": "36951a1daa1f129ffe8941815b8bca6ccbd58af359f73b94c5d2e73d304d683f",
+    "src/gps_uart_tx.h": "7ab22b09094b23e0acd04bda5f24cf872ad08361e785346c6b5d7d39543cbb9a",
+    "src/main.cpp": "b59c01f8e69056d58c9a5ec64d5e44114c69fb5ef077721285f757d958aa9feb",
+    "src/monotonic_clock.cpp": "a38919e9d885dedcd995e904a7af61b9398845b2bbe01a91e5fc2f512cb8a09f",
+    "src/monotonic_clock.h": "a72133f834fa72cb909281c8057a6f85dd8bc1b3ae8d3ca5e94d589a3f5265a5",
+    "src/ram_observations.cpp": "ee395ad4c7de96cab4bf6651cbed67d2ee9f2d44f3a7a01741a9f0b9c92f2a2c",
+    "src/ram_observations.h": "15aab0b539d2f4b6d46c2a1e8cf5a5065789566f4c56c53dcfd54fc59e9a575c",
+    "src/recorder.cpp": "2ad10717d20e6f0fbf5dedc014755e33c624180c7da4a6f1ad7a0d24483046dd",
+    "src/recorder.h": "2d2e661814f0d4fc2a448080f6f15052fa8a8b617816ddf76d4bfd00a2a41035",
+    "src/recorder_format.h": "3eda601b69b4a454a1e0babbc5f129e047c3e6d2cc6dd1856580ec6d76457ca2",
+    "src/serial_console.cpp": "df480ea6165064a7bec55e30590a5b795ac4c593dcdaac9cb6cb682364bff726",
+    "src/serial_console.h": "0297a79c168a72593eb6e38ffe921f90407f3fd6a14779d0712559f45b2a3a86",
+    "src/tcb3_session.cpp": "132781239b4d1e622fe59e98fac898c116df444fd651ad21efc80e904e67d157",
+    "src/tcb3_session.h": "1996d0d41ec9b67c5bfb4ae39981cb204d706594800a0b2e9bd0189e56dc6f3c",
+    "src/tcb3_store.cpp": "9f0734c9c0d061b3b1b386b0bcc00d31fba5deab7690fdf8fd1b0c6210ef8ca1",
+    "src/tcb3_store.h": "1cb2cca79067879880c3a3ba120d013095db27ef2246a425aa69116d2ce6fa2f",
+    "src/tcb3_test_limits.h": "52d27a228d610dbc74adedebb591a805dd75073242e9c3b345fab2927128ee2d",
+    "variants/tacticpod/README.md": "28fb70c342fa1c64ed082a10bd27e7c8089b063d0b3bbd5f1bbb1bb5a8a02627",
+    "variants/tacticpod/Seeed_XIAO_nRF52840/variant.cpp": "349a7851d337ee5f9a102de9a2e0f374992070af9cd96e79745fb8d39e0c42de",
+    "variants/tacticpod/Seeed_XIAO_nRF52840/variant.h": "a74818f54005de7f6002b6e2b143686edb9d99a6b98411f469a50960c9d31a0d",
+    "platformio.ini": "5749d2cf7915b17729660a299d8538b9640ab7ceb330103874053fc6d39a48fc"
+  },
+  "preserved_archive_hashes": {
+    "logs/phase3b10-hardware/recovered-recording-image.bin": "b9ad38d83ac27a61a79bf58cbbba68cc44a03d6dddeebcf287d9166eb76fb6f6",
+    "logs/phase3b10-hardware/movement-120s-1.tpx3": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9",
+    "logs/phase3b10-hardware/movement-120s-2.tpx3": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9",
+    "logs/phase3b10-review/tcb3_movement_120s-3b10.zip": "0bdd99698bd4535dfe02943a045d3c9b697a4f5f3d92b077857d7f4f8d9c059e",
+    "logs/reusable-review/tacticpod_reusable_usb.zip": "a0a6d7399342cae4fa351027a190d043e6c38d1e6dd3ee6e8c738e978ba3f680"
+  }
+}

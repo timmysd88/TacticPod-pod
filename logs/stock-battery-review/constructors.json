@@ -1,0 +1,46 @@
+[
+  {
+    "address": "0x27201",
+    "symbol": "__arm_set_fast_math"
+  },
+  {
+    "address": "0x27235",
+    "symbol": "frame_dummy"
+  },
+  {
+    "address": "0x275bd",
+    "symbol": "_GLOBAL__sub_I_Serial"
+  },
+  {
+    "address": "0x2de39",
+    "symbol": "_GLOBAL__sub_I__ZN15CompactRecorder9capturingEv"
+  },
+  {
+    "address": "0x39b39",
+    "symbol": "_GLOBAL__sub_I__ZN11GpsReceiver5beginEv"
+  },
+  {
+    "address": "0x3b3cd",
+    "symbol": "_GLOBAL__sub_I__ZN11GpsUartScan6activeEv"
+  },
+  {
+    "address": "0x3c1d1",
+    "symbol": "_GLOBAL__sub_I__ZN16FlashDiagnostics7requestEv"
+  },
+  {
+    "address": "0x3f6a1",
+    "symbol": "_GLOBAL__sub_I__ZN15RamObservations5beginEv"
+  },
+  {
+    "address": "0x46491",
+    "symbol": "_GLOBAL__sub_I__ZN8SPIClassC2EP13NRF_SPIM_Typehhh"
+  },
+  {
+    "address": "0x486f9",
+    "symbol": "_GLOBAL__sub_I__ZN4UartC2EP14NRF_UARTE_Type9IRQn_Typehh"
+  },
+  {
+    "address": "0x4bbcd",
+    "symbol": "_GLOBAL__sub_I__ZN7TwoWireC2EP13NRF_TWIM_TypeP13NRF_TWIS_Type9IRQn_Typehh"
+  }
+]

@@ -1,0 +1,173 @@
+{
+  "passed": true,
+  "serial_released": true,
+  "recording_started": false,
+  "uploaded": false,
+  "states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x39000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98995 max=100740\nOBS RMC | seen=223 accepted=32 overflow=191 | queue=32/32 high=32 | spacing_us_min=84044 max=116830\nOBS GGA | seen=23 accepted=8 overflow=15 | queue=8/8 high=8 | spacing_us_min=996219 max=1005562\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=1 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=13321 rejected=0 blocks sealed=60 completed=60\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=361781147 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=12 blocks=60 committed=13321 offered=13321 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=681 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+  },
+  "gps": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=10032198 | checksum_ok=139357 | checksum_fail=0 | last_valid_message_age_ms=27\nGPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS fix=VALID | lat=50.775246 | lon=0.090082 | position=CURRENT | satellites=9 | HDOP=0.89\nGPS speed_km/h=0.370 | UTC=22:21:01Z | position_age_ms=28\n",
+  "identity": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n",
+  "inventory": [
+    {
+      "session_id": 1,
+      "sectors": [
+        0,
+        4096
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 116890708,
+        "offered": [
+          500,
+          50,
+          5,
+          0
+        ],
+        "committed": [
+          500,
+          50,
+          5,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    },
+    {
+      "session_id": 3,
+      "sectors": [
+        8192,
+        12288,
+        16384,
+        20480,
+        24576,
+        28672,
+        32768,
+        36864,
+        40960
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 79294225,
+        "offered": [
+          3000,
+          300,
+          30,
+          0
+        ],
+        "committed": [
+          3000,
+          300,
+          30,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    },
+    {
+      "session_id": 12,
+      "sectors": [
+        45056,
+        49152,
+        53248,
+        57344,
+        61440,
+        65536,
+        69632,
+        73728,
+        77824,
+        81920,
+        86016,
+        90112,
+        94208,
+        98304,
+        102400,
+        106496,
+        110592,
+        114688,
+        118784,
+        122880,
+        126976,
+        131072,
+        135168,
+        139264,
+        143360,
+        147456,
+        151552,
+        155648,
+        159744,
+        163840,
+        167936,
+        172032,
+        176128,
+        180224,
+        184320,
+        188416,
+        192512,
+        196608,
+        200704,
+        204800,
+        208896,
+        212992,
+        217088,
+        221184,
+        225280,
+        229376
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 4101236647,
+        "offered": [
+          12001,
+          1200,
+          120,
+          0
+        ],
+        "committed": [
+          12001,
+          1200,
+          120,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    }
+  ],
+  "export_sha256": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9",
+  "image_sha256": "b9ad38d83ac27a61a79bf58cbbba68cc44a03d6dddeebcf287d9166eb76fb6f6",
+  "archive_packet_identical": true,
+  "archive_image_identical": true
+}

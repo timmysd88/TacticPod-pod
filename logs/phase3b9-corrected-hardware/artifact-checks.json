@@ -1,0 +1,8 @@
+{
+  "elf": "8fd835ac50c608b699893a34310e358b397987e0ba3adb04cb4ffa3b16c7761e",
+  "hex": "00cb0ce3ce1e6944fcd4a7f88b72cc794334a3edf247e40fd9312b25214532b6",
+  "zip": "8e17bab58b1d5b21fa6898c8d0e9b98902c7944f3c28b62455041a57dbe53f93",
+  "application_sha256": "d6710beafe277697c1f32301661f601231974ba60a3273b992d3c21f9364227b",
+  "regression_suites_passed": 18,
+  "test_environment": "tcb3_append_30s"
+}

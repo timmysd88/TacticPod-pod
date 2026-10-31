@@ -1,0 +1,6 @@
+{
+  "one_start_only": true,
+  "duration_s": 10,
+  "usb_remains_connected": true,
+  "battery_absent_user_confirmed": true
+}

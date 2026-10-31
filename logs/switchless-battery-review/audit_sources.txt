@@ -1,0 +1,20 @@
+.pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840/Seeed_XIAO_nRF52840_bootloader-0.6.1_s140_7.3.0.hex
+0xfc230 UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)
+0xfc2ac Model: Seeed XIAO nRF52840
+0xfc2c8 Board-ID: Seeed_XIAO_nRF52840
+.pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840/Seeed_XIAO_nRF52840_bootloader-0.6.2_s140_7.3.0.hex
+0xfc230 UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)
+0xfc2ac Model: Seeed XIAO nRF52840
+0xfc2c8 Board-ID: Seeed_XIAO_nRF52840
+.pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840_Sense/Seeed_XIAO_nRF52840_Sense_bootloader-0.6.1_s140_7.3.0.hex
+0xfc234 UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)
+0xfc2b0 Model: Seeed XIAO nRF52840
+0xfc2cc Board-ID: Seeed_XIAO_nRF52840_Sense
+.pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840_Sense/Seeed_XIAO_nRF52840_Sense_bootloader-0.6.2_s140_7.3.0.hex
+0xfc234 UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)
+0xfc2b0 Model: Seeed XIAO nRF52840
+0xfc2cc Board-ID: Seeed_XIAO_nRF52840_Sense
+PASS: XIAO board source has no battery-specific pin configuration
+PASS: bootloader teardown restores input/disconnected/no-pull defaults
+PASS: historical and application SystemInit have no explicit P0.13/14/31 configuration
+LIMIT: not a match to installed bootloader; dirty builds and electrical transients unqualified

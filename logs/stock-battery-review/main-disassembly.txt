@@ -1,0 +1,31 @@
+   4a9fc:	b500      	push	{lr}
+   4a9fe:	b083      	sub	sp, #12
+   4aa00:	f000 fd08 	bl	4b414 <init>
+   4aa04:	f7fd f8ba 	bl	47b7c <initVariant()>
+   4aa08:	4b0e      	ldr	r3, [pc, #56]	; (4aa44 <main+0x48>)
+   4aa0a:	9301      	str	r3, [sp, #4]
+   4aa0c:	2301      	movs	r3, #1
+   4aa0e:	f44f 6280 	mov.w	r2, #1024	; 0x400
+   4aa12:	490d      	ldr	r1, [pc, #52]	; (4aa48 <main+0x4c>)
+   4aa14:	9300      	str	r3, [sp, #0]
+   4aa16:	480d      	ldr	r0, [pc, #52]	; (4aa4c <main+0x50>)
+   4aa18:	2300      	movs	r3, #0
+   4aa1a:	f7fe fed5 	bl	497c8 <xTaskCreate>
+   4aa1e:	f44f 7040 	mov.w	r0, #768	; 0x300
+   4aa22:	f000 fcc1 	bl	4b3a8 <ada_callback_init>
+   4aa26:	f7fe ff49 	bl	498bc <vTaskStartScheduler>
+   4aa2a:	f3bf 8f4f 	dsb	sy
+   4aa2e:	4908      	ldr	r1, [pc, #32]	; (4aa50 <main+0x54>)
+   4aa30:	4b08      	ldr	r3, [pc, #32]	; (4aa54 <main+0x58>)
+   4aa32:	68ca      	ldr	r2, [r1, #12]
+   4aa34:	f402 62e0 	and.w	r2, r2, #1792	; 0x700
+   4aa38:	4313      	orrs	r3, r2
+   4aa3a:	60cb      	str	r3, [r1, #12]
+   4aa3c:	f3bf 8f4f 	dsb	sy
+   4aa40:	bf00      	nop
+   4aa42:	e7fd      	b.n	4aa40 <main+0x44>
+   4aa44:	20022d50 	.word	0x20022d50
+   4aa48:	000545d8 	.word	0x000545d8
+   4aa4c:	0004a9ad 	.word	0x0004a9ad
+   4aa50:	e000ed00 	.word	0xe000ed00
+   4aa54:	05fa0004 	.word	0x05fa0004

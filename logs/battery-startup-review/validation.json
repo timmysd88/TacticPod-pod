@@ -1,0 +1,15 @@
+{
+  "suites_passed": 26,
+  "suites_failed": 0,
+  "builds": [
+    "seeed_xiao_nrf52840_sense",
+    "tacticpod_reusable_usb"
+  ],
+  "static_ram": 120836,
+  "program_bytes": 189424,
+  "hardware_access": false,
+  "battery_connected": false,
+  "upload_performed": false,
+  "battery_connection_decision": "NO-GO",
+  "preferred_hardware_solution": "Isolate original VBAT-to-ADC path; qualified external single-cell I2C voltage monitor"
+}

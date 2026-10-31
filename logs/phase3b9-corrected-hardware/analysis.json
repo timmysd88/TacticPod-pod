@@ -1,0 +1,1254 @@
+{
+  "streams": {
+    "1": {
+      "count": 3000,
+      "first_us": 49292268,
+      "last_us": 79280101,
+      "mean_hz": 100.00722626406517,
+      "spacing_min_us": 9267,
+      "spacing_max_us": 10796,
+      "spacing_mean_us": 9999.277425808603,
+      "spacing_stdev_us": 416.6248117973502,
+      "max_absolute_spacing_error_us": 796,
+      "nonpositive_spacing": 0
+    },
+    "2": {
+      "count": 300,
+      "first_us": 49405627,
+      "last_us": 79290494,
+      "mean_hz": 10.005063766889108,
+      "spacing_min_us": 79942,
+      "spacing_max_us": 118610,
+      "spacing_mean_us": 99949.38795986622,
+      "spacing_stdev_us": 7249.538603469846,
+      "max_absolute_spacing_error_us": 20058,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 300,
+      "unique_utc_epochs": 300,
+      "utc_step_ms": [
+        100
+      ],
+      "validity_masks": [
+        119,
+        127
+      ],
+      "valid_fix_count": 300
+    },
+    "3": {
+      "count": 30,
+      "first_us": 50010142,
+      "last_us": 79014108,
+      "mean_hz": 0.9998632600796732,
+      "spacing_min_us": 993849,
+      "spacing_max_us": 1004533,
+      "spacing_mean_us": 1000136.7586206896,
+      "spacing_stdev_us": 2832.0630552006746,
+      "max_absolute_spacing_error_us": 6151,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 30,
+      "unique_utc_epochs": 30,
+      "utc_step_ms": [
+        1000
+      ],
+      "validity_masks": [
+        63
+      ],
+      "fix_quality_values": [
+        2
+      ],
+      "satellites_used_values": [
+        7
+      ],
+      "hdop_values": [
+        1.5
+      ]
+    }
+  },
+  "ordering": {
+    "all_records_monotonic": true,
+    "equal_timestamp_pairs": 0,
+    "event_records": 0
+  },
+  "pages": [
+    {
+      "address": 8192,
+      "address_hex": "0x002000",
+      "end_hex": "0x0020FF",
+      "magic": "TPH3",
+      "page_sequence": 0,
+      "sector_sequence": 0
+    },
+    {
+      "address": 8448,
+      "address_hex": "0x002100",
+      "end_hex": "0x0021FF",
+      "magic": "TPD3",
+      "page_sequence": 0,
+      "sector_sequence": null
+    },
+    {
+      "address": 8704,
+      "address_hex": "0x002200",
+      "end_hex": "0x0022FF",
+      "magic": "TPD3",
+      "page_sequence": 1,
+      "sector_sequence": null
+    },
+    {
+      "address": 8960,
+      "address_hex": "0x002300",
+      "end_hex": "0x0023FF",
+      "magic": "TPD3",
+      "page_sequence": 2,
+      "sector_sequence": null
+    },
+    {
+      "address": 9216,
+      "address_hex": "0x002400",
+      "end_hex": "0x0024FF",
+      "magic": "TPD3",
+      "page_sequence": 3,
+      "sector_sequence": null
+    },
+    {
+      "address": 9472,
+      "address_hex": "0x002500",
+      "end_hex": "0x0025FF",
+      "magic": "TPD3",
+      "page_sequence": 4,
+      "sector_sequence": null
+    },
+    {
+      "address": 9728,
+      "address_hex": "0x002600",
+      "end_hex": "0x0026FF",
+      "magic": "TPD3",
+      "page_sequence": 5,
+      "sector_sequence": null
+    },
+    {
+      "address": 9984,
+      "address_hex": "0x002700",
+      "end_hex": "0x0027FF",
+      "magic": "TPD3",
+      "page_sequence": 6,
+      "sector_sequence": null
+    },
+    {
+      "address": 10240,
+      "address_hex": "0x002800",
+      "end_hex": "0x0028FF",
+      "magic": "TPD3",
+      "page_sequence": 7,
+      "sector_sequence": null
+    },
+    {
+      "address": 10496,
+      "address_hex": "0x002900",
+      "end_hex": "0x0029FF",
+      "magic": "TPD3",
+      "page_sequence": 8,
+      "sector_sequence": null
+    },
+    {
+      "address": 10752,
+      "address_hex": "0x002A00",
+      "end_hex": "0x002AFF",
+      "magic": "TPD3",
+      "page_sequence": 9,
+      "sector_sequence": null
+    },
+    {
+      "address": 11008,
+      "address_hex": "0x002B00",
+      "end_hex": "0x002BFF",
+      "magic": "TPD3",
+      "page_sequence": 10,
+      "sector_sequence": null
+    },
+    {
+      "address": 11264,
+      "address_hex": "0x002C00",
+      "end_hex": "0x002CFF",
+      "magic": "TPD3",
+      "page_sequence": 11,
+      "sector_sequence": null
+    },
+    {
+      "address": 11520,
+      "address_hex": "0x002D00",
+      "end_hex": "0x002DFF",
+      "magic": "TPD3",
+      "page_sequence": 12,
+      "sector_sequence": null
+    },
+    {
+      "address": 11776,
+      "address_hex": "0x002E00",
+      "end_hex": "0x002EFF",
+      "magic": "TPD3",
+      "page_sequence": 13,
+      "sector_sequence": null
+    },
+    {
+      "address": 12288,
+      "address_hex": "0x003000",
+      "end_hex": "0x0030FF",
+      "magic": "TPH3",
+      "page_sequence": 14,
+      "sector_sequence": 1
+    },
+    {
+      "address": 12544,
+      "address_hex": "0x003100",
+      "end_hex": "0x0031FF",
+      "magic": "TPD3",
+      "page_sequence": 14,
+      "sector_sequence": null
+    },
+    {
+      "address": 12800,
+      "address_hex": "0x003200",
+      "end_hex": "0x0032FF",
+      "magic": "TPD3",
+      "page_sequence": 15,
+      "sector_sequence": null
+    },
+    {
+      "address": 13056,
+      "address_hex": "0x003300",
+      "end_hex": "0x0033FF",
+      "magic": "TPD3",
+      "page_sequence": 16,
+      "sector_sequence": null
+    },
+    {
+      "address": 13312,
+      "address_hex": "0x003400",
+      "end_hex": "0x0034FF",
+      "magic": "TPD3",
+      "page_sequence": 17,
+      "sector_sequence": null
+    },
+    {
+      "address": 13568,
+      "address_hex": "0x003500",
+      "end_hex": "0x0035FF",
+      "magic": "TPD3",
+      "page_sequence": 18,
+      "sector_sequence": null
+    },
+    {
+      "address": 13824,
+      "address_hex": "0x003600",
+      "end_hex": "0x0036FF",
+      "magic": "TPD3",
+      "page_sequence": 19,
+      "sector_sequence": null
+    },
+    {
+      "address": 14080,
+      "address_hex": "0x003700",
+      "end_hex": "0x0037FF",
+      "magic": "TPD3",
+      "page_sequence": 20,
+      "sector_sequence": null
+    },
+    {
+      "address": 14336,
+      "address_hex": "0x003800",
+      "end_hex": "0x0038FF",
+      "magic": "TPD3",
+      "page_sequence": 21,
+      "sector_sequence": null
+    },
+    {
+      "address": 14592,
+      "address_hex": "0x003900",
+      "end_hex": "0x0039FF",
+      "magic": "TPD3",
+      "page_sequence": 22,
+      "sector_sequence": null
+    },
+    {
+      "address": 14848,
+      "address_hex": "0x003A00",
+      "end_hex": "0x003AFF",
+      "magic": "TPD3",
+      "page_sequence": 23,
+      "sector_sequence": null
+    },
+    {
+      "address": 15104,
+      "address_hex": "0x003B00",
+      "end_hex": "0x003BFF",
+      "magic": "TPD3",
+      "page_sequence": 24,
+      "sector_sequence": null
+    },
+    {
+      "address": 15360,
+      "address_hex": "0x003C00",
+      "end_hex": "0x003CFF",
+      "magic": "TPD3",
+      "page_sequence": 25,
+      "sector_sequence": null
+    },
+    {
+      "address": 15616,
+      "address_hex": "0x003D00",
+      "end_hex": "0x003DFF",
+      "magic": "TPD3",
+      "page_sequence": 26,
+      "sector_sequence": null
+    },
+    {
+      "address": 15872,
+      "address_hex": "0x003E00",
+      "end_hex": "0x003EFF",
+      "magic": "TPD3",
+      "page_sequence": 27,
+      "sector_sequence": null
+    },
+    {
+      "address": 16384,
+      "address_hex": "0x004000",
+      "end_hex": "0x0040FF",
+      "magic": "TPH3",
+      "page_sequence": 28,
+      "sector_sequence": 2
+    },
+    {
+      "address": 16640,
+      "address_hex": "0x004100",
+      "end_hex": "0x0041FF",
+      "magic": "TPD3",
+      "page_sequence": 28,
+      "sector_sequence": null
+    },
+    {
+      "address": 16896,
+      "address_hex": "0x004200",
+      "end_hex": "0x0042FF",
+      "magic": "TPD3",
+      "page_sequence": 29,
+      "sector_sequence": null
+    },
+    {
+      "address": 17152,
+      "address_hex": "0x004300",
+      "end_hex": "0x0043FF",
+      "magic": "TPD3",
+      "page_sequence": 30,
+      "sector_sequence": null
+    },
+    {
+      "address": 17408,
+      "address_hex": "0x004400",
+      "end_hex": "0x0044FF",
+      "magic": "TPD3",
+      "page_sequence": 31,
+      "sector_sequence": null
+    },
+    {
+      "address": 17664,
+      "address_hex": "0x004500",
+      "end_hex": "0x0045FF",
+      "magic": "TPD3",
+      "page_sequence": 32,
+      "sector_sequence": null
+    },
+    {
+      "address": 17920,
+      "address_hex": "0x004600",
+      "end_hex": "0x0046FF",
+      "magic": "TPD3",
+      "page_sequence": 33,
+      "sector_sequence": null
+    },
+    {
+      "address": 18176,
+      "address_hex": "0x004700",
+      "end_hex": "0x0047FF",
+      "magic": "TPD3",
+      "page_sequence": 34,
+      "sector_sequence": null
+    },
+    {
+      "address": 18432,
+      "address_hex": "0x004800",
+      "end_hex": "0x0048FF",
+      "magic": "TPD3",
+      "page_sequence": 35,
+      "sector_sequence": null
+    },
+    {
+      "address": 18688,
+      "address_hex": "0x004900",
+      "end_hex": "0x0049FF",
+      "magic": "TPD3",
+      "page_sequence": 36,
+      "sector_sequence": null
+    },
+    {
+      "address": 18944,
+      "address_hex": "0x004A00",
+      "end_hex": "0x004AFF",
+      "magic": "TPD3",
+      "page_sequence": 37,
+      "sector_sequence": null
+    },
+    {
+      "address": 19200,
+      "address_hex": "0x004B00",
+      "end_hex": "0x004BFF",
+      "magic": "TPD3",
+      "page_sequence": 38,
+      "sector_sequence": null
+    },
+    {
+      "address": 19456,
+      "address_hex": "0x004C00",
+      "end_hex": "0x004CFF",
+      "magic": "TPD3",
+      "page_sequence": 39,
+      "sector_sequence": null
+    },
+    {
+      "address": 19712,
+      "address_hex": "0x004D00",
+      "end_hex": "0x004DFF",
+      "magic": "TPD3",
+      "page_sequence": 40,
+      "sector_sequence": null
+    },
+    {
+      "address": 19968,
+      "address_hex": "0x004E00",
+      "end_hex": "0x004EFF",
+      "magic": "TPD3",
+      "page_sequence": 41,
+      "sector_sequence": null
+    },
+    {
+      "address": 20480,
+      "address_hex": "0x005000",
+      "end_hex": "0x0050FF",
+      "magic": "TPH3",
+      "page_sequence": 42,
+      "sector_sequence": 3
+    },
+    {
+      "address": 20736,
+      "address_hex": "0x005100",
+      "end_hex": "0x0051FF",
+      "magic": "TPD3",
+      "page_sequence": 42,
+      "sector_sequence": null
+    },
+    {
+      "address": 20992,
+      "address_hex": "0x005200",
+      "end_hex": "0x0052FF",
+      "magic": "TPD3",
+      "page_sequence": 43,
+      "sector_sequence": null
+    },
+    {
+      "address": 21248,
+      "address_hex": "0x005300",
+      "end_hex": "0x0053FF",
+      "magic": "TPD3",
+      "page_sequence": 44,
+      "sector_sequence": null
+    },
+    {
+      "address": 21504,
+      "address_hex": "0x005400",
+      "end_hex": "0x0054FF",
+      "magic": "TPD3",
+      "page_sequence": 45,
+      "sector_sequence": null
+    },
+    {
+      "address": 21760,
+      "address_hex": "0x005500",
+      "end_hex": "0x0055FF",
+      "magic": "TPD3",
+      "page_sequence": 46,
+      "sector_sequence": null
+    },
+    {
+      "address": 22016,
+      "address_hex": "0x005600",
+      "end_hex": "0x0056FF",
+      "magic": "TPD3",
+      "page_sequence": 47,
+      "sector_sequence": null
+    },
+    {
+      "address": 22272,
+      "address_hex": "0x005700",
+      "end_hex": "0x0057FF",
+      "magic": "TPD3",
+      "page_sequence": 48,
+      "sector_sequence": null
+    },
+    {
+      "address": 22528,
+      "address_hex": "0x005800",
+      "end_hex": "0x0058FF",
+      "magic": "TPD3",
+      "page_sequence": 49,
+      "sector_sequence": null
+    },
+    {
+      "address": 22784,
+      "address_hex": "0x005900",
+      "end_hex": "0x0059FF",
+      "magic": "TPD3",
+      "page_sequence": 50,
+      "sector_sequence": null
+    },
+    {
+      "address": 23040,
+      "address_hex": "0x005A00",
+      "end_hex": "0x005AFF",
+      "magic": "TPD3",
+      "page_sequence": 51,
+      "sector_sequence": null
+    },
+    {
+      "address": 23296,
+      "address_hex": "0x005B00",
+      "end_hex": "0x005BFF",
+      "magic": "TPD3",
+      "page_sequence": 52,
+      "sector_sequence": null
+    },
+    {
+      "address": 23552,
+      "address_hex": "0x005C00",
+      "end_hex": "0x005CFF",
+      "magic": "TPD3",
+      "page_sequence": 53,
+      "sector_sequence": null
+    },
+    {
+      "address": 23808,
+      "address_hex": "0x005D00",
+      "end_hex": "0x005DFF",
+      "magic": "TPD3",
+      "page_sequence": 54,
+      "sector_sequence": null
+    },
+    {
+      "address": 24064,
+      "address_hex": "0x005E00",
+      "end_hex": "0x005EFF",
+      "magic": "TPD3",
+      "page_sequence": 55,
+      "sector_sequence": null
+    },
+    {
+      "address": 24576,
+      "address_hex": "0x006000",
+      "end_hex": "0x0060FF",
+      "magic": "TPH3",
+      "page_sequence": 56,
+      "sector_sequence": 4
+    },
+    {
+      "address": 24832,
+      "address_hex": "0x006100",
+      "end_hex": "0x0061FF",
+      "magic": "TPD3",
+      "page_sequence": 56,
+      "sector_sequence": null
+    },
+    {
+      "address": 25088,
+      "address_hex": "0x006200",
+      "end_hex": "0x0062FF",
+      "magic": "TPD3",
+      "page_sequence": 57,
+      "sector_sequence": null
+    },
+    {
+      "address": 25344,
+      "address_hex": "0x006300",
+      "end_hex": "0x0063FF",
+      "magic": "TPD3",
+      "page_sequence": 58,
+      "sector_sequence": null
+    },
+    {
+      "address": 25600,
+      "address_hex": "0x006400",
+      "end_hex": "0x0064FF",
+      "magic": "TPD3",
+      "page_sequence": 59,
+      "sector_sequence": null
+    },
+    {
+      "address": 25856,
+      "address_hex": "0x006500",
+      "end_hex": "0x0065FF",
+      "magic": "TPD3",
+      "page_sequence": 60,
+      "sector_sequence": null
+    },
+    {
+      "address": 26112,
+      "address_hex": "0x006600",
+      "end_hex": "0x0066FF",
+      "magic": "TPD3",
+      "page_sequence": 61,
+      "sector_sequence": null
+    },
+    {
+      "address": 26368,
+      "address_hex": "0x006700",
+      "end_hex": "0x0067FF",
+      "magic": "TPD3",
+      "page_sequence": 62,
+      "sector_sequence": null
+    },
+    {
+      "address": 26624,
+      "address_hex": "0x006800",
+      "end_hex": "0x0068FF",
+      "magic": "TPD3",
+      "page_sequence": 63,
+      "sector_sequence": null
+    },
+    {
+      "address": 26880,
+      "address_hex": "0x006900",
+      "end_hex": "0x0069FF",
+      "magic": "TPD3",
+      "page_sequence": 64,
+      "sector_sequence": null
+    },
+    {
+      "address": 27136,
+      "address_hex": "0x006A00",
+      "end_hex": "0x006AFF",
+      "magic": "TPD3",
+      "page_sequence": 65,
+      "sector_sequence": null
+    },
+    {
+      "address": 27392,
+      "address_hex": "0x006B00",
+      "end_hex": "0x006BFF",
+      "magic": "TPD3",
+      "page_sequence": 66,
+      "sector_sequence": null
+    },
+    {
+      "address": 27648,
+      "address_hex": "0x006C00",
+      "end_hex": "0x006CFF",
+      "magic": "TPD3",
+      "page_sequence": 67,
+      "sector_sequence": null
+    },
+    {
+      "address": 27904,
+      "address_hex": "0x006D00",
+      "end_hex": "0x006DFF",
+      "magic": "TPD3",
+      "page_sequence": 68,
+      "sector_sequence": null
+    },
+    {
+      "address": 28160,
+      "address_hex": "0x006E00",
+      "end_hex": "0x006EFF",
+      "magic": "TPD3",
+      "page_sequence": 69,
+      "sector_sequence": null
+    },
+    {
+      "address": 28672,
+      "address_hex": "0x007000",
+      "end_hex": "0x0070FF",
+      "magic": "TPH3",
+      "page_sequence": 70,
+      "sector_sequence": 5
+    },
+    {
+      "address": 28928,
+      "address_hex": "0x007100",
+      "end_hex": "0x0071FF",
+      "magic": "TPD3",
+      "page_sequence": 70,
+      "sector_sequence": null
+    },
+    {
+      "address": 29184,
+      "address_hex": "0x007200",
+      "end_hex": "0x0072FF",
+      "magic": "TPD3",
+      "page_sequence": 71,
+      "sector_sequence": null
+    },
+    {
+      "address": 29440,
+      "address_hex": "0x007300",
+      "end_hex": "0x0073FF",
+      "magic": "TPD3",
+      "page_sequence": 72,
+      "sector_sequence": null
+    },
+    {
+      "address": 29696,
+      "address_hex": "0x007400",
+      "end_hex": "0x0074FF",
+      "magic": "TPD3",
+      "page_sequence": 73,
+      "sector_sequence": null
+    },
+    {
+      "address": 29952,
+      "address_hex": "0x007500",
+      "end_hex": "0x0075FF",
+      "magic": "TPD3",
+      "page_sequence": 74,
+      "sector_sequence": null
+    },
+    {
+      "address": 30208,
+      "address_hex": "0x007600",
+      "end_hex": "0x0076FF",
+      "magic": "TPD3",
+      "page_sequence": 75,
+      "sector_sequence": null
+    },
+    {
+      "address": 30464,
+      "address_hex": "0x007700",
+      "end_hex": "0x0077FF",
+      "magic": "TPD3",
+      "page_sequence": 76,
+      "sector_sequence": null
+    },
+    {
+      "address": 30720,
+      "address_hex": "0x007800",
+      "end_hex": "0x0078FF",
+      "magic": "TPD3",
+      "page_sequence": 77,
+      "sector_sequence": null
+    },
+    {
+      "address": 30976,
+      "address_hex": "0x007900",
+      "end_hex": "0x0079FF",
+      "magic": "TPD3",
+      "page_sequence": 78,
+      "sector_sequence": null
+    },
+    {
+      "address": 31232,
+      "address_hex": "0x007A00",
+      "end_hex": "0x007AFF",
+      "magic": "TPD3",
+      "page_sequence": 79,
+      "sector_sequence": null
+    },
+    {
+      "address": 31488,
+      "address_hex": "0x007B00",
+      "end_hex": "0x007BFF",
+      "magic": "TPD3",
+      "page_sequence": 80,
+      "sector_sequence": null
+    },
+    {
+      "address": 31744,
+      "address_hex": "0x007C00",
+      "end_hex": "0x007CFF",
+      "magic": "TPD3",
+      "page_sequence": 81,
+      "sector_sequence": null
+    },
+    {
+      "address": 32000,
+      "address_hex": "0x007D00",
+      "end_hex": "0x007DFF",
+      "magic": "TPD3",
+      "page_sequence": 82,
+      "sector_sequence": null
+    },
+    {
+      "address": 32256,
+      "address_hex": "0x007E00",
+      "end_hex": "0x007EFF",
+      "magic": "TPD3",
+      "page_sequence": 83,
+      "sector_sequence": null
+    },
+    {
+      "address": 32768,
+      "address_hex": "0x008000",
+      "end_hex": "0x0080FF",
+      "magic": "TPH3",
+      "page_sequence": 84,
+      "sector_sequence": 6
+    },
+    {
+      "address": 33024,
+      "address_hex": "0x008100",
+      "end_hex": "0x0081FF",
+      "magic": "TPD3",
+      "page_sequence": 84,
+      "sector_sequence": null
+    },
+    {
+      "address": 33280,
+      "address_hex": "0x008200",
+      "end_hex": "0x0082FF",
+      "magic": "TPD3",
+      "page_sequence": 85,
+      "sector_sequence": null
+    },
+    {
+      "address": 33536,
+      "address_hex": "0x008300",
+      "end_hex": "0x0083FF",
+      "magic": "TPD3",
+      "page_sequence": 86,
+      "sector_sequence": null
+    },
+    {
+      "address": 33792,
+      "address_hex": "0x008400",
+      "end_hex": "0x0084FF",
+      "magic": "TPD3",
+      "page_sequence": 87,
+      "sector_sequence": null
+    },
+    {
+      "address": 34048,
+      "address_hex": "0x008500",
+      "end_hex": "0x0085FF",
+      "magic": "TPD3",
+      "page_sequence": 88,
+      "sector_sequence": null
+    },
+    {
+      "address": 34304,
+      "address_hex": "0x008600",
+      "end_hex": "0x0086FF",
+      "magic": "TPD3",
+      "page_sequence": 89,
+      "sector_sequence": null
+    },
+    {
+      "address": 34560,
+      "address_hex": "0x008700",
+      "end_hex": "0x0087FF",
+      "magic": "TPD3",
+      "page_sequence": 90,
+      "sector_sequence": null
+    },
+    {
+      "address": 34816,
+      "address_hex": "0x008800",
+      "end_hex": "0x0088FF",
+      "magic": "TPD3",
+      "page_sequence": 91,
+      "sector_sequence": null
+    },
+    {
+      "address": 35072,
+      "address_hex": "0x008900",
+      "end_hex": "0x0089FF",
+      "magic": "TPD3",
+      "page_sequence": 92,
+      "sector_sequence": null
+    },
+    {
+      "address": 35328,
+      "address_hex": "0x008A00",
+      "end_hex": "0x008AFF",
+      "magic": "TPD3",
+      "page_sequence": 93,
+      "sector_sequence": null
+    },
+    {
+      "address": 35584,
+      "address_hex": "0x008B00",
+      "end_hex": "0x008BFF",
+      "magic": "TPD3",
+      "page_sequence": 94,
+      "sector_sequence": null
+    },
+    {
+      "address": 35840,
+      "address_hex": "0x008C00",
+      "end_hex": "0x008CFF",
+      "magic": "TPD3",
+      "page_sequence": 95,
+      "sector_sequence": null
+    },
+    {
+      "address": 36096,
+      "address_hex": "0x008D00",
+      "end_hex": "0x008DFF",
+      "magic": "TPD3",
+      "page_sequence": 96,
+      "sector_sequence": null
+    },
+    {
+      "address": 36352,
+      "address_hex": "0x008E00",
+      "end_hex": "0x008EFF",
+      "magic": "TPD3",
+      "page_sequence": 97,
+      "sector_sequence": null
+    },
+    {
+      "address": 36864,
+      "address_hex": "0x009000",
+      "end_hex": "0x0090FF",
+      "magic": "TPH3",
+      "page_sequence": 98,
+      "sector_sequence": 7
+    },
+    {
+      "address": 37120,
+      "address_hex": "0x009100",
+      "end_hex": "0x0091FF",
+      "magic": "TPD3",
+      "page_sequence": 98,
+      "sector_sequence": null
+    },
+    {
+      "address": 37376,
+      "address_hex": "0x009200",
+      "end_hex": "0x0092FF",
+      "magic": "TPD3",
+      "page_sequence": 99,
+      "sector_sequence": null
+    },
+    {
+      "address": 37632,
+      "address_hex": "0x009300",
+      "end_hex": "0x0093FF",
+      "magic": "TPD3",
+      "page_sequence": 100,
+      "sector_sequence": null
+    },
+    {
+      "address": 37888,
+      "address_hex": "0x009400",
+      "end_hex": "0x0094FF",
+      "magic": "TPD3",
+      "page_sequence": 101,
+      "sector_sequence": null
+    },
+    {
+      "address": 38144,
+      "address_hex": "0x009500",
+      "end_hex": "0x0095FF",
+      "magic": "TPD3",
+      "page_sequence": 102,
+      "sector_sequence": null
+    },
+    {
+      "address": 38400,
+      "address_hex": "0x009600",
+      "end_hex": "0x0096FF",
+      "magic": "TPD3",
+      "page_sequence": 103,
+      "sector_sequence": null
+    },
+    {
+      "address": 38656,
+      "address_hex": "0x009700",
+      "end_hex": "0x0097FF",
+      "magic": "TPD3",
+      "page_sequence": 104,
+      "sector_sequence": null
+    },
+    {
+      "address": 38912,
+      "address_hex": "0x009800",
+      "end_hex": "0x0098FF",
+      "magic": "TPD3",
+      "page_sequence": 105,
+      "sector_sequence": null
+    },
+    {
+      "address": 39168,
+      "address_hex": "0x009900",
+      "end_hex": "0x0099FF",
+      "magic": "TPD3",
+      "page_sequence": 106,
+      "sector_sequence": null
+    },
+    {
+      "address": 39424,
+      "address_hex": "0x009A00",
+      "end_hex": "0x009AFF",
+      "magic": "TPD3",
+      "page_sequence": 107,
+      "sector_sequence": null
+    },
+    {
+      "address": 39680,
+      "address_hex": "0x009B00",
+      "end_hex": "0x009BFF",
+      "magic": "TPD3",
+      "page_sequence": 108,
+      "sector_sequence": null
+    },
+    {
+      "address": 39936,
+      "address_hex": "0x009C00",
+      "end_hex": "0x009CFF",
+      "magic": "TPD3",
+      "page_sequence": 109,
+      "sector_sequence": null
+    },
+    {
+      "address": 40192,
+      "address_hex": "0x009D00",
+      "end_hex": "0x009DFF",
+      "magic": "TPD3",
+      "page_sequence": 110,
+      "sector_sequence": null
+    },
+    {
+      "address": 40448,
+      "address_hex": "0x009E00",
+      "end_hex": "0x009EFF",
+      "magic": "TPD3",
+      "page_sequence": 111,
+      "sector_sequence": null
+    },
+    {
+      "address": 40960,
+      "address_hex": "0x00A000",
+      "end_hex": "0x00A0FF",
+      "magic": "TPH3",
+      "page_sequence": 112,
+      "sector_sequence": 8
+    },
+    {
+      "address": 41216,
+      "address_hex": "0x00A100",
+      "end_hex": "0x00A1FF",
+      "magic": "TPD3",
+      "page_sequence": 112,
+      "sector_sequence": null
+    },
+    {
+      "address": 41472,
+      "address_hex": "0x00A200",
+      "end_hex": "0x00A2FF",
+      "magic": "TPD3",
+      "page_sequence": 113,
+      "sector_sequence": null
+    },
+    {
+      "address": 41728,
+      "address_hex": "0x00A300",
+      "end_hex": "0x00A3FF",
+      "magic": "TPD3",
+      "page_sequence": 114,
+      "sector_sequence": null
+    },
+    {
+      "address": 41984,
+      "address_hex": "0x00A400",
+      "end_hex": "0x00A4FF",
+      "magic": "TPD3",
+      "page_sequence": 115,
+      "sector_sequence": null
+    },
+    {
+      "address": 42240,
+      "address_hex": "0x00A500",
+      "end_hex": "0x00A5FF",
+      "magic": "TPD3",
+      "page_sequence": 116,
+      "sector_sequence": null
+    },
+    {
+      "address": 42496,
+      "address_hex": "0x00A600",
+      "end_hex": "0x00A6FF",
+      "magic": "TPD3",
+      "page_sequence": 117,
+      "sector_sequence": null
+    },
+    {
+      "address": 42752,
+      "address_hex": "0x00A700",
+      "end_hex": "0x00A7FF",
+      "magic": "TPD3",
+      "page_sequence": 118,
+      "sector_sequence": null
+    },
+    {
+      "address": 43008,
+      "address_hex": "0x00A800",
+      "end_hex": "0x00A8FF",
+      "magic": "TPD3",
+      "page_sequence": 119,
+      "sector_sequence": null
+    },
+    {
+      "address": 43264,
+      "address_hex": "0x00A900",
+      "end_hex": "0x00A9FF",
+      "magic": "TPD3",
+      "page_sequence": 120,
+      "sector_sequence": null
+    },
+    {
+      "address": 43520,
+      "address_hex": "0x00AA00",
+      "end_hex": "0x00AAFF",
+      "magic": "TPD3",
+      "page_sequence": 121,
+      "sector_sequence": null
+    },
+    {
+      "address": 44800,
+      "address_hex": "0x00AF00",
+      "end_hex": "0x00AFFF",
+      "magic": "TPE3",
+      "page_sequence": 122,
+      "sector_sequence": null
+    }
+  ],
+  "allocated_sectors": [
+    8192,
+    12288,
+    16384,
+    20480,
+    24576,
+    28672,
+    32768,
+    36864,
+    40960
+  ],
+  "old_export_reframed_byte_identical": true,
+  "metadata_to_stop_us": 30002275,
+  "last_observation_to_stop_us": 3731,
+  "raw_bytes": 86400,
+  "frames": [
+    {
+      "sequence": 0,
+      "bytes": 1587
+    },
+    {
+      "sequence": 1,
+      "bytes": 1584
+    },
+    {
+      "sequence": 2,
+      "bytes": 1605
+    },
+    {
+      "sequence": 3,
+      "bytes": 1594
+    },
+    {
+      "sequence": 4,
+      "bytes": 1585
+    },
+    {
+      "sequence": 5,
+      "bytes": 1580
+    },
+    {
+      "sequence": 6,
+      "bytes": 1562
+    },
+    {
+      "sequence": 7,
+      "bytes": 1569
+    },
+    {
+      "sequence": 8,
+      "bytes": 1601
+    },
+    {
+      "sequence": 9,
+      "bytes": 1627
+    },
+    {
+      "sequence": 10,
+      "bytes": 1743
+    },
+    {
+      "sequence": 11,
+      "bytes": 1823
+    },
+    {
+      "sequence": 12,
+      "bytes": 1745
+    },
+    {
+      "sequence": 13,
+      "bytes": 1661
+    },
+    {
+      "sequence": 14,
+      "bytes": 1512
+    }
+  ],
+  "footer": {
+    "reason": 0,
+    "stop_us": 79294225,
+    "offered": [
+      3000,
+      300,
+      30,
+      0
+    ],
+    "committed": [
+      3000,
+      300,
+      30,
+      0
+    ],
+    "lost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rejected": 0,
+    "crc_failures": 0,
+    "incomplete_writes": 0,
+    "full": 0,
+    "missed": 0
+  },
+  "metadata": {
+    "start_us": 49291950,
+    "device_id": 1047801283069882557,
+    "availability_flags": 1,
+    "clock_hz": 1000000,
+    "imu_hz": 100,
+    "imu_odr_hz": 104,
+    "accel_ug_per_lsb": 61,
+    "gyro_udps_per_lsb": 8750,
+    "rmc_hz": 10,
+    "gga_hz": 1,
+    "uart_baud": 38400,
+    "block_us": 2000000,
+    "max_frame": 8228,
+    "build_id_hex": null
+  },
+  "programmed_page_count": 132,
+  "max_committed_address_hex": "0x00AFFF",
+  "max_service_us": 1189,
+  "max_block_ms": 393
+}

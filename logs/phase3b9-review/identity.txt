@@ -1,0 +1,14 @@
+PASS: full repeated raw capture and transaction framing
+PASS: BUSY refuses further reads
+PASS: WEL preserved and refuses further reads
+PASS: unavailable status
+PASS: USB backpressure
+PASS: capture cancelled when OBS starts
+PASS: request refused during OBS
+PASS: disconnect cancels
+PASS: unstable SFDP reported
+PASS: malformed SFDP never follows pointers
+PASS: mutation opcode/address allowlist
+PASS: 11 read-only identity scenarios
+PASS: V1 CSV export remains silent
+PASS: V1 recording refuses identity without SPI access

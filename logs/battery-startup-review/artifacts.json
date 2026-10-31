@@ -1,0 +1,12 @@
+{
+  "default_elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+  "elf": "c6f09813857a70bb38fafaa27ef16c1957ae6b63584793d8302bf7afebbc3654",
+  "hex": "fee831d0d665853f7203e46653724ff1ba4e4a08e01062eaed44d2bbf0c0ecdc",
+  "zip": "ffee03178a49e2b77130da9afdefd5f5c358c6b22ecb3e1e249b2157ca540c67",
+  "zip_members": [
+    "firmware.bin",
+    "firmware.dat",
+    "manifest.json"
+  ],
+  "application_sha256": "ea159b3619e3fa27bc59ac9268c8ce8c5630a33b53da82d45901da8a17bdc9ae"
+}

@@ -1,0 +1,78 @@
+{
+  "decision": "Conditional GO for separately authorised supervised 30-second physical test; stop for review now",
+  "hardware_access": false,
+  "upload": false,
+  "physical_writes_or_erases": false,
+  "environment": "tcb3_append_30s",
+  "marker": "test=30s,256KiB,60s profile=3B9 exact=2000",
+  "expected_initial_address": "0x002000",
+  "first_program_identity": {
+    "address": "0x002000",
+    "sector": "0x002000",
+    "session": 3,
+    "sector_sequence": 0,
+    "next_sector": "0x003000"
+  },
+  "write_window_inclusive": [
+    "0x002000",
+    "0x03FFFF"
+  ],
+  "capture_us": 30000000,
+  "total_deadline_us": 60000000,
+  "skip_nonblank_candidates": false,
+  "full_allocation_independently_prescanned": false,
+  "full_sector_check_before_each_allocation": true,
+  "full_page_blank_check_before_each_program": true,
+  "first_program_checks": [
+    "core allocation",
+    "core program dispatch",
+    "physical adapter before WREN"
+  ],
+  "static_ram_bytes": 120692,
+  "program_bytes": 182768,
+  "default_elf_byte_identical": true,
+  "frozen_v2_and_v1_serializer_unchanged": true,
+  "regression_suites_passed": 18,
+  "model_counts": [
+    3001,
+    300,
+    30,
+    0
+  ],
+  "old_model_counts": [
+    500,
+    50,
+    5,
+    0
+  ],
+  "old_fixture_preserved": true,
+  "model_range_inclusive": [
+    "0x002000",
+    "0x010FFF"
+  ],
+  "model_programs": 225,
+  "model_max_service_us": 544,
+  "model_block_max_ms": 356,
+  "cpu_stressed_model_block_max_ms": 357,
+  "max_frame_stress_arrival_to_commit_ms": 1770,
+  "model_input_output_high": [
+    2,
+    1
+  ],
+  "combined_export_bytes": 76224,
+  "combined_canonical_bytes": 100824,
+  "artifact_hashes": {
+    "seeed_xiao_nrf52840_sense": {
+      "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+      "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+      "zip": "67dbf26bf85b6f9d1a11137ba4eea0af60653b9a0d6f80379b76a0d6480ac853",
+      "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+    },
+    "tcb3_append_30s": {
+      "elf": "8fd835ac50c608b699893a34310e358b397987e0ba3adb04cb4ffa3b16c7761e",
+      "hex": "00cb0ce3ce1e6944fcd4a7f88b72cc794334a3edf247e40fd9312b25214532b6",
+      "zip": "8e17bab58b1d5b21fa6898c8d0e9b98902c7944f3c28b62455041a57dbe53f93",
+      "application_sha256": "d6710beafe277697c1f32301661f601231974ba60a3273b992d3c21f9364227b"
+    }
+  }
+}

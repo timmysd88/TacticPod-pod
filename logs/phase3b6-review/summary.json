@@ -1,0 +1,58 @@
+{
+  "prepared_only": true,
+  "hardware_accessed": false,
+  "uploaded": false,
+  "physical_programs_or_erases": 0,
+  "default_tcb3_enabled": false,
+  "test_environment": "tcb3_first_write",
+  "test_tcb3_enabled": true,
+  "capture_limit_us": 5000000,
+  "finalisation_deadline_us_from_capture_start": 15000000,
+  "write_start": 0,
+  "write_end_exclusive": 65536,
+  "max_write_address_hex": "0x00FFFF",
+  "last_page_start_hex": "0x00FF00",
+  "diagnostic_sector_start_hex": "0xFFF000",
+  "test_single_session": true,
+  "v1_mutations_and_diagnostic_mutations_blocked_in_test": true,
+  "suites_passed": 17,
+  "new_bounded_scenarios": 11,
+  "default_static_ram": 118992,
+  "default_program_bytes": 165336,
+  "test_static_ram": 120692,
+  "test_program_bytes": 181392,
+  "normal_application_unchanged": true,
+  "decision": "Conditional GO for one supervised stable-power five-second engineering trial after separate upload/write approval; physical provenance/electrical timing and brownout qualification remain open",
+  "artifacts": {
+    "seeed_xiao_nrf52840_sense": {
+      "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+      "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+      "zip": "67dbf26bf85b6f9d1a11137ba4eea0af60653b9a0d6f80379b76a0d6480ac853",
+      "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+    },
+    "tcb3_first_write": {
+      "elf": "eae2df98fbc2418a185941db2389a7fee6ca3395befa2c9f4eb1d3fb9ae085d4",
+      "hex": "59da3a23951cc8a964ae04cf7214fed22eae9a5f902ecffccfffb9587ce7f469",
+      "zip": "a8d58032d620e320adfed80be8462aee2b646cf6b4597c2c93182c0f5851ae44",
+      "application_sha256": "64ef63d6b4622eb676b462b7ff8d322e1b3158851c929fa4dca7e143fb3d0723"
+    }
+  },
+  "modified_files": [
+    "platformio.ini",
+    "src/tcb3_test_limits.h",
+    "src/tcb3_store.h",
+    "src/tcb3_store.cpp",
+    "src/tcb3_session.h",
+    "src/tcb3_session.cpp",
+    "src/recorder.cpp",
+    "src/flash_write_test.cpp",
+    "src/ram_observations.cpp",
+    "tests/recording/SPI.h",
+    "tests/tcb3/first_write.cpp",
+    "tests/tcb3/first_store.cpp",
+    "tests/tcb3/first_console.cpp",
+    "tests/tcb3/first_write_tests.py",
+    "docs/phase3b6-first-write.md",
+    "logs/phase3b6-review/"
+  ]
+}

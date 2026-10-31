@@ -1,0 +1,401 @@
+[
+  {
+    "case": 0,
+    "metrics": [
+      1500,
+      150,
+      15,
+      9924,
+      10088,
+      0,
+      2,
+      1,
+      0,
+      8,
+      23,
+      544,
+      8192,
+      1,
+      1,
+      43200,
+      0,
+      0,
+      0,
+      0,
+      102,
+      26,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 0,
+      "stop_us": 17479080,
+      "offered": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "committed": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "lost": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rejected": 0,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 0
+    },
+    "observed_harness_stack_bytes": 856
+  },
+  {
+    "case": 1,
+    "metrics": [
+      1205,
+      121,
+      13,
+      9920,
+      10092,
+      1,
+      2,
+      2,
+      0,
+      6,
+      84,
+      544,
+      24576,
+      1,
+      1,
+      34764,
+      0,
+      0,
+      0,
+      0,
+      3956,
+      91,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 2,
+      "stop_us": 14525204,
+      "offered": [
+        1205,
+        121,
+        13,
+        0
+      ],
+      "committed": [
+        1204,
+        121,
+        13,
+        0
+      ],
+      "lost": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "rejected": 1,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 0
+    },
+    "observed_harness_stack_bytes": 856
+  },
+  {
+    "case": 2,
+    "metrics": [
+      1500,
+      150,
+      15,
+      9924,
+      10088,
+      0,
+      2,
+      1,
+      1,
+      8,
+      23,
+      544,
+      8192,
+      1,
+      1,
+      43200,
+      0,
+      0,
+      0,
+      0,
+      102,
+      26,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 3,
+      "stop_us": 17479080,
+      "offered": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "committed": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "lost": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rejected": 0,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 1
+    },
+    "observed_harness_stack_bytes": 856
+  },
+  {
+    "case": 3,
+    "metrics": [
+      1500,
+      150,
+      15,
+      9924,
+      10088,
+      0,
+      2,
+      1,
+      0,
+      8,
+      23,
+      544,
+      8192,
+      1,
+      1,
+      43200,
+      9024,
+      0,
+      0,
+      0,
+      102,
+      26,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 0,
+      "stop_us": 17479080,
+      "offered": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "committed": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "lost": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rejected": 0,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 0
+    },
+    "observed_harness_stack_bytes": 856
+  },
+  {
+    "case": 4,
+    "metrics": [
+      1500,
+      150,
+      15,
+      9908,
+      10088,
+      0,
+      2,
+      1,
+      0,
+      8,
+      105,
+      544,
+      32768,
+      1,
+      1,
+      43200,
+      0,
+      0,
+      0,
+      0,
+      280,
+      114,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 0,
+      "stop_us": 17479012,
+      "offered": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "committed": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "lost": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rejected": 0,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 0
+    },
+    "observed_harness_stack_bytes": 856
+  },
+  {
+    "case": 5,
+    "metrics": [
+      1500,
+      150,
+      15,
+      9924,
+      10088,
+      0,
+      2,
+      1,
+      0,
+      8,
+      23,
+      544,
+      8192,
+      1,
+      1,
+      43200,
+      0,
+      0,
+      0,
+      0,
+      102,
+      26,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 0,
+      "stop_us": 17479080,
+      "offered": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "committed": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "lost": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rejected": 0,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 0
+    },
+    "observed_harness_stack_bytes": 856
+  },
+  {
+    "case": 6,
+    "metrics": [
+      0,
+      0,
+      0,
+      4294967295,
+      0,
+      0,
+      2,
+      1,
+      0,
+      8,
+      23,
+      544,
+      8192,
+      1,
+      1,
+      0,
+      0,
+      1251,
+      118,
+      7,
+      102,
+      26,
+      0,
+      0
+    ],
+    "footer": {
+      "reason": 0,
+      "stop_us": 17479080,
+      "offered": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "committed": [
+        1500,
+        150,
+        15,
+        0
+      ],
+      "lost": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rejected": 0,
+      "crc_failures": 0,
+      "incomplete_writes": 0,
+      "full": 0,
+      "missed": 0
+    },
+    "observed_harness_stack_bytes": 856
+  }
+]

@@ -1,0 +1,95 @@
+{
+  "bootloader_source_commit": "459adc98ea32e0600de550c4a4de9f5ac091d6b6",
+  "nrfx_gitlink": "7a4c9d946cf1801771fc180acdbf7b878f270093",
+  "packaged_bootloaders": [
+    {
+      "file": ".pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840/Seeed_XIAO_nRF52840_bootloader-0.6.1_s140_7.3.0.hex",
+      "sha256": "c79c8cf75ebb7abfa53b02fd3584aa9a5aeb8dc1b073f674f4fa162225630c6c",
+      "identification_strings": [
+        {
+          "address": "0xfc230",
+          "text": "UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)"
+        },
+        {
+          "address": "0xfc2ac",
+          "text": "Model: Seeed XIAO nRF52840"
+        },
+        {
+          "address": "0xfc2c8",
+          "text": "Board-ID: Seeed_XIAO_nRF52840"
+        }
+      ]
+    },
+    {
+      "file": ".pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840/Seeed_XIAO_nRF52840_bootloader-0.6.2_s140_7.3.0.hex",
+      "sha256": "c79c8cf75ebb7abfa53b02fd3584aa9a5aeb8dc1b073f674f4fa162225630c6c",
+      "identification_strings": [
+        {
+          "address": "0xfc230",
+          "text": "UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)"
+        },
+        {
+          "address": "0xfc2ac",
+          "text": "Model: Seeed XIAO nRF52840"
+        },
+        {
+          "address": "0xfc2c8",
+          "text": "Board-ID: Seeed_XIAO_nRF52840"
+        }
+      ]
+    },
+    {
+      "file": ".pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840_Sense/Seeed_XIAO_nRF52840_Sense_bootloader-0.6.1_s140_7.3.0.hex",
+      "sha256": "ac654c6cab225a933278c8be09b92b41bc4c044d064bd8c9c3314c1c4a0cc8c8",
+      "identification_strings": [
+        {
+          "address": "0xfc234",
+          "text": "UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)"
+        },
+        {
+          "address": "0xfc2b0",
+          "text": "Model: Seeed XIAO nRF52840"
+        },
+        {
+          "address": "0xfc2cc",
+          "text": "Board-ID: Seeed_XIAO_nRF52840_Sense"
+        }
+      ]
+    },
+    {
+      "file": ".pio-core/packages/framework-arduinoadafruitnrf52/bootloader/Seeed_XIAO_nRF52840_Sense/Seeed_XIAO_nRF52840_Sense_bootloader-0.6.2_s140_7.3.0.hex",
+      "sha256": "ac654c6cab225a933278c8be09b92b41bc4c044d064bd8c9c3314c1c4a0cc8c8",
+      "identification_strings": [
+        {
+          "address": "0xfc234",
+          "text": "UF2 Bootloader 0.6.1 lib/nrfx (v2.0.0) lib/tinyusb (0.10.1-293-gaf8e5a90) lib/uf2 (remotes/origin/configupdate-9-gadbb8c7)"
+        },
+        {
+          "address": "0xfc2b0",
+          "text": "Model: Seeed XIAO nRF52840"
+        },
+        {
+          "address": "0xfc2cc",
+          "text": "Board-ID: Seeed_XIAO_nRF52840_Sense"
+        }
+      ]
+    }
+  ],
+  "audited_source_hashes": {
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/main.c": "50cb6a288aa21d1e353cea2f524bef29ff0cf753d9ee6a0d727ac4e7703f7476",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/boards.c": "d5d3d409478cc18513c0f76044d92b599d729c504539d6b281443a3c58d9408a",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/boards.h": "80295a5dcd785d3d3bb22f6daa3b07b3d0b547cd37d19835c6e5e942354c2f8c",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/Seeed_XIAO_nRF52840/board.h": "7f4185b027e32309390f94a8864b7722c2599d26ecf70d90c0d521665ae1006c",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/Seeed_XIAO_nRF52840/board.mk": "94c8593214dd86b7b86fe62334530229c9cd74a556b73a00740fbdab996eab03",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/Seeed_XIAO_nRF52840/pinconfig.c": "18b59846330b3cb6b022128d0c77eeb8823254293dc34c03dcea79177c95549d",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/Seeed_XIAO_nRF52840_Sense/board.h": "1078c3893ac9c9d36c81069d493e7472f174a1f4775e515424b1e74ba71aa5e1",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/Seeed_XIAO_nRF52840_Sense/board.mk": "94c8593214dd86b7b86fe62334530229c9cd74a556b73a00740fbdab996eab03",
+    "logs/stock-battery-review/adafruit-Adafruit_nRF52_Bootloader-459adc9/src/boards/Seeed_XIAO_nRF52840_Sense/pinconfig.c": "18b59846330b3cb6b022128d0c77eeb8823254293dc34c03dcea79177c95549d",
+    "logs/stock-battery-review/nrfx-source/gcc_startup_nrf52840.S": "31624088f748282a0ea7cb578c7ae947886bd4464322aa50a0e76dafa4cbaf21",
+    "logs/stock-battery-review/nrfx-source/nrf_gpio.h": "a73dded2d57f615f74ee5fb049118dcc1d97c17c36da002ec01a1fb2ca708965",
+    "logs/stock-battery-review/nrfx-source/system_nrf52840.c": "0b3a5202635ecca5821c445734b37197ba9f164c5fe1136317a88d547c59277d"
+  },
+  "installed_bootloader_identified": false,
+  "dirty_binary_source_match_proven": false,
+  "electrical_safety_proven": false
+}

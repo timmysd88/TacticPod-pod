@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-31",
+  "qualification": "NO-GO for physical recording",
+  "hardware_accessed": false,
+  "upload_performed": false,
+  "tcb3_normal_build_enabled": false,
+  "array_writes": 0,
+  "status_writes": 0,
+  "erase_operations": 0,
+  "protected_source_hash_checks": {
+    "src/recorder.cpp": true,
+    "src/recorder_format.h": true,
+    "src/tcb3_store.cpp": true,
+    "src/tcb3_store.h": true,
+    "src/tcb3_session.cpp": true,
+    "src/tcb3_session.h": true,
+    "platformio.ini": true,
+    "docs/recorder-v2-format.md": true
+  },
+  "recorded_jedec": "0B4018",
+  "user_marking": "W25Q128",
+  "capacity_bits": 134217728,
+  "capacity_bytes": 16777216,
+  "saved_sfdp_header": "53464450000101FF",
+  "saved_bfpt_revision": "1.0",
+  "exact_model_revision_verified": false,
+  "diagnostic_command": "DIAG ID",
+  "diagnostic_opcodes": [
+    "05",
+    "35",
+    "90",
+    "9F",
+    "5A"
+  ],
+  "diagnostic_transactions": 41,
+  "sfdp_bytes_per_pass": 256,
+  "sfdp_passes": 2,
+  "max_read_data_bytes": 16,
+  "normal_static_ram_bytes": 118992,
+  "normal_program_bytes": 165336,
+  "static_ram_increase_bytes": 552,
+  "writer_protocol_compatibility": "conditional family match; not physical qualification",
+  "remaining": [
+    "B/F revision and provenance",
+    "raw SFDP parameter tables and vendor reference",
+    "SR2 suspend/protection-state review",
+    "held-CS clock gaps and physical IRQ/SPI timing",
+    "power-interruption electrical qualification"
+  ],
+  "sources": [
+    {
+      "title": "XTX XT25F128B Rev 1.2 (2020-03-20), manufacturer-authored distributor mirror",
+      "url": "https://datasheet.lcsc.com/lcsc/2005251034_XTX-XT25F128BSSIGT_C558844.pdf",
+      "review": "web PDF text; no local archive",
+      "sections": [
+        "ID table",
+        "6.14",
+        "6.37",
+        "7.8",
+        "SFDP Tables 3-5"
+      ]
+    },
+    {
+      "title": "XTX XT25F128F Rev 1.2 (2023-05-16), manufacturer-authored distributor mirror",
+      "url": "https://cdn.semikey.com/upload/pdfs/7f/97/7f97109b0187d7aa9ee7c57f038dfe1c.pdf",
+      "review": "web PDF text; no local archive",
+      "sections": [
+        "ID table",
+        "5.1.4",
+        "5.1.5",
+        "5.2.10",
+        "6.6"
+      ]
+    },
+    {
+      "title": "XTX official product catalog",
+      "url": "https://www.xtxtech.com/en/Products/info.aspx?productModel=XT25F128FWOIGT",
+      "review": "catalog read; linked B/F migration notes could not be retrieved"
+    }
+  ],
+  "regression_suites_passed": 15,
+  "new_identity_scenarios_passed": 13,
+  "firmware_elf_sha256": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+  "changed_files": [
+    "src/flash_identity.h",
+    "src/main.cpp",
+    "src/flash_diagnostics.h",
+    "src/serial_console.cpp",
+    "tests/flash_identity/harness.cpp",
+    "tests/flash_identity/recording.cpp",
+    "tests/flash_identity/run_tests.py",
+    "tests/flash_write/SPI.h",
+    "tests/compact/test_resources.py",
+    "docs/phase3b4-flash-qualification.md",
+    "benchmarks/flash-identification/"
+  ]
+}

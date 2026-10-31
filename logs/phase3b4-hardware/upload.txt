@@ -1,0 +1,12 @@
+Upgrading target on COM7 with DFU package C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.pio\build\seeed_xiao_nrf52840_sense\firmware.zip. Flow control is disabled, Single bank, Touch disabled
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+###
+Activating new firmware
+Device programmed.

@@ -1,0 +1,837 @@
+{
+  "start_commands_sent": 1,
+  "automatic_stop_observed": true,
+  "exports": [
+    {
+      "file": "movement-120s-1.tpx3",
+      "bytes": 255424,
+      "sha256": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9"
+    },
+    {
+      "file": "movement-120s-2.tpx3",
+      "bytes": 255424,
+      "sha256": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9"
+    }
+  ],
+  "errors": [],
+  "serial_released": true,
+  "full_allocation_independently_prescanned": false,
+  "before": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xB000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98995 max=100740\nOBS RMC | seen=223 accepted=32 overflow=191 | queue=32/32 high=32 | spacing_us_min=84044 max=116830\nOBS GGA | seen=23 accepted=8 overflow=15 | queue=8/8 high=8 | spacing_us_min=996219 max=1005562\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=0 rejected=0 blocks sealed=0 completed=0\nCOMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=165663324 max_block_step_us=0 max_slice_us=136 max_units=1\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+  },
+  "identity_before": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n",
+  "gps_before": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=3158912 | checksum_ok=43751 | checksum_fail=0 | last_valid_message_age_ms=61\nGPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS fix=NO FIX | lat=50.775298 | lon=0.089974 | position=LAST_KNOWN/UNAVAILABLE | satellites=4 | HDOP=99.99\nGPS speed_km/h=N/A | UTC=19:56:09Z | position_age_ms=364\n",
+  "old_export_archive_match_before_start": true,
+  "started_response": "TCB START scanning; no auto resume state=0 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STARTED state=2 session=12 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n",
+  "first_sector_probe_verified": "STARTED requires exact 0xB000, validated predecessor headers and all 4096 initial-sector bytes FF; inferred from reviewed firmware, not independent raw readback.",
+  "monitor": [
+    {
+      "host_elapsed_s": 1.0310000000026776,
+      "text": "TCB STATUS state=4 session=12 blocks=0 committed=0 offered=114 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=928 error=none programs=1 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 2.077999999994063,
+      "text": "TCB STATUS state=4 session=12 blocks=0 committed=0 offered=231 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=928 error=none programs=1 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 3.0,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=334 rejected=0 blocks sealed=1 completed=1\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=107000 max_block_step_us=54254 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 3.139999999999418,
+      "text": "TCB STATUS state=4 session=12 blocks=1 committed=223 offered=350 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=928 error=none programs=10 max_block_ms=249 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 4.1710000000020955,
+      "text": "TCB STATUS state=4 session=12 blocks=1 committed=223 offered=463 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=928 error=none programs=10 max_block_ms=249 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 5.23399999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=2 committed=445 offered=581 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=929 error=none programs=20 max_block_ms=390 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 6.0310000000026776,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=670 rejected=0 blocks sealed=3 completed=2\nCOMP RAM input=2/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=217896 max_block_step_us=54254 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 6.312000000005355,
+      "text": "TCB STATUS state=6 session=12 blocks=2 committed=445 offered=702 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=929 error=none programs=25 max_block_ms=390 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 7.327999999994063,
+      "text": "TCB STATUS state=4 session=12 blocks=3 committed=667 offered=815 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=929 error=none programs=29 max_block_ms=390 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 8.34299999999348,
+      "text": "TCB STATUS state=2 session=12 blocks=3 committed=667 offered=927 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=929 error=none programs=30 max_block_ms=390 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 9.10899999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=1012 rejected=0 blocks sealed=4 completed=4\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=369413 max_block_step_us=54617 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 9.375,
+      "text": "TCB STATUS state=4 session=12 blocks=4 committed=890 offered=1041 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1063 error=none programs=39 max_block_ms=398 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 10.452999999994063,
+      "text": "TCB STATUS state=2 session=12 blocks=4 committed=890 offered=1161 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1063 error=none programs=45 max_block_ms=398 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 11.452999999994063,
+      "text": "TCB STATUS state=4 session=12 blocks=5 committed=1112 offered=1272 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1063 error=none programs=52 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 12.21799999999348,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=1357 rejected=0 blocks sealed=6 completed=6\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=527139 max_block_step_us=54617 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 12.46799999999348,
+      "text": "TCB STATUS state=2 session=12 blocks=5 committed=1112 offered=1385 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1063 error=none programs=60 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 13.5,
+      "text": "TCB STATUS state=4 session=12 blocks=6 committed=1335 offered=1498 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=64 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 14.562000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=7 committed=1558 offered=1616 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=75 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 15.327999999994063,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=1703 rejected=0 blocks sealed=7 completed=7\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=631569 max_block_step_us=54637 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 15.59299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=7 committed=1558 offered=1731 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=75 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 16.687000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=8 committed=1781 offered=1852 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=87 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 17.71799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=8 committed=1781 offered=1968 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=87 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 18.375,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=2040 rejected=0 blocks sealed=9 completed=9\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=786847 max_block_step_us=54637 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 18.781000000002678,
+      "text": "TCB STATUS state=4 session=12 blocks=9 committed=2004 offered=2085 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=99 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 19.84299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=9 committed=2004 offered=2203 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=99 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 20.889999999999418,
+      "text": "TCB STATUS state=4 session=12 blocks=10 committed=2227 offered=2319 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=111 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 21.421000000002095,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=2379 rejected=0 blocks sealed=10 completed=10\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=889368 max_block_step_us=54637 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 21.937000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=10 committed=2227 offered=2435 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=111 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 22.96799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=11 committed=2450 offered=2550 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=123 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 24.0,
+      "text": "TCB STATUS state=4 session=12 blocks=11 committed=2450 offered=2663 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=123 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 24.531000000002678,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=2724 rejected=0 blocks sealed=12 completed=12\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1044366 max_block_step_us=54637 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 25.046000000002095,
+      "text": "TCB STATUS state=4 session=12 blocks=12 committed=2673 offered=2781 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=134 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 26.156000000002678,
+      "text": "TCB STATUS state=4 session=12 blocks=12 committed=2673 offered=2904 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=134 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 27.21799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=13 committed=2896 offered=3021 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=147 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 27.60899999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=3066 rejected=0 blocks sealed=13 completed=13\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1151022 max_block_step_us=54637 max_slice_us=246 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 28.25,
+      "text": "TCB STATUS state=4 session=12 blocks=13 committed=2896 offered=3136 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=147 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 29.312000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=14 committed=3119 offered=3254 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=159 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 30.34299999999348,
+      "text": "TCB STATUS state=6 session=12 blocks=14 committed=3119 offered=3369 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1148 error=none programs=161 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 30.60899999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=3397 rejected=0 blocks sealed=15 completed=15\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1302905 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 31.437000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=15 committed=3342 offered=3490 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=171 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 32.48399999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=15 committed=3342 offered=3606 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=178 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 33.546000000002095,
+      "text": "TCB STATUS state=4 session=12 blocks=16 committed=3565 offered=3725 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=183 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 33.687000000005355,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=3740 rejected=0 blocks sealed=16 completed=16\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1408768 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 34.625,
+      "text": "TCB STATUS state=4 session=12 blocks=17 committed=3788 offered=3844 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=194 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 35.671000000002095,
+      "text": "TCB STATUS state=4 session=12 blocks=17 committed=3788 offered=3960 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=194 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 36.75,
+      "text": "TCB STATUS state=6 session=12 blocks=17 committed=3788 offered=4079 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=205 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 36.75,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=4079 rejected=0 blocks sealed=18 completed=18\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1562412 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 37.82799999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=18 committed=4011 offered=4199 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=206 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 38.85899999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=19 committed=4234 offered=4314 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=218 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 39.75,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=4413 rejected=0 blocks sealed=19 completed=19\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1668230 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 39.88999999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=19 committed=4234 offered=4428 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=218 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 40.95299999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=20 committed=4457 offered=4546 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=230 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 41.96799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=20 committed=4457 offered=4659 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=230 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 42.796000000002095,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=4750 rejected=0 blocks sealed=21 completed=21\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1818757 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 43.07799999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=21 committed=4680 offered=4782 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=242 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 44.09299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=21 committed=4680 offered=4895 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=242 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 45.13999999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=22 committed=4903 offered=5012 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=253 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 45.796000000002095,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=5083 rejected=0 blocks sealed=22 completed=22\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1926907 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 46.187000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=22 committed=4903 offered=5128 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=253 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 47.21799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=23 committed=5126 offered=5242 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=265 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 48.25,
+      "text": "TCB STATUS state=4 session=12 blocks=23 committed=5126 offered=5357 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=265 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 48.875,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=5425 rejected=0 blocks sealed=24 completed=24\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2078765 max_block_step_us=54637 max_slice_us=249 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 49.26499999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=24 committed=5349 offered=5469 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=276 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 50.32799999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=24 committed=5349 offered=5588 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=276 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 51.35899999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=25 committed=5572 offered=5701 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=287 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 51.88999999999942,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=5760 rejected=0 blocks sealed=25 completed=25\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2185773 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 52.421000000002095,
+      "text": "TCB STATUS state=4 session=12 blocks=25 committed=5572 offered=5820 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=288 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 53.48399999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=26 committed=5795 offered=5937 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=297 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 54.53100000000268,
+      "text": "TCB STATUS state=2 session=12 blocks=26 committed=5795 offered=6054 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=300 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 54.937000000005355,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=6098 rejected=0 blocks sealed=27 completed=27\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2339857 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 55.59299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=27 committed=6018 offered=6171 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=308 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 56.63999999999942,
+      "text": "TCB STATUS state=2 session=12 blocks=27 committed=6018 offered=6288 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=315 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 57.63999999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=28 committed=6241 offered=6399 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=319 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 58.046000000002095,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=6445 rejected=0 blocks sealed=28 completed=28\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2448227 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 58.687000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=29 committed=6464 offered=6515 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=329 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 59.71799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=29 committed=6464 offered=6630 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=329 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 60.76499999999942,
+      "text": "TCB STATUS state=6 session=12 blocks=29 committed=6464 offered=6745 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=337 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 61.046000000002095,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=6778 rejected=0 blocks sealed=30 completed=30\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2601333 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 61.812000000005355,
+      "text": "TCB STATUS state=4 session=12 blocks=30 committed=6687 offered=6862 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=340 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 62.85899999999674,
+      "text": "TCB STATUS state=6 session=12 blocks=30 committed=6687 offered=6977 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1171 error=none programs=351 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 63.85899999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=31 committed=6910 offered=7088 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=351 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 64.15600000000268,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=7122 rejected=0 blocks sealed=31 completed=31\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2709602 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 64.9210000000021,
+      "text": "TCB STATUS state=4 session=12 blocks=32 committed=7133 offered=7207 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=362 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 65.98399999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=32 committed=7133 offered=7324 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=362 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 67.01499999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=33 committed=7356 offered=7439 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=372 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 67.28100000000268,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=7468 rejected=0 blocks sealed=33 completed=33\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2865329 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 68.09299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=33 committed=7356 offered=7559 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=372 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 69.125,
+      "text": "TCB STATUS state=4 session=12 blocks=34 committed=7579 offered=7674 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=383 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 70.125,
+      "text": "TCB STATUS state=4 session=12 blocks=34 committed=7579 offered=7786 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=383 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 70.40600000000268,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=7815 rejected=0 blocks sealed=35 completed=34\nCOMP RAM input=2/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3009018 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 71.1710000000021,
+      "text": "TCB STATUS state=4 session=12 blocks=35 committed=7802 offered=7901 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=394 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 72.20299999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=35 committed=7802 offered=8017 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=394 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 73.26499999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=36 committed=8025 offered=8133 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=405 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 73.40600000000268,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=8148 rejected=0 blocks sealed=36 completed=36\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3126819 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 74.31200000000536,
+      "text": "TCB STATUS state=4 session=12 blocks=36 committed=8025 offered=8250 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=405 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 75.4210000000021,
+      "text": "TCB STATUS state=4 session=12 blocks=37 committed=8248 offered=8374 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=417 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 76.43700000000536,
+      "text": "TCB STATUS state=4 session=12 blocks=37 committed=8248 offered=8486 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=417 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 76.43700000000536,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=8486 rejected=0 blocks sealed=38 completed=37\nCOMP RAM input=2/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3270366 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 77.48399999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=38 committed=8470 offered=8600 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=428 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 78.53100000000268,
+      "text": "TCB STATUS state=6 session=12 blocks=38 committed=8470 offered=8718 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=429 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 79.45299999999406,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=8821 rejected=0 blocks sealed=39 completed=39\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3383912 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 79.59299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=39 committed=8692 offered=8836 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=440 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 80.65600000000268,
+      "text": "TCB STATUS state=6 session=12 blocks=39 committed=8692 offered=8953 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=445 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 81.71799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=40 committed=8914 offered=9071 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=452 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 82.46799999999348,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=9155 rejected=0 blocks sealed=41 completed=40\nCOMP RAM input=2/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3533259 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 82.75,
+      "text": "TCB STATUS state=6 session=12 blocks=40 committed=8914 offered=9186 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=461 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 83.82799999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=41 committed=9137 offered=9306 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=462 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 84.84299999999348,
+      "text": "TCB STATUS state=6 session=12 blocks=41 committed=9137 offered=9418 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=470 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 85.51499999999942,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=9493 rejected=0 blocks sealed=42 completed=42\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3642960 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 85.90600000000268,
+      "text": "TCB STATUS state=4 session=12 blocks=42 committed=9359 offered=9535 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=474 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 86.9210000000021,
+      "text": "TCB STATUS state=6 session=12 blocks=42 committed=9359 offered=9649 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=485 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 87.93700000000536,
+      "text": "TCB STATUS state=4 session=12 blocks=43 committed=9582 offered=9761 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=486 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 88.57799999999406,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=9833 rejected=0 blocks sealed=44 completed=44\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3799768 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 88.96799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=44 committed=9805 offered=9876 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=498 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 90.01499999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=44 committed=9805 offered=9992 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=498 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 91.01499999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=45 committed=10028 offered=10104 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=508 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 91.68700000000536,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=10177 rejected=0 blocks sealed=45 completed=45\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3904998 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 92.09299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=45 committed=10028 offered=10223 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=508 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 93.125,
+      "text": "TCB STATUS state=4 session=12 blocks=46 committed=10251 offered=10339 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=520 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 94.21799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=46 committed=10251 offered=10460 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=520 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 94.73399999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=10516 rejected=0 blocks sealed=47 completed=47\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4059812 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 95.2960000000021,
+      "text": "TCB STATUS state=4 session=12 blocks=47 committed=10474 offered=10579 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=531 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 96.34299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=47 committed=10474 offered=10695 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=531 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 97.35899999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=48 committed=10697 offered=10807 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=543 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 97.73399999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=10850 rejected=0 blocks sealed=48 completed=48\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4162457 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 98.38999999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=48 committed=10697 offered=10922 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=543 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 99.43700000000536,
+      "text": "TCB STATUS state=4 session=12 blocks=49 committed=10920 offered=11039 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=554 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 100.48399999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=49 committed=10920 offered=11154 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=554 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 100.73399999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=11182 rejected=0 blocks sealed=50 completed=50\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4318942 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 101.5460000000021,
+      "text": "TCB STATUS state=4 session=12 blocks=50 committed=11143 offered=11272 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=566 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 102.56200000000536,
+      "text": "TCB STATUS state=4 session=12 blocks=50 committed=11143 offered=11385 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=566 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 103.59299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=51 committed=11366 offered=11500 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=577 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 103.73399999999674,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=11516 rejected=0 blocks sealed=51 completed=51\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4421357 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 104.625,
+      "text": "TCB STATUS state=6 session=12 blocks=51 committed=11366 offered=11614 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=578 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 105.65600000000268,
+      "text": "TCB STATUS state=4 session=12 blocks=52 committed=11589 offered=11729 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=588 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 106.68700000000536,
+      "text": "TCB STATUS state=6 session=12 blocks=52 committed=11589 offered=11843 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=591 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 106.82799999999406,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=11859 rejected=0 blocks sealed=53 completed=53\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4576703 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 107.71799999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=53 committed=11812 offered=11957 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=599 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 108.75,
+      "text": "TCB STATUS state=2 session=12 blocks=53 committed=11812 offered=12072 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=600 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 109.875,
+      "text": "TCB STATUS state=4 session=12 blocks=54 committed=12035 offered=12196 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=612 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 109.875,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=12196 rejected=0 blocks sealed=54 completed=54\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4682136 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 110.95299999999406,
+      "text": "TCB STATUS state=6 session=12 blocks=54 committed=12035 offered=12316 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=620 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 112.0,
+      "text": "TCB STATUS state=4 session=12 blocks=55 committed=12258 offered=12432 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=624 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 112.9210000000021,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=12534 rejected=0 blocks sealed=56 completed=56\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4834993 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 113.0460000000021,
+      "text": "TCB STATUS state=4 session=12 blocks=56 committed=12481 offered=12550 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=635 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 114.07799999999406,
+      "text": "TCB STATUS state=4 session=12 blocks=56 committed=12481 offered=12664 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=635 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 115.09299999999348,
+      "text": "TCB STATUS state=4 session=12 blocks=57 committed=12704 offered=12776 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=647 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 115.96799999999348,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=12872 rejected=0 blocks sealed=57 completed=57\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4940732 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 116.10899999999674,
+      "text": "TCB STATUS state=4 session=12 blocks=57 committed=12704 offered=12889 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=647 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 117.18700000000536,
+      "text": "TCB STATUS state=4 session=12 blocks=58 committed=12927 offered=13009 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=658 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 118.26499999999942,
+      "text": "TCB STATUS state=4 session=12 blocks=58 committed=12927 offered=13128 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=658 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    },
+    {
+      "host_elapsed_s": 119.03100000000268,
+      "text": "COMP STATUS | capturing=1 fault=0\nCOMP records accepted=13214 rejected=0 blocks sealed=59 completed=59\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=5094772 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n"
+    },
+    {
+      "host_elapsed_s": 119.28100000000268,
+      "text": "TCB STATUS state=4 session=12 blocks=59 committed=13150 offered=13241 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=670 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+    }
+  ],
+  "host_elapsed_start_to_stop_s": 121.9369999999908,
+  "stop_notice": "0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=531 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=47 committed=10474 offered=10695 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=531 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=48 committed=10697 offered=10807 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=543 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=10850 rejected=0 blocks sealed=48 completed=48\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4162457 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=4 session=12 blocks=48 committed=10697 offered=10922 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=543 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=49 committed=10920 offered=11039 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=554 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=49 committed=10920 offered=11154 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=554 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=11182 rejected=0 blocks sealed=50 completed=50\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4318942 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=4 session=12 blocks=50 committed=11143 offered=11272 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=566 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=50 committed=11143 offered=11385 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=566 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=51 committed=11366 offered=11500 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=577 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=11516 rejected=0 blocks sealed=51 completed=51\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4421357 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=6 session=12 blocks=51 committed=11366 offered=11614 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=578 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=52 committed=11589 offered=11729 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=588 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=6 session=12 blocks=52 committed=11589 offered=11843 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=591 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=11859 rejected=0 blocks sealed=53 completed=53\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4576703 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=4 session=12 blocks=53 committed=11812 offered=11957 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=599 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=2 session=12 blocks=53 committed=11812 offered=12072 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=600 max_block_ms=480 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=54 committed=12035 offered=12196 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=612 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=12196 rejected=0 blocks sealed=54 completed=54\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4682136 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=6 session=12 blocks=54 committed=12035 offered=12316 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=620 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=55 committed=12258 offered=12432 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=624 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=12534 rejected=0 blocks sealed=56 completed=56\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4834993 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=4 session=12 blocks=56 committed=12481 offered=12550 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=635 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=56 committed=12481 offered=12664 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=635 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=57 committed=12704 offered=12776 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=647 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=12872 rejected=0 blocks sealed=57 completed=57\nCOMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4940732 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=4 session=12 blocks=57 committed=12704 offered=12889 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=647 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=58 committed=12927 offered=13009 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=658 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STATUS state=4 session=12 blocks=58 committed=12927 offered=13128 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=658 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nCOMP STATUS | capturing=1 fault=0\nCOMP records accepted=13214 rejected=0 blocks sealed=59 completed=59\nCOMP RAM input=1/2 output=1/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=5094772 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\nTCB STATUS state=4 session=12 blocks=59 committed=13150 offered=13241 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=670 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STOPPED state=1 session=12 blocks=60 committed=13321 offered=13321 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=681 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n",
+  "settling": "RECORD scan complete. Recording OFF at startup; append position recovered without writes.\r\n",
+  "after": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x39000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98995 max=100740\nOBS RMC | seen=223 accepted=32 overflow=191 | queue=32/32 high=32 | spacing_us_min=84044 max=116830\nOBS GGA | seen=23 accepted=8 overflow=15 | queue=8/8 high=8 | spacing_us_min=996219 max=1005562\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=1 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=13321 rejected=0 blocks sealed=60 completed=60\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=5203505 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=12 blocks=60 committed=13321 offered=13321 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=681 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+  },
+  "final": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x39000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98995 max=100740\nOBS RMC | seen=223 accepted=32 overflow=191 | queue=32/32 high=32 | spacing_us_min=84044 max=116830\nOBS GGA | seen=23 accepted=8 overflow=15 | queue=8/8 high=8 | spacing_us_min=996219 max=1005562\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=1 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=13321 rejected=0 blocks sealed=60 completed=60\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=5288581 max_block_step_us=54637 max_slice_us=264 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=12 blocks=60 committed=13321 offered=13321 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1189 error=none programs=681 max_block_ms=487 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+  },
+  "gps_after": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=3257807 | checksum_ok=45270 | checksum_fail=0 | last_valid_message_age_ms=62\nGPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS fix=NO FIX | lat=50.775233 | lon=0.090087 | position=LAST_KNOWN/UNAVAILABLE | satellites=3 | HDOP=31.36\nGPS speed_km/h=N/A | UTC=19:58:27Z | position_age_ms=21054\n",
+  "identity_after": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n",
+  "status": "complete",
+  "commands": [
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "DIAG ID",
+    "GPS STATUS",
+    "TCB READ",
+    "TCB START",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "TCB STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "TCB READ",
+    "TCB READ",
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "GPS STATUS",
+    "DIAG ID"
+  ]
+}

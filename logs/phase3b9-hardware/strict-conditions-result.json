@@ -1,0 +1,50 @@
+{
+  "start_commands_sent": 0,
+  "recording_started": false,
+  "physical_flash_writes": false,
+  "serial_released": true,
+  "decision": "NO-GO under strict non-FF/address-mismatch abort conditions",
+  "blocker": "Reviewed profile 2 Probe skips non-FF candidates; header scan can move the start beyond 0x2000. No mandatory start-address equality or host confirmation gate before capture/programming.",
+  "reviewed_source_hashes_match": true,
+  "regression_suites_passed": 18,
+  "states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x2000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=99216 max=100807\nOBS RMC | seen=223 accepted=32 overflow=191 | queue=32/32 high=32 | spacing_us_min=82119 max=118016\nOBS GGA | seen=22 accepted=8 overflow=14 | queue=8/8 high=8 | spacing_us_min=997573 max=1001503\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=0 rejected=0 blocks sealed=0 completed=0\nCOMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4653352 max_block_step_us=0 max_slice_us=133 max_units=1\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=30s,256KiB,60s profile=3B8 min=2000 skip=0\n"
+  },
+  "identity": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n",
+  "gps": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=90278 | checksum_ok=1224 | checksum_fail=0 | last_valid_message_age_ms=4\nGPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS fix=VALID | lat=50.775513 | lon=0.089940 | position=CURRENT | satellites=8 | HDOP=1.44\nGPS speed_km/h=3.723 | UTC=17:51:34Z | position_age_ms=4\n",
+  "old_export": {
+    "bytes": 9024,
+    "sha256": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+    "archive_byte_identical": true,
+    "complete": true,
+    "counts": [
+      500,
+      50,
+      5,
+      0
+    ]
+  },
+  "final_states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x2000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=99216 max=100807\nOBS RMC | seen=223 accepted=32 overflow=191 | queue=32/32 high=32 | spacing_us_min=82119 max=118016\nOBS GGA | seen=22 accepted=8 overflow=14 | queue=8/8 high=8 | spacing_us_min=997573 max=1001503\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=0 rejected=0 blocks sealed=0 completed=0\nCOMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=4666585 max_block_step_us=0 max_slice_us=133 max_units=1\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=30s,256KiB,60s profile=3B8 min=2000 skip=0\n"
+  },
+  "full_allocation_independently_prescanned": false,
+  "commands": [
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "DIAG ID",
+    "GPS STATUS",
+    "TCB READ",
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS"
+  ]
+}

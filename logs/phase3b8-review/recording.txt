@@ -1,0 +1,20 @@
+PASS: startup does not write; confirmation cannot be bypassed
+PASS: 100 Hz input, sector rollover, STOP flush, append/reboot and CSV export
+PASS: power interruption: torn marker rejected; prior committed data survives
+PASS: torn session header reserves occupied sector
+PASS: blank header with old payload refuses overwrite
+PASS: denied WEL locks recorder
+PASS: program timeout locks recorder
+PASS: RAM overflow stops and flushes retained samples
+PASS: full area stops before diagnostic sector
+PASS: erase requires fresh explicit confirmation
+PASS: diagnostic/recorder mutual exclusion
+PASS: readback corruption prevents commit
+PASS: wrong JEDEC prevents writes
+PASS: empty session closes safely
+PASS: main loop and command integration: 100 Hz recording with USB disconnected
+PASS: confirmed erase stops before reserved diagnostic sector
+PASS: payload corruption rejected despite valid marker
+PASS: erase timeout lockout
+PASS: quiet after one startup report, late USB scan notice, one-shot DIAG
+PASS: DIAG refused during recording/export/fault/diagnostic ownership

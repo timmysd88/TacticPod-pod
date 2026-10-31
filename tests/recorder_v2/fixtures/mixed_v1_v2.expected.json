@@ -1,0 +1,213 @@
+{
+  "issues": [],
+  "schema": "tacticpod.decode/1",
+  "sessions": [
+    {
+      "footer": {
+        "committed_samples": 2,
+        "dropped_samples": 0,
+        "missed_deadlines": 0
+      },
+      "metadata": {
+        "accel_ug_per_lsb": 61,
+        "format_major": 1,
+        "format_minor": 0,
+        "gyro_udps_per_lsb": 8750,
+        "imu_rate_millihz": 100000,
+        "session_start_ms": 4294967040
+      },
+      "records": [
+        {
+          "axes_raw": [
+            1,
+            -2,
+            32767,
+            -32768,
+            0,
+            100
+          ],
+          "schema_version": 0,
+          "timestamp_ms": 4294967280,
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            1,
+            -2,
+            32767,
+            -32768,
+            0,
+            100
+          ],
+          "schema_version": 0,
+          "timestamp_ms": 16,
+          "type": "IMU_RAW",
+          "type_id": 1
+        }
+      ],
+      "sectors": [
+        0
+      ],
+      "session_id": 1,
+      "status": "closed",
+      "version": 1
+    },
+    {
+      "footer": {
+        "close_reason": 0,
+        "committed_by_type": [
+          "1",
+          "2",
+          "1",
+          "1"
+        ],
+        "dropped_by_type": [
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "first_record_us": "4294967290",
+        "flags": 0,
+        "gps_checksum_failures": "0",
+        "invalid_rmc_observations": "1",
+        "last_record_us": "4295067310",
+        "missed_imu_intervals": "0",
+        "stop_us": "4295067410"
+      },
+      "metadata": {
+        "accel_range_mg": 2000,
+        "accel_ug_per_lsb": 61,
+        "axis_convention": 1,
+        "boot_uuid_hex": "202122232425262728292a2b2c2d2e2f",
+        "calibration": 0,
+        "device_id_hex": "0102030405060708",
+        "extensions": [],
+        "firmware_sha256": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "format_major": 2,
+        "format_minor": 0,
+        "gga_epoch_divisor": 10,
+        "gps_firmware": "SPG 5.10",
+        "gps_model": "MAX-M10S",
+        "gps_period_us": 100000,
+        "gps_profile_checked_us": "1000000",
+        "gps_profile_state": 1,
+        "gyro_range_mdps": 245000,
+        "gyro_udps_per_lsb": 8750,
+        "imu_model": "LSM6DS3TR-C",
+        "imu_odr_millihz": 104000,
+        "imu_rate_millihz": 100000,
+        "required_features": 31,
+        "session_start_us": "4294967200",
+        "session_uuid_hex": "000102030405060708090a0b0c0d0e0f",
+        "timestamp_basis": 1,
+        "uart_baud": 38400
+      },
+      "records": [
+        {
+          "axes_raw": [
+            0,
+            0,
+            0,
+            -1,
+            1,
+            2
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4294967290",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 359.99999,
+          "fields": {
+            "course_e5_deg": 35999999,
+            "latitude_e7": 507752560,
+            "longitude_e7": -900030,
+            "speed_mm_s": 1234
+          },
+          "fix_valid": true,
+          "mode": "A",
+          "position": {
+            "latitude_deg": 50.775256,
+            "longitude_deg": -0.090003
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 1.234,
+          "talker": "GN",
+          "timestamp_us": "4294967300",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2026-10-30",
+            "time_of_day_ms": 58460000
+          },
+          "validity_mask": 127
+        },
+        {
+          "altitude_msl_mm": -1200,
+          "date_is_associated": true,
+          "fix_quality": 1,
+          "geoid_separation_mm": 45000,
+          "hdop": 1.28,
+          "satellites_used": 7,
+          "schema_version": 1,
+          "talker": "GN",
+          "timestamp_us": "4294967310",
+          "type": "GPS_GGA_QUALITY",
+          "type_id": 3,
+          "utc": {
+            "date": "2026-10-30",
+            "time_of_day_ms": 58460000
+          },
+          "validity_mask": 63
+        },
+        {
+          "course_deg": null,
+          "fields": {
+            "course_e5_deg": 35999999,
+            "latitude_e7": 507752560,
+            "longitude_e7": -900030,
+            "speed_mm_s": 1234
+          },
+          "fix_valid": false,
+          "mode": "A",
+          "position": null,
+          "receiver_status": "V",
+          "schema_version": 1,
+          "speed_m_s": null,
+          "talker": "GN",
+          "timestamp_us": "4295067300",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2026-10-30",
+            "time_of_day_ms": 58460000
+          },
+          "validity_mask": 125
+        },
+        {
+          "argument": 7,
+          "code": 5,
+          "count": 1,
+          "detail": "18446744073709551614",
+          "schema_version": 1,
+          "severity": 1,
+          "stream": 2,
+          "timestamp_us": "4295067310",
+          "type": "EVENT",
+          "type_id": 4
+        }
+      ],
+      "sectors": [
+        4096,
+        8192
+      ],
+      "session_id": 2,
+      "status": "closed",
+      "version": 2
+    }
+  ]
+}

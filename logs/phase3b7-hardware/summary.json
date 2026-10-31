@@ -1,0 +1,52 @@
+{
+  "result": "PASS",
+  "hardware_recording_count": 1,
+  "capture_auto_stopped": true,
+  "erase_commands": 0,
+  "retries": 0,
+  "export_files_identical": true,
+  "export_bytes": 9024,
+  "export_sha256": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+  "counts": [
+    500,
+    50,
+    5,
+    0
+  ],
+  "lost": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "missed_deadlines": 0,
+  "crc_failures": 0,
+  "incomplete_writes": 0,
+  "programs": 23,
+  "max_committed_address": "0x001FFF",
+  "write_fence_exclusive": "0x010000",
+  "diagnostic_sector_targeted": false,
+  "independent_outside_fence_byte_comparison_or_bus_trace": false,
+  "max_spi_service_us": 1108,
+  "max_store_block_ms": 369,
+  "max_compression_slice_us": 219,
+  "max_compression_block_step_us": 53859,
+  "record_metadata_to_stop_us": 5002598,
+  "final_record": "STOPPED; next_sector=0x2000",
+  "final_obs": "OFF",
+  "final_comp": "OFF; fault=0; queues empty",
+  "final_tcb": "Idle; bounded single-session build remains installed",
+  "serial_released": true,
+  "next_test_recommendation": "GO to prepare a separately reviewed bounded 30-second append-only test; no longer recording with current firmware",
+  "evidence_sha256": {
+    "blank-before.tpx3": "2a4cc2c464274ada0b359bab7f7270724f658f1339798de935bab315e35c4888",
+    "first-write-1.tpx3": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+    "first-write-2.tpx3": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+    "first-write.v2wire": "85b0c895d6a6149c94a2e10b4f95545de3b3c979995cb68c72ced3a84588e0de",
+    "preflight-transcript.txt": "80e5d39efe25e7b643e5a26ccdd1b9a7271fa7243cbb8513125ec7fede01d5d8",
+    "record-transcript.txt": "fd416de7686ce73e87297fdd2d3c2dc1f8f397b9dd298ec0e06802b40464a191",
+    "recovered-recording-image.bin": "8bf910507bac630695a28b2b7c42a9a34d0d06ebda9a30016cc82d0a898dc1bc",
+    "startup.txt": "85297d0485fb75bf5019b301d12d3d2b8820adedd532f8b82f619db5ee7f2941",
+    "upload.txt": "df0822e7987818c92ac25e4a449ec88b14dae8a26ebc97b88c2e4c9e77116256"
+  }
+}

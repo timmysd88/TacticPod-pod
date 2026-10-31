@@ -1,0 +1,7 @@
+{
+  "status": "Capture, export and independent decoding complete; see summary.json and REPORT.md",
+  "recording_started": true,
+  "start_commands_sent": 1,
+  "automatic_stop": true,
+  "serial_released": true
+}

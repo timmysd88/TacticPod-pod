@@ -1,0 +1,291 @@
+{
+  "verified": true,
+  "serial_released": true,
+  "new_recording_started": false,
+  "states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x3C000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=1110 rejected=0 blocks sealed=5 completed=5\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=1959420 max_block_step_us=53605 max_slice_us=298 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=58 blocks=5 committed=1110 offered=1110 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1001 error=none programs=43 max_block_ms=369 reusable duration_s=10 drain_s=60 lock=0\n"
+  },
+  "battery": "BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=3714 filtered_mV=3843 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000\n",
+  "gps": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=135123 | checksum_ok=1866 | checksum_fail=1 | last_valid_message_age_ms=5\nGPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS fix=VALID | lat=50.775322 | lon=0.090163 | position=CURRENT | satellites=9 | HDOP=0.89\nGPS speed_km/h=0.519 | UTC=22:24:51Z | position_age_ms=5\n",
+  "export_bytes": 268864,
+  "export_sha256": "92708b9d73289781ba296fde11afe6498d433dc34aa2f3ff75ebae95f28ff6ac",
+  "previous_image_unchanged": true,
+  "inventory": [
+    {
+      "session_id": 1,
+      "sectors": [
+        0,
+        4096
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 116890708,
+        "offered": [
+          500,
+          50,
+          5,
+          0
+        ],
+        "committed": [
+          500,
+          50,
+          5,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    },
+    {
+      "session_id": 3,
+      "sectors": [
+        8192,
+        12288,
+        16384,
+        20480,
+        24576,
+        28672,
+        32768,
+        36864,
+        40960
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 79294225,
+        "offered": [
+          3000,
+          300,
+          30,
+          0
+        ],
+        "committed": [
+          3000,
+          300,
+          30,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    },
+    {
+      "session_id": 12,
+      "sectors": [
+        45056,
+        49152,
+        53248,
+        57344,
+        61440,
+        65536,
+        69632,
+        73728,
+        77824,
+        81920,
+        86016,
+        90112,
+        94208,
+        98304,
+        102400,
+        106496,
+        110592,
+        114688,
+        118784,
+        122880,
+        126976,
+        131072,
+        135168,
+        139264,
+        143360,
+        147456,
+        151552,
+        155648,
+        159744,
+        163840,
+        167936,
+        172032,
+        176128,
+        180224,
+        184320,
+        188416,
+        192512,
+        196608,
+        200704,
+        204800,
+        208896,
+        212992,
+        217088,
+        221184,
+        225280,
+        229376
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 4101236647,
+        "offered": [
+          12001,
+          1200,
+          120,
+          0
+        ],
+        "committed": [
+          12001,
+          1200,
+          120,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    },
+    {
+      "session_id": 58,
+      "sectors": [
+        233472,
+        237568,
+        241664
+      ],
+      "footer": {
+        "reason": 0,
+        "stop_us": 129218465,
+        "offered": [
+          1000,
+          100,
+          10,
+          0
+        ],
+        "committed": [
+          1000,
+          100,
+          10,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      }
+    }
+  ],
+  "verification": {
+    "session_id": 58,
+    "counts": [
+      1000,
+      100,
+      10,
+      0
+    ],
+    "elapsed_us": 10002992,
+    "sectors": [
+      "0x39000",
+      "0x3a000",
+      "0x3b000"
+    ],
+    "allocated_start": "0x39000",
+    "allocated_end": "0x3bfff",
+    "spacing": {
+      "1": {
+        "count": 1000,
+        "min_us": 9270,
+        "max_us": 10926,
+        "observed_hz": 100.00592627711272
+      },
+      "2": {
+        "count": 100,
+        "min_us": 86612,
+        "max_us": 115886,
+        "observed_hz": 10.00549089212292
+      },
+      "3": {
+        "count": 10,
+        "min_us": 998987,
+        "max_us": 1000881,
+        "observed_hz": 1.000033223325975
+      }
+    },
+    "rmc_fix_valid": 100,
+    "previous_prefix_unchanged": true,
+    "complete": true,
+    "after_sha256": "92708b9d73289781ba296fde11afe6498d433dc34aa2f3ff75ebae95f28ff6ac",
+    "note": "Cadence/counts do not by themselves prove valid advancing GPS navigation or electrical safety."
+  },
+  "footer": {
+    "reason": 0,
+    "stop_us": 129218465,
+    "offered": [
+      1000,
+      100,
+      10,
+      0
+    ],
+    "committed": [
+      1000,
+      100,
+      10,
+      0
+    ],
+    "lost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rejected": 0,
+    "crc_failures": 0,
+    "incomplete_writes": 0,
+    "full": 0,
+    "missed": 0
+  },
+  "metadata": {
+    "start_us": 119215473,
+    "device_id": 1047801283069882557,
+    "availability_flags": 1,
+    "clock_hz": 1000000,
+    "imu_hz": 100,
+    "imu_odr_hz": 104,
+    "accel_ug_per_lsb": 61,
+    "gyro_udps_per_lsb": 8750,
+    "rmc_hz": 10,
+    "gga_hz": 1,
+    "uart_baud": 38400,
+    "block_us": 2000000,
+    "max_frame": 8228,
+    "build_id_hex": null
+  }
+}

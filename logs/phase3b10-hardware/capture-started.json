@@ -1,0 +1,5 @@
+{
+  "session": 12,
+  "expected_capture_seconds": 120,
+  "started_response": "TCB START scanning; no auto resume state=0 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\nTCB STARTED state=2 session=12 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=120s,1MiB,180s profile=3B10 exact=B000 skip=0\n"
+}

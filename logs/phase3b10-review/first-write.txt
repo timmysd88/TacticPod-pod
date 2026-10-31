@@ -1,0 +1,11 @@
+PASS: disconnected five-second capture and TPX3 export (12288, 12288, 39, 0, 1, 0, 14424, 5000088, 0, 1, 544, 13504, 2218688, 0, 0, 0)
+PASS: unexpected SR2 refuses start (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: occupied final test sector refuses start (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: occupied sector beyond fence refuses start (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: OBS active refuses start (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: no-slack finalisation deadline faults (0, 0, 0, 1, 0, 0, 0, 5000100, 2, 0, 0, 0, 2218688, 0, 0, 0)
+PASS: missed acquisition stops (4096, 4096, 2, 0, 1, 1, 0, 100, 3, 0, 544, 0, 2218688, 0, 0, 0)
+PASS: held-CS deadline abort faults and never retries (4096, 64, 1, 1, 0, 0, 144, 15000000, 2, 1, 544, 0, 2218688, 0, 0, 0)
+PASS: capture deadline through TIMER4 low-word rollover (12288, 12288, 39, 0, 1, 0, 14400, 5000088, 0, 1, 544, 13504, 4291119107, 0, 0, 0)
+PASS: production engine fills all 16 allowed sectors, reports full, finalises within fence; all later bytes unchanged
+PASS: actual USB console and diagnostic entry refuse all erases/V1 writes; 20-second disconnected boot never records

@@ -1,0 +1,8538 @@
+{
+  "container_version": "3.2.0",
+  "export_issues": [],
+  "issues": [],
+  "legacy": {
+    "issues": [],
+    "schema": "tacticpod.decode/1",
+    "sessions": []
+  },
+  "schema": "tacticpod.tcb3.decode/1",
+  "sessions": [
+    {
+      "container_version": "3.2.0",
+      "footer": {
+        "committed": [
+          "501",
+          "50",
+          "5",
+          "0"
+        ],
+        "crc_failures": 0,
+        "full": 0,
+        "incomplete_writes": 0,
+        "lost": [
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "missed": 0,
+        "offered": [
+          "501",
+          "50",
+          "5",
+          "0"
+        ],
+        "reason": 0,
+        "rejected": 0,
+        "stop_us": "7218776"
+      },
+      "frames": [
+        {
+          "bytes": 2837,
+          "sequence": 0
+        },
+        {
+          "bytes": 2827,
+          "sequence": 1
+        },
+        {
+          "bytes": 1444,
+          "sequence": 2
+        }
+      ],
+      "issues": [],
+      "metadata": {
+        "accel_ug_per_lsb": 61,
+        "availability_flags": 0,
+        "block_us": 2000000,
+        "build_id_hex": null,
+        "clock_hz": 1000000,
+        "device_id": null,
+        "gga_hz": 1,
+        "gyro_udps_per_lsb": 8750,
+        "imu_hz": 100,
+        "imu_odr_hz": 104,
+        "max_frame": 8228,
+        "rmc_hz": 10,
+        "start_us": "2218688",
+        "uart_baud": 38400
+      },
+      "records": [
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2218788",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 0
+          },
+          "validity_mask": 63
+        },
+        {
+          "altitude_msl_mm": 545400,
+          "date_is_associated": true,
+          "fix_quality": 1,
+          "geoid_separation_mm": 46900,
+          "hdop": 0.9,
+          "satellites_used": 8,
+          "schema_version": 1,
+          "talker": "GN",
+          "timestamp_us": "2218788",
+          "type": "GPS_GGA_QUALITY",
+          "type_id": 3,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 0
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -19956,
+            10080,
+            3748,
+            -9721,
+            -24083,
+            -14166
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2218788",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28806,
+            -9594,
+            27780,
+            -26468,
+            -32164,
+            15960
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2228052",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17142,
+            -31979,
+            -26844,
+            19495,
+            -10216,
+            7517
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2238004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26225,
+            -8680,
+            -19005,
+            29540,
+            -28560,
+            21432
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2248056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23909,
+            -22710,
+            20600,
+            20507,
+            18394,
+            26401
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2258008",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28896,
+            -6080,
+            6266,
+            31983,
+            -13592,
+            9656
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2268060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26764,
+            -776,
+            -17216,
+            392,
+            18267,
+            -10693
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2278096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18116,
+            15181,
+            -22017,
+            -14021,
+            5164,
+            -20321
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2288072",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30593,
+            2304,
+            24196,
+            6328,
+            -11619,
+            2654
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2298096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -29671,
+            18518,
+            -5805,
+            17782,
+            -25675,
+            25055
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2308076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26788,
+            -4740,
+            -28275,
+            -27195,
+            -15179,
+            -7496
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2318056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2318736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 100
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            22904,
+            22313,
+            19996,
+            25296,
+            -11678,
+            10436
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2328036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29049,
+            15174,
+            -2303,
+            26115,
+            17988,
+            -32195
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2338016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            22472,
+            -21390,
+            -16153,
+            6529,
+            23065,
+            -13987
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2348096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7181,
+            32711,
+            -3904,
+            20402,
+            19770,
+            -19406
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2358076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15971,
+            14890,
+            -26467,
+            12311,
+            -4959,
+            15784
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2368056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26590,
+            15107,
+            -6147,
+            -20509,
+            18893,
+            7419
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2378036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9622,
+            9793,
+            -1724,
+            -3324,
+            30141,
+            12548
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2388016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6315,
+            10724,
+            23326,
+            -10583,
+            23733,
+            -7385
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2398096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15369,
+            -19571,
+            -20487,
+            -14234,
+            -9077,
+            -7726
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2408076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11901,
+            4293,
+            -4393,
+            3458,
+            -19796,
+            -17221
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2418056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2418736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 200
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -31868,
+            22771,
+            -6100,
+            19479,
+            14366,
+            -2708
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2428036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15762,
+            29249,
+            -380,
+            -27641,
+            -7899,
+            -29506
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2438016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -18016,
+            4822,
+            22045,
+            -8201,
+            27480,
+            2634
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2448096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -21676,
+            -8645,
+            26566,
+            7889,
+            24650,
+            -764
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2458076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16805,
+            15039,
+            -19818,
+            -9097,
+            25612,
+            5233
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2468056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14918,
+            -15056,
+            -29345,
+            -23379,
+            32314,
+            -16323
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2478036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24701,
+            29005,
+            -23575,
+            -12952,
+            31059,
+            -12258
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2488016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8067,
+            -1093,
+            -12976,
+            -31229,
+            26498,
+            26687
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2498096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10654,
+            26206,
+            28714,
+            26373,
+            -23252,
+            -10575
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2508076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19736,
+            23144,
+            -6605,
+            23170,
+            8410,
+            -878
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2518056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2518736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 300
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            30179,
+            -29827,
+            5296,
+            7997,
+            -27303,
+            8670
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2528036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26701,
+            9660,
+            2005,
+            -3825,
+            -29148,
+            -17093
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2538016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31189,
+            -883,
+            -24888,
+            -26812,
+            -12425,
+            2322
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2548096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5695,
+            10883,
+            -29930,
+            19950,
+            -7519,
+            -16948
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2558076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28627,
+            10934,
+            -7750,
+            16731,
+            25695,
+            1313
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2568056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16569,
+            -17829,
+            -29436,
+            -19664,
+            5748,
+            17579
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2578036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            31386,
+            5518,
+            -6656,
+            -4387,
+            -4421,
+            -14792
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2588016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11000,
+            -2944,
+            -5836,
+            -161,
+            15706,
+            6816
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2598096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -3395,
+            7818,
+            -21052,
+            12940,
+            -10006,
+            26624
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2608076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20961,
+            1753,
+            20322,
+            -4506,
+            -9559,
+            13988
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2618056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2618736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 400
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            10832,
+            -15706,
+            10905,
+            -15587,
+            9751,
+            -12271
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2628036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30190,
+            21313,
+            28747,
+            2245,
+            -29047,
+            29159
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2638016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26077,
+            -14766,
+            -32644,
+            18944,
+            14999,
+            -32103
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2648096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -12894,
+            -23272,
+            32200,
+            19701,
+            -18319,
+            12322
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2658076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20415,
+            -24674,
+            -3571,
+            19059,
+            24449,
+            31051
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2668056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16286,
+            -7412,
+            31278,
+            -8424,
+            -5405,
+            10269
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2678036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11835,
+            10920,
+            4616,
+            3272,
+            -621,
+            -14197
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2688016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10934,
+            -5853,
+            4836,
+            19171,
+            19562,
+            -18302
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2698096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6533,
+            -3004,
+            5640,
+            -17932,
+            -13502,
+            7898
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2708076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17073,
+            30476,
+            580,
+            9167,
+            16850,
+            29923
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2718056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2718736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 500
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            20441,
+            -22804,
+            26239,
+            4955,
+            27169,
+            27262
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2728036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -32257,
+            24230,
+            13493,
+            3965,
+            -599,
+            -10489
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2738016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -614,
+            26089,
+            -14353,
+            29401,
+            12151,
+            12661
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2748096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22344,
+            24271,
+            11528,
+            -31128,
+            -12044,
+            16507
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2758076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18899,
+            8897,
+            -18068,
+            -237,
+            5146,
+            26522
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2768056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23336,
+            22128,
+            25617,
+            -10544,
+            22836,
+            -18344
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2778036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7086,
+            14562,
+            -7083,
+            16382,
+            1936,
+            -12520
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2788016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32696,
+            -17465,
+            -24696,
+            13797,
+            -6245,
+            4432
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2798096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30402,
+            -9329,
+            -18096,
+            32686,
+            8806,
+            12045
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2808076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -21298,
+            -31754,
+            31777,
+            -5326,
+            -17015,
+            25598
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2818056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2818736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 600
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            32491,
+            8713,
+            -27003,
+            -23709,
+            29650,
+            -4991
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2828036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10841,
+            -6453,
+            -22807,
+            -7605,
+            -1460,
+            2413
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2838016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            5884,
+            -16895,
+            4894,
+            26832,
+            26246,
+            -11896
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2848096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32547,
+            -21807,
+            -32287,
+            11961,
+            22040,
+            -32280
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2858076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20802,
+            -22468,
+            19453,
+            13228,
+            -1834,
+            3765
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2868056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9202,
+            -6762,
+            12255,
+            20003,
+            1602,
+            -3069
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2878036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5438,
+            20358,
+            19902,
+            -10370,
+            17420,
+            -15679
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2888016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24498,
+            23612,
+            17315,
+            13504,
+            26307,
+            12265
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2898096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10683,
+            5595,
+            -2065,
+            2467,
+            3849,
+            -27526
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2908076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            2808,
+            -4027,
+            -29129,
+            28667,
+            17643,
+            25318
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2918056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "2918736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 700
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            27289,
+            10194,
+            -2675,
+            26530,
+            26655,
+            10992
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2928036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            22391,
+            -15207,
+            -14197,
+            -5273,
+            -6301,
+            -6346
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2938016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8677,
+            -1460,
+            -22847,
+            15795,
+            -32211,
+            -28707
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2948096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23950,
+            1755,
+            5200,
+            9188,
+            12135,
+            -9201
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2958076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17827,
+            -1444,
+            6106,
+            31116,
+            20730,
+            -14252
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2968056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8702,
+            -30484,
+            -28653,
+            -10991,
+            28483,
+            29163
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2978036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17198,
+            15224,
+            24972,
+            30061,
+            -24363,
+            12204
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2988016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            31868,
+            -26946,
+            31387,
+            27892,
+            -11762,
+            5913
+          ],
+          "schema_version": 1,
+          "timestamp_us": "2998096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -9408,
+            12256,
+            3689,
+            -30867,
+            -23188,
+            24749
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3008076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30451,
+            -19364,
+            -24186,
+            -11802,
+            28837,
+            -3963
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3018056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3018736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 800
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            23342,
+            -18611,
+            24990,
+            -32507,
+            15338,
+            -18182
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3028036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            508,
+            12345,
+            5921,
+            18115,
+            28649,
+            19142
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3038016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25786,
+            4061,
+            -25870,
+            -29988,
+            23639,
+            -15679
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3048096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -9571,
+            -19017,
+            27526,
+            31057,
+            -15302,
+            -4248
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3058076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20425,
+            30012,
+            -27654,
+            2259,
+            30251,
+            4256
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3068056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17088,
+            19450,
+            -6917,
+            1776,
+            30261,
+            -30087
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3078036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            21705,
+            31254,
+            21152,
+            29267,
+            -19406,
+            22489
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3088016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16885,
+            27885,
+            29576,
+            898,
+            -31572,
+            -29608
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3098096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22208,
+            26555,
+            27861,
+            19156,
+            25510,
+            -11079
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3108076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -534,
+            8339,
+            23513,
+            20123,
+            -16410,
+            13244
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3118056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3118736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 900
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            32244,
+            12306,
+            22932,
+            -22864,
+            -1399,
+            17731
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3128036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14806,
+            18577,
+            -10923,
+            -15637,
+            14870,
+            -21503
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3138016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9519,
+            -16958,
+            2841,
+            -6103,
+            31043,
+            1571
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3148096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            12180,
+            -30725,
+            6014,
+            -29718,
+            10528,
+            27577
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3158076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            2121,
+            -20834,
+            28257,
+            -24393,
+            9083,
+            7633
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3168056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22499,
+            29534,
+            -28023,
+            11717,
+            21897,
+            16242
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3178036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            31745,
+            -15280,
+            -21532,
+            -15723,
+            -13256,
+            16899
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3188016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15032,
+            -2803,
+            20288,
+            2951,
+            29373,
+            -21309
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3198096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28643,
+            -26808,
+            17808,
+            -29043,
+            12601,
+            9046
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3208076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23580,
+            4526,
+            -19946,
+            30602,
+            -889,
+            -26213
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3218056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3218736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1000
+          },
+          "validity_mask": 63
+        },
+        {
+          "altitude_msl_mm": 545400,
+          "date_is_associated": true,
+          "fix_quality": 1,
+          "geoid_separation_mm": 46900,
+          "hdop": 0.9,
+          "satellites_used": 8,
+          "schema_version": 1,
+          "talker": "GN",
+          "timestamp_us": "3218736",
+          "type": "GPS_GGA_QUALITY",
+          "type_id": 3,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1000
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -10684,
+            22502,
+            28168,
+            -5631,
+            8595,
+            -29889
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3228036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29958,
+            30982,
+            7562,
+            -26082,
+            30156,
+            25548
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3238016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23577,
+            -22044,
+            13596,
+            2364,
+            27531,
+            6190
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3248096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27575,
+            -28926,
+            12224,
+            -17799,
+            9353,
+            -11051
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3258076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            21658,
+            -6648,
+            25994,
+            -26118,
+            -12875,
+            -23549
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3268056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15548,
+            -9976,
+            -26788,
+            -18975,
+            -22770,
+            -25106
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3278036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            11449,
+            19977,
+            12277,
+            -9676,
+            26445,
+            -24395
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3288016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26186,
+            -1153,
+            -17504,
+            -20200,
+            -389,
+            18521
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3298096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            1850,
+            -320,
+            -219,
+            18223,
+            25555,
+            -2241
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3308076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8601,
+            -19556,
+            -19512,
+            20486,
+            -5510,
+            -14875
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3318056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3318736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1100
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -9265,
+            -21357,
+            4479,
+            -12090,
+            -8724,
+            13516
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3328036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23705,
+            31085,
+            18851,
+            -85,
+            -19908,
+            3525
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3338016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19088,
+            30237,
+            -19514,
+            -17162,
+            13686,
+            4645
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3348096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13747,
+            -18902,
+            885,
+            7750,
+            -18760,
+            29074
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3358076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13313,
+            22816,
+            14610,
+            -22615,
+            21739,
+            -24230
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3368056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23781,
+            -17735,
+            28939,
+            3520,
+            27169,
+            -26980
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3378036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29979,
+            5550,
+            3087,
+            19141,
+            -24070,
+            -21074
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3388016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -9276,
+            -7551,
+            14365,
+            31838,
+            -30553,
+            16247
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3398096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10306,
+            -29803,
+            30073,
+            -1417,
+            -27294,
+            6598
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3408076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            12907,
+            -29070,
+            -25621,
+            28582,
+            -20879,
+            20933
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3418056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3418736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1200
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            4652,
+            -8694,
+            -3113,
+            443,
+            13841,
+            18452
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3428036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31726,
+            -7085,
+            31761,
+            -8817,
+            -22823,
+            -15297
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3438016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -3227,
+            -5736,
+            16501,
+            19247,
+            -3204,
+            -9856
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3448096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            855,
+            32333,
+            1708,
+            -8209,
+            4329,
+            24841
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3458076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17963,
+            -10166,
+            23974,
+            535,
+            -25793,
+            20055
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3468056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            27758,
+            30391,
+            -26190,
+            -12768,
+            13588,
+            -30666
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3478036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6263,
+            -8170,
+            19002,
+            6066,
+            26102,
+            21879
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3488016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28065,
+            31779,
+            -28788,
+            -14093,
+            10295,
+            24215
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3498096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -16461,
+            30603,
+            13884,
+            -10050,
+            22365,
+            -10822
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3508076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7805,
+            -9816,
+            -3337,
+            -31527,
+            -26671,
+            5323
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3518056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3518736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1300
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            9635,
+            -29507,
+            21743,
+            -184,
+            28069,
+            -606
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3528036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19653,
+            -24721,
+            22044,
+            24142,
+            -9343,
+            12930
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3538016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -1549,
+            -30097,
+            -22519,
+            -4936,
+            23576,
+            -6843
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3548096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28942,
+            22403,
+            18668,
+            1159,
+            10175,
+            4627
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3558076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19204,
+            14208,
+            24624,
+            -2021,
+            -13073,
+            -29062
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3568056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19372,
+            -3373,
+            10944,
+            18014,
+            -547,
+            -1984
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3578036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7122,
+            -17254,
+            -20812,
+            -847,
+            26225,
+            20292
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3588016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30002,
+            -9590,
+            21295,
+            -12931,
+            13631,
+            29766
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3598096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11600,
+            23576,
+            9357,
+            -27464,
+            3919,
+            -3460
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3608076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11704,
+            20883,
+            -12751,
+            -11320,
+            14808,
+            -3030
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3618056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3618736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1400
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            22842,
+            -22473,
+            -1386,
+            -21382,
+            11837,
+            6852
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3628036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20192,
+            -28058,
+            10100,
+            7951,
+            23527,
+            -18110
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3638016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4400,
+            17279,
+            -8438,
+            22931,
+            -7981,
+            -19542
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3648096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -1176,
+            21782,
+            252,
+            -12557,
+            19697,
+            -26367
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3658076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26370,
+            30579,
+            9278,
+            8839,
+            26021,
+            32026
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3668056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20322,
+            -22113,
+            28928,
+            -14057,
+            9729,
+            13830
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3678036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18370,
+            11638,
+            27807,
+            8834,
+            13727,
+            -759
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3688016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7365,
+            21098,
+            25346,
+            -12407,
+            -27875,
+            -25243
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3698096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26118,
+            5630,
+            12269,
+            -19088,
+            -30555,
+            25438
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3708076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8198,
+            2852,
+            30767,
+            -29326,
+            11,
+            29750
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3718056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3718736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1500
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            20990,
+            2558,
+            -19016,
+            -26561,
+            16745,
+            11298
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3728036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26107,
+            26559,
+            8952,
+            9724,
+            -7612,
+            8542
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3738016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7977,
+            -3440,
+            24858,
+            -22158,
+            31886,
+            -29718
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3748096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27153,
+            14279,
+            -1552,
+            4482,
+            31798,
+            -24677
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3758076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24751,
+            -15648,
+            27060,
+            -18967,
+            16125,
+            -3454
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3768056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            15381,
+            -26135,
+            32231,
+            21756,
+            -19008,
+            -7211
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3778036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            19358,
+            20576,
+            24045,
+            -530,
+            -122,
+            12253
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3788016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30709,
+            11199,
+            -12475,
+            24492,
+            -6678,
+            930
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3798096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28035,
+            5416,
+            2664,
+            24194,
+            1977,
+            1852
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3808076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -597,
+            480,
+            3755,
+            6915,
+            -22045,
+            -30695
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3818056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3818736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1600
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -29803,
+            10412,
+            -23867,
+            19175,
+            -6139,
+            15517
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3828036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13213,
+            21543,
+            25798,
+            -1831,
+            9535,
+            -26405
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3838016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20204,
+            -1373,
+            18331,
+            624,
+            31505,
+            26725
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3848096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30228,
+            2625,
+            -4747,
+            3020,
+            18287,
+            -5283
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3858076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20106,
+            -25546,
+            17844,
+            -20857,
+            13400,
+            7502
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3868056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            5242,
+            -27524,
+            542,
+            30198,
+            -3453,
+            -23943
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3878036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23806,
+            -23705,
+            -21879,
+            21757,
+            -18934,
+            11413
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3888016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18264,
+            -17203,
+            -24757,
+            -17963,
+            7966,
+            -30153
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3898096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            12897,
+            -2877,
+            2559,
+            -13672,
+            -5600,
+            5214
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3908076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10258,
+            23585,
+            -7798,
+            -18058,
+            22968,
+            23510
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3918056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "3918736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1700
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            514,
+            -183,
+            -28317,
+            4569,
+            6848,
+            -7062
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3928036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8778,
+            8167,
+            -10875,
+            28643,
+            13594,
+            -2528
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3938016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17264,
+            13980,
+            -15454,
+            -11764,
+            -14894,
+            9467
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3948096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -32667,
+            -13348,
+            5983,
+            -20274,
+            -29163,
+            -18962
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3958076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -1755,
+            -10393,
+            31435,
+            -11627,
+            10210,
+            -29690
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3968056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19679,
+            -23528,
+            -688,
+            31357,
+            -17276,
+            23289
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3978036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8611,
+            16911,
+            2760,
+            -22920,
+            -17866,
+            -29543
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3988016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31491,
+            -5288,
+            18818,
+            -23050,
+            3459,
+            9442
+          ],
+          "schema_version": 1,
+          "timestamp_us": "3998096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19375,
+            30622,
+            -24230,
+            -3032,
+            8242,
+            3214
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4008076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7492,
+            -24180,
+            -24787,
+            365,
+            8943,
+            5250
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4018056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4018736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1800
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -9032,
+            -31507,
+            16213,
+            1427,
+            16362,
+            -13200
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4028036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6715,
+            -4445,
+            14064,
+            8428,
+            5151,
+            32117
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4038016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24642,
+            -6126,
+            -6372,
+            -29588,
+            -32248,
+            19883
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4048096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3172,
+            -6763,
+            -29071,
+            28996,
+            27619,
+            21475
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4058076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            5890,
+            15371,
+            -9122,
+            -14662,
+            29919,
+            17145
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4068056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2239,
+            -29776,
+            3894,
+            22835,
+            24509,
+            -7536
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4078036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30585,
+            -18773,
+            4368,
+            28576,
+            20174,
+            -10485
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4088016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30684,
+            20517,
+            -5948,
+            29908,
+            -9123,
+            -10971
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4098096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8376,
+            17604,
+            7085,
+            10349,
+            3033,
+            21878
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4108076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32233,
+            24532,
+            -26120,
+            14158,
+            17249,
+            -15681
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4118056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4118736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 1900
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            9955,
+            20628,
+            21163,
+            17894,
+            8836,
+            479
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4128036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5696,
+            -32426,
+            -6748,
+            32438,
+            -2484,
+            -23369
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4138016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            12645,
+            32371,
+            -5825,
+            11729,
+            3057,
+            10601
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4148096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6569,
+            25930,
+            11884,
+            -6585,
+            2757,
+            -6733
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4158076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30769,
+            -5188,
+            10580,
+            -20284,
+            6971,
+            -17827
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4168056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11219,
+            -26909,
+            30178,
+            -7483,
+            -15341,
+            -2836
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4178036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -12856,
+            -17413,
+            9928,
+            3118,
+            24596,
+            -4582
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4188016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            352,
+            30897,
+            31454,
+            -2772,
+            -21032,
+            -30272
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4198096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27669,
+            88,
+            -30744,
+            -32604,
+            -28516,
+            -11971
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4208076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7446,
+            -1618,
+            -19679,
+            32671,
+            29708,
+            890
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4218056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4218736",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2000
+          },
+          "validity_mask": 63
+        },
+        {
+          "altitude_msl_mm": 545400,
+          "date_is_associated": true,
+          "fix_quality": 1,
+          "geoid_separation_mm": 46900,
+          "hdop": 0.9,
+          "satellites_used": 8,
+          "schema_version": 1,
+          "talker": "GN",
+          "timestamp_us": "4218736",
+          "type": "GPS_GGA_QUALITY",
+          "type_id": 3,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2000
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -7949,
+            17729,
+            16172,
+            -22416,
+            13954,
+            -18925
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4228036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3683,
+            -4469,
+            7212,
+            2190,
+            -11205,
+            -28321
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4238016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20591,
+            21085,
+            21045,
+            -1450,
+            -25760,
+            -8898
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4248096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16471,
+            15163,
+            8028,
+            -2008,
+            17409,
+            3835
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4258076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            31486,
+            -5969,
+            2566,
+            9384,
+            12370,
+            -8027
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4268056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6137,
+            14527,
+            1353,
+            7171,
+            10437,
+            -16213
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4278036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20846,
+            -29944,
+            10369,
+            11403,
+            27863,
+            -21344
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4288004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9090,
+            818,
+            -19361,
+            32008,
+            -17229,
+            23661
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4298056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10477,
+            -25423,
+            -221,
+            32138,
+            24812,
+            4963
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4308020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24866,
+            -25578,
+            -18756,
+            21411,
+            -770,
+            2790
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4318068",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4318764",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2100
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -2197,
+            25176,
+            -31998,
+            21850,
+            30308,
+            18089
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4328032",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10591,
+            3295,
+            -15541,
+            9771,
+            15701,
+            19635
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4338080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29426,
+            -20167,
+            -17915,
+            14318,
+            7564,
+            -15452
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4348044",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14142,
+            -2625,
+            17952,
+            23949,
+            15525,
+            -4108
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4358092",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8001,
+            22672,
+            7525,
+            22461,
+            24829,
+            32035
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4368056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27290,
+            13490,
+            -23531,
+            -9154,
+            -10480,
+            -32236
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4378004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2452,
+            -28355,
+            -12957,
+            7762,
+            -25405,
+            20483
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4388068",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -21559,
+            -28468,
+            13732,
+            25442,
+            -20180,
+            -5668
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4398016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20068,
+            -72,
+            -19895,
+            16659,
+            -11090,
+            3546
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4408080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16197,
+            -27199,
+            13573,
+            -11721,
+            30847,
+            5561
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4418028",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4418724",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2200
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -5398,
+            5174,
+            -6491,
+            3668,
+            26103,
+            -22047
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4428092",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5621,
+            2997,
+            7050,
+            -29754,
+            -27335,
+            -5556
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4438040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            637,
+            -10982,
+            1731,
+            -8546,
+            4117,
+            21537
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4448004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27041,
+            -18620,
+            10809,
+            -28981,
+            26930,
+            -8910
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4458052",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17125,
+            24481,
+            16747,
+            -10694,
+            -28449,
+            -28960
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4468016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25324,
+            19922,
+            6570,
+            3043,
+            30757,
+            -6124
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4478064",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            185,
+            -21816,
+            17883,
+            25348,
+            20453,
+            -30132
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4488028",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2743,
+            -13802,
+            11553,
+            -31241,
+            5421,
+            -16400
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4498076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20115,
+            22655,
+            27397,
+            8813,
+            -10998,
+            21095
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4508040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28317,
+            -29469,
+            9454,
+            -14104,
+            29055,
+            31911
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4518088",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4518784",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2300
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            13688,
+            -24301,
+            -21493,
+            7119,
+            1637,
+            -25804
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4528052",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17740,
+            -2504,
+            -13309,
+            17018,
+            10343,
+            7369
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4538000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11867,
+            -23338,
+            22010,
+            31479,
+            26968,
+            14114
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4548064",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11795,
+            25226,
+            7381,
+            -30332,
+            -23417,
+            -28257
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4558012",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27720,
+            -20461,
+            -32059,
+            14063,
+            -7440,
+            -31816
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4568000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -3608,
+            -18352,
+            14711,
+            8024,
+            -1458,
+            16249
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4578080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7747,
+            15664,
+            -17021,
+            20747,
+            -19586,
+            22657
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4588060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31847,
+            -3634,
+            -19725,
+            -18578,
+            5045,
+            7737
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4598040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6089,
+            -16093,
+            27628,
+            -26571,
+            -22156,
+            17465
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4608020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            11341,
+            20260,
+            -9238,
+            -28329,
+            18752,
+            -6626
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4618000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4618780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2400
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -18157,
+            -29158,
+            -9969,
+            7291,
+            -14460,
+            9271
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4628080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4291,
+            7320,
+            8813,
+            -20257,
+            -15310,
+            -2861
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4638060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14033,
+            22628,
+            -681,
+            -16680,
+            -9738,
+            25115
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4648040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32483,
+            14625,
+            -21220,
+            131,
+            17937,
+            -10567
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4658020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            627,
+            10660,
+            24511,
+            -30399,
+            -18616,
+            25531
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4668000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23364,
+            -14025,
+            -18560,
+            -21996,
+            12636,
+            -24461
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4678080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7751,
+            -12744,
+            -21421,
+            -17677,
+            10250,
+            -1719
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4688060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20287,
+            -15912,
+            27044,
+            12715,
+            -4214,
+            -31566
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4698040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            214,
+            2277,
+            -9238,
+            -19207,
+            -19974,
+            -10808
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4708020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2234,
+            14301,
+            9977,
+            7887,
+            4165,
+            21057
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4718000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4718780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2500
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -15494,
+            6343,
+            2336,
+            13058,
+            -15779,
+            23984
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4728080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -1737,
+            -24706,
+            -28567,
+            16355,
+            -16922,
+            -14766
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4738060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26557,
+            23926,
+            20120,
+            31844,
+            -3168,
+            22494
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4748040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26650,
+            26658,
+            -19013,
+            -11308,
+            25394,
+            -8439
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4758020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15606,
+            9595,
+            19057,
+            31082,
+            27182,
+            19648
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4768000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31930,
+            -24470,
+            12841,
+            9731,
+            -25003,
+            -26040
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4778080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28203,
+            -3340,
+            8968,
+            -10012,
+            -31599,
+            -24639
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4788060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            27236,
+            -29058,
+            12350,
+            26734,
+            -8930,
+            -13124
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4798040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4204,
+            -15739,
+            10479,
+            -19984,
+            23246,
+            -20751
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4808020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16677,
+            26777,
+            -28428,
+            -10204,
+            15995,
+            -729
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4818000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4818780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2600
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            29498,
+            8321,
+            29228,
+            19972,
+            -14084,
+            -31497
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4828080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16451,
+            -26159,
+            -19955,
+            30698,
+            -27338,
+            28655
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4838060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30056,
+            6232,
+            2740,
+            1855,
+            293,
+            -5831
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4848040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4028,
+            16171,
+            -28752,
+            -4824,
+            -22544,
+            -12571
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4858020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9782,
+            19010,
+            -27095,
+            26351,
+            -8095,
+            -9652
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4868000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            1612,
+            -14115,
+            15686,
+            19225,
+            2653,
+            6488
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4878080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7780,
+            -19669,
+            32466,
+            -3995,
+            -31953,
+            -16743
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4888060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10795,
+            -5148,
+            -3691,
+            -10191,
+            11200,
+            -14244
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4898040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28704,
+            -3360,
+            3546,
+            17398,
+            -10988,
+            -10417
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4908020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3846,
+            20425,
+            8732,
+            6608,
+            30375,
+            21334
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4918000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "4918780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2700
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -30216,
+            7289,
+            2252,
+            -31148,
+            6009,
+            -15984
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4928080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -4798,
+            -23378,
+            27055,
+            -19929,
+            -25110,
+            -32566
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4938060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14690,
+            23817,
+            -20403,
+            14349,
+            -25664,
+            4565
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4948040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -29074,
+            3486,
+            13909,
+            -9111,
+            29408,
+            12136
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4958020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10175,
+            1155,
+            15386,
+            -5789,
+            11430,
+            21923
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4968000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5369,
+            2836,
+            31329,
+            -27851,
+            -7965,
+            -31917
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4978080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23301,
+            -17171,
+            12354,
+            30285,
+            -7457,
+            1907
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4988060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -27278,
+            20939,
+            -9010,
+            -21183,
+            -5627,
+            -23630
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4998040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10897,
+            -1078,
+            10151,
+            -18740,
+            24814,
+            16605
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5008020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20022,
+            14791,
+            9439,
+            31818,
+            -16111,
+            29820
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5018000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5018780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2800
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -2050,
+            -1596,
+            -4175,
+            -12430,
+            -19899,
+            14086
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5028080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23928,
+            -20062,
+            -8971,
+            -17862,
+            23751,
+            -1922
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5038060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            25300,
+            -17256,
+            4436,
+            -29138,
+            18844,
+            -12981
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5048040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -29254,
+            -7653,
+            26801,
+            -12134,
+            8275,
+            18351
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5058020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20755,
+            -187,
+            9027,
+            32603,
+            -9580,
+            -13779
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5068000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7210,
+            -4645,
+            2636,
+            -14791,
+            29965,
+            17847
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5078080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17994,
+            1142,
+            -32396,
+            -22773,
+            2702,
+            31358
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5088060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28727,
+            31112,
+            -27852,
+            24348,
+            29046,
+            -31557
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5098040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            12275,
+            -24786,
+            17878,
+            2703,
+            13511,
+            -12596
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5108020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10919,
+            -6130,
+            -17430,
+            15015,
+            -5776,
+            109
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5118000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5118780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 2900
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -21238,
+            -587,
+            -25008,
+            30281,
+            -16970,
+            16140
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5128080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            24450,
+            30507,
+            24347,
+            -1012,
+            -31809,
+            -25261
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5138060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13074,
+            705,
+            -9220,
+            11188,
+            -20055,
+            137
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5148040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13887,
+            -22468,
+            5115,
+            -14094,
+            -20289,
+            -26538
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5158020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -32389,
+            14567,
+            -10333,
+            25522,
+            -21859,
+            23053
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5168000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3110,
+            -24251,
+            -7192,
+            -21912,
+            -24986,
+            21133
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5178080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16486,
+            -21437,
+            -30854,
+            -12008,
+            14685,
+            8784
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5188060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -12479,
+            29253,
+            5949,
+            -25589,
+            -31365,
+            9545
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5198040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28709,
+            13925,
+            -7651,
+            -28810,
+            19933,
+            -19297
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5208020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            24799,
+            27321,
+            21878,
+            21877,
+            -5097,
+            10851
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5218000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5218780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3000
+          },
+          "validity_mask": 63
+        },
+        {
+          "altitude_msl_mm": 545400,
+          "date_is_associated": true,
+          "fix_quality": 1,
+          "geoid_separation_mm": 46900,
+          "hdop": 0.9,
+          "satellites_used": 8,
+          "schema_version": 1,
+          "talker": "GN",
+          "timestamp_us": "5218780",
+          "type": "GPS_GGA_QUALITY",
+          "type_id": 3,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3000
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            31315,
+            2174,
+            27338,
+            10794,
+            23254,
+            -6192
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5228080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17921,
+            -5264,
+            -27516,
+            6632,
+            -18085,
+            9412
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5238060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9658,
+            32713,
+            738,
+            -22618,
+            12452,
+            -11419
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5248040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14817,
+            24720,
+            -27792,
+            6714,
+            13937,
+            -2765
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5258020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            2496,
+            -28610,
+            -9060,
+            -15104,
+            -13473,
+            28413
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5268000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            2974,
+            20456,
+            -9163,
+            13569,
+            22727,
+            18277
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5278080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -32387,
+            20852,
+            -21751,
+            -12870,
+            -28618,
+            22530
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5288060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19058,
+            -22665,
+            -30503,
+            8449,
+            -3703,
+            25409
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5298040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19381,
+            31189,
+            27471,
+            -17455,
+            -18926,
+            18830
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5308020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2393,
+            -18373,
+            18380,
+            19925,
+            -24994,
+            20082
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5318000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5318780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3100
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            4574,
+            -11257,
+            25376,
+            -29686,
+            -10902,
+            4768
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5328080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25212,
+            -30403,
+            23428,
+            1755,
+            -26778,
+            -21966
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5338060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8794,
+            -1384,
+            12410,
+            -3462,
+            -9374,
+            5759
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5348040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24033,
+            28380,
+            -28328,
+            -23452,
+            -18830,
+            -1709
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5358020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31384,
+            -6677,
+            1701,
+            -9386,
+            -9174,
+            -23699
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5368000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            5263,
+            4696,
+            27547,
+            -10469,
+            21380,
+            14992
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5378080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -16614,
+            6242,
+            29800,
+            25595,
+            -32620,
+            -21617
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5388060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30464,
+            21920,
+            -1285,
+            22964,
+            -11639,
+            788
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5398040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22018,
+            29899,
+            20364,
+            14399,
+            2805,
+            -21478
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5408020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23794,
+            -16545,
+            8987,
+            -27432,
+            -428,
+            -31413
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5418000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5418780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3200
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            28417,
+            2830,
+            -24171,
+            32761,
+            12095,
+            -12607
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5428080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29108,
+            23363,
+            18029,
+            335,
+            -29476,
+            12263
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5438060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7251,
+            26391,
+            -20034,
+            -14131,
+            14942,
+            -28323
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5448040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14369,
+            14991,
+            -27308,
+            21613,
+            26808,
+            -11980
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5458020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -18359,
+            11776,
+            -30667,
+            -26564,
+            17618,
+            32733
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5468000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10652,
+            226,
+            31865,
+            -15679,
+            -25638,
+            27294
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5478080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14479,
+            5505,
+            -31082,
+            -28182,
+            27788,
+            -13201
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5488060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            2632,
+            10568,
+            -4501,
+            -6917,
+            -2167,
+            8321
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5498040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15882,
+            -32357,
+            -3669,
+            24112,
+            21004,
+            -11795
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5508020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -28533,
+            -4224,
+            -31620,
+            2844,
+            -10845,
+            -3533
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5518000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5518780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3300
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            13365,
+            21634,
+            -30620,
+            -17180,
+            21690,
+            -13172
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5528080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            19908,
+            2446,
+            -19750,
+            2531,
+            -28909,
+            9806
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5538060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31074,
+            -17206,
+            -31724,
+            28774,
+            19076,
+            21699
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5548040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2999,
+            -25212,
+            -29717,
+            -12682,
+            -31857,
+            -26815
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5558020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22321,
+            3540,
+            -25108,
+            -4883,
+            -20809,
+            26744
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5568000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            22182,
+            8075,
+            -12564,
+            17487,
+            -12650,
+            19481
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5578080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7149,
+            -4487,
+            -2628,
+            -2030,
+            -31711,
+            3696
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5588060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17389,
+            1079,
+            15820,
+            22888,
+            1447,
+            2442
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5598040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6212,
+            27127,
+            -2586,
+            -23395,
+            26214,
+            -8202
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5608020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26165,
+            29450,
+            30276,
+            11432,
+            -25659,
+            -14525
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5618000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5618780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3400
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -13791,
+            -20710,
+            -28507,
+            22157,
+            -31072,
+            1228
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5628080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            25624,
+            25928,
+            -13767,
+            -19825,
+            -14807,
+            13682
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5638060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7698,
+            -30290,
+            29310,
+            -17556,
+            -28868,
+            27985
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5648040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3691,
+            -8964,
+            -11435,
+            23583,
+            -440,
+            -16748
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5658020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -3187,
+            -7645,
+            1541,
+            -7469,
+            -21741,
+            22258
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5668000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14084,
+            8266,
+            -16925,
+            -29684,
+            32007,
+            -20095
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5678080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            24824,
+            -12415,
+            25811,
+            -7366,
+            11207,
+            26325
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5688060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6795,
+            9461,
+            -30999,
+            -6618,
+            19259,
+            32693
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5698040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13287,
+            1933,
+            -28218,
+            -18685,
+            -29857,
+            -6461
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5708020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15530,
+            -26574,
+            -22134,
+            -15099,
+            -15514,
+            15331
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5718000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5718780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3500
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            19429,
+            -18117,
+            -26502,
+            15816,
+            -15069,
+            -4011
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5728080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30411,
+            11950,
+            -2147,
+            25078,
+            -24401,
+            -15178
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5738060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8002,
+            7509,
+            28166,
+            -29212,
+            16827,
+            -28063
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5748040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4916,
+            10460,
+            -26232,
+            31524,
+            -2271,
+            18408
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5758020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7160,
+            18795,
+            -20742,
+            575,
+            -11643,
+            15525
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5768000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -3391,
+            14210,
+            29025,
+            -31735,
+            -20186,
+            2440
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5778080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28427,
+            4349,
+            -26985,
+            -20388,
+            30774,
+            -589
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5788060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25708,
+            11397,
+            23878,
+            -21482,
+            28229,
+            -25722
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5798040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2805,
+            229,
+            -13489,
+            12966,
+            -3917,
+            24351
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5808020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6628,
+            9203,
+            5370,
+            18335,
+            -8422,
+            -3710
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5818000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5818780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3600
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -29531,
+            -16119,
+            -9090,
+            -3335,
+            18479,
+            -5146
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5828080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -4630,
+            4432,
+            -24893,
+            26379,
+            -1387,
+            -812
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5838060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -23445,
+            26688,
+            -29335,
+            24942,
+            -5753,
+            -21216
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5848040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5990,
+            -8924,
+            -26751,
+            -22468,
+            -22411,
+            -17186
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5858020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7872,
+            -29052,
+            18806,
+            -15509,
+            -5668,
+            10472
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5868000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9631,
+            32451,
+            -13806,
+            -29126,
+            -17147,
+            -4208
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5878080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4343,
+            10584,
+            23980,
+            -30999,
+            -29839,
+            -20599
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5888060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32406,
+            -16802,
+            -11804,
+            -5338,
+            25111,
+            -12742
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5898040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -24150,
+            32379,
+            -11411,
+            17925,
+            13254,
+            748
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5908020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            5006,
+            -29878,
+            -15142,
+            10332,
+            18753,
+            -32104
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5918000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "5918780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3700
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -15785,
+            -18228,
+            2160,
+            -6452,
+            20724,
+            -23487
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5928080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15170,
+            4750,
+            8290,
+            30953,
+            17238,
+            16410
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5938060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -16321,
+            -5250,
+            24579,
+            -31935,
+            -5558,
+            21483
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5948040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -18041,
+            433,
+            30166,
+            16943,
+            6437,
+            11634
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5958020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6015,
+            -28801,
+            -22143,
+            1458,
+            -10202,
+            -28752
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5968000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20651,
+            -24125,
+            -28142,
+            18132,
+            -16009,
+            -30109
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5978080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17548,
+            -14556,
+            6160,
+            -23236,
+            -8425,
+            6944
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5988060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            5582,
+            -18772,
+            7252,
+            24562,
+            20549,
+            -16954
+          ],
+          "schema_version": 1,
+          "timestamp_us": "5998040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            27460,
+            -3047,
+            -6241,
+            -20838,
+            10803,
+            -8636
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6008020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26580,
+            20147,
+            -6054,
+            -12164,
+            15160,
+            14303
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6018000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6018780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3800
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -24114,
+            27526,
+            2845,
+            17716,
+            -8011,
+            -22903
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6028080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16026,
+            -4528,
+            30649,
+            32493,
+            -12443,
+            21729
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6038060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13889,
+            21636,
+            32764,
+            2150,
+            -11559,
+            -27155
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6048040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29890,
+            -15307,
+            26234,
+            -24266,
+            -3001,
+            -21570
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6058020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            22250,
+            -830,
+            8936,
+            -14065,
+            31226,
+            19563
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6068000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -12903,
+            -11879,
+            -16646,
+            -22808,
+            -26625,
+            30002
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6078080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13848,
+            12146,
+            8643,
+            -17572,
+            -14357,
+            6051
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6088060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2269,
+            12998,
+            28929,
+            28063,
+            24778,
+            -2287
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6098040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            27381,
+            23160,
+            26338,
+            -12075,
+            -32364,
+            -19252
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6108020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25751,
+            -3100,
+            26658,
+            2993,
+            32706,
+            8142
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6118000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6118780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 3900
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -2040,
+            -29229,
+            -26227,
+            9895,
+            8400,
+            28893
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6128080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -30023,
+            7686,
+            -684,
+            -17130,
+            -16169,
+            -16818
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6138060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15821,
+            -24243,
+            -28749,
+            -19406,
+            31109,
+            -19720
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6148040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13538,
+            -6028,
+            -16432,
+            -16743,
+            13327,
+            494
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6158020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2501,
+            3170,
+            19691,
+            -23083,
+            -25085,
+            15641
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6168000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            26914,
+            14906,
+            -11988,
+            9022,
+            3068,
+            11985
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6178080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3194,
+            15469,
+            -5454,
+            4087,
+            -16736,
+            -20737
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6188060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9665,
+            -6160,
+            20664,
+            -4107,
+            -29316,
+            -19858
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6198040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25613,
+            29975,
+            1506,
+            -6568,
+            147,
+            5977
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6208020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            23983,
+            22985,
+            -28137,
+            2431,
+            11446,
+            1112
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6218000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6218780",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4000
+          },
+          "validity_mask": 63
+        },
+        {
+          "altitude_msl_mm": 545400,
+          "date_is_associated": true,
+          "fix_quality": 1,
+          "geoid_separation_mm": 46900,
+          "hdop": 0.9,
+          "satellites_used": 8,
+          "schema_version": 1,
+          "talker": "GN",
+          "timestamp_us": "6218780",
+          "type": "GPS_GGA_QUALITY",
+          "type_id": 3,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4000
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            3254,
+            -30974,
+            -29329,
+            25496,
+            -30705,
+            -24781
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6228080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14899,
+            -31263,
+            6943,
+            -16225,
+            13140,
+            -178
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6238060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6796,
+            -5964,
+            3688,
+            19719,
+            12706,
+            -25694
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6248040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10008,
+            27330,
+            -23308,
+            2180,
+            -29700,
+            -24955
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6258020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -20380,
+            -576,
+            -9940,
+            -16722,
+            -18738,
+            -28243
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6268000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4786,
+            30262,
+            -25503,
+            -23691,
+            -28909,
+            19251
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6278080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19624,
+            -26566,
+            -25622,
+            27549,
+            14824,
+            -1923
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6288060",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            21509,
+            -31662,
+            -8839,
+            -11844,
+            -4941,
+            9821
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6298092",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2279,
+            92,
+            20061,
+            32373,
+            29999,
+            -14905
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6308000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3157,
+            25282,
+            -22931,
+            20183,
+            4076,
+            -1308
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6318052",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6318876",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4100
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            23050,
+            3699,
+            -30009,
+            -31177,
+            2351,
+            4216
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6328004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            1140,
+            1105,
+            -593,
+            -22308,
+            -26823,
+            -15411
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6338056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22021,
+            8974,
+            -20434,
+            6989,
+            -22954,
+            21921
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6348056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6516,
+            -12102,
+            1862,
+            15915,
+            -16828,
+            -3377
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6358096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            332,
+            2408,
+            27092,
+            10455,
+            3542,
+            11172
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6368080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8360,
+            -17228,
+            1394,
+            27993,
+            -11043,
+            -7390
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6378008",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -7355,
+            4117,
+            30715,
+            1594,
+            9660,
+            28575
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6388092",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2909,
+            5690,
+            130,
+            -15526,
+            7990,
+            9348
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6398020",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11341,
+            -7190,
+            -10791,
+            -13082,
+            -25520,
+            14615
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6408004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -4859,
+            12570,
+            20980,
+            13296,
+            -17565,
+            -30066
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6418032",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6418972",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4200
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            26054,
+            -1743,
+            -26409,
+            -27035,
+            -10577,
+            8167
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6428016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6949,
+            24511,
+            -28979,
+            -22446,
+            26640,
+            11319
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6438044",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -472,
+            -28916,
+            9488,
+            -29013,
+            9893,
+            -24471
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6448028",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -4985,
+            -7103,
+            -29383,
+            28703,
+            18562,
+            -16473
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6458056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15264,
+            -26328,
+            -27896,
+            1691,
+            -31794,
+            -22043
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6468040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            19432,
+            -14932,
+            -32411,
+            24708,
+            467,
+            -448
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6478068",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32615,
+            7077,
+            25259,
+            -3369,
+            17390,
+            -23751
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6488052",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18203,
+            -19056,
+            28058,
+            -21077,
+            -12952,
+            -790
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6498080",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            22923,
+            -15037,
+            -10361,
+            -32052,
+            -29041,
+            29128
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6508064",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -32655,
+            29128,
+            24989,
+            -13722,
+            23733,
+            -23395
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6518092",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6519032",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4300
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -14462,
+            -11312,
+            -26036,
+            -17412,
+            -30757,
+            20135
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6528076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            21426,
+            20109,
+            17733,
+            -9701,
+            -21965,
+            -18638
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6538004",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3793,
+            -28976,
+            31619,
+            17804,
+            28347,
+            30213
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6548088",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14702,
+            -11076,
+            10844,
+            -32527,
+            5024,
+            3180
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6558016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            10077,
+            -7059,
+            29581,
+            -12273,
+            10799,
+            -807
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6568000",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -5517,
+            -24474,
+            25017,
+            7738,
+            22903,
+            -3260
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6578028",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2991,
+            -2911,
+            15325,
+            -14957,
+            494,
+            22737
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6588012",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -13476,
+            -5225,
+            -12388,
+            -17119,
+            24497,
+            -7309
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6598040",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4145,
+            -26976,
+            7544,
+            11755,
+            32320,
+            26233
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6608024",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18488,
+            29034,
+            15180,
+            18327,
+            -13379,
+            -5307
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6618052",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6618992",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4400
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -22466,
+            9353,
+            -12117,
+            -3266,
+            -21734,
+            -1623
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6628036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28753,
+            -27316,
+            -27154,
+            -14470,
+            -9284,
+            -31333
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6638064",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            8972,
+            6479,
+            -30195,
+            -3377,
+            14969,
+            17459
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6648036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            16909,
+            -1393,
+            29862,
+            -15866,
+            4864,
+            -15297
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6658016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -29088,
+            19684,
+            -28489,
+            -31219,
+            16899,
+            -24884
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6668096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -6422,
+            -1999,
+            14835,
+            -1665,
+            -26683,
+            -1426
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6678076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4173,
+            -9561,
+            -1599,
+            28637,
+            -28710,
+            -32711
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6688056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -14153,
+            -27412,
+            -21946,
+            8478,
+            24112,
+            21410
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6698036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10352,
+            -498,
+            25855,
+            23077,
+            -11582,
+            -20803
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6708016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            7187,
+            -2177,
+            -6173,
+            20282,
+            31879,
+            670
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6718096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6718776",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4500
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            18218,
+            29077,
+            -10500,
+            20379,
+            4469,
+            -2111
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6728076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -17367,
+            30526,
+            4602,
+            14778,
+            17585,
+            -2881
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6738056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            22846,
+            7144,
+            3125,
+            -8754,
+            11588,
+            -1596
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6748036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29611,
+            -18217,
+            775,
+            -30534,
+            -273,
+            13696
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6758016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            29996,
+            5967,
+            -7783,
+            -13452,
+            27633,
+            -13180
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6768096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            3854,
+            -31899,
+            -5527,
+            -13445,
+            25051,
+            28237
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6778076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            13548,
+            24409,
+            -20929,
+            -28939,
+            17610,
+            -27796
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6788056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -11257,
+            14777,
+            -17087,
+            -9330,
+            9120,
+            11915
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6798036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -10833,
+            -20278,
+            -21913,
+            -3786,
+            -4855,
+            17983
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6808016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14917,
+            9190,
+            -17780,
+            -17854,
+            16505,
+            -6170
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6818096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6818776",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4600
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            20402,
+            26568,
+            -16458,
+            -30551,
+            24425,
+            15364
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6828076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            366,
+            -2803,
+            32385,
+            13389,
+            -11666,
+            -13604
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6838056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            20836,
+            26692,
+            24236,
+            -1900,
+            -9461,
+            17459
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6848036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            94,
+            14697,
+            24878,
+            -10311,
+            -27060,
+            -4216
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6858016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -26181,
+            23717,
+            13672,
+            8351,
+            5514,
+            23072
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6868096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            18845,
+            -26468,
+            7247,
+            2064,
+            31205,
+            30387
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6878076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28113,
+            -10566,
+            -7265,
+            -22365,
+            -25509,
+            16039
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6888056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -32481,
+            6202,
+            -2959,
+            15561,
+            -12408,
+            -28905
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6898036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            9669,
+            7903,
+            2008,
+            -27472,
+            8553,
+            -31721
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6908016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32578,
+            -13675,
+            -7866,
+            -18956,
+            705,
+            -29964
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6918096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "6918776",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4700
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            3278,
+            -17040,
+            16875,
+            -12962,
+            -20752,
+            -10141
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6928076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -25340,
+            -27190,
+            29002,
+            13091,
+            -5548,
+            29144
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6938056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            4258,
+            2669,
+            1722,
+            -14248,
+            -360,
+            -26235
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6948036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17794,
+            -245,
+            25749,
+            30875,
+            4981,
+            -17751
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6958016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -1015,
+            20334,
+            24881,
+            -17116,
+            28627,
+            52
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6968096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22344,
+            9773,
+            15105,
+            -20806,
+            -23988,
+            6645
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6978076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14523,
+            18376,
+            -902,
+            4663,
+            22907,
+            27849
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6988056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -21642,
+            23923,
+            12671,
+            -6231,
+            -23641,
+            -28547
+          ],
+          "schema_version": 1,
+          "timestamp_us": "6998036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            21633,
+            2815,
+            4996,
+            -4553,
+            -19802,
+            -23955
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7008016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            28831,
+            2460,
+            27317,
+            22341,
+            -5120,
+            9726
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7018096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "7018776",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4800
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -14966,
+            -21139,
+            8629,
+            6545,
+            20171,
+            -890
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7028076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            6056,
+            -18903,
+            16090,
+            2377,
+            -8271,
+            -959
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7038056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -22004,
+            9011,
+            28909,
+            -25538,
+            10521,
+            -5534
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7048036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -29618,
+            -30222,
+            -4396,
+            8639,
+            -16268,
+            -22940
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7058016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            32541,
+            12638,
+            -8004,
+            -15408,
+            31509,
+            15651
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7068096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -31848,
+            -30741,
+            13969,
+            -3160,
+            23584,
+            -3991
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7078076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            2770,
+            31068,
+            -32026,
+            32193,
+            -25996,
+            5101
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7088056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            527,
+            18481,
+            31397,
+            31208,
+            14496,
+            -32002
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7098036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -2664,
+            -5472,
+            -5865,
+            12799,
+            -9670,
+            29261
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7108016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            1851,
+            5466,
+            -29404,
+            -394,
+            -26314,
+            3981
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7118096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "course_deg": 84.4,
+          "fields": {
+            "course_e5_deg": 8440000,
+            "latitude_e7": 481173000,
+            "longitude_e7": 115166667,
+            "speed_mm_s": 11524
+          },
+          "fix_valid": true,
+          "mode": null,
+          "position": {
+            "latitude_deg": 48.1173,
+            "longitude_deg": 11.5166667
+          },
+          "receiver_status": "A",
+          "schema_version": 1,
+          "speed_m_s": 11.524,
+          "talker": "GN",
+          "timestamp_us": "7118776",
+          "type": "GPS_RMC",
+          "type_id": 2,
+          "utc": {
+            "date": "2000-01-01",
+            "time_of_day_ms": 4900
+          },
+          "validity_mask": 63
+        },
+        {
+          "axes_raw": [
+            -12591,
+            9874,
+            16353,
+            -30287,
+            -5358,
+            -13077
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7128076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14944,
+            -26116,
+            17856,
+            -1084,
+            -1808,
+            -3962
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7138056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            30898,
+            -23876,
+            -27907,
+            -12722,
+            30447,
+            6258
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7148036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -19335,
+            -30083,
+            26917,
+            -31637,
+            -10647,
+            27115
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7158016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            14170,
+            -27343,
+            -10559,
+            -13088,
+            -3102,
+            9918
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7168096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            17267,
+            -2275,
+            -25710,
+            -17127,
+            -4925,
+            -2533
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7178076",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8396,
+            -2241,
+            -27938,
+            27027,
+            -5572,
+            24134
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7188056",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -15700,
+            12864,
+            23226,
+            13502,
+            13795,
+            19169
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7198036",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            -8559,
+            10840,
+            19038,
+            20355,
+            10726,
+            6091
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7208016",
+          "type": "IMU_RAW",
+          "type_id": 1
+        },
+        {
+          "axes_raw": [
+            25773,
+            30462,
+            15068,
+            9971,
+            20974,
+            703
+          ],
+          "schema_version": 1,
+          "timestamp_us": "7218096",
+          "type": "IMU_RAW",
+          "type_id": 1
+        }
+      ],
+      "sectors": [
+        0,
+        4096,
+        8192
+      ],
+      "session_id": 1,
+      "status": "complete",
+      "version": 3
+    }
+  ]
+}

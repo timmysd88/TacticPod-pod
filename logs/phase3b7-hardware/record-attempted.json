@@ -1,0 +1,6 @@
+{
+  "authorised_start_count": 1,
+  "capture_seconds": 5,
+  "write_end_exclusive": 65536,
+  "no_retry": true
+}

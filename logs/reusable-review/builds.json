@@ -1,0 +1,20 @@
+{
+  "seeed_xiao_nrf52840_sense": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\platformio.exe",
+      "run",
+      "-e",
+      "seeed_xiao_nrf52840_sense"
+    ],
+    "exit_code": 0
+  },
+  "tacticpod_reusable_usb": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\platformio.exe",
+      "run",
+      "-e",
+      "tacticpod_reusable_usb"
+    ],
+    "exit_code": 0
+  }
+}

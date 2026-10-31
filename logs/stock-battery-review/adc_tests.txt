@@ -1,0 +1,7 @@
+PASS: real-backend register sequencing
+PASS: ADC timeout without blocking
+PASS: existing ADC owner
+PASS: existing ADC IRQ owner
+PASS: rail reading invalid
+PASS: VBUS independent of serial
+PASS: operator calibration and arming

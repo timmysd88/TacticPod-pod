@@ -1,0 +1,4 @@
+SUSTAIN 0 result 0 metrics (1471, 1470, 1, 1118, 2940148, 1118, 61426, 0, 16773120, 1, 0, 3, 0, 0, 0, 0)
+SUSTAIN 1 result 0 metrics (1471, 1470, 1, 1518, 2940548, 1118, 61426, 0, 16773120, 1, 400, 3, 0, 0, 0, 0)
+SUSTAIN 3 result 0 metrics (1471, 1470, 1, 1770, 2940554, 1370, 61426, 0, 16773120, 1, 400, 10, 0, 0, 0, 0)
+PASS: paced maximum frames through entire recording capacity; no growing backlog

@@ -1,0 +1,66 @@
+{
+  "issues": [
+    {
+      "code": "data_invalid",
+      "message": "CRC mismatch",
+      "offset": 512,
+      "severity": "error"
+    }
+  ],
+  "schema": "tacticpod.decode/1",
+  "sessions": [
+    {
+      "footer": null,
+      "metadata": {
+        "accel_range_mg": 2000,
+        "accel_ug_per_lsb": 61,
+        "axis_convention": 1,
+        "boot_uuid_hex": "202122232425262728292a2b2c2d2e2f",
+        "calibration": 0,
+        "device_id_hex": "0102030405060708",
+        "extensions": [],
+        "firmware_sha256": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "format_major": 2,
+        "format_minor": 0,
+        "gga_epoch_divisor": 10,
+        "gps_firmware": "SPG 5.10",
+        "gps_model": "MAX-M10S",
+        "gps_period_us": 100000,
+        "gps_profile_checked_us": "1000000",
+        "gps_profile_state": 1,
+        "gyro_range_mdps": 245000,
+        "gyro_udps_per_lsb": 8750,
+        "imu_model": "LSM6DS3TR-C",
+        "imu_odr_millihz": 104000,
+        "imu_rate_millihz": 100000,
+        "required_features": 31,
+        "session_start_us": "4294967200",
+        "session_uuid_hex": "000102030405060708090a0b0c0d0e0f",
+        "timestamp_basis": 1,
+        "uart_baud": 38400
+      },
+      "records": [
+        {
+          "axes_raw": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "schema_version": 1,
+          "timestamp_us": "4294967290",
+          "type": "IMU_RAW",
+          "type_id": 1
+        }
+      ],
+      "sectors": [
+        0
+      ],
+      "session_id": 2,
+      "status": "damaged",
+      "version": 2
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "preflight_checks_passed": true,
+  "jedec": "0B4018",
+  "capacity_bytes": 16777216,
+  "sr1": "00",
+  "sr2": "02",
+  "reviewed_firmware_elf_sha256": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+  "record_stopped": true,
+  "obs_off": true,
+  "comp_off_empty": true,
+  "tcb_disabled": true,
+  "recording_end_exclusive": "0xFFF000",
+  "last_erase_address": "0xFFE000",
+  "diagnostic_sector_excluded_by_reviewed_code": true,
+  "diagnostic_sector_before_after_readback_available": false,
+  "commands_sent": [
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "DIAG ID"
+  ],
+  "erase_armed": false,
+  "erase_started": false,
+  "completed_sector_count": 0,
+  "serial_released": true,
+  "responses": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x10000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=484 accepted=256 overflow=228 | queue=256/256 high=256 | spacing_us_min=99362 max=100793\nOBS RMC | seen=485 accepted=32 overflow=453 | queue=32/32 high=32 | spacing_us_min=82845 max=118300\nOBS GGA | seen=49 accepted=8 overflow=41 | queue=8/8 high=8 | spacing_us_min=996889 max=1002579\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=0 rejected=0 blocks sealed=0 completed=0\nCOMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=44772497 max_block_step_us=0 max_slice_us=140 max_units=1\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB DISABLED: simulated validation only; physical recording/export requires a separately approved build.\r\n",
+    "DIAG ID": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n"
+  }
+}

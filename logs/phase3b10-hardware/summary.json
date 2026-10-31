@@ -1,0 +1,796 @@
+{
+  "completed_at": "2026-10-31T20:01:24.878426+00:00",
+  "result": "PASS recorder integrity/cadence with documented count-boundary and GPS-validity qualifications",
+  "qualification_notes": [
+    "12001 IMU, not exactly 12000: distinct timestamps span 119995599us; 100.0036676Hz mean; no duplicate or fabricated sample",
+    "1033 valid and 167 invalid RMC fixes; all 1200 UTC epochs advance by 100ms; final receiver state NO FIX",
+    "One parser partial-frame counter increment; consistent with restarting paused sentence collection; no observed complete-sentence UTC gap",
+    "One gyro Y sample approached int16 limit (-32762); exact rail not reached; sports range headroom not qualified"
+  ],
+  "recommendations": {
+    "reusable_firmware": "GO for separately reviewed development retaining bounded sessions and integrity guards",
+    "battery_integration": "GO for design and bench qualification planning; NO-GO for battery-powered recording/deployment until power path/current/runtime/undervoltage/brownout behaviour is verified",
+    "further_hardware_operations": "Not authorised or performed in this run"
+  },
+  "operator_ready": true,
+  "firmware_zip": "logs/phase3b10-review/tcb3_movement_120s-3b10.zip",
+  "zip_sha256": "0bdd99698bd4535dfe02943a045d3c9b697a4f5f3d92b077857d7f4f8d9c059e",
+  "regression_suites_passed": 20,
+  "source_hashes_unchanged": true,
+  "start_commands": 1,
+  "manual_stop_commands": 0,
+  "erase_commands": 0,
+  "automatic_stop": true,
+  "full_allocation_independently_prescanned": false,
+  "first_sector_verification": "Entire 4096-byte firmware probe passed before STARTED and full check repeated before header; not independently raw-read",
+  "preserved_sessions": [
+    1,
+    3
+  ],
+  "preserved_counts": [
+    [
+      500,
+      50,
+      5,
+      0
+    ],
+    [
+      3000,
+      300,
+      30,
+      0
+    ]
+  ],
+  "preserved_range_inclusive": [
+    "0x000000",
+    "0x00AFFF"
+  ],
+  "preserved_combined_export_sha256": "8e22bf5ad18f8a98c8d9ef7535603f6d882c32d2a0fc97362375204b1cef3240",
+  "old_sessions_byte_identical": true,
+  "session": 12,
+  "new_counts": [
+    12001,
+    1200,
+    120,
+    0
+  ],
+  "new_canonical_bytes": 345624,
+  "exports": [
+    {
+      "file": "movement-120s-1.tpx3",
+      "bytes": 255424,
+      "sha256": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9"
+    },
+    {
+      "file": "movement-120s-2.tpx3",
+      "bytes": 255424,
+      "sha256": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9"
+    }
+  ],
+  "allocated_sectors": 46,
+  "allocated_bytes": 188416,
+  "new_programmed_pages": 681,
+  "new_programmed_bytes": 174336,
+  "header_pages": 46,
+  "data_pages": 634,
+  "footer_pages": 1,
+  "new_allocation_range_inclusive": [
+    "0x00B000",
+    "0x038FFF"
+  ],
+  "footer_address": "0x038F00",
+  "next_sector": "0x039000",
+  "write_fence_inclusive": [
+    "0x00B000",
+    "0x0FFFFF"
+  ],
+  "block_sequences": [
+    0,
+    59
+  ],
+  "data_page_sequences": [
+    0,
+    633
+  ],
+  "footer_sequence": 634,
+  "footer": {
+    "reason": 0,
+    "stop_us": 4101236647,
+    "offered": [
+      12001,
+      1200,
+      120,
+      0
+    ],
+    "committed": [
+      12001,
+      1200,
+      120,
+      0
+    ],
+    "lost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rejected": 0,
+    "crc_failures": 0,
+    "incomplete_writes": 0,
+    "full": 0,
+    "missed": 0
+  },
+  "timing": {
+    "metadata_to_capture_stop_us": 120000145,
+    "host_START_to_STOPPED_notice_s": 121.9369999999908,
+    "max_flash_service_us": 1189,
+    "max_store_block_ms": 487,
+    "max_compression_block_cpu_us": 54637,
+    "max_compression_slice_us": 264,
+    "input_high": 2,
+    "output_high": 1,
+    "backpressure_slices": 0,
+    "raw_fallbacks": 0
+  },
+  "streams": {
+    "1": {
+      "count": 12001,
+      "first_us": 3981236993,
+      "last_us": 4101232592,
+      "mean_hz": 100.00366763451049,
+      "spacing_min_us": 8991,
+      "spacing_max_us": 10988,
+      "spacing_mean_us": 9999.63325,
+      "spacing_stdev_us": 416.970033189162,
+      "max_absolute_spacing_error_us": 1009,
+      "nonpositive_spacing": 0
+    },
+    "2": {
+      "count": 1200,
+      "first_us": 3981335390,
+      "last_us": 4101228646,
+      "mean_hz": 10.000562500362824,
+      "spacing_min_us": 78627,
+      "spacing_max_us": 119298,
+      "spacing_mean_us": 99994.37531276063,
+      "spacing_stdev_us": 7036.643522493039,
+      "max_absolute_spacing_error_us": 21373,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 1200,
+      "unique_utc_epochs": 1200,
+      "utc_step_ms": [
+        100
+      ],
+      "validity_masks": [
+        112,
+        119,
+        127
+      ],
+      "valid_fix_count": 1033
+    },
+    "3": {
+      "count": 120,
+      "first_us": 3981250360,
+      "last_us": 4100240971,
+      "mean_hz": 1.0000789053852324,
+      "spacing_min_us": 979097,
+      "spacing_max_us": 1018362,
+      "spacing_mean_us": 999921.1008403362,
+      "spacing_stdev_us": 4082.0330521163987,
+      "max_absolute_spacing_error_us": 20903,
+      "nonpositive_spacing": 0,
+      "utc_epochs": 120,
+      "unique_utc_epochs": 120,
+      "utc_step_ms": [
+        1000
+      ],
+      "validity_masks": [
+        49,
+        51,
+        63
+      ],
+      "fix_quality_values": [
+        0,
+        2
+      ],
+      "satellites_used_values": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "hdop_values": [
+        1.45,
+        1.46,
+        1.47,
+        1.49,
+        1.5,
+        1.59,
+        1.6,
+        1.66,
+        1.67,
+        1.76,
+        2.65,
+        2.66,
+        2.67,
+        3.22,
+        3.37,
+        3.89,
+        3.9,
+        4.07,
+        4.69,
+        4.92,
+        5.9,
+        15.27,
+        29.54,
+        99.99
+      ]
+    }
+  },
+  "fix_evidence": {
+    "rmc_valid": 1033,
+    "rmc_invalid": 167,
+    "invalid_position_always_null": true,
+    "rmc_receiver_status_counts": {
+      "V": 167,
+      "A": 1033
+    },
+    "gga_quality_counts": {
+      "0": 16,
+      "2": 104
+    },
+    "first_invalid_timestamp_us": 3981335390,
+    "last_invalid_timestamp_us": 4101228646
+  },
+  "movement_evidence": {
+    "raw_axis_ranges": [
+      [
+        -5403,
+        15524
+      ],
+      [
+        -4981,
+        27716
+      ],
+      [
+        -15888,
+        22512
+      ],
+      [
+        -23222,
+        16002
+      ],
+      [
+        -32762,
+        18621
+      ],
+      [
+        -16023,
+        15018
+      ]
+    ],
+    "raw_axis_stdev": [
+      3656.815039618153,
+      5064.256504213822,
+      4161.976352817252,
+      2225.879673823225,
+      3722.3272301220723,
+      4744.180313508239
+    ],
+    "interpretation": "Sensor variation is measured; user activity must be confirmed by the operator.",
+    "near_int16_rail_count_abs_ge_32700": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "exact_int16_rail_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "page_map": [
+    {
+      "sector_start": "0x00B000",
+      "header": "0x00B000?0x00B0FF",
+      "data": "0x00B100?0x00BEFF",
+      "data_sequences": [
+        0,
+        13
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x00C000",
+      "header": "0x00C000?0x00C0FF",
+      "data": "0x00C100?0x00CEFF",
+      "data_sequences": [
+        14,
+        27
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x00D000",
+      "header": "0x00D000?0x00D0FF",
+      "data": "0x00D100?0x00DEFF",
+      "data_sequences": [
+        28,
+        41
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x00E000",
+      "header": "0x00E000?0x00E0FF",
+      "data": "0x00E100?0x00EEFF",
+      "data_sequences": [
+        42,
+        55
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x00F000",
+      "header": "0x00F000?0x00F0FF",
+      "data": "0x00F100?0x00FEFF",
+      "data_sequences": [
+        56,
+        69
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x010000",
+      "header": "0x010000?0x0100FF",
+      "data": "0x010100?0x010EFF",
+      "data_sequences": [
+        70,
+        83
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x011000",
+      "header": "0x011000?0x0110FF",
+      "data": "0x011100?0x011EFF",
+      "data_sequences": [
+        84,
+        97
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x012000",
+      "header": "0x012000?0x0120FF",
+      "data": "0x012100?0x012EFF",
+      "data_sequences": [
+        98,
+        111
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x013000",
+      "header": "0x013000?0x0130FF",
+      "data": "0x013100?0x013EFF",
+      "data_sequences": [
+        112,
+        125
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x014000",
+      "header": "0x014000?0x0140FF",
+      "data": "0x014100?0x014EFF",
+      "data_sequences": [
+        126,
+        139
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x015000",
+      "header": "0x015000?0x0150FF",
+      "data": "0x015100?0x015EFF",
+      "data_sequences": [
+        140,
+        153
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x016000",
+      "header": "0x016000?0x0160FF",
+      "data": "0x016100?0x016EFF",
+      "data_sequences": [
+        154,
+        167
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x017000",
+      "header": "0x017000?0x0170FF",
+      "data": "0x017100?0x017EFF",
+      "data_sequences": [
+        168,
+        181
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x018000",
+      "header": "0x018000?0x0180FF",
+      "data": "0x018100?0x018EFF",
+      "data_sequences": [
+        182,
+        195
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x019000",
+      "header": "0x019000?0x0190FF",
+      "data": "0x019100?0x019EFF",
+      "data_sequences": [
+        196,
+        209
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x01A000",
+      "header": "0x01A000?0x01A0FF",
+      "data": "0x01A100?0x01AEFF",
+      "data_sequences": [
+        210,
+        223
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x01B000",
+      "header": "0x01B000?0x01B0FF",
+      "data": "0x01B100?0x01BEFF",
+      "data_sequences": [
+        224,
+        237
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x01C000",
+      "header": "0x01C000?0x01C0FF",
+      "data": "0x01C100?0x01CEFF",
+      "data_sequences": [
+        238,
+        251
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x01D000",
+      "header": "0x01D000?0x01D0FF",
+      "data": "0x01D100?0x01DEFF",
+      "data_sequences": [
+        252,
+        265
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x01E000",
+      "header": "0x01E000?0x01E0FF",
+      "data": "0x01E100?0x01EEFF",
+      "data_sequences": [
+        266,
+        279
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x01F000",
+      "header": "0x01F000?0x01F0FF",
+      "data": "0x01F100?0x01FEFF",
+      "data_sequences": [
+        280,
+        293
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x020000",
+      "header": "0x020000?0x0200FF",
+      "data": "0x020100?0x020EFF",
+      "data_sequences": [
+        294,
+        307
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x021000",
+      "header": "0x021000?0x0210FF",
+      "data": "0x021100?0x021EFF",
+      "data_sequences": [
+        308,
+        321
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x022000",
+      "header": "0x022000?0x0220FF",
+      "data": "0x022100?0x022EFF",
+      "data_sequences": [
+        322,
+        335
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x023000",
+      "header": "0x023000?0x0230FF",
+      "data": "0x023100?0x023EFF",
+      "data_sequences": [
+        336,
+        349
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x024000",
+      "header": "0x024000?0x0240FF",
+      "data": "0x024100?0x024EFF",
+      "data_sequences": [
+        350,
+        363
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x025000",
+      "header": "0x025000?0x0250FF",
+      "data": "0x025100?0x025EFF",
+      "data_sequences": [
+        364,
+        377
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x026000",
+      "header": "0x026000?0x0260FF",
+      "data": "0x026100?0x026EFF",
+      "data_sequences": [
+        378,
+        391
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x027000",
+      "header": "0x027000?0x0270FF",
+      "data": "0x027100?0x027EFF",
+      "data_sequences": [
+        392,
+        405
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x028000",
+      "header": "0x028000?0x0280FF",
+      "data": "0x028100?0x028EFF",
+      "data_sequences": [
+        406,
+        419
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x029000",
+      "header": "0x029000?0x0290FF",
+      "data": "0x029100?0x029EFF",
+      "data_sequences": [
+        420,
+        433
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x02A000",
+      "header": "0x02A000?0x02A0FF",
+      "data": "0x02A100?0x02AEFF",
+      "data_sequences": [
+        434,
+        447
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x02B000",
+      "header": "0x02B000?0x02B0FF",
+      "data": "0x02B100?0x02BEFF",
+      "data_sequences": [
+        448,
+        461
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x02C000",
+      "header": "0x02C000?0x02C0FF",
+      "data": "0x02C100?0x02CEFF",
+      "data_sequences": [
+        462,
+        475
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x02D000",
+      "header": "0x02D000?0x02D0FF",
+      "data": "0x02D100?0x02DEFF",
+      "data_sequences": [
+        476,
+        489
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x02E000",
+      "header": "0x02E000?0x02E0FF",
+      "data": "0x02E100?0x02EEFF",
+      "data_sequences": [
+        490,
+        503
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x02F000",
+      "header": "0x02F000?0x02F0FF",
+      "data": "0x02F100?0x02FEFF",
+      "data_sequences": [
+        504,
+        517
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x030000",
+      "header": "0x030000?0x0300FF",
+      "data": "0x030100?0x030EFF",
+      "data_sequences": [
+        518,
+        531
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x031000",
+      "header": "0x031000?0x0310FF",
+      "data": "0x031100?0x031EFF",
+      "data_sequences": [
+        532,
+        545
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x032000",
+      "header": "0x032000?0x0320FF",
+      "data": "0x032100?0x032EFF",
+      "data_sequences": [
+        546,
+        559
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x033000",
+      "header": "0x033000?0x0330FF",
+      "data": "0x033100?0x033EFF",
+      "data_sequences": [
+        560,
+        573
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x034000",
+      "header": "0x034000?0x0340FF",
+      "data": "0x034100?0x034EFF",
+      "data_sequences": [
+        574,
+        587
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x035000",
+      "header": "0x035000?0x0350FF",
+      "data": "0x035100?0x035EFF",
+      "data_sequences": [
+        588,
+        601
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x036000",
+      "header": "0x036000?0x0360FF",
+      "data": "0x036100?0x036EFF",
+      "data_sequences": [
+        602,
+        615
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x037000",
+      "header": "0x037000?0x0370FF",
+      "data": "0x037100?0x037EFF",
+      "data_sequences": [
+        616,
+        629
+      ],
+      "footer": null
+    },
+    {
+      "sector_start": "0x038000",
+      "header": "0x038000?0x0380FF",
+      "data": "0x038100?0x0384FF",
+      "data_sequences": [
+        630,
+        633
+      ],
+      "footer": "0x038F00"
+    }
+  ],
+  "static_ram_bytes": 120692,
+  "live_stack_heap_high_water": "Not instrumented",
+  "diagnostic_sector_targeted": false,
+  "independent_outside_fence_or_diagnostic_sector_readback_or_bus_trace": false,
+  "parser_counters": {
+    "checksum_fail": 0,
+    "malformed_fields": 0,
+    "overlong": 0,
+    "partial_before": 0,
+    "partial_after": 1
+  },
+  "obs_diagnostic_overflows": "Unchanged startup RMC=191/GGA=15, capture OFF; not recording queue losses",
+  "final_states": {
+    "RECORD": "STOPPED",
+    "OBS": "OFF",
+    "COMP": "OFF; fault=0; queues empty",
+    "TCB": "IDLE; finalised; bounded one-shot profile used",
+    "GPS": "10Hz RAM profile verified; NO FIX at final status"
+  },
+  "serial_released": true,
+  "evidence_sha256": {
+    "movement-120s-1.tpx3": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9",
+    "movement-120s-2.tpx3": "03c489ffd50a17fb190b7c9d1603ec96c983b67e61136d80a2d7d18ac3eaf3a9",
+    "session-1.tpx3": "e003fc70802374e1559c22cacc0930f5b1d58209da1868263e42126d87d5a972",
+    "session-3.tpx3": "790e72dd0102e15eb05ab1f07d349f49e5ad0bc15fc4da9f03df078f8dabb192",
+    "session-12.tpx3": "2f666048dc5fcc0d3cf04563b07af2d5e0ffd0adcd3048850c33e61b40691e37",
+    "session-12.v2wire": "14ac8aba43db87065213986f71dbce22833c4b1a6c022a96d35e1b1160103e3f",
+    "earlier-two-sessions.tpx3": "8e22bf5ad18f8a98c8d9ef7535603f6d882c32d2a0fc97362375204b1cef3240",
+    "recovered-recording-image.bin": "b9ad38d83ac27a61a79bf58cbbba68cc44a03d6dddeebcf287d9166eb76fb6f6",
+    "record-transcript.txt": "164b444473856047ec47aa777184c156f60651d980844891e13c5ce3119d6d1e",
+    "preflight-transcript.txt": "8c1b1a49dd7ddf0a89efefb0ebbdb1ae09fec5bc67c5b4797a0c2a12dcfb5b37",
+    "new-session-pages.csv": "9fa5fda145b5c73d0f1dae882a3812478c19aac2add5220206e6908096a44349",
+    "upload.txt": "de3a80c2f5e8b10ae55954daa1a1a52595a8961711bbd97a1e7ce4e23e84b0a9",
+    "startup.txt": "842c5e0bafc101c8856b7461b4df29b39e3c4d3b1bb95a44ba500969426c8cef"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "winbond-w25q128jv-revf.pdf": {
+    "url": "https://www.winbond.com/resource-files/w25q128jv%20revf%2003272018%20plus.pdf",
+    "local_download_error": "<urlopen error [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions>",
+    "review_method": "web tool PDF text review; no local PDF archived",
+    "installed_chip_applicability": "unverified"
+  },
+  "xtx-xt25f128f-rev12.pdf": {
+    "url": "https://cdn.semikey.com/upload/pdfs/7f/97/7f97109b0187d7aa9ee7c57f038dfe1c.pdf",
+    "local_download_error": "<urlopen error [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions>",
+    "review_method": "web tool PDF text review; no local PDF archived",
+    "installed_chip_applicability": "unverified"
+  },
+  "identity": {
+    "user_marking": "W25Q128 (no suffix)",
+    "recorded_jedec": "0B4018",
+    "capacity_bytes": 16777216,
+    "exact_model_verified": false,
+    "winbond_jv_manufacturer_id": "EF",
+    "saved_log": ".pio/phase23-hardware/startup-serial.txt"
+  }
+}

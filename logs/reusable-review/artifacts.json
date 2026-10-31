@@ -1,0 +1,14 @@
+{
+  "seeed_xiao_nrf52840_sense": {
+    "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+    "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+    "zip": "64a92f4c0b9dcb56d0bc1316336b9b17d36f269e96655c433aa306c98520d2ef",
+    "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+  },
+  "tacticpod_reusable_usb": {
+    "elf": "90d779d3468b4b337ab95f0a252cb9e676eaeac39bd975a4c2a3182cd63e0102",
+    "hex": "89d3977f38afe3f57726bd1fa7fca132b6349c312df9e931ba7c13cb8343a9c2",
+    "zip": "a0a6d7399342cae4fa351027a190d043e6c38d1e6dd3ee6e8c738e978ba3f680",
+    "application_sha256": "a965a052e40b05f95d3ad7eb7472fa45fb630d51e80eb48dc9796302c1d460bf"
+  }
+}

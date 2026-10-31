@@ -1,0 +1,12 @@
+Upgrading target on COM7 with DFU package C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\logs\phase3b9-review\tcb3_append_30s-3b9.zip. Flow control is disabled, Single bank, Touch disabled
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+#####################################
+Activating new firmware
+Device programmed.

@@ -1,0 +1,191 @@
+[
+  {
+    "scenario": "disconnected five-second capture and TPX3 export",
+    "metrics": [
+      12288,
+      12288,
+      39,
+      0,
+      1,
+      0,
+      14424,
+      5000088,
+      0,
+      1,
+      544,
+      13504,
+      2218688,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "unexpected SR2 refuses start",
+    "metrics": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "occupied final test sector refuses start",
+    "metrics": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "occupied sector beyond fence refuses start",
+    "metrics": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "OBS active refuses start",
+    "metrics": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "no-slack finalisation deadline faults",
+    "metrics": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      5000100,
+      2,
+      0,
+      0,
+      0,
+      2218688,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "missed acquisition stops",
+    "metrics": [
+      4096,
+      4096,
+      2,
+      0,
+      1,
+      1,
+      0,
+      100,
+      3,
+      0,
+      544,
+      0,
+      2218688,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "held-CS deadline abort faults and never retries",
+    "metrics": [
+      4096,
+      64,
+      1,
+      1,
+      0,
+      0,
+      144,
+      15000000,
+      2,
+      1,
+      544,
+      0,
+      2218688,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "scenario": "capture deadline through TIMER4 low-word rollover",
+    "metrics": [
+      12288,
+      12288,
+      39,
+      0,
+      1,
+      0,
+      14400,
+      5000088,
+      0,
+      1,
+      544,
+      13504,
+      4291119107,
+      0,
+      0,
+      0
+    ]
+  }
+]

@@ -1,0 +1,165 @@
+{
+  "objective": "Reusable bounded USB prototype and battery monitor prepared; stop for review",
+  "firmware_environment": "tacticpod_reusable_usb",
+  "firmware_archive": "logs/reusable-review/tacticpod_reusable_usb.zip",
+  "hardware_access": false,
+  "upload": false,
+  "battery_connected": false,
+  "physical_flash_program_or_erase": false,
+  "default_disabled_elf_byte_identical": true,
+  "installed_firmware_archive_unchanged": true,
+  "unchanged_source_hashes": [
+    "docs/recorder-v2-format.md",
+    "src/compact_recorder.cpp",
+    "src/compact_recorder.h",
+    "src/gps_config.cpp",
+    "src/gps_config.h",
+    "src/gps_profile.cpp",
+    "src/gps_profile.h",
+    "src/gps_rate.cpp",
+    "src/gps_rate.h",
+    "src/gps_receiver.cpp",
+    "src/gps_receiver.h",
+    "src/gps_uart_config.h",
+    "src/gps_uart_scan.cpp",
+    "src/gps_uart_scan.h",
+    "src/gps_uart_tx.h",
+    "src/monotonic_clock.cpp",
+    "src/monotonic_clock.h",
+    "src/ram_observations.cpp",
+    "src/recorder_format.h"
+  ],
+  "regression_suites_passed": 25,
+  "battery_policy_cases": 16,
+  "real_adc_register_cases": 7,
+  "reusable_integration_cases": 13,
+  "duration_seconds": {
+    "default": 120,
+    "minimum": 1,
+    "maximum": 1800,
+    "drain_after_stop": 60,
+    "usb_independent": true
+  },
+  "write_range_inclusive": [
+    "0x039000",
+    "0xFFEFFF"
+  ],
+  "protected_original_range_inclusive": [
+    "0x000000",
+    "0x038FFF"
+  ],
+  "diagnostic_sector_inclusive": [
+    "0xFFF000",
+    "0xFFFFFF"
+  ],
+  "initial_expected_session": 58,
+  "no_auto_recording_or_erase": true,
+  "multiple_clean_append_sessions": true,
+  "capacity_admission": "ceil(duration/2)+1 maximum 8228-byte frames; 39 fragments/frame; 14 data pages/sector; reserve complete sectors",
+  "fault_locking": true,
+  "new_memory": {
+    "static_ram_bytes": 120836,
+    "program_bytes": 189424,
+    "ram_delta_from_previous_engineering": 144,
+    "heap_allocations_added": false,
+    "live_stack_high_water": "not measured"
+  },
+  "battery_hardware": {
+    "analog_pin": "P0.31 / AIN7 / Arduino 32",
+    "enable_pin": "P0.14 / Arduino 14, LOW in application",
+    "charge_current_pin": "P0.13 / Arduino 22, INPUT no pulls, nominal low-current mode",
+    "sample_rate_hz": 1,
+    "conversion": "12-bit 0.6V internal reference, gain 1/6, 40us acquisition; divider 1510/510",
+    "adc_timeout_us": 20000,
+    "software_accuracy": "unqualified; physical voltage not measured",
+    "boot_issue": "Installed variant initialises enable HIGH before application LOW; bootloader/core interval unverified against Seeed caution",
+    "bsp_package_version": "framework-arduinoadafruitnrf52-seeed 1.10101.0",
+    "no_charge_termination_overvoltage_current_or_temperature_protection_implemented": true
+  },
+  "battery_defaults": {
+    "cell_confirmed": false,
+    "calibrated": false,
+    "nominal_reading_is_not_cell_presence": true,
+    "configuration_persistent": false,
+    "warn_mv": 3600,
+    "stop_mv": 3500,
+    "hard_mv": 3300,
+    "recover_mv": 3700,
+    "low_dwell_us": 3000000,
+    "warm_samples": 3,
+    "hard_consecutive_samples_after_warmup": 2,
+    "recovery_samples": 3,
+    "invalid_stale_uncalibrated_no_new_low_action": true,
+    "no_automatic_restart_on_recovery": true,
+    "physical_load_disconnect": false,
+    "new_start_requires_both_instantaneous_and_filtered_above_stop": true,
+    "initial_filter_seed": "three-sample median; does not inherit an early outlier"
+  },
+  "cell_user_report": {
+    "brand": "Soshine",
+    "model": "602030",
+    "capacity_mah": 300,
+    "charge_voltage_v": 4.2,
+    "discharge_limit_v": 2.75,
+    "max_charge_current_a_reported": 1.2,
+    "protection_reported": [
+      "overcharge",
+      "overdischarge",
+      "overcurrent",
+      "short circuit"
+    ],
+    "matching_manufacturer_datasheet_found": false,
+    "charge_current_claim_independently_verified": false
+  },
+  "battery_event": {
+    "code": 256,
+    "argument": {
+      "1": "warning",
+      "2": "filtered low stop",
+      "3": "hard stop"
+    },
+    "detail_low_u32": "instantaneous calibrated mV",
+    "detail_high_u32": "filtered mV",
+    "footer_reason_for_successful_intentional_stop": "Clean"
+  },
+  "validation": {
+    "physically_validated": "Earlier 3B.10 USB recording only; no new hardware validation",
+    "new_reusable_battery_features": "Host simulation/register model/build only",
+    "original_physical_image_bytes_preserved": 233472,
+    "original_physical_image_sha256": "b9ad38d83ac27a61a79bf58cbbba68cc44a03d6dddeebcf287d9166eb76fb6f6",
+    "example_total_sessions": 6,
+    "example_real_archived_sessions": 3,
+    "example_simulated_sessions": 3,
+    "example_export_bytes": 282304,
+    "example_canonical_bytes": 481056,
+    "exact_host_reconstruction": true,
+    "low_drain_stop_model_us": 15739804,
+    "hard_stop_model_us": 7739504,
+    "model_max_store_service_us": 544,
+    "model_max_store_block_ms": 358,
+    "model_input_output_high": [
+      2,
+      1
+    ],
+    "diagnostic_sector_boundary_model": "16 single-page programs only FFE000..FFEFFF, protected diagnostic unchanged"
+  },
+  "decisions": {
+    "software_review_and_USB_only_bench_preparation": "GO; next upload still requires approval",
+    "battery_connection_charging": "NO-GO until board startup sensing/polarity/charger verification and exact cell charge rating check",
+    "battery_field_recording": "NO-GO; no new physical power qualification"
+  },
+  "artifacts": {
+    "seeed_xiao_nrf52840_sense": {
+      "elf": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+      "hex": "de5e9ad64c2f549e40bebfb2c8247c92cb96edd147113613e5d3e1c32983bd0b",
+      "zip": "64a92f4c0b9dcb56d0bc1316336b9b17d36f269e96655c433aa306c98520d2ef",
+      "application_sha256": "a89568173d20346d6545f142522be7df3f529fd9af32e0ccf9c16baff94d0ce6"
+    },
+    "tacticpod_reusable_usb": {
+      "elf": "90d779d3468b4b337ab95f0a252cb9e676eaeac39bd975a4c2a3182cd63e0102",
+      "hex": "89d3977f38afe3f57726bd1fa7fca132b6349c312df9e931ba7c13cb8343a9c2",
+      "zip": "a0a6d7399342cae4fa351027a190d043e6c38d1e6dd3ee6e8c738e978ba3f680",
+      "application_sha256": "a965a052e40b05f95d3ad7eb7472fa45fb630d51e80eb48dc9796302c1d460bf"
+    }
+  }
+}

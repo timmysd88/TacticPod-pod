@@ -1,0 +1,1 @@
+PASS: real USB command parser can STOP/STATUS while TCB owns flash; competing writes refused

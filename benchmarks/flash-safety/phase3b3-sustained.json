@@ -1,0 +1,38 @@
+[
+  {
+    "mode": 0,
+    "produced": 1471,
+    "committed": 1470,
+    "queue_high": 1,
+    "max_arrival_to_commit_ms": 1118,
+    "elapsed_ms": 2940148,
+    "max_store_block_ms": 1118,
+    "programs": 61426,
+    "compression_blackout_ms": 0,
+    "program_busy_ms": 3
+  },
+  {
+    "mode": 1,
+    "produced": 1471,
+    "committed": 1470,
+    "queue_high": 1,
+    "max_arrival_to_commit_ms": 1518,
+    "elapsed_ms": 2940548,
+    "max_store_block_ms": 1118,
+    "programs": 61426,
+    "compression_blackout_ms": 400,
+    "program_busy_ms": 3
+  },
+  {
+    "mode": 3,
+    "produced": 1471,
+    "committed": 1470,
+    "queue_high": 1,
+    "max_arrival_to_commit_ms": 1770,
+    "elapsed_ms": 2940554,
+    "max_store_block_ms": 1370,
+    "programs": 61426,
+    "compression_blackout_ms": 400,
+    "program_busy_ms": 10
+  }
+]

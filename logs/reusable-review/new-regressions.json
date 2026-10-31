@@ -1,0 +1,37 @@
+{
+  "battery-policy": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/reusable/policy_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "reusable-store": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/reusable/store_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "battery-adc": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/reusable/adc_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "reusable-console": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/reusable/console_tests.py"
+    ],
+    "exit_code": 0
+  },
+  "reusable-integration": {
+    "command": [
+      "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+      "tests/reusable/integration_tests.py"
+    ],
+    "exit_code": 0
+  }
+}

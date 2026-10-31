@@ -1,0 +1,29 @@
+PASS: normal disconnected 120-second append (290816, 290816, 898, 345624, 120000088, 60, 544, 358, 2, 1, 12, 45056, 318144, 2286632, 0, 0, 0, 0, 0, 0)
+PASS: hidden initial payload aborts before WREN (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: full fence refuses before writes (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: missing preserved prefix refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: torn header preserved; reset refuses another append (49152, 45120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: interrupted data preserved; reset refuses another append (53248, 49216, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: post-probe mutation refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: 180-second finalisation watchdog without slack (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: capture through TIMER4 rollover (290816, 290816, 898, 345624, 120000008, 60, 544, 358, 2, 1, 12, 45056, 318144, 4216188751, 0, 0, 0, 0, 0, 0)
+PASS: denied WEL faults without overwriting prefix (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: queue pressure stops with explicit loss (69632, 69632, 91, 34764, 12039640, 6, 544, 3956, 2, 2, 12, 45056, 76224, 2286632, 0, 0, 0, 0, 0, 0)
+PASS: occupied sector beyond fence refuses before writes (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: corrupt initial prefix refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: partial initial sector last byte refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: corrupt predecessor header refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: occupied continuation sector faults (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: repeated START pending active and stopped refuses (290816, 290816, 898, 345624, 120000088, 60, 544, 358, 2, 1, 12, 45056, 318144, 2286632, 0, 0, 0, 0, 0, 0)
+PASS: first-program identity mismatch refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: valid occupied header at unexpected append address refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: inconsistent preserved metadata refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: corrupt second predecessor refuses (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+PASS: 120-second append with 100us per compression unit and 10ms program BUSY (290816, 290816, 897, 345624, 120000076, 60, 544, 357, 2, 1, 12, 45056, 318144, 2286632, 0, 0, 0, 0, 0, 0)
+PASS: cancelling the read-only append probe cannot allocate from a partial scan
+PASS: maximum raw-frame pacing to exact append fence, one program per page, old session preserved (88, 87, 1, 1770, 175657, 1370, 3676, 0, 1048576, 1, 400, 10, 0, 0, 0, 0)
+PASS: fail closed without any program: start address tamper
+PASS: fail closed without any program: pre-program address tamper
+PASS: fail closed without any program: unreadable allocated sector
+PASS: unreadable recovery scan/probe fail closed before programming
+PASS: unexpected protection/status bits in scan/probe fault before programming

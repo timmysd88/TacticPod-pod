@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-31",
+  "review_only": true,
+  "physical_erase_performed": false,
+  "physical_recording_performed": false,
+  "upload_performed": false,
+  "tcb3_enabled": false,
+  "firmware_source_configuration_unchanged": true,
+  "fresh_status_checks": {
+    "record_stopped": true,
+    "obs_stopped": true,
+    "comp_stopped": true,
+    "tcb_disabled": true
+  },
+  "serial_released": true,
+  "partition_start": 0,
+  "partition_end_exclusive": 16773120,
+  "erase_sector_count": 4095,
+  "erase_last_address": 16769024,
+  "diagnostic_sector_start": 16773120,
+  "recording_partition_bytes": 16773120,
+  "suites_passed": 16,
+  "new_erase_scenarios": 5,
+  "erase_recommendation": "conditional GO for reviewed partition-only procedure; not executed; wait for review",
+  "physical_tcb3_recommendation": "NO-GO for immediate run; qualification/approved enabled build/host capture acceptance gates remain",
+  "current_elf_sha256": "a83cbaabf9c0e18034a5f70a987539c77c574e429e9b6aa3a06caf6d1a836089",
+  "changed_files": [
+    "docs/phase3b5-clean-flash-plan.md",
+    "tests/recording/erase_review.cpp",
+    "tests/recording/erase_review_tests.py",
+    "logs/phase3b5-review/"
+  ]
+}

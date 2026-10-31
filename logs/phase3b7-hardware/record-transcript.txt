@@ -1,0 +1,153 @@
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD START / RECORD STOP / RECORD STATUS - append binary IMU at 100 Hz
+  RECORD READ  - export committed recordings as CSV while stopped
+  RECORD ERASE - warn before explicitly confirmed recording-area erase
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - separate compact sessions (host simulation gate)
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+  ERASE FFF000 - confirm ONE destructive flash test (see warning below)
+IMU printing: OFF (default after boot)
+TCB3 TEST BUILD: V1 writes and all erases disabled; TCB capture limited to 5s and first 64KiB.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x0
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98896 max=100605
+OBS RMC | seen=224 accepted=32 overflow=192 | queue=32/32 high=32 | spacing_us_min=82883 max=117505
+OBS GGA | seen=22 accepted=8 overflow=14 | queue=8/8 high=8 | spacing_us_min=998283 max=1001960
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=4705972 max_block_step_us=0 max_slice_us=140 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=5s,64KiB,15s
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=87714 | checksum_ok=1214 | checksum_fail=0 | last_valid_message_age_ms=67
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)
+GPS fix=VALID | lat=50.775223 | lon=0.090114 | position=CURRENT | satellites=6 | HDOP=2.16
+GPS speed_km/h=1.611 | UTC=17:01:10Z | position_age_ms=67
+
+HOST TX TCB START
+TCB START scanning; no auto resume state=0 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=5s,64KiB,15s
+TCB STARTED state=2 session=1 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 test=5s,64KiB,15s
+
+HOST TX TCB STATUS
+TCB STATUS state=4 session=1 blocks=0 committed=0 offered=96 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=920 error=none programs=1 max_block_ms=0 test=5s,64KiB,15s
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=1 fault=0
+COMP records accepted=177 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=1/2 output=0/2 input_high=1 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=30995 max_block_step_us=0 max_slice_us=13 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=4 session=1 blocks=0 committed=0 offered=189 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=920 error=none programs=1 max_block_ms=0 test=5s,64KiB,15s
+
+HOST TX TCB STATUS
+TCB STATUS state=4 session=1 blocks=1 committed=223 offered=284 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=920 error=none programs=9 max_block_ms=220 test=5s,64KiB,15s
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=1 fault=0
+COMP records accepted=353 rejected=0 blocks sealed=1 completed=1
+COMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=111354 max_block_step_us=53859 max_slice_us=218 max_units=8
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=4 session=1 blocks=1 committed=223 offered=381 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=920 error=none programs=9 max_block_ms=220 test=5s,64KiB,15s
+
+HOST TX TCB STATUS
+TCB STATUS state=6 session=1 blocks=1 committed=223 offered=475 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=968 error=none programs=12 max_block_ms=220 test=5s,64KiB,15s
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=1 fault=0
+COMP records accepted=529 rejected=0 blocks sealed=2 completed=2
+COMP RAM input=1/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=188864 max_block_step_us=53859 max_slice_us=219 max_units=8
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=4 session=1 blocks=2 committed=446 offered=555 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1108 error=none programs=21 max_block_ms=369 test=5s,64KiB,15s
+TCB STOPPED state=1 session=1 blocks=3 committed=555 offered=555 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1108 error=none programs=23 max_block_ms=369 test=5s,64KiB,15s
+RECORD scan complete. Recording OFF at startup; append position recovered without writes.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x2000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98896 max=100605
+OBS RMC | seen=224 accepted=32 overflow=192 | queue=32/32 high=32 | spacing_us_min=82883 max=117505
+OBS GGA | seen=22 accepted=8 overflow=14 | queue=8/8 high=8 | spacing_us_min=998283 max=1001960
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=555 rejected=0 blocks sealed=3 completed=3
+COMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=270110 max_block_step_us=53859 max_slice_us=219 max_units=8
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=1 blocks=3 committed=555 offered=555 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1108 error=none programs=23 max_block_ms=369 test=5s,64KiB,15s
+
+HOST TX TCB READ
+
+HOST RX binary saved first-write-1.tpx3
+
+HOST TX TCB READ
+
+HOST RX binary saved first-write-2.tpx3
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x2000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=223 accepted=223 overflow=0 | queue=223/256 high=223 | spacing_us_min=98896 max=100605
+OBS RMC | seen=224 accepted=32 overflow=192 | queue=32/32 high=32 | spacing_us_min=82883 max=117505
+OBS GGA | seen=22 accepted=8 overflow=14 | queue=8/8 high=8 | spacing_us_min=998283 max=1001960
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=555 rejected=0 blocks sealed=3 completed=3
+COMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=297855 max_block_step_us=53859 max_slice_us=219 max_units=8
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=1 blocks=3 committed=555 offered=555 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1108 error=none programs=23 max_block_ms=369 test=5s,64KiB,15s
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=97363 | checksum_ok=1346 | checksum_fail=0 | last_valid_message_age_ms=86
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)
+GPS fix=VALID | lat=50.775204 | lon=0.090144 | position=CURRENT | satellites=6 | HDOP=2.15
+GPS speed_km/h=2.556 | UTC=17:01:22Z | position_age_ms=86

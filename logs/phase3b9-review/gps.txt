@@ -1,0 +1,197 @@
+PASS: default OFF, 38400 baud, no-UART error on STATUS
+PASS: GP NMEA position/speed/satellites/HDOP/UTC
+PASS: GN multi-constellation sentences
+PASS: checksum rejection
+PASS: GGA fix loss and missing HDOP
+PASS: RMC void status invalidates cached fix
+PASS: stale UART/data and message age
+PASS: one-second output; OFF preserves reception
+PASS: USB backpressure never blocks reception
+PASS: CSV export suppresses GPS printing but keeps reception
+PASS: incomplete UART sentences return without waiting
+PASS: 100 Hz IMU recording alongside GPS, binary layout unchanged
+PASS: RAW duration and no-data summary
+PASS: RAW counts NUL/binary bytes and escapes terminal controls
+PASS: RAW readable NMEA and independent checksum validation
+PASS: RAW invalid checksum rejected
+PASS: RAW exact end boundary excludes later bytes
+PASS: RAW duplicate/status/OFF do not restart or cancel
+PASS: RAW backpressure preserves captured data without waiting
+PASS: RAW defers output during CSV export
+PASS: RAW capture survives USB disconnect
+PASS: RAW overflow counted explicitly
+PASS: RAW 10-second capture preserves 100 Hz recording
+PASS: RAW timer handles millis wrap
+PASS: RAW validation excludes pre-capture sentence fragments
+PASS: explicit loopback PASS, exact binary comparison, parser isolated
+PASS: no-jumper timeout and explicit successful retry
+PASS: corrupted loopback byte FAIL
+PASS: pre-existing RX counted and test refused before TX
+PASS: UART/RAW mutual exclusion and duplicate refusal
+PASS: stuck TX refuses another blocking write
+PASS: loopback result survives USB backpressure
+PASS: loopback preserves 100 Hz recording
+PASS: loopback timer wrap
+PASS: short TX failure
+PASS: loopback refused during CSV export
+PASS: GPS reception resumes unchanged after loopback
+PASS: six exact 3-second scan windows, bytes and sticky error counts, restore 38400
+PASS: SCAN refused during recording/stopping/erase
+PASS: SCAN blocks concurrent UART/flash/recording commands
+PASS: SCAN NMEA detection and normal parser resumption
+PASS: SCAN parity-enabled flag reporting
+PASS: SCAN exposes incorrect physical RX selection
+PASS: SCAN exposes disabled receiver
+PASS: SCAN stop timeout never falsely claims restoration
+PASS: SCAN start timeout recovers to 38400
+PASS: SCAN failed receiver restart reports restoration failure
+PASS: SCAN timer wrap
+PASS: SCAN restores before USB reconnect and resumes reception
+PASS: SCAN startup/flash-test interlocks
+PASS: SCAN preserves idle IMU and LED without writing flash
+PASS: loopback still works after SCAN
+PASS: SCAN counts transition discards and clears old error flags
+PASS: RAW holds a full-rate 38400-baud ten-second capture without omissions
+PASS: full-rate 38400-baud input and RAW preserve 100 Hz recording
+PASS: RATE 1 Hz no-fix GGA/RMC counted separately
+PASS: RATE 10 Hz indoors without fix
+PASS: RATE valid-fix counts at 10 Hz
+PASS: RATE checksum failures excluded
+PASS: RATE duplicate GP/GN UTC epochs are not double-counted
+PASS: RATE RMC-only output
+PASS: RATE frozen UTC does not prove 10 Hz epochs
+PASS: RATE missing UTC still counts no-fix messages
+PASS: RATE no UART data report
+PASS: RATE exact 15-second end boundary
+PASS: RATE USB backpressure
+PASS: RATE USB disconnect retains results
+PASS: RATE CSV output protection
+PASS: RATE UART diagnostic interlocks
+PASS: RATE 10 Hz NMEA alongside 100 Hz IMU recording
+PASS: RATE millis and UTC midnight wrap
+PASS: RATE backwards UTC and duplicate rejection
+PASS: RATE bounded overlong sentence handling
+PASS: CONFIG decoded RAM settings, MON-VER and golden read-only UBX polls
+PASS: CONFIG per-key NAK does not poison supported keys
+PASS: CONFIG timeout reports unavailable, never unsupported
+PASS: CONFIG rejects corrupt checksum then accepts valid response
+PASS: CONFIG validates version/layer/position/key/exact length
+PASS: CONFIG multiplexes NMEA and ignores NMEA-like data inside UBX
+PASS: CONFIG incremental byte-at-a-time response
+PASS: CONFIG bounded oversized frame handling
+PASS: CONFIG incomplete frame timeout and NMEA recovery
+PASS: CONFIG startup and flash-test interlocks
+PASS: CONFIG blocks recording/erase/export and other diagnostics
+PASS: CONFIG mutually exclusive with RATE/RAW/loopback/SCAN
+PASS: CONFIG retains report under USB backpressure
+PASS: CONFIG completes collection without USB and reports after reconnect
+PASS: CONFIG stuck TX never writes again
+PASS: CONFIG short TX reported safely
+PASS: CONFIG timers survive millis wrap
+PASS: CONFIG followed by intact 100 Hz recording; refused while recording
+PASS: loopback still works after CONFIG
+PASS: SCAN still works after CONFIG
+PASS: CONFIG absolute frame timeout under continuous corrupt traffic
+PASS: CONFIG request deadline and stale-key rejection
+PASS: CONFIG reads OTP clock verification profile without programming
+PASS: CONFIG unsupported OTP clock fields remain unavailable
+PASS: CONFIG duplicate-key reply values must agree
+PASS: CONFIG alternating TX lengths reject stale DMA completion
+PASS: RAW still counts every UBX byte after CONFIG
+PASS: CONFIG MON-VER bounds and terminal-control sanitisation
+PASS: PROFILE atomic RAM-only 10Hz test and exact verified restore
+PASS: PROFILE recording/startup/flash interlocks
+PASS: PROFILE RESTORE without snapshot sends nothing
+PASS: PROFILE requires advertised SPG 5.10 firmware
+PASS: PROFILE snapshot NAK aborts before writes
+PASS: PROFILE snapshot timeout aborts before writes
+PASS: PROFILE rejected commit automatically restores
+PASS: PROFILE lost staging ACK cancels and restores
+PASS: PROFILE lost commit ACK rolls back actual applied values
+PASS: PROFILE mismatched apply readback rolls back
+PASS: PROFILE apply verification timeout automatically restores
+PASS: PROFILE failed automatic rollback retains snapshot for retry
+PASS: PROFILE lost restore commit ACK verified by values
+PASS: PROFILE repeat TEST cannot replace original snapshot
+PASS: PROFILE UART/recording/erase command interlocks
+PASS: PROFILE USB backpressure does not delay collection
+PASS: PROFILE USB disconnect preserves snapshot and completion
+PASS: PROFILE timers survive millis wrap
+PASS: PROFILE corrupt/wrong-layer/wrong-key replies cannot satisfy reads
+PASS: PROFILE incompatible UART preflight sends no writes
+PASS: PROFILE RESTORE refused while recording
+PASS: PROFILE lost ongoing-transaction ACK recovered
+PASS: PROFILE short UART write automatically restores
+PASS: PROFILE NAK in ongoing transaction restores
+PASS: PROFILE preserves SBAS and restores original disabled QZSS
+PASS: PROFILE 10Hz GPS alongside unchanged 100Hz IMU recording
+PASS: PROFILE failed explicit restore retains snapshot and succeeds on retry
+PASS: PROFILE fragmented UBX and simultaneous NMEA
+PASS: PROFILE stuck TX reports unverified rollback without blocking; later explicit restore succeeds
+PASS: PROFILE refuses already-active test profile without its old snapshot
+PASS: PROFILE power-save preflight refuses without changing settings
+PASS: PROFILE refused during CONFIG/RATE/RAW/loopback/SCAN
+PASS: PROFILE operation deadline automatically rolls back
+PASS: PROFILE automatic rollback completes with USB disconnected
+PASS: PROFILE restore readback timeout retains snapshot until verified retry
+PASS: REGRESSION SPG 5.10 ignores old APPLY payload; reproduces MEAS staying 1000
+PASS: PROFILE golden U2 100ms/1000ms bytes and START/CONTINUE/CONTINUE/empty APPLY
+PASS: PROFILE preserves actual 1000ms mismatch before automatic rollback
+PASS: PROFILE deferred diagnostics retain original mismatch under USB backpressure
+PASS: PROFILE commit NAK and transaction status survive rollback
+PASS: PROFILE commit timeout status survives successful rollback
+PASS: PROFILE duplicate ACK is logged and does not advance transaction
+PASS: PROFILE readback timing includes 600ms commit settle and prior signal reads
+PASS: PROFILE bounded diagnostic overflow cannot erase first mismatch evidence
+PASS: STARTUP applies tested RAM profile, reports status and restores without reapplying
+PASS: STARTUP missing communication times out without writes
+PASS: STARTUP already configured receiver does not invent original snapshot
+PASS: STARTUP completes without USB, releases interlock and preserves restore
+PASS: STARTUP lost commit ACK restores original settings
+PASS: STARTUP retries a lost snapshot reply safely
+PASS: STARTUP defers during recording and preserves IMU acquisition
+PASS: STARTUP unanswered UBX reads stop after exactly three attempts
+PASS: RATE 10Hz valid RMC primary with independent 1Hz supporting GGA
+PASS: RATE 149 valid RMC epochs at 9.933Hz passes window tolerance
+PASS: RATE both valid RMC and GGA at 1Hz fail 10Hz cadence
+PASS: RATE missing UTC no-fix RMC stays UNKNOWN despite GGA UTC
+PASS: RATE advancing no-fix RMC establishes cadence without valid navigation claim
+PASS: RATE frozen RMC UTC stays UNKNOWN despite advancing GGA
+PASS: RATE valid-status RMC without UTC cannot establish 10Hz cadence
+PASS: OBS RMC field-scoped fixed-point wire bytes and shared microsecond timestamps
+PASS: OBS void RMC clears all unavailable fields despite cached valid position
+PASS: OBS mode N explicitly invalidates RMC A coordinates
+PASS: OBS independent GGA quality, altitude, HDOP and no-fix observation
+PASS: OBS missing RMC UTC does not inherit a previous timestamp
+PASS: OBS checksum failure excluded and subsequent valid sentence recovered
+PASS: OBS malformed ranges/date/time/speed/course produce explicit missing masks
+PASS: OBS bounded overlong/partial/UBX frames cannot leak observations
+PASS: OBS byte-at-a-time completion stamps final LF, including valid zero position
+PASS: OBS bounded queues retain immutable copies, count overflow and clear RAM only
+PASS: CLOCK pending wrap extends exactly once
+PASS: CLOCK ISR extends hardware counter without main-loop polling
+PASS: CLOCK capture/wrap race cannot return a backwards or double-extended timestamp
+PASS: CLOCK preserves IRQ mask and idempotent boot initialization
+PASS: OBS GGA associates forward midnight/year rollover date
+PASS: OBS GGA associates previous-day sentence delivered after midnight RMC
+PASS: OBS stale/missing UTC anchor cannot date a GGA sentence
+SIM TIMING: IMU=1500 gap_us=10000..10000; RMC=150 gap_us=100000..100000
+PASS: OBS 15s concurrent 100Hz IMU/10Hz RMC/1Hz GGA retains intact V1 recording
+SIM TIMING: IMU=1500 gap_us=10000..10000; RMC=150 gap_us=100000..100000
+PASS: OBS START supports 100Hz RAM-only acquisition with zero flash writes
+PASS: OBS USB backpressure never blocks parsing or overfills TX
+PASS: OBS controls/reporting refused quietly during CSV export
+PASS: OBS STOP cannot stop or alter independent 100Hz V1 recording
+PASS: OBS signed extremes, quality bounds and scaled numeric limits
+PASS: OBS unsupported leap-second UTC creates a V2-compatible EVENT
+SIM TIMING: IMU=1500 gap_us=10000..10000; RMC=0 (GPS silent)
+PASS: OBS GPS silence leaves IMU acquisition running without invented GPS samples
+PASS: OBS duplicate/backwards UTC and invalid fixes are preserved independently
+PASS: OBS partial sentence expires and resynchronises without stale data
+PASS: OBS saturated RAM queues do not lose or change any V1 recorded samples
+PASS: OBS bounded EVENT overflow counts rejected leap-second events
+PASS: OBS IMU timestamp precedes all six simulated sensor reads
+PASS: COMP RAM-only concurrent 100Hz IMU/10Hz RMC/1Hz GGA with OBS stopped
+PASS: COMP concurrent V1 recording commits all 1500 samples with no missed deadlines
+PASS: COMP output backpressure faults RAM capture without changing V1 recording
+PASS: COMP controls and diagnostics remain silent during V1 CSV export

@@ -1,0 +1,7 @@
+{
+  "action": "single reviewed recording-partition erase",
+  "first_address": "000000",
+  "last_address": "FFE000",
+  "exclusive_end": "FFF000",
+  "no_automatic_repeat": true
+}

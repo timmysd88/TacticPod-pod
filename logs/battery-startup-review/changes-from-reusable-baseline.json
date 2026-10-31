@@ -1,0 +1,18 @@
+{
+  "docs/battery-bench-checklist.md": {
+    "before": "fe556c952951a28d02473296d25f02a7f96295731cc3d1188e71676c2520ff77",
+    "after": "d96b57832b044acfed7156b20ded4a2e878028b86334d9a7286181590c576638"
+  },
+  "docs/reusable-prototype.md": {
+    "before": "9479d5d28f9653973192fab2f0691881e6df6fd6fa76f99f59dd9b88adecee70",
+    "after": "6c7d0ed51270d9964c57296f4d07c49f0fd02fe8d4361f20f31f7f248a25fed6"
+  },
+  "platformio.ini": {
+    "before": "6c4130e2c2d12b7560a341cb4dde1d4ffa2b9c20d6e3cbc8bf1fc4954868ff08",
+    "after": "5749d2cf7915b17729660a299d8538b9640ab7ceb330103874053fc6d39a48fc"
+  },
+  "tests/reusable/run_all_tests.py": {
+    "before": "94467e7f960cfd9acc095e74cc8a3147039b42bf2634df8ea4c998f4e25b62ca",
+    "after": "31c53de03435dc754845d72cf7491a2a8c3b3f333a9d7d7c10a8fe571ea4c370"
+  }
+}

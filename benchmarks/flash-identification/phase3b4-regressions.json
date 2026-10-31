@@ -1,0 +1,17 @@
+{
+  "gps": 0,
+  "recording": 0,
+  "flash": 0,
+  "v2": 0,
+  "storage": 0,
+  "compact-native": 0,
+  "compact-host": 0,
+  "timing": 0,
+  "resources": 0,
+  "tcb3-store": 0,
+  "tcb3-integration": 0,
+  "tcb3-console": 0,
+  "identity": 0,
+  "sustained": 0,
+  "long": 0
+}

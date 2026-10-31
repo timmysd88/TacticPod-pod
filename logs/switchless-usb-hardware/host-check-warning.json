@@ -1,0 +1,6 @@
+{
+  "upload_not_repeated": true,
+  "recording_not_started": true,
+  "reason": "upload.py expected profile_error=none; actual GPS STATUS omits that field when no detail exists",
+  "correction": "Require 10HZ VERIFIED RAM and absence of GPS profile detail/error; verify fresh RATE window"
+}

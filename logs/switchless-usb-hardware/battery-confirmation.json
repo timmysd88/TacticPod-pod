@@ -1,0 +1,5 @@
+{
+  "user_confirmed": "LiPo disconnected; USB-only power; serial monitor closed",
+  "basis": "Physical confirmation by user; not inferred from ADC/USB",
+  "battery_commands_not_sent": true
+}

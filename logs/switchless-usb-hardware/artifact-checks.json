@@ -1,0 +1,22 @@
+{
+  "zip_sha256": "ffee03178a49e2b77130da9afdefd5f5c358c6b22ecb3e1e249b2157ca540c67",
+  "application_sha256": "ea159b3619e3fa27bc59ac9268c8ce8c5630a33b53da82d45901da8a17bdc9ae",
+  "manifest": {
+    "application": {
+      "bin_file": "firmware.bin",
+      "dat_file": "firmware.dat",
+      "init_packet_data": {
+        "application_version": 4294967295,
+        "device_revision": 65535,
+        "device_type": 82,
+        "firmware_crc16": 62519,
+        "softdevice_req": [
+          291
+        ]
+      }
+    },
+    "dfu_version": 0.5
+  },
+  "source_hashes_match": true,
+  "regression_suites": 10
+}

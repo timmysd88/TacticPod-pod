@@ -1,0 +1,42 @@
+{
+  "captures": 2,
+  "jedec_reads": 10,
+  "jedec": "0B4018",
+  "legacy_id": "0B17",
+  "sr1_before_after": [
+    "00",
+    "00"
+  ],
+  "sr2": "02",
+  "sfdp_passes": 4,
+  "all_sfdp_passes_identical": true,
+  "sfdp_sha256": "fb55c78de1f723eb5048b7f004658c75128c515881efae7d9dcc918afafafdec",
+  "capacity_bits": 134217728,
+  "parameter_headers": [
+    {
+      "id_hex": "FF00",
+      "revision": "1.0",
+      "dwords": 9,
+      "address": 48
+    },
+    {
+      "id_hex": "FF0B",
+      "revision": "1.0",
+      "dwords": 3,
+      "address": 96
+    }
+  ],
+  "bfpt_dwords_hex": [
+    "FFF120E5",
+    "07FFFFFF",
+    "6B08EB44",
+    "BB423B08",
+    "FFFFFFEE",
+    "FF00FFFF",
+    "FF00FFFF",
+    "520F200C",
+    "FF00D810"
+  ],
+  "vendor_table_hex": "003600279FF97764D9E8FFFF",
+  "b_uid_location_candidate_hex": "5F464283833B655D3D75435650528678"
+}

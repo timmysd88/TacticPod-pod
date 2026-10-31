@@ -1,0 +1,67 @@
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions
+  RECORD READ  - export committed recordings as CSV while stopped
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - bounded append-only compact sessions
+  TCB DURATION seconds - stopped only, 1..1800; default 120; drain deadline 60 seconds
+  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference
+  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming
+  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+IMU printing: OFF (default after boot)
+TCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.
+RECORD scan complete. Recording OFF at startup; append position recovered without writes.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x3C000
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x3C000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=1110 rejected=0 blocks sealed=5 completed=5
+COMP RAM input=0/2 output=0/2 input_high=2 output_high=1 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=1959420 max_block_step_us=53605 max_slice_us=298 max_units=8
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=58 blocks=5 committed=1110 offered=1110 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1001 error=none programs=43 max_block_ms=369 reusable duration_s=10 drain_s=60 lock=0
+
+HOST TX BAT STATUS
+BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=3714 filtered_mV=3843 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=135123 | checksum_ok=1866 | checksum_fail=1 | last_valid_message_age_ms=5
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)
+GPS fix=VALID | lat=50.775322 | lon=0.090163 | position=CURRENT | satellites=9 | HDOP=0.89
+GPS speed_km/h=0.519 | UTC=22:24:51Z | position_age_ms=5
+
+HOST TX TCB READ
+
+HOST RX binary saved after-1.tpx3
+
+HOST TX TCB READ
+
+HOST RX binary saved after-2.tpx3

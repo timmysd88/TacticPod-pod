@@ -1,0 +1,39 @@
+test_body_corruption_during_commit_is_detected (__main__.Persistent.test_body_corruption_during_commit_is_detected) ... ok
+test_boot_busy_timeout (__main__.Persistent.test_boot_busy_timeout) ... ok
+test_busy_timeout (__main__.Persistent.test_busy_timeout) ... ok
+test_cancelled_scan_cannot_allocate_from_partial_scan (__main__.Persistent.test_cancelled_scan_cannot_allocate_from_partial_scan) ... ok
+test_corrupt_continuation_header_recovers_later_blocks (__main__.Persistent.test_corrupt_continuation_header_recovers_later_blocks) ... ok
+test_corrupt_page_recovers_later_independent_block (__main__.Persistent.test_corrupt_page_recovers_later_independent_block) ... ok
+test_crc_valid_fragment_and_footer_corruption (__main__.Persistent.test_crc_valid_fragment_and_footer_corruption) ... ok
+test_denied_program (__main__.Persistent.test_denied_program) ... ok
+test_diagnostic_canary_never_touched (__main__.Persistent.test_diagnostic_canary_never_touched) ... ok
+test_empty_session_finalises (__main__.Persistent.test_empty_session_finalises) ... ok
+test_existing_v31_export_still_decodes (__main__.Persistent.test_existing_v31_export_still_decodes) ... ok
+test_export_busy_fault_cannot_look_complete (__main__.Persistent.test_export_busy_fault_cannot_look_complete) ... ok
+test_export_corruption_truncation_and_no_writes (__main__.Persistent.test_export_corruption_truncation_and_no_writes) ... ok
+test_export_unknown_sector_is_explicit_issue (__main__.Persistent.test_export_unknown_sector_is_explicit_issue) ... ok
+test_flash_full_stops_before_diagnostic (__main__.Persistent.test_flash_full_stops_before_diagnostic) ... ok
+test_hidden_payload_refuses_overwrite (__main__.Persistent.test_hidden_payload_refuses_overwrite) ... ok
+test_invalid_fix_missing_utc_and_u64_event_detail (__main__.Persistent.test_invalid_fix_missing_utc_and_u64_event_detail) ... ok
+test_json_u64_precision (__main__.Persistent.test_json_u64_precision) ... ok
+test_maximum_raw_block_paced_throughput (__main__.Persistent.test_maximum_raw_block_paced_throughput) ... ok
+test_mixed_v1_v2_preserved_and_legacy_decode (__main__.Persistent.test_mixed_v1_v2_preserved_and_legacy_decode) ... ok
+test_no_boot_writes_and_reset_append (__main__.Persistent.test_no_boot_writes_and_reset_append) ... ok
+test_nonsequential_torn_program_internal_order (__main__.Persistent.test_nonsequential_torn_program_internal_order) ... ok
+test_nor_model_bits_pages_and_sector_erase (__main__.Persistent.test_nor_model_bits_pages_and_sector_erase) ... ok
+test_power_cut_each_program_byte (__main__.Persistent.test_power_cut_each_program_byte) ... ok
+test_program_poll_millisecond_wrap (__main__.Persistent.test_program_poll_millisecond_wrap) ... ok
+test_readback_corruption_no_commit (__main__.Persistent.test_readback_corruption_no_commit) ... ok
+test_reset_at_each_wire_slice_boundary (__main__.Persistent.test_reset_at_each_wire_slice_boundary) ... ok
+test_roundtrip_continuations_and_export (__main__.Persistent.test_roundtrip_continuations_and_export) ... ok
+test_single_program_per_page_between_erases (__main__.Persistent.test_single_program_per_page_between_erases) ... ok
+test_timestamp_counter_rollover_exact (__main__.Persistent.test_timestamp_counter_rollover_exact) ... ok
+test_torn_header_reserves_sector_after_reboot (__main__.Persistent.test_torn_header_reserves_sector_after_reboot) ... ok
+test_torn_marker_native_lockout (__main__.Persistent.test_torn_marker_native_lockout) ... ok
+test_transport_read_failure_is_not_successful_export (__main__.Persistent.test_transport_read_failure_is_not_successful_export) ... ok
+test_wrong_block_crc (__main__.Persistent.test_wrong_block_crc) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 7.487s
+
+OK
