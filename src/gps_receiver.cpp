@@ -78,6 +78,13 @@ void decimal(double value, unsigned places) {
 }
 void twoDigits(unsigned value) { if (value < 10) text("0"); number(value); }
 bool fresh(bool valid, uint32_t age) { return valid && age <= kFreshMs; }
+bool liveFix() {
+  const uint32_t now = millis();
+  const bool nmeaFresh = receivedValid && uint32_t(now - lastValidAt) <= kFreshMs;
+  const bool positionFresh = fresh(gps.location.isValid(), gps.location.age());
+  return nmeaFresh && positionFresh && fixKnown && fixReported &&
+    uint32_t(now - lastFixAt) <= kFreshMs;
+}
 
 void updateFix(TinyGPSCustom& field, bool rmc) {
   if (!field.isUpdated()) return;
@@ -128,8 +135,7 @@ void buildStatus() {
   const uint32_t now = millis();
   outputLength = outputPosition = 0;
   const bool nmeaFresh = receivedValid && uint32_t(now - lastValidAt) <= kFreshMs;
-  const bool positionFresh = fresh(gps.location.isValid(), gps.location.age());
-  const bool hasFix = nmeaFresh && positionFresh && fixKnown && fixReported && uint32_t(now - lastFixAt) <= kFreshMs;
+  const bool hasFix = liveFix();
   text("GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=");
   text(nmeaFresh ? "VALID" : receivedValid ? "STALE" : "NONE");
   text(" | bytes="); number(byteCount);
@@ -275,6 +281,7 @@ void reportLoopback() {
 }
 
 namespace GpsReceiver {
+bool hasFreshFix() { return liveFix(); }
 void begin() {
   Serial1.begin(GpsUartConfig::kNormalBaud);  // Verified pins; 38400 8N1, no PPS.
   startedAt = lastReportAt = millis();

@@ -17,6 +17,7 @@ uint64_t offered[4]{};uint64_t stopUs=0;
 uint32_t storeMissed=0,maxServiceUs=0;
 unsigned exportSent=0;
 Tcb3::Reason reason=Tcb3::Reason::Clean;
+bool cleanCompletionPending=false;
 char line[256]{};unsigned lineSize=0;
 bool pageOpen=false;unsigned pageSent=0;
 uint64_t testStartedUs=0;
@@ -111,6 +112,9 @@ void begin(bool ready){storeImuReady=ready;
 }
 bool exclusive(){return pending || owned || dumping || locked;}
 bool exporting(){return dumping;}
+bool recording(){return owned && !finishing;}
+bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault;}
+bool takeCleanCompletion(){bool completed=cleanCompletionPending;cleanCompletionPending=false;return completed;}
 void observation(unsigned kind){
   if(Tcb3Test::Enabled && owned && !finishing && MonotonicClock::now()-testStartedUs>=Tcb3Test::CaptureUs)stop(Tcb3::Reason::Clean);
 #if TACTICPOD_REUSABLE
@@ -231,6 +235,7 @@ void update(bool allow){
       Tcb3::put(m+68,1); // Bit 0: device ID present; build ID remains unavailable.
 #endif
       if(store.start(m) && CompactRecorder::start()){
+        cleanCompletionPending=false;
         testStartedUs=MonotonicClock::now();testUsed=true;
         memset(offered,0,sizeof(offered));storeMissed=maxServiceUs=0;finishing=false;owned=true;pending=false;storeReport("STARTED");
       }else{pending=false;storeReport("REFUSED: full/retained RAM");}
@@ -246,6 +251,7 @@ void update(bool allow){
       if(finishing && !store.stats.closing && (store.stats.full || (!c.inputUsed && !c.outputReady)))
         store.finish(stopUs,offered,reason,c.rejected,storeMissed);
       if(store.stats.finished){
+        cleanCompletionPending=reason==Tcb3::Reason::Clean && !locked;
         owned=false;finishing=false;storeReport("STOPPED");
 #if TACTICPOD_REUSABLE
         if(reason!=Tcb3::Reason::Clean)locked=true;

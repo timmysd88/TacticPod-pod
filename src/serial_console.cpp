@@ -37,6 +37,8 @@ void printMenu() {
   if(Tcb3Test::Reusable){
     Serial.println("  TCB START / STOP / STATUS / READ - bounded append-only compact sessions");
     Serial.println("  TCB DURATION seconds - stopped only, 1..1800; default 120; drain deadline 60 seconds");
+    Serial.println("  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop");
+    Serial.println("  Standby remains awake for USB recovery; no deep sleep or wake-on-button is used");
     Serial.println("  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference");
     Serial.println("  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming");
     Serial.println("  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds");

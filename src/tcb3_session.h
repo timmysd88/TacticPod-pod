@@ -12,6 +12,9 @@ void begin(bool imuReady);
 void update(bool allowWork=true);
 bool exclusive();
 bool exporting();
+bool recording();
+bool faulted();
+bool takeCleanCompletion();
 bool handleCommand(const char*);
 bool guardCommand(const char*);
 void observation(unsigned kind);
@@ -21,6 +24,9 @@ inline void begin(bool){}
 inline void update(bool=true){}
 inline bool exclusive(){return false;}
 inline bool exporting(){return false;}
+inline bool recording(){return false;}
+inline bool faulted(){return false;}
+inline bool takeCleanCompletion(){return false;}
 inline bool guardCommand(const char*){return false;}
 inline void observation(unsigned){}
 inline void noteMissed(uint32_t){}

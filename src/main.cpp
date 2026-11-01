@@ -13,26 +13,73 @@
 #include "compact_recorder.h"
 #include "tcb3_session.h"
 #include "battery_runtime.h"
+#include "physical_button.h"
+#include "status_led.h"
 
 namespace {
+#if !TACTICPOD_REUSABLE
 constexpr unsigned long kLedIntervalMs = 1000;
+#endif
 constexpr unsigned long kReadingIntervalMs = 100;
 constexpr uint8_t kFlashCsPin = 2;  // XIAO D2; SPI defaults: D8/D9/D10.
 constexpr uint32_t kFlashClockHz = 1000000;
 LSM6DS3 imu(I2C_MODE, 0x6A);
+#if !TACTICPOD_REUSABLE
 unsigned long lastLedMs = 0;
+#endif
 unsigned long lastReadingMs = 0;
 unsigned long lastImuPrintMs = 0;
 bool wasRecording = false;
 bool imuReady = false;
 int imuStatus = -1;
+#if !TACTICPOD_REUSABLE
 bool redLedIsOn = false;
+#endif
 bool flashReportPrinted = false;
 bool flashReportRequested = false;
 bool imuFailureReported = false;
 FlashIdentity::Reader identityReader;
 bool identityRequested=false,identityRunning=false;
 unsigned identityOutput=0;
+#if TACTICPOD_REUSABLE
+static_assert(PIN_A0 == 0, "Record button must use XIAO D0/P0.02");
+PhysicalButton::StateMachine physicalButton;
+StatusLed::Scheduler userLed;
+bool wasTcbRecording = false;
+
+void setUserLed(StatusLed::Color color) {
+  const bool red = color == StatusLed::Color::Red || color == StatusLed::Color::Orange;
+  const bool green = color == StatusLed::Color::Green || color == StatusLed::Color::Orange;
+  const bool blue = color == StatusLed::Color::Blue;
+  digitalWrite(LED_RED, red ? LOW : HIGH);
+  digitalWrite(LED_GREEN, green ? LOW : HIGH);
+  digitalWrite(LED_BLUE, blue ? LOW : HIGH);
+}
+
+void updateFieldControls() {
+  const uint32_t now = millis();
+  const PhysicalButton::Action action = physicalButton.update(
+    digitalRead(PIN_A0) == LOW, now, Tcb3Session::recording(), Tcb3Session::exclusive());
+  if (action == PhysicalButton::Action::Start) {
+    Tcb3Session::handleCommand("TCB START");
+    if (Tcb3Session::exclusive()) userLed.notify(StatusLed::Event::StartupAccepted, now);
+  } else if (action == PhysicalButton::Action::Stop) {
+    Tcb3Session::handleCommand("TCB STOP");
+  }
+
+  const bool recording = Tcb3Session::recording();
+  if (recording && !wasTcbRecording) userLed.notify(StatusLed::Event::RecordingStarted, now);
+  const bool cleanCompletion = Tcb3Session::takeCleanCompletion();
+  if (wasTcbRecording && !recording && cleanCompletion && !Tcb3Session::exclusive())
+    userLed.notify(StatusLed::Event::RecordingStopped, now);
+  wasTcbRecording = recording;
+
+  const auto& battery = BatteryRuntime::monitor();
+  const bool lowBattery = battery.trusted(MonotonicClock::now()) && battery.s.warning;
+  setUserLed(userLed.update(now, GpsReceiver::hasFreshFix(), lowBattery, Tcb3Session::faulted()));
+}
+#endif
+
 struct ImuReading {
   unsigned long timestampMs;
   float ax, ay, az;
@@ -360,6 +407,9 @@ void setup() {
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
+#if TACTICPOD_REUSABLE
+  pinMode(PIN_A0, INPUT_PULLUP);
+#endif
 
   Serial.begin(115200);  // USB CDC serial; do not wait for a host connection.
   GpsReceiver::begin();
@@ -382,6 +432,9 @@ void setup() {
 void loop() {
   (void)MonotonicClock::now(); // Boot clock continues while all recorders are idle.
   GpsReceiver::update();
+#if TACTICPOD_REUSABLE
+  updateFieldControls();
+#endif
   FlashWriteTest::update(); // Keep the USB command reader alive during TCB capture.
   Recorder::update();
   RamObservations::update();
@@ -391,12 +444,14 @@ void loop() {
   }
   updateIdentity();
   const unsigned long now = millis();
+#if !TACTICPOD_REUSABLE
   if (now - lastLedMs >= kLedIntervalMs) {
     lastLedMs = now;
     redLedIsOn = !redLedIsOn;
     digitalWrite(LED_RED, redLedIsOn ? LOW : HIGH);
 
   }
+#endif
   if (!Serial) {
     imuFailureReported = false;
   } else if (!identityRunning && FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() && !Tcb3Session::exclusive() && !GpsReceiver::uartScanBusy() &&

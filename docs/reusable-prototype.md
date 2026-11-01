@@ -95,6 +95,7 @@ with explicit overflow/full accounting; it cannot bypass the fence.
 | `BAT MODE CELL` | Idle-only explicit cell configuration; fresh warmup required |
 | `BAT MODE USB` | Idle-only absent-cell mode; disables voltage-triggered stops |
 | `BAT LIMITS 3600 3500 3300 3700` | Idle-only warning/stop/hard/recovery mV |
+| Physical button | D0/P0.02, active LOW; hold 3s to start, tap then hold 3s to stop |
 
 Battery settings, cell mode and calibration are **RAM-only**, never written to
 recording flash or internal nonvolatile settings. Every boot defaults to cell
@@ -108,14 +109,50 @@ serial response buffer. Battery configuration is refused while busy. TPX3 export
 suppresses all command text, including BAT STATUS; wait for export END before
 sending another command. No periodic voltage printing or USB waiting is required.
 
-No momentary button or GPIO input has been configured. The board reset button is
-not a recording control. A later reviewed debounced button adapter can request
-the same validated START/STOP command API without USB, keeping battery admission,
-duration and fault guards. Select/verify a spare pin and wiring then. Current
-bench operation can configure/start over USB, disconnect the PC and let the
-independent stop/finalisation run. Cold-boot autonomous battery use needs a future
-reviewed way to supply verified calibration/cell configuration and a start input;
-this prototype deliberately does not invent persistent calibration or auto-start.
+The reusable build now uses the normally-open switch on D0/P0.02 with the
+internal pull-up; source review found no other D0 ownership. Its debounced,
+nonblocking state machine invokes the same `TCB START`/`TCB STOP` command path,
+so storage, battery, duration and fault admission remain firmware-owned:
+
+- From idle, hold continuously for 3 seconds to request one start. Releasing
+  early is ignored. A busy scan, active session or fault cannot start a second
+  session; a failed request never gets the recording-success indication.
+- While recording, make a short tap (at most 500 ms), release, then press again
+  within 5 seconds and hold for 3 seconds. A standalone long hold does not stop.
+  Releasing the second hold early cancels shutdown. Finalisation remains
+  nonblocking and the normal flash footer/verification must finish before the
+  safe-stop indication.
+- USB commands and the button share the TCB3 recorder state and reject duplicate
+  operations. USB diagnostics/recovery remain available; reset still performs a
+  read-only scan and never resumes or starts a session automatically.
+
+The reusable build drives the active-LOW XIAO RGB LED using the variant's
+`LED_RED`, `LED_GREEN` and `LED_BLUE` mappings. Ready/acquiring/no-fix uses a
+100ms blue flash every 3 seconds; a current valid GPS fix alternates blue/green
+on those same intervals. A trusted calibrated low-battery warning overrides
+this with orange. Startup accepted is two brief blue flashes, capture actually
+started is a 400ms blue flash, successful finalisation is two brief green
+flashes, and a recorder fault repeats three red flashes. GPS fix freshness is
+the same 5-second RMC/GGA validity used by GPS STATUS. LED updates do not delay
+sensor/flash service.
+
+This is **not a power switch or low-power standby implementation**. The MCU
+remains in System ON; GPS reception and the idle IMU polling continue, and no
+System OFF/deep sleep or wake-on-button mechanism is used. D0 can be sampled
+while the firmware is running, but cannot wake a powered-down MCU. The user LED
+returns to the ready/GPS pattern after a completed stop rather than claiming
+standby. USB recovery is preserved. No battery isolation, zero-power or
+battery-powered operation is claimed. Battery settings remain volatile, so a
+cold reset restores uncalibrated USB mode and still requires a fresh button hold.
+
+Do not begin a battery-powered outdoor trial until the documented boot
+P0.14/P0.31 and charging-safety NO-GO is cleared. After those hardware and
+power gates pass, the conservative first supervised capture recommendation is
+120 seconds, followed by download and TPX3 verification before increasing the
+duration. The firmware remains capped at 1800 seconds (30 minutes), not a
+whole-match guarantee; admission checks storage and never overwrites old
+sessions. Existing sessions remain protected by the append-only layout. This
+recommendation is not field qualification.
 
 ## Exact board support and hardware evidence
 
