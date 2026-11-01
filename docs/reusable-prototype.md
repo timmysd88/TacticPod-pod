@@ -145,6 +145,15 @@ standby. USB recovery is preserved. No battery isolation, zero-power or
 battery-powered operation is claimed. Battery settings remain volatile, so a
 cold reset restores uncalibrated USB mode and still requires a fresh button hold.
 
+Idle-armed current and battery runtime have **not been measured** on this
+prototype; no defensible mA or runtime estimate is available. The idle state
+keeps the CPU active, the GPS receiver running, and the IMU initialized and
+polled, with a periodic user-LED flash. Its draw should therefore be treated as
+active-system consumption, not sleep current. Measure steady-state battery
+current on the actual board, with USB disconnected, before estimating field
+runtime or approving battery trials. Charging, battery sensing, and board-level
+quiescent loads can change that measurement.
+
 Do not begin a battery-powered outdoor trial until the documented boot
 P0.14/P0.31 and charging-safety NO-GO is cleared. After those hardware and
 power gates pass, the conservative first supervised capture recommendation is
@@ -153,6 +162,15 @@ duration. The firmware remains capped at 1800 seconds (30 minutes), not a
 whole-match guarantee; admission checks storage and never overwrites old
 sessions. Existing sessions remain protected by the append-only layout. This
 recommendation is not field qualification.
+
+An unlimited-until-button-stop policy is not implemented. A compatible future
+extension should be explicitly opt-in while preserving the default 120-second
+and existing 1–1800-second policy, report available append capacity, and retain
+the current TCB3 footer reservation. At the final writable sector, it must stop
+accepting samples, account for any unwritten tail, write and verify the footer
+in the reserved page, report storage-full distinctly, and never erase or
+overwrite an earlier session. A finite wall-clock safety ceiling may also be
+offered separately, but must not be silently presented as flash capacity.
 
 ## Exact board support and hardware evidence
 
