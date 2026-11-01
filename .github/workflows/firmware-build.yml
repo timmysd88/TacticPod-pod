@@ -70,7 +70,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
           $build = '.pio/build/tacticpod_reusable_usb'
-          foreach ($f in 'firmware.bin','firmware.hex','firmware.elf') { if (Test-Path "$build/$f") { Copy-Item "$build/$f" "dist/tacticpod_reusable_usb-$f" } }
+          foreach ($f in 'firmware.zip','firmware.hex','firmware.elf') { if (Test-Path "$build/$f") { Copy-Item "$build/$f" "dist/tacticpod_reusable_usb-$f" } }
           Copy-Item build.log, tests.log dist/
           Copy-Item .pio/reusable-regression-logs dist/regression-logs -Recurse
           pio run -e tacticpod_reusable_usb -t size 2>&1 | Tee-Object -FilePath dist/size.txt

@@ -18,7 +18,12 @@ uint32_t storeMissed=0,maxServiceUs=0;
 unsigned exportSent=0;
 Tcb3::Reason reason=Tcb3::Reason::Clean;
 bool cleanCompletionPending=false;
-char line[320]{};unsigned lineSize=0;
+#if TACTICPOD_REUSABLE
+char line[320]{};
+#else
+char line[256]{};
+#endif
+unsigned lineSize=0;
 bool pageOpen=false;unsigned pageSent=0;
 uint64_t testStartedUs=0;
 bool testUsed=false;
