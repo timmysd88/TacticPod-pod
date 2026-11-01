@@ -209,8 +209,8 @@ three red flashes (2 s); fault: repeating red. Standby: off.
 
 | Item | State |
 | --- | --- |
-| Firmware compiled | See the CI "Firmware build and tests" run on the PR (artifact + SHA256SUMS) |
-| Host tests | See the same run; local runs documented in the PR |
+| Firmware compiled | Yes: GitHub Actions Windows build of `tacticpod_reusable_usb` (pinned PlatformIO 6.2.0 and Seeed platform a6fd41d). `firmware.hex` SHA-256 `a04b05e9443ccd22f533c2aa1df4a40dea2c12d0593f4d90ffa87c56bf83c573`, `firmware.elf` `e476e26ebe4583c72ab07c20405568106743fa8d8d44199c90c534bbae9d84ed`; text 191772, data 2828, bss 232692 (bss includes stack/heap reservation). The DFU `firmware.zip` hash differs per build; use the SHA256SUMS.txt of the artifact you install |
+| Host tests | 30/30 regression suites pass in the same CI run (no hardware) |
 | Hardware behaviour | **Not verified**: wake, hold, GPS/IMU timing, LEDs, USB, standby current |
 
 Install (needs separate approval; never done by CI): download the artifact, verify
