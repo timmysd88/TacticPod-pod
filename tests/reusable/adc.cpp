@@ -1,9 +1,11 @@
 #define TACTICPOD_REUSABLE 1
+#define TACTICPOD_BATTERY_STORE_SIM 1
 #define TACTICPOD_TCB3_FLASH_ENABLED 1
 #include "hw/Arduino.h"
 uint8_t writes[33]{},modes[33]{};
 Adc adc;Power power;uint64_t clockUs=1000000;
 namespace MonotonicClock {uint64_t now(){return clockUs;}}
+#include "../../src/battery_calibration_store.cpp"
 #include "../../src/battery_runtime.cpp"
 void complete(int raw){
   if(adc.TASKS_CALIBRATEOFFSET){
@@ -15,8 +17,9 @@ void complete(int raw){
   adc.EVENTS_STOPPED=1;BatteryRuntime::update(false);
 }
 extern "C" unsigned adcCase(unsigned c){
+  BatteryCalibrationStore::resetForTest();
   BatteryRuntime::begin();
-  if(writes[14]!=LOW || modes[14]!=OUTPUT || modes[22]!=INPUT)return 1;
+  if(writes[14]!=LOW || modes[14]!=OUTPUT || modes[22]!=INPUT || modes[23]!=INPUT)return 1;
   BatteryRuntime::update(false);if(adc.ENABLE)return 2;
   if(c==2 || c==3){
     adc.ENABLE=c==2?1:0;adc.INTENSET=c==3?1:0;BatteryRuntime::update(true);
@@ -37,8 +40,32 @@ extern "C" unsigned adcCase(unsigned c){
     if(m.trusted(clockUs))return 12;
     for(unsigned i=0;i<3;++i){clockUs+=1000000;BatteryRuntime::update(true);complete(1500);}
     if(!m.trusted(clockUs) || m.s.stop)return 13;
-    char output[256];unsigned n=BatteryRuntime::format(output,sizeof(output));
-    if(!strstr(output,"gain_ppm=1000000") || !strstr(output,"limits=3600/3500/3300/3700") || n>=255 || output[n-1]!='\n')return 14;
+    char output[512];unsigned n=BatteryRuntime::format(output,sizeof(output));
+    if(!strstr(output,"gain_ppm=1000000") || !strstr(output,"limits=3600/3500/3300/3700") || n>=sizeof(output)-1 || output[n-1]!='\n')return 14;
+  }
+  if(c==7 || c==8){
+    if(!BatteryRuntime::command("BAT CAL SAVE 4000"))return 15;
+    BatteryCalibrationStore::Settings saved{};
+    if(BatteryCalibrationStore::load(saved)!=BatteryCalibrationStore::LoadResult::Valid ||
+       saved.gainPpm<1024000 || saved.gainPpm>1025000)return 16;
+    if(c==8){
+      if(BatteryRuntime::command("BAT CAL SAVE 4301") ||
+         BatteryRuntime::command("BAT CAL SAVE 2000"))return 17;
+      BatteryCalibrationStore::Settings unchanged{};
+      if(BatteryCalibrationStore::load(unchanged)!=BatteryCalibrationStore::LoadResult::Valid ||
+         unchanged.gainPpm!=saved.gainPpm || unchanged.sequence!=saved.sequence)return 18;
+    }
+  }
+  if(c==9){
+    BatteryCalibrationStore::Settings first{};first.gainPpm=1010000;
+    BatteryCalibrationStore::Settings second{};second.gainPpm=1020000;
+    if(!BatteryCalibrationStore::save(first) || !BatteryCalibrationStore::save(second))return 19;
+    BatteryCalibrationStore::corruptForTest(1,4);
+    BatteryCalibrationStore::Settings recovered{};
+    if(BatteryCalibrationStore::load(recovered)!=BatteryCalibrationStore::LoadResult::Valid ||
+       recovered.gainPpm!=first.gainPpm)return 20;
+    BatteryCalibrationStore::corruptForTest(0,4);
+    if(BatteryCalibrationStore::load(recovered)!=BatteryCalibrationStore::LoadResult::Invalid)return 21;
   }
   return 0;
 }

@@ -12,6 +12,7 @@ class Monitor {
  public:
   State s{}; Limits limits{};
   uint32_t gainPpm() const {return gain;}
+  int32_t offsetMv() const {return offset;}
   bool configure(Limits p){
     if(p.hard<2500 || p.hard>=p.stop || p.stop>=p.warn || p.warn>=p.recover || p.recover>4300)return false;
     limits=p;resetPolicy();return true;

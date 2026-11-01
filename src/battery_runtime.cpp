@@ -3,10 +3,14 @@
 #include <Arduino.h>
 #include <string.h>
 #include "monotonic_clock.h"
+#include "battery_calibration_store.h"
 namespace {
 namespace BatteryDetail {
 Battery::Monitor policy;
 bool initialized=false;uint32_t timeoutCount=0;
+constexpr uint8_t chargingStatusPin=23; // Arduino D23 maps to nRF P0.17 (~CHG).
+BatteryCalibrationStore::LoadResult calibrationLoad=BatteryCalibrationStore::LoadResult::Empty;
+bool persistentCalibration=false;
 uint64_t due=0,began=0;unsigned phase=0;
 #ifdef TACTICPOD_BATTERY_SIM
 uint32_t simMv=4000;bool simValid=false;
@@ -36,10 +40,19 @@ bool usbPresent(){
 }
 void begin(){
   if(initialized)return;initialized=true;
+  BatteryCalibrationStore::Settings settings{};
+  calibrationLoad=BatteryCalibrationStore::load(settings);
+  if(calibrationLoad==BatteryCalibrationStore::LoadResult::Valid &&
+     !policy.calibrate(settings.gainPpm,settings.offsetMv)) {
+    calibrationLoad=BatteryCalibrationStore::LoadResult::Invalid;
+  } else {
+    persistentCalibration=calibrationLoad==BatteryCalibrationStore::LoadResult::Valid;
+  }
 #ifndef TACTICPOD_BATTERY_SIM
   // Assert sink before changing direction, leave enabled even during charging.
   digitalWrite(VBAT_ENABLE,LOW);pinMode(VBAT_ENABLE,OUTPUT);
   pinMode(PIN_CHARGING_CURRENT,INPUT); // No pulls: nominal low charge-current mode.
+  pinMode(chargingStatusPin,INPUT); // No pulls: observe the charger's open-drain indicator.
 #endif
 }
 #ifdef TACTICPOD_BATTERY_SIM
@@ -90,10 +103,29 @@ void update(bool allow){
 bool command(const char* line){
   if(!strcmp(line,"BAT MODE USB")){policy.cell(false);return true;}
   if(!strcmp(line,"BAT MODE CELL")){policy.cell(true);return true;}
+  if(!strncmp(line,"BAT CAL SAVE ",13)){
+    const char* p=line+13;uint32_t referenceMv=0;
+    if(!decimal(p,referenceMv) || *p || referenceMv<2500 || referenceMv>4300 ||
+       !policy.fresh(MonotonicClock::now()) || !policy.s.nominalMv)return false;
+#ifndef TACTICPOD_BATTERY_SIM
+    if(usbPresent() && digitalRead(chargingStatusPin)==LOW)return false;
+#endif
+    const uint64_t scaled=(uint64_t(referenceMv)*1000000+policy.s.nominalMv/2)/policy.s.nominalMv;
+    if(scaled>1200000 || scaled<800000)return false;
+    BatteryCalibrationStore::Settings settings{};
+    settings.gainPpm=uint32_t(scaled);
+    if(!BatteryCalibrationStore::save(settings))return false;
+    if(!policy.calibrate(settings.gainPpm,0))return false;
+    calibrationLoad=BatteryCalibrationStore::LoadResult::Valid;
+    persistentCalibration=true;
+    return true;
+  }
   if(!strncmp(line,"BAT CAL ",8)){
     const char* p=line+8;uint32_t mv=0;
     if(!decimal(p,mv) || *p || mv<2500 || mv>4300 || !policy.fresh(MonotonicClock::now()) || !policy.s.nominalMv)return false;
-    return policy.calibrate(uint32_t(uint64_t(mv)*1000000/policy.s.nominalMv));
+    const bool ok=policy.calibrate(uint32_t((uint64_t(mv)*1000000+policy.s.nominalMv/2)/policy.s.nominalMv));
+    if(ok)persistentCalibration=false;
+    return ok;
   }
   if(!strncmp(line,"BAT LIMITS ",11)){
     const char* p=line+11;uint32_t a[4]{};
@@ -113,10 +145,29 @@ unsigned format(char* dst,unsigned capacity){
 #endif
   text(" cell=");num(s.cell);text(" calibrated=");num(s.calibrated);text(" valid=");num(policy.fresh(MonotonicClock::now()));
   text(" trusted=");num(policy.trusted(MonotonicClock::now()));text(" nominal_mV=");num(s.nominalMv);
+  text(" raw_mV=");num(s.nominalMv);text(" voltage_mV=");num(s.mv);
   text(" filtered_mV=");num(s.filteredMv);text(" warning=");num(s.warning);text(" stop=");num(s.stop);text(" hard=");num(s.hard);
   text(" adc_timeout=");num(timeoutCount);text(" invalid=");num(s.invalid);text(" usb_vbus=");num(usbPresent());
+  text(" charge_status=");
+#ifdef TACTICPOD_BATTERY_SIM
+  text("UNKNOWN");
+#else
+  if(!usbPresent())text("UNKNOWN");
+  else text(digitalRead(chargingStatusPin)==LOW?"CHARGING":"NOT_CHARGING_OR_FULL");
+#endif
+  text(" calibration_state=");
+  if(calibrationLoad==BatteryCalibrationStore::LoadResult::Invalid)text("INVALID");
+  else text(s.calibrated?"CALIBRATED":"UNCALIBRATED");
+  text(" calibration_crc_valid=");num(persistentCalibration);
+  text(" protection_active=");num(policy.trusted(MonotonicClock::now()));
+  text(" thresholds_provisional=1 protocol=2");
+  text(" sample_age_ms=");
+  const uint64_t now=MonotonicClock::now();
+  if(s.valid && now>=s.lastUs)num((now-s.lastUs)/1000);else text("N/A");
   text(" limits=");num(policy.limits.warn);text("/");num(policy.limits.stop);text("/");num(policy.limits.hard);text("/");num(policy.limits.recover);
-  text(" gain_ppm=");num(policy.gainPpm());text("\n");if(capacity)dst[used]=0;return used;
+  text(" gain_ppm=");num(policy.gainPpm());text(" offset_mV=");num(policy.offsetMv());
+  text(" adc_errors=");num(s.invalid);
+  text("\n");if(capacity)dst[used]=0;return used;
 }
 }
 #endif

@@ -17,7 +17,7 @@ uint64_t offered[4]{};uint64_t stopUs=0;
 uint32_t storeMissed=0,maxServiceUs=0;
 unsigned exportSent=0;
 Tcb3::Reason reason=Tcb3::Reason::Clean;
-char line[256]{};unsigned lineSize=0;
+char line[512]{};unsigned lineSize=0;
 bool pageOpen=false;unsigned pageSent=0;
 uint64_t testStartedUs=0;
 bool testUsed=false;

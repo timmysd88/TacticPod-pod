@@ -5,6 +5,8 @@ from native import Native,compile
 elf=compile('tests/reusable/adc.cpp','battery-real-backend-tests',('tests/reusable/hw',))
 for i,name in enumerate(('real-backend register sequencing','ADC timeout without blocking',
     'existing ADC owner','existing ADC IRQ owner','rail reading invalid',
-    'VBUS independent of serial','operator calibration and arming')):
+    'VBUS independent of serial','operator calibration and arming',
+    'persistent calibration survives store reload','invalid calibration preserves saved settings',
+    'CRC corruption falls back to the prior valid settings')):
     m=Native(elf);code=m.call('adcCase',i);assert code==0,(name,code)
     print('PASS:',name,flush=True)

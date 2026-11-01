@@ -10,6 +10,7 @@
 #define PIN_CHARGING_CURRENT 22
 extern uint8_t writes[33],modes[33];
 inline void digitalWrite(unsigned p,unsigned n){writes[p]=n;}
+inline int digitalRead(unsigned){return HIGH;}
 inline void pinMode(unsigned p,unsigned n){modes[p]=n;}
 struct Adc {
   uint32_t ENABLE=0,INTENSET=0,RESOLUTION=0,OVERSAMPLE=0,SAMPLERATE=0;

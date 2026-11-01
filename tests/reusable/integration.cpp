@@ -1,5 +1,6 @@
 #define TACTICPOD_REUSABLE 1
 #define TACTICPOD_BATTERY_SIM 1
+#define TACTICPOD_BATTERY_STORE_SIM 1
 #define TACTICPOD_TCB3_FLASH_ENABLED 1
 #define TCB_SIM_FLASH_BYTES 0x1000000
 #define TCB_SIM_USB_CAPACITY 700000
@@ -7,6 +8,7 @@
 void reusableObservation(const uint8_t*,unsigned);
 #define TCB_SIM_OBSERVATION reusableObservation
 #include "../tcb3/integration.cpp"
+#include "../../src/battery_calibration_store.cpp"
 #include "../../src/battery_runtime.cpp"
 uint8_t protectedPrefix[0x39000],newWire[200000];unsigned newWireSize=0;
 uint32_t reusableInfo[24]{};

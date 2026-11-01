@@ -37,8 +37,10 @@ void printMenu() {
   if(Tcb3Test::Reusable){
     Serial.println("  TCB START / STOP / STATUS / READ - bounded append-only compact sessions");
     Serial.println("  TCB DURATION seconds - stopped only, 1..1800; default 120; drain deadline 60 seconds");
-    Serial.println("  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference");
-    Serial.println("  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming");
+    Serial.println("  BAT STATUS - voltage, calibration, charger indicator, USB VBUS and protection");
+    Serial.println("  BAT CAL measured_mV - stopped-only RAM calibration");
+    Serial.println("  BAT CAL SAVE measured_mV - persist confirmed multimeter calibration");
+    Serial.println("  BAT MODE USB|CELL - stopped-only RAM protection selection");
     Serial.println("  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds");
   }else Serial.println("  TCB START / STOP / STATUS / READ - separate compact sessions (host simulation gate)");
   Serial.println("  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first");
