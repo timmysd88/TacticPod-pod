@@ -13,6 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: utf-8
   PLATFORMIO_CORE_DIR: ${{ github.workspace }}/.pio-core
   SEEED_PLATFORM_COMMIT: a6fd41debbbcda13b5340fff50c9092ed3289194
   LSM6DS3_COMMIT: e063c3a544b8bb89238accddf24f0028bcd1ca20
