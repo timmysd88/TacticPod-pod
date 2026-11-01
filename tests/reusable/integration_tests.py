@@ -14,7 +14,7 @@ for c,name in enumerate(('USB-only three consecutive bounded sessions','calibrat
     'calibrated hard threshold finalisation','uncalibrated cell start refuses','hidden occupied initial sector faults',
     'insufficient capacity refuses before programming','power interruption and append recovery',
     'finalisation watchdog without flash slack','TIMER4 rollover','USB-only low phantom ignored','acquisition fault finalises and locks',
-    'USB battery status while recording and export isolation','power interruption after a committed block')):
+    'USB battery status while recording and export isolation','power interruption after a committed block','until-stop session ignores the timed cap and stops cleanly')):
     m=machine();code=m.call('reusableCase',c,limit=4000000000);assert code==0,(c,name,code)
     info=struct.unpack('<24I',m.get('reusableInfo',96))
     assert bytes(m.m.mem_read(m.s['SPI'],len(seed)))==seed

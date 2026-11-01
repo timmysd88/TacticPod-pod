@@ -182,7 +182,7 @@ void advanceValue(uint32_t value) {
   readRetries = 0;
   if (job == Job::Snapshot) saved[keyIndex] = value;
   else {
-    (restoring ? restoreRead : testRead)[keyIndex] = {value, millis(), ReadState::Value};
+    (restoring ? restoreRead : testRead)[keyIndex] = Readback{value, millis(), ReadState::Value};
   }
   if (job != Job::Snapshot && value != target(keyIndex)) {
     event(EventKind::Mismatch, keys[keyIndex].id, target(keyIndex), value);

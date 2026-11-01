@@ -95,6 +95,7 @@ with explicit overflow/full accounting; it cannot bypass the fence.
 | `BAT MODE CELL` | Idle-only explicit cell configuration; fresh warmup required |
 | `BAT MODE USB` | Idle-only absent-cell mode; disables voltage-triggered stops |
 | `BAT LIMITS 3600 3500 3300 3700` | Idle-only warning/stop/hard/recovery mV |
+| Physical button | D0/P0.02, active LOW; hold 3s to start, tap then hold 3s to stop |
 
 Battery settings, cell mode and calibration are **RAM-only**, never written to
 recording flash or internal nonvolatile settings. Every boot defaults to cell
@@ -108,14 +109,133 @@ serial response buffer. Battery configuration is refused while busy. TPX3 export
 suppresses all command text, including BAT STATUS; wait for export END before
 sending another command. No periodic voltage printing or USB waiting is required.
 
-No momentary button or GPIO input has been configured. The board reset button is
-not a recording control. A later reviewed debounced button adapter can request
-the same validated START/STOP command API without USB, keeping battery admission,
-duration and fault guards. Select/verify a spare pin and wiring then. Current
-bench operation can configure/start over USB, disconnect the PC and let the
-independent stop/finalisation run. Cold-boot autonomous battery use needs a future
-reviewed way to supply verified calibration/cell configuration and a start input;
-this prototype deliberately does not invent persistent calibration or auto-start.
+The reusable build now uses the normally-open switch on D0/P0.02 with the
+internal pull-up; source review found no other D0 ownership. Its debounced,
+nonblocking state machine invokes the same `TCB START`/`TCB STOP` command path,
+so storage, battery, duration and fault admission remain firmware-owned:
+
+- From idle, hold continuously for 3 seconds to request one start. Releasing
+  early is ignored. A busy scan, active session or fault cannot start a second
+  session; a failed request never gets the recording-success indication.
+- While recording, make a short tap (at most 500 ms), release, then press again
+  within 5 seconds and hold for 3 seconds. A standalone long hold does not stop.
+  Releasing the second hold early cancels shutdown. Finalisation remains
+  nonblocking and the normal flash footer/verification must finish before the
+  safe-stop indication.
+- USB commands and the button share the TCB3 recorder state and reject duplicate
+  operations. USB diagnostics/recovery remain available; reset still performs a
+  read-only scan and never resumes or starts a session automatically.
+
+The reusable build drives the active-LOW XIAO RGB LED using the variant's
+`LED_RED`, `LED_GREEN` and `LED_BLUE` mappings. Ready/acquiring/no-fix uses a
+100ms blue flash every 3 seconds; a current valid GPS fix alternates blue/green
+on those same intervals. A trusted calibrated low-battery warning overrides
+this with orange. Startup accepted is two brief blue flashes, capture actually
+started is a 400ms blue flash, successful finalisation is two brief green
+flashes, and a recorder fault repeats three red flashes. GPS fix freshness is
+the same 5-second RMC/GGA validity used by GPS STATUS. LED updates do not delay
+sensor/flash service.
+
+## Standby, wake and USB recovery (System ON)
+
+The button is **not a power switch**. After 2 seconds with nothing to do the
+firmware enters a **System ON standby** (`src/standby_policy.h`). This is a
+software idle state, not System OFF:
+
+- GPS UART (`Serial1`) is stopped and its TX line parked HIGH; receiver
+  configuration is untouched, so the module keeps running from its own supply.
+- IMU accelerometer and gyroscope are written to power-down (`CTRL1_XL`/`CTRL2_G` = 0).
+- The SPI NOR is put into deep power-down (opcode 0xB9) only when WIP/WEL are clear
+  (`src/flash_power.h`); otherwise standby is refused. It is released (0xAB) at wake
+  and always at boot, since a reset can occur while it sleeps.
+- The 1 MHz TIMER4 clock is stopped; time continues from the RTC-based `millis()`.
+- The user RGB LED is off. `loop()` only polls D0 (every 50 ms, 10 ms while pressed)
+  using FreeRTOS `delay()` (tickless idle).
+- D0 (pull-up), P0.14 (`VBAT_ENABLE`, LOW) and P0.13 (charge-current select) are never
+  modified. The divider stays enabled; its current is unmeasured.
+
+Standby is never entered while recording, starting, finalising, exporting, faulted,
+GPS start-up/scan is running, a button sequence or LED pattern is active, USB VBUS is
+present, or a serial port is open. Any of these exits standby. A pressed button
+held for 3 seconds wakes the peripherals first, then requests a session.
+
+**Why not System OFF:** wake from System OFF is a reset, so the time already held
+cannot be measured and RAM (including the RAM-only battery calibration) is lost;
+the Adafruit bootloader's behaviour on System OFF/USB wake, and the GPS/flash
+breakout supply paths, are unverified on this board. System OFF is therefore **not
+implemented** (source scan in `standby_tests.py`), and no sleep current is claimed.
+It can be revisited after measuring the System ON standby current and bootloader.
+
+**Hold timing:** the 3-second hold is measured from the debounced press (25 ms) as
+seen by the 50 ms standby poll, so it is accurate to roughly +75 ms; this is a
+design bound, not a measurement. Releasing earlier cancels the start and standby
+resumes after the settle time. A button held at boot never starts recording.
+
+**No automatic recording:** reset, bootloader exit, USB insertion and firmware
+install never start a session; only a debounced 3-second hold does. The recorder
+scan after reset is read-only.
+
+**USB recovery:** with VBUS present or a serial port open the device does not stay
+in standby, so serial commands (`TCB STATUS`, `TCB READ`, `BAT STATUS`) and the
+bootloader double-tap reset work as before. If a port does not enumerate while the
+device is in standby, press and release RESET (or double-tap for the bootloader)
+and reconnect. Automatic USB wake is not claimed beyond this System ON behaviour,
+which is untested on hardware. The bootloader is not modified.
+
+## Recording until the button stops it
+
+A physical-button start begins an **until-stop** session (no time cap). `TCB DURATION
+UNLIMITED` selects the same for USB `TCB START`; `TCB DURATION 1..1800` still
+selects the timed mode (`TCB DURATION 0` is refused). `TCB STATUS` reports
+`mode=until_stop|timed` and `free_sectors=N`. The TCB3/TPX3 format is unchanged
+(`src/tcb3_store.*` are byte-identical, hash-guarded in `standby_tests.py`).
+
+Until-stop admission requires at least 8 free sectors. The store reserves page 15 of
+every sector for the footer, so when the partition fills the session stops with
+reason Full and is still finalised; this is treated as a clean completion (a readable
+session, not a fault-lock). The next start is then refused ("insufficient session
+capacity") with the red start-failure pattern. Existing sessions are never overwritten.
+No maximum recording duration is claimed: it depends on measured compression and is
+unverified. The 60-second finalisation watchdog still applies after a stop.
+
+## LED summary
+
+Ready/recording without fix: blue 100 ms every 3 s. Fresh fix: alternating blue/green.
+Trusted calibrated low battery: orange, overriding GPS patterns. Start accepted: two
+blue flashes; recording started: 400 ms blue; stopped: two green flashes; start refused:
+three red flashes (2 s); fault: repeating red. Standby: off.
+
+## Status and supervised hardware checklist
+
+| Item | State |
+| --- | --- |
+| Firmware compiled | Yes: GitHub Actions Windows build of `tacticpod_reusable_usb` (pinned PlatformIO 6.2.0 and Seeed platform a6fd41d). `firmware.hex` SHA-256 `a04b05e9443ccd22f533c2aa1df4a40dea2c12d0593f4d90ffa87c56bf83c573`, `firmware.elf` `e476e26ebe4583c72ab07c20405568106743fa8d8d44199c90c534bbae9d84ed`; text 191772, data 2828, bss 232692 (bss includes stack/heap reservation). The DFU `firmware.zip` hash differs per build; use the SHA256SUMS.txt of the artifact you install |
+| Host tests | 30/30 regression suites pass in the same CI run (no hardware) |
+| Hardware behaviour | **Not verified**: wake, hold, GPS/IMU timing, LEDs, USB, standby current |
+
+Install (needs separate approval; never done by CI): download the artifact, verify
+`SHA256SUMS.txt`, and install the `.hex`/DFU package through the existing bootloader.
+Flashing is not modified here and recordings are not erased.
+
+Supervised checks, USB-only first, each by the user: (1) connect USB, confirm
+`TCB STATUS` and `BAT STATUS`; (2) disconnect, wait 3 s, tap D0 briefly: no recording,
+no LED; (3) hold D0 3 s: two blue flashes then a blue confirmation; (4) confirm
+GPS-fix alternation outdoors and 10 Hz/100 Hz sampling after download; (5) tap, release,
+hold 3 s: green flashes and LED off; (6) reconnect USB and `TCB READ`, compare with the
+TPX3 decoder; (7) measure standby current with a meter in the battery lead before any
+claim; (8) battery connection stays NO-GO until the P0.14/P0.31 and charger items
+above are qualified.
+
+Do not begin a battery-powered outdoor trial until the documented boot
+P0.14/P0.31 and charging-safety NO-GO is cleared. After those hardware and
+power gates pass, the conservative first supervised capture recommendation is
+120 seconds, followed by download and TPX3 verification before increasing the
+duration. The firmware remains capped at 1800 seconds (30 minutes), not a
+whole-match guarantee; admission checks storage and never overwrites old
+sessions. Existing sessions remain protected by the append-only layout. This
+recommendation is not field qualification.
+
+See "Recording until the button stops it" above for the opt-in until-stop mode.
 
 ## Exact board support and hardware evidence
 

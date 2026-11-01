@@ -1,0 +1,88 @@
+name: Firmware build and tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: utf-8
+  PLATFORMIO_CORE_DIR: ${{ github.workspace }}/.pio-core
+  SEEED_PLATFORM_COMMIT: a6fd41debbbcda13b5340fff50c9092ed3289194
+  LSM6DS3_COMMIT: e063c3a544b8bb89238accddf24f0028bcd1ca20
+  TINYGPS_COMMIT: ca29434514a5c5172bd807af0608df7f296582a2
+
+jobs:
+  firmware:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Keep LF line endings (byte-exact fixtures and hashes)
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned PlatformIO
+        run: |
+          python -m pip install platformio==6.2.0
+          python -m pip install --target .pio-core/test-python unicorn==2.1.4 pyelftools==0.33
+          python -m pip install unicorn==2.1.4 pyelftools==0.33
+      - name: Fetch the pinned libraries (gitlinks without .gitmodules)
+        run: |
+          foreach ($lib in @(@('Seeed-Studio/Seeed_Arduino_LSM6DS3','Seeed_Arduino_LSM6DS3',$env:LSM6DS3_COMMIT),@('mikalhart/TinyGPSPlus','TinyGPSPlus',$env:TINYGPS_COMMIT))) {
+            $dir = "lib/$($lib[1])"
+            if (Test-Path $dir) { Remove-Item -Recurse -Force $dir }
+            git clone "https://github.com/$($lib[0]).git" $dir
+            git -C $dir checkout $lib[2]
+            if ((git -C $dir rev-parse HEAD) -ne $lib[2]) { throw "Unexpected commit for $dir" }
+          }
+      - name: Install the pinned Seeed platform
+        run: |
+          pio pkg install -g -p "https://github.com/Seeed-Studio/platform-seeedboards.git#$env:SEEED_PLATFORM_COMMIT"
+          pio pkg list -g
+      - name: Build default environment (resource baseline for tests)
+        run: |
+          pio run -e seeed_xiao_nrf52840_sense
+          if ($LASTEXITCODE -ne 0) { throw "Default build failed" }
+      - name: Build tacticpod_reusable_usb
+        run: |
+          pio run -e tacticpod_reusable_usb -v 2>&1 | Tee-Object -FilePath build.log
+          if ($LASTEXITCODE -ne 0) { throw "Firmware build failed" }
+      - name: Regression tests
+        id: tests
+        continue-on-error: true
+        run: |
+          python tests/reusable/run_all_tests.py 2>&1 | Tee-Object -FilePath tests.log
+          if ($LASTEXITCODE -ne 0) { throw "Regression tests failed" }
+      - name: Collect artifacts and SHA-256
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          $build = '.pio/build/tacticpod_reusable_usb'
+          foreach ($f in 'firmware.zip','firmware.hex','firmware.elf') { if (Test-Path "$build/$f") { Copy-Item "$build/$f" "dist/tacticpod_reusable_usb-$f" } }
+          Copy-Item build.log, tests.log dist/
+          Copy-Item .pio/reusable-regression-logs dist/regression-logs -Recurse
+          pio run -e tacticpod_reusable_usb -t size 2>&1 | Tee-Object -FilePath dist/size.txt
+          $lines = Get-ChildItem dist -File | Where-Object { $_.Name -ne 'SHA256SUMS.txt' } | ForEach-Object {
+            "$((Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant())  $($_.Name)" }
+          Set-Content -LiteralPath dist/SHA256SUMS.txt -Value $lines
+          Get-Content dist/SHA256SUMS.txt
+          if ('${{ steps.tests.outcome }}' -ne 'success') { throw 'Regression tests failed; see regression-logs' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tacticpod-firmware-${{ github.sha }}
+          path: dist/*
+          if-no-files-found: warn
+          retention-days: 30

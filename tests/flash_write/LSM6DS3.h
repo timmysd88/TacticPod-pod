@@ -2,7 +2,10 @@
 #define I2C_MODE 1
 extern unsigned mockImuAxisReads;
 static uint32_t mockImuReadCostUs = 0;
+static bool mockImuOn = true;
+static unsigned mockImuPowerDowns = 0, mockImuBegins = 0, mockImuOffReads = 0;
 inline int16_t simulatedAxis(unsigned axis,int16_t fallback) {
+  if (!mockImuOn) ++mockImuOffReads;
 #ifdef TCB_SIM_IMU_AXIS
   return TCB_SIM_IMU_AXIS(axis);
 #else
@@ -15,7 +18,11 @@ struct LSM6DS3 {
     int accelSampleRate, gyroSampleRate;
   } settings;
   LSM6DS3(int, int) {}
-  int begin() { return 0; }
+  int begin() { ++mockImuBegins; mockImuOn = true; return 0; }
+  int writeRegister(uint8_t reg, uint8_t value) {
+    if ((reg == 0x10 || reg == 0x11) && value == 0) { mockImuOn = false; ++mockImuPowerDowns; }
+    return 0;
+  }
   int16_t readRawAccelX() { ++mockImuAxisReads; mockSubUs += mockImuReadCostUs; return simulatedAxis(0,100); }
   int16_t readRawAccelY() { ++mockImuAxisReads; mockSubUs += mockImuReadCostUs; return simulatedAxis(1,200); }
   int16_t readRawAccelZ() { ++mockImuAxisReads; mockSubUs += mockImuReadCostUs; return simulatedAxis(2,16384); }

@@ -15,6 +15,10 @@ void begin() {}
 void update() {}
 bool handleCommand(const char*) { return false; }
 bool uartScanBusy() { return false; }
+bool hasFreshFix() { return false; }
+bool busy() { return false; }
+void suspend() {}
+void resume() {}
 }
 // These regressions isolate the original flash test and console/IMU behavior.
 // Recording itself is exercised by tests/recording against a larger mock flash.

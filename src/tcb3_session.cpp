@@ -17,15 +17,27 @@ uint64_t offered[4]{};uint64_t stopUs=0;
 uint32_t storeMissed=0,maxServiceUs=0;
 unsigned exportSent=0;
 Tcb3::Reason reason=Tcb3::Reason::Clean;
-char line[256]{};unsigned lineSize=0;
+bool cleanCompletionPending=false;
+#if TACTICPOD_REUSABLE
+char line[320]{};
+#else
+char line[256]{};
+#endif
+unsigned lineSize=0;
 bool pageOpen=false;unsigned pageSent=0;
 uint64_t testStartedUs=0;
 bool testUsed=false;
 #if TACTICPOD_REUSABLE
 uint32_t sessionSeconds=120;
 bool batteryWarningRecorded=false;
+// Until-stop sessions (TCB DURATION UNLIMITED, or a physical-button start) have no time cap.
+// The store keeps page 15 of every sector for the footer, so a full partition still finalises.
+bool configuredUnlimited=false,buttonRequest=false,sessionUnlimited=false;
+constexpr uint32_t UnlimitedMinSectors=8; // Refuse to begin an until-stop session in a nearly full partition.
 uint64_t captureLimit(){return uint64_t(sessionSeconds)*1000000;}
-uint64_t deadline(){return finishing?stopUs+60000000:testStartedUs+captureLimit()+60000000;}
+bool timeLimited(){return !sessionUnlimited;}
+bool capReached(uint64_t now){return timeLimited() && now-testStartedUs>=captureLimit();}
+uint64_t deadline(){return finishing?stopUs+60000000:timeLimited()?testStartedUs+captureLimit()+60000000:~0ULL;}
 bool mutationBlocked(){return owned || pending || dumping || locked || Recorder::exclusive();}
 #endif
 void select(){SPI.beginTransaction(SPISettings(1000000,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
@@ -82,7 +94,9 @@ void storeReport(const char* text){
   if(Tcb3Test::Enabled)append(Tcb3Test::Marker);
   if(Tcb3Test::Append){append(" skip=");number(s.probeSkipped);}
 #if TACTICPOD_REUSABLE
-  append(" reusable duration_s=");number(sessionSeconds);append(" drain_s=60 lock=");number(locked);
+  append(" reusable duration_s=");number(configuredUnlimited?0:sessionSeconds);append(" drain_s=60 lock=");number(locked);
+  append(" mode=");append((owned||pending?sessionUnlimited:configuredUnlimited)?"until_stop":"timed");
+  if(s.next>=Tcb3Test::WriteStart && s.next<=Tcb3Test::WriteEnd){append(" free_sectors=");number((Tcb3Test::WriteEnd-s.next)/Tcb3::Sector);}
 #endif
   line[lineSize++]='\n';
 }
@@ -111,10 +125,13 @@ void begin(bool ready){storeImuReady=ready;
 }
 bool exclusive(){return pending || owned || dumping || locked;}
 bool exporting(){return dumping;}
+bool recording(){return owned && !finishing;}
+bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault;}
+bool takeCleanCompletion(){bool completed=cleanCompletionPending;cleanCompletionPending=false;return completed;}
 void observation(unsigned kind){
   if(Tcb3Test::Enabled && owned && !finishing && MonotonicClock::now()-testStartedUs>=Tcb3Test::CaptureUs)stop(Tcb3::Reason::Clean);
 #if TACTICPOD_REUSABLE
-  if(owned && !finishing && MonotonicClock::now()-testStartedUs>=captureLimit())stop(Tcb3::Reason::Clean);
+  if(owned && !finishing && capReached(MonotonicClock::now()))stop(Tcb3::Reason::Clean);
 #endif
   if(owned && !finishing && kind>=1 && kind<=4 && CompactRecorder::capturing())++offered[kind-1];
 }
@@ -145,10 +162,11 @@ bool handleCommand(const char* p){
   }
   if(!strncmp(p,"TCB DURATION ",13)){
     if(mutationBlocked()){storeReport("REFUSED: duration while busy");return true;}
+    if(!strcmp(p+13,"UNLIMITED")){configuredUnlimited=true;storeReport("DURATION configured until stop");return true;}
     uint32_t n=0;const char* q=p+13;bool valid=*q!=0;
     while(*q){if(*q<'0' || *q>'9' || n>1800){valid=false;break;}n=n*10+(*q++-'0');}
     if(!valid || !n || n>1800){storeReport("REFUSED: duration 1..1800 seconds");return true;}
-    sessionSeconds=n;storeReport("DURATION configured");return true;
+    sessionSeconds=n;configuredUnlimited=false;storeReport("DURATION configured");return true;
   }
 #endif
   if(strncmp(p,"TCB ",4))return false;
@@ -170,7 +188,25 @@ bool handleCommand(const char* p){
 #if TACTICPOD_REUSABLE
   if(!BatteryRuntime::monitor().mayStart(MonotonicClock::now())){storeReport("REFUSED: battery untrusted/low");return true;}
 #endif
+#if TACTICPOD_REUSABLE
+  sessionUnlimited=configuredUnlimited || buttonRequest;buttonRequest=false;
+#endif
   pending=true;store.begin(port,millis());storeReport("START scanning; no auto resume");return true;
+}
+bool startFromButton(){
+#if TACTICPOD_REUSABLE
+  if(exclusive())return false;
+  buttonRequest=true;
+  handleCommand("TCB START");
+  if(!pending)buttonRequest=false;
+  return pending;
+#else
+  return false;
+#endif
+}
+uint32_t freeSectors(){
+  const uint32_t next=store.stats.next;
+  return next>=Tcb3Test::WriteStart && next<=Tcb3Test::WriteEnd?(Tcb3Test::WriteEnd-next)/Tcb3::Sector:0;
 }
 void update(bool allow){
 #if TACTICPOD_REUSABLE
@@ -182,7 +218,7 @@ void update(bool allow){
       if(b.s.stop){batteryEvent(b.s.hard?3:2);stop(Tcb3::Reason::Clean);}
       else if(b.s.warning && !batteryWarningRecorded){batteryEvent(1);batteryWarningRecorded=true;}
     }
-    if(!finishing && now-testStartedUs>=captureLimit())stop(Tcb3::Reason::Clean);
+    if(!finishing && capReached(now))stop(Tcb3::Reason::Clean);
     if(now>=deadline()){
       stop(Tcb3::Reason::Overflow);store.halt("reusable finalisation deadline");locked=true;pending=false;storeReport("FAULT: drain timeout");
     }
@@ -215,7 +251,7 @@ void update(bool allow){
     }else if(pending && store.state()==Tcb3::State::Idle){
 #if TACTICPOD_REUSABLE
       // Conservative raw-fallback admission reserves all headers/footer slots.
-      uint32_t blocks=(sessionSeconds+1)/2+1,sectors=(blocks*39+13)/14;
+      uint32_t blocks=(sessionSeconds+1)/2+1,sectors=sessionUnlimited?UnlimitedMinSectors:(blocks*39+13)/14;
       if(store.stats.next<Tcb3Test::WriteStart || store.stats.next>=Tcb3Test::WriteEnd ||
          sectors>(Tcb3Test::WriteEnd-store.stats.next)/Tcb3::Sector){
         ++store.stats.full;pending=false;storeReport("REFUSED: insufficient session capacity");return;
@@ -231,6 +267,7 @@ void update(bool allow){
       Tcb3::put(m+68,1); // Bit 0: device ID present; build ID remains unavailable.
 #endif
       if(store.start(m) && CompactRecorder::start()){
+        cleanCompletionPending=false;
         testStartedUs=MonotonicClock::now();testUsed=true;
         memset(offered,0,sizeof(offered));storeMissed=maxServiceUs=0;finishing=false;owned=true;pending=false;storeReport("STARTED");
       }else{pending=false;storeReport("REFUSED: full/retained RAM");}
@@ -246,9 +283,11 @@ void update(bool allow){
       if(finishing && !store.stats.closing && (store.stats.full || (!c.inputUsed && !c.outputReady)))
         store.finish(stopUs,offered,reason,c.rejected,storeMissed);
       if(store.stats.finished){
+        // A full partition is finalised with its reserved footer page: a complete, readable session.
+        cleanCompletionPending=(reason==Tcb3::Reason::Clean || reason==Tcb3::Reason::Full) && !locked;
         owned=false;finishing=false;storeReport("STOPPED");
 #if TACTICPOD_REUSABLE
-        if(reason!=Tcb3::Reason::Clean)locked=true;
+        if(reason!=Tcb3::Reason::Clean && reason!=Tcb3::Reason::Full)locked=true;
 #endif
         Recorder::begin(storeImuReady); // Refresh legacy append cache; never resume or erase.
       }
