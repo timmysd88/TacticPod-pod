@@ -16,6 +16,8 @@ bool recording();
 bool faulted();
 bool takeCleanCompletion();
 bool handleCommand(const char*);
+bool startFromButton();
+uint32_t freeSectors();
 bool guardCommand(const char*);
 void observation(unsigned kind);
 void noteMissed(uint32_t);
@@ -27,6 +29,8 @@ inline bool exporting(){return false;}
 inline bool recording(){return false;}
 inline bool faulted(){return false;}
 inline bool takeCleanCompletion(){return false;}
+inline bool startFromButton(){return false;}
+inline uint32_t freeSectors(){return 0;}
 inline bool guardCommand(const char*){return false;}
 inline void observation(unsigned){}
 inline void noteMissed(uint32_t){}

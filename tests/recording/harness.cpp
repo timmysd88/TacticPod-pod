@@ -11,6 +11,10 @@ void begin() {}
 void update() {}
 bool handleCommand(const char*) { return false; }
 bool uartScanBusy() { return false; }
+bool hasFreshFix() { return false; }
+bool busy() { return false; }
+void suspend() {}
+void resume() {}
 }
 bool diagnosticAvailable = true;
 namespace FlashWriteTest {

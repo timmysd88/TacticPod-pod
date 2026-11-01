@@ -64,6 +64,12 @@ class StateMachine {
     return Action::None;
   }
 
+  // True while a press, release-debounce, tap or stop confirmation is in progress, or the
+  // button has not yet been seen released since boot. Standby is never entered while busy.
+  bool busy() const {
+    return rawPressed || stablePressed || !armed || stopSequence != StopSequence::Idle;
+  }
+
  private:
   enum class StopSequence : uint8_t { Idle, WaitingSecond, HoldingSecond, StopIssued };
   static const uint32_t kDebounceMs = 25;

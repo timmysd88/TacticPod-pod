@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <math.h>
+#define PIN_A0 0
+#define INPUT_PULLUP 2
 #define PIN_SERIAL1_RX 7
 #define PIN_SERIAL1_TX 6
 typedef uint8_t byte;
@@ -86,6 +88,12 @@ inline void __disable_irq() { mockPrimask = 1; }
 inline void __enable_irq() { mockPrimask = 0; }
 inline void digitalWrite(uint8_t pin, uint8_t) { if (pin == LED_RED) ++mockRedWrites; }
 inline void pinMode(uint8_t, uint8_t) {}
+// Host model of D0: LOW when pressed. delay() only advances simulated time.
+static bool mockButtonLow = false;
+static unsigned mockDelayCalls = 0, mockSerialPins = 0;
+inline int digitalRead(uint8_t pin) { return pin == PIN_A0 && mockButtonLow ? LOW : HIGH; }
+inline void delay(unsigned long ms) { mockTime += uint32_t(ms); ++mockDelayCalls; }
+inline void delayMicroseconds(unsigned us) { mockSubUs += us; mockTime += mockSubUs / 1000; mockSubUs %= 1000; }
 struct MockSerial {
   bool connected = true;
   const char* rx = "";
@@ -133,7 +141,13 @@ struct MockUart {
   uint8_t echo[64];
   uint8_t writes[256][64] = {};
   size_t writeSizes[256] = {};
+  unsigned endCalls = 0, beginCalls = 0;
+  void end() {
+    ++endCalls; baud = 0; mockUarte.ENABLE = 0; mockUarte.RXD.AMOUNT = 0;
+    mockUarte.PSEL.RXD = 0xFFFFFFFFUL; mockUarte.PSEL.TXD = 0xFFFFFFFFUL;
+  }
   void begin(unsigned long value) {
+    ++beginCalls;
     baud = value; mockUarte.ENABLE = 8;
     mockUarte.BAUDRATE = value == 38400 ? UARTE_BAUDRATE_BAUDRATE_Baud38400 : UARTE_BAUDRATE_BAUDRATE_Baud9600;
     mockUarte.PSEL.RXD = 44; mockUarte.PSEL.TXD = 43;

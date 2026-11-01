@@ -24,6 +24,7 @@ TinyGPSCustom gpQuality(gps, "GPGGA", 6), gnQuality(gps, "GNGGA", 6);
 TinyGPSCustom gpRmc(gps, "GPRMC", 2), gnRmc(gps, "GNRMC", 2);
 TinyGPSCustom gpHdop(gps, "GPGGA", 8), gnHdop(gps, "GNGGA", 8);
 TinyGPSCustom gpSats(gps, "GPGGA", 7), gnSats(gps, "GNGGA", 7);
+bool suspended = false;
 bool printing = false, receivedByte = false, receivedValid = false;
 bool startupPending = false, startupNoCommunication = false;
 bool fixKnown = false, fixReported = false, hdopPresent = false, satsPresent = false;
@@ -281,7 +282,31 @@ void reportLoopback() {
 }
 
 namespace GpsReceiver {
-bool hasFreshFix() { return liveFix(); }
+bool hasFreshFix() { return !suspended && liveFix(); }
+bool busy() {
+  return startupPending || GpsProfile::active() || GpsConfig::active() || GpsRate::active() ||
+         GpsUartScan::active() || GpsUartScan::faulted() || rawPhase != RawPhase::Idle ||
+         loopPhase != LoopPhase::Idle;
+}
+void suspend() {
+  if (suspended) return;
+  Serial1.end();
+  // Park our TX at the UART idle level instead of leaving the GPS RX input floating.
+  pinMode(PIN_SERIAL1_TX, OUTPUT);
+  digitalWrite(PIN_SERIAL1_TX, HIGH);
+  suspended = true;
+}
+void resume() {
+  if (!suspended) return;
+  Serial1.begin(GpsUartConfig::kNormalBaud);
+  suspended = false;
+  fixReported = false;
+  receivedByte = false;
+  if (startupNoCommunication) {
+    startupNoCommunication = false; startupPending = true; receivedValid = false;
+    startedAt = millis();
+  }
+}
 void begin() {
   Serial1.begin(GpsUartConfig::kNormalBaud);  // Verified pins; 38400 8N1, no PPS.
   startedAt = lastReportAt = millis();
@@ -289,6 +314,7 @@ void begin() {
   startupPending = true; startupNoCommunication = false;
 }
 void update() {
+  if (suspended) return;
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
   if (startupPending) {

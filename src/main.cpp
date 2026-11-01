@@ -15,6 +15,8 @@
 #include "battery_runtime.h"
 #include "physical_button.h"
 #include "status_led.h"
+#include "standby_policy.h"
+#include "flash_power.h"
 
 namespace {
 #if !TACTICPOD_REUSABLE
@@ -56,13 +58,60 @@ void setUserLed(StatusLed::Color color) {
   digitalWrite(LED_BLUE, blue ? LOW : HIGH);
 }
 
+Standby::Policy standbyPolicy;
+bool startAttempt = false;
+
+struct FlashIo {
+  void begin() { SPI.beginTransaction(SPISettings(kFlashClockHz, MSBFIRST, SPI_MODE0)); digitalWrite(kFlashCsPin, LOW); }
+  void end() { digitalWrite(kFlashCsPin, HIGH); SPI.endTransaction(); }
+  uint8_t status() { begin(); SPI.transfer(0x05); const uint8_t value = SPI.transfer(0x00); end(); return value; }
+  void command(uint8_t opcode) { begin(); SPI.transfer(opcode); end(); }
+  void waitUs(unsigned us) { delayMicroseconds(us); }
+};
+
+// Standby leaves D0, P0.14 (VBAT_ENABLE, LOW) and P0.13 (charge current, input) untouched.
+bool enterStandby() {
+  FlashIo flash;
+  if (!FlashPower::deepPowerDown(flash)) return false;  // Flash busy: stay awake, retry later.
+  if (imuReady) {
+    imu.writeRegister(0x10, 0);  // CTRL1_XL: accelerometer power-down.
+    imu.writeRegister(0x11, 0);  // CTRL2_G: gyroscope power-down.
+  }
+  GpsReceiver::suspend();
+  MonotonicClock::suspend();
+  setUserLed(StatusLed::Color::Off);
+  return true;
+}
+
+void leaveStandby(uint32_t now) {
+  MonotonicClock::resume();
+  FlashIo flash;
+  FlashPower::release(flash);
+  GpsReceiver::resume();
+  const bool wasReady = imuReady;
+  imuStatus = imu.begin();
+  imuReady = imuStatus == 0;
+  if (imuReady != wasReady) {
+    Recorder::begin(imuReady);
+    Tcb3Session::begin(imuReady);
+  }
+  lastReadingMs = millis();
+  standbyPolicy.wake(now);
+}
+
 void updateFieldControls() {
   const uint32_t now = millis();
   const PhysicalButton::Action action = physicalButton.update(
     digitalRead(PIN_A0) == LOW, now, Tcb3Session::recording(), Tcb3Session::exclusive());
   if (action == PhysicalButton::Action::Start) {
-    Tcb3Session::handleCommand("TCB START");
-    if (Tcb3Session::exclusive()) userLed.notify(StatusLed::Event::StartupAccepted, now);
+    // Peripherals are awake and the flash is released BEFORE the recorder is asked to start.
+    if (standbyPolicy.inStandby()) leaveStandby(now);
+    if (Tcb3Session::startFromButton()) {
+      startAttempt = true;
+      userLed.notify(StatusLed::Event::StartupAccepted, now);
+    } else {
+      userLed.notify(StatusLed::Event::StartFailed, now);
+    }
   } else if (action == PhysicalButton::Action::Stop) {
     Tcb3Session::handleCommand("TCB STOP");
   }
@@ -73,10 +122,47 @@ void updateFieldControls() {
   if (wasTcbRecording && !recording && cleanCompletion && !Tcb3Session::exclusive())
     userLed.notify(StatusLed::Event::RecordingStopped, now);
   wasTcbRecording = recording;
+  if (startAttempt) {
+    if (recording || Tcb3Session::faulted()) {
+      startAttempt = false;
+    } else if (!Tcb3Session::exclusive()) {  // Scan/admission refused after acceptance.
+      startAttempt = false;
+      userLed.notify(StatusLed::Event::StartFailed, now);
+    }
+  }
+
+  Standby::Inputs in;
+  in.recording = recording;
+  in.sessionBusy = Tcb3Session::exclusive();
+  in.faulted = Tcb3Session::faulted();
+  in.usbPresent = BatteryRuntime::usbPresent();
+  in.serialOpen = bool(Serial);
+  in.gpsBusy = GpsReceiver::busy();
+  in.captureActive = CompactRecorder::capturing() || RamObservations::capturing() ||
+                     RamObservations::fastImu() || Recorder::exclusive();
+  in.buttonBusy = physicalButton.busy();
+  in.ledBusy = userLed.eventActive();
+  in.startAttempt = startAttempt;
+  const Standby::Policy::Change change = standbyPolicy.update(in, now);
+  if (change == Standby::Policy::Change::Enter) {
+    if (!enterStandby()) standbyPolicy.wake(now);
+  } else if (change == Standby::Policy::Change::Exit) {
+    leaveStandby(now);
+  }
+  if (standbyPolicy.inStandby()) {
+    setUserLed(StatusLed::Color::Off);
+    return;
+  }
 
   const auto& battery = BatteryRuntime::monitor();
   const bool lowBattery = battery.trusted(MonotonicClock::now()) && battery.s.warning;
   setUserLed(userLed.update(now, GpsReceiver::hasFreshFix(), lowBattery, Tcb3Session::faulted()));
+}
+
+// Standby pace: no GPS/IMU/flash/LED work. D0 is polled; sleeping is the RTOS tickless idle.
+void standbyIdle() {
+  if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);  // Keeps armed-cell trust warm.
+  delay(digitalRead(PIN_A0) == LOW ? 10 : 50);
 }
 #endif
 
@@ -416,6 +502,13 @@ void setup() {
   digitalWrite(kFlashCsPin, HIGH);
   pinMode(kFlashCsPin, OUTPUT);
   SPI.begin();  // Board variant maps SCK=D8, MISO=D9, MOSI=D10.
+#if TACTICPOD_REUSABLE
+  {
+    // A reset during standby leaves the flash in deep power-down; always release it first.
+    FlashIo flash;
+    FlashPower::release(flash);
+  }
+#endif
   // Seeed's library enables IMU power and selects Wire1 via the build flag.
   imu.settings.accelEnabled = 1;
   imu.settings.gyroEnabled = 1;
@@ -434,6 +527,10 @@ void loop() {
   GpsReceiver::update();
 #if TACTICPOD_REUSABLE
   updateFieldControls();
+  if (standbyPolicy.inStandby()) {
+    standbyIdle();
+    return;
+  }
 #endif
   FlashWriteTest::update(); // Keep the USB command reader alive during TCB capture.
   Recorder::update();

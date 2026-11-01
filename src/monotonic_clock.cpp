@@ -5,6 +5,9 @@ namespace {
 volatile uint32_t clockHigh = 0;
 uint64_t clockOrigin = 0;
 bool clockStarted = false;
+bool clockSuspended = false;
+uint64_t suspendedAtUs = 0;
+uint32_t suspendedAtMs = 0;
 void overflow() {
   if (NRF_TIMER4->EVENTS_COMPARE[0]) {
     NRF_TIMER4->EVENTS_COMPARE[0] = 0;
@@ -40,6 +43,8 @@ void begin() {
 }
 uint64_t now() {
   begin();
+  // Standby: TIMER4 is stopped; continue from the RTC-driven millisecond tick.
+  if (clockSuspended) return suspendedAtUs + uint64_t(uint32_t(millis() - suspendedAtMs)) * 1000;
   // Prevent the ISR changing the upper word while capturing the lower word.
   // Also service a pending wrap: capture may race the compare interrupt.
   const uint32_t mask = __get_PRIMASK();
@@ -55,4 +60,28 @@ uint64_t now() {
   if (!mask) __enable_irq();
   return value;
 }
+// Stop the 1 MHz TIMER4 for standby. now() stays monotonic at millisecond resolution.
+void suspend() {
+  begin();
+  if (clockSuspended) return;
+  suspendedAtUs = now();
+  suspendedAtMs = millis();
+  NRF_TIMER4->TASKS_STOP = 1;
+  NRF_TIMER4->INTENCLR = TIMER_INTENCLR_COMPARE0_Msk;
+  clockSuspended = true;
+}
+void resume() {
+  if (!clockSuspended) return;
+  const uint64_t value = now();
+  NRF_TIMER4->TASKS_STOP = 1;
+  NRF_TIMER4->TASKS_CLEAR = 1;
+  NRF_TIMER4->EVENTS_COMPARE[0] = 0;
+  clockOrigin = value;
+  clockHigh = 0;
+  NVIC_ClearPendingIRQ(TIMER4_IRQn);
+  NRF_TIMER4->INTENSET = TIMER_INTENSET_COMPARE0_Msk;
+  clockSuspended = false;
+  NRF_TIMER4->TASKS_START = 1;
+}
+bool suspended() { return clockSuspended; }
 }

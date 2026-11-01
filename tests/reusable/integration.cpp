@@ -25,7 +25,7 @@ extern "C" unsigned reusableCase(unsigned c){
   memcpy(protectedPrefix,SPI.memory,sizeof(protectedPrefix));
   if(c==4)SPI.memory[0x39040]=0;
   if(c==5)SPI.memory[0xffd000]=0; // At most one free final recording sector.
-  Serial.connected=false;setup();startupPending=false;waitIdle();
+  Serial.connected=false;setup();startupPending=false;waitIdle();Serial.connected=true; // Commands arrive over an open port, which also holds standby off.
   if(owned || pending || SPI.programs || SPI.enables || RamObservations::capturing())return 1;
   if(!Tcb3Session::guardCommand("RECORD START") || !Tcb3Session::guardCommand("RECORD ERASE") ||
      !Tcb3Session::guardCommand("RECORD ERASE CONFIRM") || !Tcb3Session::guardCommand("ERASE FFF000"))return 2;
@@ -38,6 +38,27 @@ extern "C" unsigned reusableCase(unsigned c){
     if(!BatteryRuntime::monitor().trusted(MonotonicClock::now()))return 4;
   }
   if(c==3)BatteryRuntime::monitor().cell(true); // Not calibrated: refusal, not shutdown.
+  if(c==13){ // Button-style until-stop session: no time cap, finalises only on an explicit stop.
+    mockImuReadCostUs=30;noiseEnabled=1;SPI.programDelayMs=10;waitIdle();
+    Tcb3Session::handleCommand("TCB DURATION 4");
+    if(!Tcb3Session::startFromButton() || Tcb3Session::startFromButton())return 40;
+    for(unsigned n=0;n<200000 && pending && !owned && !locked;++n)cycle();
+    if(!owned || locked)return 41;
+    const uint64_t start=testStartedUs;unsigned rmcAt=0,ggaAt=0;
+    while(owned && !finishing && MonotonicClock::now()-start<9000000){
+      unsigned elapsed=unsigned(MonotonicClock::now()-start);
+      if(elapsed>=rmcAt){rateFrame(false,rmcAt/1000,true);rmcAt+=100000;}
+      if(elapsed>=ggaAt){rateFrame(true,ggaAt/1000,true);ggaAt+=1000000;}
+      cycle();
+    }
+    if(!owned || finishing || !Tcb3Session::recording())return 42; // Past the 4 s timed cap, still recording.
+    Tcb3Session::handleCommand("TCB STOP");
+    for(unsigned n=0;n<400000 && (owned || finishing);++n)cycle();
+    if(owned || locked || !store.stats.finished || reason!=Tcb3::Reason::Clean)return 43;
+    if(!Tcb3Session::takeCleanCompletion() || Tcb3Session::freeSectors()==0)return 44;
+    reusableInfo[0]=store.stats.next;
+    return SPI.violations?45:0;
+  }
   unsigned sessions=c==0?3:1;
   if(c==11){Serial.connected=true;SerialConsole::printMenu();if(!strstr(Serial.output,"BAT STATUS"))return 21;}
   mockImuReadCostUs=30;noiseEnabled=1;SPI.programDelayMs=10;
