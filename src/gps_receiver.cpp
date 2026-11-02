@@ -11,6 +11,8 @@
 #include "gps_uart_tx.h"
 #include "gps_profile.h"
 #include "ram_observations.h"
+#include "compact_recorder.h"
+#include "tcb3_session.h"
 
 // Verified in Seeed_XIAO_nRF52840/variant.h and cores/nRF5/Uart.cpp:
 // Serial1 = UARTE0, RX = D7/P1.12, TX = D6/P1.11.
@@ -27,6 +29,11 @@ TinyGPSCustom gpSats(gps, "GPGGA", 7), gnSats(gps, "GNGGA", 7);
 bool suspended = false;
 bool printing = false, receivedByte = false, receivedValid = false;
 bool startupPending = false, startupNoCommunication = false;
+#if TACTICPOD_REUSABLE
+bool profileRequested=false, profileRunning=false, profileFailed=false;
+uint32_t profileRequestedAt=0, lastRmcMs=0;
+unsigned slowRmc=0;
+#endif
 bool fixKnown = false, fixReported = false, hdopPresent = false, satsPresent = false;
 uint32_t startedAt = 0, lastByteAt = 0, lastValidAt = 0, lastFixAt = 0;
 uint32_t byteCount = 0, lastReportAt = 0;
@@ -123,6 +130,17 @@ void pollUart() {
     receivedByte = true; lastByteAt = millis(); ++byteCount;
     if (gps.encode(char(value))) {
       receivedValid = true; lastValidAt = millis();
+#if TACTICPOD_REUSABLE
+      if(gpRmc.isUpdated() || gnRmc.isUpdated()) {
+        const uint32_t gap=millis()-lastRmcMs;
+        if(lastRmcMs && gap>250)++slowRmc;else slowRmc=0;
+        lastRmcMs=millis();
+        if(slowRmc==3 && GpsProfile::currentVerified()) {
+          GpsProfile::invalidate("UNVERIFIED (RMC cadence lost; RAM audit required)");
+          profileRequested=true;profileRequestedAt=millis();
+        }
+      }
+#endif
       updateFix(gpQuality, false); updateFix(gnQuality, false);
       updateFix(gpRmc, true); updateFix(gnRmc, true);
       if (gpHdop.isUpdated()) hdopPresent = *gpHdop.value() != 0;
@@ -146,6 +164,8 @@ void buildStatus() {
   if (receivedValid) number(now - lastValidAt); else text("N/A");
   text("\n");
   text("GPS configuration: "); text(GpsProfile::status()); text("\n");
+  text("GPS last applied profile (historical): "); text(GpsProfile::lastApplied());text("\n");
+  text("GPS RAM readback t_ms=");number(GpsProfile::checkedAt());text(" (snapshot, not proof of navigation cadence)\n");
   if (startupPending) text("GPS startup: waiting for valid NMEA and idle recording/diagnostics.\n");
   if (startupNoCommunication) text("GPS startup ERROR: no checksum-valid NMEA within 30s; settings unchanged.\n");
   if (*GpsProfile::error()) { text("GPS profile detail: "); text(GpsProfile::error()); text("\n"); }
@@ -284,7 +304,11 @@ void reportLoopback() {
 namespace GpsReceiver {
 bool hasFreshFix() { return !suspended && liveFix(); }
 bool busy() {
-  return startupPending || GpsProfile::active() || GpsConfig::active() || GpsRate::active() ||
+  return startupPending ||
+#if TACTICPOD_REUSABLE
+         profileRequested || profileRunning ||
+#endif
+         GpsProfile::active() || GpsConfig::active() || GpsRate::active() ||
          GpsUartScan::active() || GpsUartScan::faulted() || rawPhase != RawPhase::Idle ||
          loopPhase != LoopPhase::Idle;
 }
@@ -295,6 +319,9 @@ void suspend() {
   pinMode(PIN_SERIAL1_TX, OUTPUT);
   digitalWrite(PIN_SERIAL1_TX, HIGH);
   suspended = true;
+#if TACTICPOD_REUSABLE
+  GpsProfile::invalidate("UNVERIFIED (UART suspended; receiver RAM not observed)");
+#endif
 }
 void resume() {
   if (!suspended) return;
@@ -302,12 +329,20 @@ void resume() {
   suspended = false;
   fixReported = false;
   receivedByte = false;
+#if TACTICPOD_REUSABLE
+  receivedValid=false;lastRmcMs=0;slowRmc=0;
+  startupPending=false;startupNoCommunication=false;
+  profileRequested=true;profileRunning=profileFailed=false;
+  profileRequestedAt=startedAt=millis();
+  GpsProfile::invalidate("UNVERIFIED (UART wake; fresh RAM audit required)");
+#endif
   if (startupNoCommunication) {
     startupNoCommunication = false; startupPending = true; receivedValid = false;
     startedAt = millis();
   }
 }
 void begin() {
+  GpsProfile::invalidate("UNVERIFIED (receiver initialization; awaiting RAM readback)");
   Serial1.begin(GpsUartConfig::kNormalBaud);  // Verified pins; 38400 8N1, no PPS.
   startedAt = lastReportAt = millis();
   printing = false;
@@ -317,6 +352,25 @@ void update() {
   if (suspended) return;
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
+#if TACTICPOD_REUSABLE
+  const bool sensorCapture=CompactRecorder::capturing() || Recorder::exclusive() || Tcb3Session::exporting();
+  if(!Serial && !sensorCapture && !startupPending && !profileRequested && !profileRunning &&
+     !profileFailed && uint32_t(millis()-GpsProfile::checkedAt())>=15000) {
+    profileRequested=true;profileRequestedAt=millis();
+  }
+  if(profileRunning && !GpsProfile::active()) {
+    profileRunning=profileRequested=false;profileFailed=!GpsProfile::currentVerified();
+  }
+  if(profileRequested && !profileRunning && !sensorCapture && !startupPending) {
+    if(!receivedValid && uint32_t(millis()-profileRequestedAt)>=30000) {
+      profileRequested=false;profileFailed=true;
+      GpsProfile::invalidate("UNVERIFIED (no receiver communication after wake/start)");
+    } else if(receivedValid && uint32_t(millis()-lastValidAt)<=kFreshMs &&
+              !GpsProfile::active() && !GpsConfig::active() && !GpsRate::active() &&
+              !GpsUartScan::active() && rawPhase==RawPhase::Idle && loopPhase==LoopPhase::Idle &&
+              GpsProfile::startCheck(true))profileRunning=true;
+  }
+#endif
   if (startupPending) {
     if (!receivedValid && uint32_t(millis() - startedAt) >= 30000) {
       startupPending = false; startupNoCommunication = true;
@@ -352,6 +406,35 @@ void update() {
   }
   if (printing && outputPosition == outputLength && uint32_t(millis() - lastReportAt) >= 1000) buildStatus();
   flushOutput();
+}
+bool prepareRecording() {
+#if TACTICPOD_REUSABLE
+  if(suspended || GpsConfig::active() || GpsRate::active() || GpsUartScan::active() ||
+     GpsUartScan::faulted() || rawPhase!=RawPhase::Idle || loopPhase!=LoopPhase::Idle ||
+     (GpsProfile::active() && !GpsProfile::automaticStartup()))return false;
+  profileFailed=false;
+  if(!profileRequested && !profileRunning) {
+    profileRequested=true;profileRequestedAt=millis();
+    if(GpsProfile::active())profileRunning=true;
+  }
+  return true;
+#else
+  return true;
+#endif
+}
+bool recordingReady() {
+#if TACTICPOD_REUSABLE
+  return !startupPending && !profileRequested && !profileRunning && GpsProfile::currentVerified();
+#else
+  return true;
+#endif
+}
+bool preparationFailed() {
+#if TACTICPOD_REUSABLE
+  return profileFailed || startupNoCommunication;
+#else
+  return false;
+#endif
 }
 bool handleCommand(const char* line) {
   if (strcmp(line, "GPS 10HZ TEST") == 0 || strcmp(line, "GPS RESTORE") == 0) {

@@ -69,6 +69,8 @@ class StateMachine {
   bool busy() const {
     return rawPressed || stablePressed || !armed || stopSequence != StopSequence::Idle;
   }
+  bool pressed() const { return stablePressed; }
+  bool stopArmed() const { return stopSequence == StopSequence::WaitingSecond; }
 
  private:
   enum class StopSequence : uint8_t { Idle, WaitingSecond, HoldingSecond, StopIssued };

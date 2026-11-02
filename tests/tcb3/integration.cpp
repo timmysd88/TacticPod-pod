@@ -52,7 +52,14 @@ void drainObserved(){
   while(RamObservations::pop(g)){if(recordingExpected){++observedGga;if(expectedSize+40<=sizeof(expectedWire)){memcpy(expectedWire+expectedSize,g.bytes,40);expectedSize+=40;}}}
   while(RamObservations::pop(e)){}
 }
-void cycle(){loop();if(drainDiagnosticQueues)drainObserved();advanceUs(100);}
+#ifdef TCB_SIM_CYCLE_HOOK
+void TCB_SIM_CYCLE_HOOK();
+#endif
+void cycle(){
+#ifdef TCB_SIM_CYCLE_HOOK
+  TCB_SIM_CYCLE_HOOK();
+#endif
+  loop();if(drainDiagnosticQueues)drainObserved();advanceUs(100);}
 void waitIdle(){for(unsigned n=0;n<200000 && Recorder::exclusive();++n)cycle();}
 extern "C" unsigned integration(unsigned scenario){
   using namespace TcbDetail;

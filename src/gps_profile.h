@@ -6,6 +6,14 @@ bool startTest();
 bool startStartup();
 const char* status();
 const char* error();
+// Fresh RAM readback; recovery uses the same ACK/readback/rollback engine.
+bool startCheck(bool recover);
+void invalidate(const char* reason);
+bool currentVerified();
+uint32_t checkedAt();
+const char* lastApplied();
+bool automaticStartup();
+void observeCurrent(uint32_t key, uint32_t value);
 bool startRestore();
 bool active();
 void update();

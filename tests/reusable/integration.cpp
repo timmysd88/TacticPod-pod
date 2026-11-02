@@ -3,11 +3,21 @@
 #define TACTICPOD_TCB3_FLASH_ENABLED 1
 #define TCB_SIM_FLASH_BYTES 0x1000000
 #define TCB_SIM_USB_CAPACITY 700000
+#define TCB_SIM_CYCLE_HOOK reusableGpsService
 #include <stdint.h>
 void reusableObservation(const uint8_t*,unsigned);
 #define TCB_SIM_OBSERVATION reusableObservation
 #include "../tcb3/integration.cpp"
 #include "../../src/battery_runtime.cpp"
+// Recorder tests now receive real UBX replies from the independent receiver
+// transaction model. No production GPS readiness check is bypassed.
+ProfileModel::Receiver reusableReceiver(0);
+bool reusableGpsEnabled=true;
+void reusableGpsService(){
+  if(suspended || !reusableGpsEnabled)return; // No delivery through a stopped MCU UART.
+  reusableReceiver.service();
+  if(!receivedValid || uint32_t(millis()-lastValidAt)>1000)validFix();
+}
 uint8_t protectedPrefix[0x39000],newWire[200000];unsigned newWireSize=0;
 uint32_t reusableInfo[24]{};
 void reusableObservation(const uint8_t* p,unsigned n){
@@ -55,7 +65,8 @@ extern "C" unsigned reusableCase(unsigned c){
     Tcb3Session::handleCommand("TCB STOP");
     for(unsigned n=0;n<400000 && (owned || finishing);++n)cycle();
     if(owned || locked || !store.stats.finished || reason!=Tcb3::Reason::Clean)return 43;
-    if(!Tcb3Session::takeCleanCompletion() || Tcb3Session::freeSectors()==0)return 44;
+    // The production main loop consumes the completion event for its LED.
+    cycle();if(completionAwaited || Tcb3Session::freeSectors()==0)return 44;
     reusableInfo[0]=store.stats.next;
     return SPI.violations?45:0;
   }

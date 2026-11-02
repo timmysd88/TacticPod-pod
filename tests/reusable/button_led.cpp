@@ -86,26 +86,31 @@ int main() {
 
   {
     StatusLed::Scheduler led;
-    if (led.update(0, false, false, false) != Color::Blue) return 21;
-    if (led.update(100, false, false, false) != Color::Off) return 22;
-    if (led.update(3000, true, false, false) != Color::Green) return 23;
-    if (led.update(6000, true, true, false) != Color::Orange) return 24;
-    if (led.update(6100, true, true, false) != Color::Off) return 25;
-    if (led.update(6200, true, true, true) != Color::Red) return 26;
-    if (led.update(6300, true, false, true) != Color::Off) return 27;
+    if (led.update(0, false, false, false, true) != Color::Blue) return 21;
+    if (led.update(100, false, false, false, true) != Color::Off) return 22;
+    if (led.update(3000, true, false, false, true) != Color::Green) return 23;
+    if (led.update(6000, true, true, false, true) != Color::Orange) return 24;
+    if (led.update(6100, true, true, false, true) != Color::Off) return 25;
+    if (led.update(6200, true, true, true, true) != Color::Red) return 26;
+    if (led.update(6300, true, false, true, true) != Color::Off) return 27;
 
     led.notify(Event::StartupAccepted, 7000);
-    if (led.update(7000, false, false, false) != Color::Blue) return 28;
-    if (led.update(7100, false, false, false) != Color::Off) return 29;
-    if (led.update(7200, false, false, false) != Color::Blue) return 30;
+    if (led.update(7000, false, false, false, true) != Color::Blue) return 28;
+    if (led.update(7100, false, false, false, true) != Color::Off) return 29;
+    if (led.update(7200, false, false, false, true) != Color::Blue) return 30;
     led.notify(Event::RecordingStarted, 8000);
-    if (led.update(8399, false, false, false) != Color::Blue) return 31;
-    if (led.update(8400, false, false, false) != Color::Off) return 32;
+    if (led.update(8399, false, false, false, true) != Color::Blue) return 31;
+    if (led.update(8400, false, false, false, true) != Color::Off) return 32;
     led.notify(Event::RecordingStopped, 9000);
-    if (led.update(9000, false, false, false) != Color::Green) return 33;
-    if (led.update(9100, false, false, false) != Color::Off) return 34;
-    if (led.update(9200, false, false, false) != Color::Green) return 35;
+    if (led.update(9000, false, false, false, true) != Color::Green) return 33;
+    if (led.update(9100, false, false, false, true) != Color::Off) return 34;
+    if (led.update(9200, false, false, false, true) != Color::Green) return 35;
   }
 
+  {
+    StatusLed::Scheduler idle;
+    for (uint32_t t=0;t<9000;t+=25)
+      if(idle.update(t,true,true,false,false)!=Color::Off)return 40;
+  }
   return 0;
 }

@@ -9,6 +9,7 @@
 #include "compact_recorder.h"
 #include "tcb3_session.h"
 #include "tcb3_test_limits.h"
+#include "field_trace.h"
 
 namespace {
 bool printImu = false;
@@ -38,6 +39,7 @@ void printMenu() {
     Serial.println("  TCB START / STOP / STATUS / READ - bounded append-only compact sessions");
     Serial.println("  TCB DURATION seconds|UNLIMITED - stopped only, 1..1800 or until stop; default 120; drain deadline 60 seconds");
     Serial.println("  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop");
+    Serial.println("  FIELD EVENTS - drain bounded timestamped RAM events while stopped; overwritten count explicit");
     Serial.println("  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake");
     Serial.println("  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference");
     Serial.println("  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming");
@@ -51,6 +53,9 @@ void printMenu() {
 
 bool handleCommand(const char* line) {
   if (Tcb3Session::guardCommand(line)) return true;
+#if TACTICPOD_REUSABLE
+  if(!strcmp(line,"FIELD EVENTS")) {FieldTrace::buffer().remaining=FieldTrace::buffer().count;return true;}
+#endif
   if (Tcb3Session::handleCommand(line)) return true;
   if (CompactRecorder::handleCommand(line)) return true;
   if (RamObservations::handleCommand(line)) return true;
