@@ -1,5 +1,7 @@
 # Reusable USB prototype and battery-monitor preparation
 
+> **Update 2026-11-02:** Seeed Technical Support has confirmed the P0.14/P0.13/bootloader behaviour (see [seeed-confirmation.md](seeed-confirmation.md)). The bootloader-interval concern and "NO-GO for LiPo connection" below are historical; battery testing now follows [supervised-validation.md](supervised-validation.md) and still needs explicit approval. No electrical measurement by this project is implied.
+
 Switchless first-test preparation and exact existing commands:
 [switchless-battery-first-test.md](switchless-battery-first-test.md). The ten-second
 disconnect/finalise/reconnect workflow is verified in simulation, with no upload
@@ -223,12 +225,11 @@ no LED; (3) hold D0 3 s: two blue flashes then a blue confirmation; (4) confirm
 GPS-fix alternation outdoors and 10 Hz/100 Hz sampling after download; (5) tap, release,
 hold 3 s: green flashes and LED off; (6) reconnect USB and `TCB READ`, compare with the
 TPX3 decoder; (7) measure standby current with a meter in the battery lead before any
-claim; (8) battery connection stays NO-GO until the P0.14/P0.31 and charger items
-above are qualified.
+claim; (8) battery connection follows the approval-gated procedure in
+[supervised-validation.md](supervised-validation.md).
 
-Do not begin a battery-powered outdoor trial until the documented boot
-P0.14/P0.31 and charging-safety NO-GO is cleared. After those hardware and
-power gates pass, the conservative first supervised capture recommendation is
+Begin a battery-powered outdoor trial only after the approved steps of
+[supervised-validation.md](supervised-validation.md) pass. After those gates, the conservative first supervised capture recommendation is
 120 seconds, followed by download and TPX3 verification before increasing the
 duration. The firmware remains capped at 1800 seconds (30 minutes), not a
 whole-match guarantee; admission checks storage and never overwrites old
