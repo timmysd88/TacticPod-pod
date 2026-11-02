@@ -3,7 +3,7 @@
 
 namespace StatusLed {
 enum class Color : uint8_t { Off, Blue, Green, Orange, Red };
-enum class Event : uint8_t { None, StartupAccepted, RecordingStarted, RecordingStopped, StartFailed };
+enum class Event : uint8_t { None, PowerOn, RecordingStarted, RecordingStopped, StartFailed };
 
 class Scheduler {
  public:
@@ -16,7 +16,9 @@ class Scheduler {
   // True while a one-shot confirmation/failure pattern is still being shown.
   bool eventActive() const { return activeEvent != Event::None; }
 
-  Color update(uint32_t now, bool gpsFix, bool lowBattery, bool fault, bool recording = false) {
+  // Priority: fault > one-shot events > low battery > ready/recording pulse.
+  // Periodic patterns are phased from the first update so cadence is start-to-start.
+  Color update(uint32_t now, bool lowBattery, bool fault, bool recording = false) {
     if (!initialized) {
       initialized = true;
       epoch = now;
@@ -24,26 +26,26 @@ class Scheduler {
     if (fault) return repeatingRed(now);
 
     const uint32_t eventAge = uint32_t(now - eventStartedAt);
-    if (activeEvent == Event::StartupAccepted) {
-      if (eventAge >= 500) activeEvent = Event::None;
-      else return eventPulse(eventAge, Color::Blue);
-    } else if (activeEvent == Event::RecordingStarted) {
-      if (eventAge >= 400) activeEvent = Event::None;
+    if (activeEvent == Event::PowerOn) {
+      if (eventAge >= 1000) activeEvent = Event::None;
       else return Color::Blue;
+    } else if (activeEvent == Event::RecordingStarted) {
+      if (eventAge >= 1000) activeEvent = Event::None;
+      else return Color::Green;
     } else if (activeEvent == Event::StartFailed) {
-      if (eventAge >= 2000) activeEvent = Event::None;
+      if (eventAge >= 500) activeEvent = Event::None;
       else return burstRed(eventAge);
     } else if (activeEvent == Event::RecordingStopped) {
       if (eventAge >= 500) activeEvent = Event::None;
       else return eventPulse(eventAge, Color::Green);
     }
 
-    if (!recording) return Color::Off;
-    const uint32_t phase = uint32_t(now - epoch) % 3000;
-    if (phase >= 100) return Color::Off;
-    if (lowBattery) return Color::Orange;
-    const uint32_t pulse = uint32_t(now - epoch) / 3000;
-    return gpsFix && (pulse & 1) ? Color::Green : Color::Blue;
+    const uint32_t sinceEpoch = uint32_t(now - epoch);
+    if (lowBattery) {
+      const uint32_t phase = sinceEpoch % 5000;
+      return (phase < 100 || (phase >= 200 && phase < 300)) ? Color::Orange : Color::Off;
+    }
+    return (sinceEpoch % 2000) < 100 ? (recording ? Color::Green : Color::Blue) : Color::Off;
   }
 
  private:
