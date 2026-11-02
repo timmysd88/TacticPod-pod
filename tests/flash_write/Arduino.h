@@ -86,7 +86,8 @@ inline void NVIC_EnableIRQ(int) {}
 inline uint32_t __get_PRIMASK() { return mockPrimask; }
 inline void __disable_irq() { mockPrimask = 1; }
 inline void __enable_irq() { mockPrimask = 0; }
-inline void digitalWrite(uint8_t pin, uint8_t) { if (pin == LED_RED) ++mockRedWrites; }
+static uint8_t mockPinLevels[33] = {};
+inline void digitalWrite(uint8_t pin, uint8_t value) { if(pin<33)mockPinLevels[pin]=value; if (pin == LED_RED) ++mockRedWrites; }
 inline void pinMode(uint8_t, uint8_t) {}
 // Host model of D0: LOW when pressed. delay() only advances simulated time.
 static bool mockButtonLow = false;

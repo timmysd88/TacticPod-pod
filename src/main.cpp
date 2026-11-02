@@ -17,6 +17,7 @@
 #include "status_led.h"
 #include "standby_policy.h"
 #include "flash_power.h"
+#include "field_trace.h"
 
 namespace {
 #if !TACTICPOD_REUSABLE
@@ -48,6 +49,8 @@ static_assert(PIN_A0 == 0, "Record button must use XIAO D0/P0.02");
 PhysicalButton::StateMachine physicalButton;
 StatusLed::Scheduler userLed;
 bool wasTcbRecording = false;
+bool completionAwaited = false;
+bool lastButtonPressed=false, lastStopArmed=false;
 
 void setUserLed(StatusLed::Color color) {
   const bool red = color == StatusLed::Color::Red || color == StatusLed::Color::Orange;
@@ -84,6 +87,7 @@ bool enterStandby() {
 }
 
 void leaveStandby(uint32_t now) {
+  FieldTrace::note(FieldTrace::Kind::Wake,now);
   MonotonicClock::resume();
   FlashIo flash;
   FlashPower::release(flash);
@@ -103,24 +107,38 @@ void updateFieldControls() {
   const uint32_t now = millis();
   const PhysicalButton::Action action = physicalButton.update(
     digitalRead(PIN_A0) == LOW, now, Tcb3Session::recording(), Tcb3Session::exclusive());
+  if(physicalButton.pressed()!=lastButtonPressed) {
+    lastButtonPressed=physicalButton.pressed();
+    FieldTrace::note(lastButtonPressed?FieldTrace::Kind::Press:FieldTrace::Kind::Release,now);
+  }
+  if(physicalButton.stopArmed() && !lastStopArmed)FieldTrace::note(FieldTrace::Kind::StopArmed,now);
+  lastStopArmed=physicalButton.stopArmed();
   if (action == PhysicalButton::Action::Start) {
     // Peripherals are awake and the flash is released BEFORE the recorder is asked to start.
     if (standbyPolicy.inStandby()) leaveStandby(now);
     if (Tcb3Session::startFromButton()) {
       startAttempt = true;
+      FieldTrace::note(FieldTrace::Kind::StartAccepted,now);
       userLed.notify(StatusLed::Event::StartupAccepted, now);
     } else {
       userLed.notify(StatusLed::Event::StartFailed, now);
     }
   } else if (action == PhysicalButton::Action::Stop) {
+    FieldTrace::note(FieldTrace::Kind::StopAccepted,now);
     Tcb3Session::handleCommand("TCB STOP");
   }
 
   const bool recording = Tcb3Session::recording();
-  if (recording && !wasTcbRecording) userLed.notify(StatusLed::Event::RecordingStarted, now);
+  if (recording && !wasTcbRecording) {
+    completionAwaited=true;
+    userLed.notify(StatusLed::Event::RecordingStarted, now);
+  }
   const bool cleanCompletion = Tcb3Session::takeCleanCompletion();
-  if (wasTcbRecording && !recording && cleanCompletion && !Tcb3Session::exclusive())
+  if (completionAwaited && !recording && cleanCompletion && !Tcb3Session::exclusive()) {
     userLed.notify(StatusLed::Event::RecordingStopped, now);
+    completionAwaited=false;
+  }
+  if(Tcb3Session::faulted())completionAwaited=false;
   wasTcbRecording = recording;
   if (startAttempt) {
     if (recording || Tcb3Session::faulted()) {
@@ -146,6 +164,7 @@ void updateFieldControls() {
   const Standby::Policy::Change change = standbyPolicy.update(in, now);
   if (change == Standby::Policy::Change::Enter) {
     if (!enterStandby()) standbyPolicy.wake(now);
+    else FieldTrace::note(FieldTrace::Kind::StandbyEnter,now);
   } else if (change == Standby::Policy::Change::Exit) {
     leaveStandby(now);
   }
@@ -156,7 +175,18 @@ void updateFieldControls() {
 
   const auto& battery = BatteryRuntime::monitor();
   const bool lowBattery = battery.trusted(MonotonicClock::now()) && battery.s.warning;
-  setUserLed(userLed.update(now, GpsReceiver::hasFreshFix(), lowBattery, Tcb3Session::faulted()));
+  setUserLed(userLed.update(now, GpsReceiver::hasFreshFix(), lowBattery, Tcb3Session::faulted(), recording));
+}
+
+// Requested explicitly while stopped; one bounded line per foreground slice.
+void flushFieldTrace() {
+  auto& b=FieldTrace::buffer();
+  if(!b.remaining || !b.count || !Serial || Tcb3Session::exclusive() || Recorder::exclusive() || GpsReceiver::busy())return;
+  const auto& e=b.events[b.head];char line[150];
+  const int n=FieldTrace::format(e,b.overwritten,line,sizeof(line));
+  if(n<=0 || n>=int(sizeof(line)) || Serial.availableForWrite()<n)return;
+  if(Serial.write(reinterpret_cast<const uint8_t*>(line),n)!=unsigned(n))return;
+  b.head=(b.head+1)%64;--b.count;--b.remaining;
 }
 
 // Standby pace: no GPS/IMU/flash/LED work. D0 is polled; sleeping is the RTOS tickless idle.
@@ -527,6 +557,7 @@ void loop() {
   GpsReceiver::update();
 #if TACTICPOD_REUSABLE
   updateFieldControls();
+  flushFieldTrace();
   if (standbyPolicy.inStandby()) {
     standbyIdle();
     return;

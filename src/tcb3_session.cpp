@@ -9,6 +9,7 @@
 #include "ram_observations.h"
 #include "battery_runtime.h"
 #include <SPI.h>
+#include "field_trace.h"
 namespace {
 namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
@@ -33,6 +34,8 @@ bool batteryWarningRecorded=false;
 // Until-stop sessions (TCB DURATION UNLIMITED, or a physical-button start) have no time cap.
 // The store keeps page 15 of every sector for the footer, so a full partition still finalises.
 bool configuredUnlimited=false,buttonRequest=false,sessionUnlimited=false;
+bool waitingGps=false;
+uint32_t gpsWaitAt=0;
 constexpr uint32_t UnlimitedMinSectors=8; // Refuse to begin an until-stop session in a nearly full partition.
 uint64_t captureLimit(){return uint64_t(sessionSeconds)*1000000;}
 bool timeLimited(){return !sessionUnlimited;}
@@ -104,7 +107,9 @@ void stop(Tcb3::Reason why){
   if(pending && !owned){store.cancelScan();pending=false;return;}
   if(!owned)return;
   CompactRecorder::stop();
-  if(!finishing){stopUs=MonotonicClock::now();reason=why;finishing=true;}else if(why!=Tcb3::Reason::Clean)reason=why;
+  if(!finishing){stopUs=MonotonicClock::now();reason=why;finishing=true;
+    FieldTrace::note(FieldTrace::Kind::Finalising,millis(),store.stats.session,unsigned(why));
+  }else if(why!=Tcb3::Reason::Clean)reason=why;
 }
 #if TACTICPOD_REUSABLE
 void batteryEvent(unsigned action){
@@ -173,7 +178,12 @@ bool handleCommand(const char* p){
   if(!strcmp(p,"TCB STATUS")){storeReport("STATUS");return true;}
   if(!strcmp(p,"TCB STOP")){stop(Tcb3::Reason::Clean);storeReport("STOP requested");return true;}
   if(strcmp(p,"TCB START") && strcmp(p,"TCB READ")){storeReport("commands: START STOP STATUS READ");return true;}
-  if(exclusive() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed() || GpsReceiver::uartScanBusy()){
+  if(exclusive() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed() ||
+     (GpsReceiver::uartScanBusy()
+#if TACTICPOD_REUSABLE
+      && strcmp(p,"TCB START")
+#endif
+     )){
     storeReport("REFUSED: busy/fault");return true;}
   if(!storeIdentity()){storeReport(Tcb3Test::Enabled?"REFUSED: identity/status":"REFUSED: JEDEC");return true;}
   if(!strcmp(p,"TCB READ")){
@@ -190,8 +200,12 @@ bool handleCommand(const char* p){
 #endif
 #if TACTICPOD_REUSABLE
   sessionUnlimited=configuredUnlimited || buttonRequest;buttonRequest=false;
-#endif
+  if(!GpsReceiver::prepareRecording()){storeReport("REFUSED: GPS diagnostics busy");return true;}
+  waitingGps=true;gpsWaitAt=millis();pending=true;
+  storeReport("START waiting for fresh GPS RAM readback; no capture/writes");return true;
+#else
   pending=true;store.begin(port,millis());storeReport("START scanning; no auto resume");return true;
+#endif
 }
 bool startFromButton(){
 #if TACTICPOD_REUSABLE
@@ -211,6 +225,15 @@ uint32_t freeSectors(){
 void update(bool allow){
 #if TACTICPOD_REUSABLE
   BatteryRuntime::update(allow);
+  if(waitingGps && !pending)waitingGps=false;
+  if(waitingGps) {
+    if(GpsReceiver::recordingReady()) {
+      waitingGps=false;store.begin(port,millis());storeReport("START GPS verified; scanning");
+    } else if(GpsReceiver::preparationFailed() || uint32_t(millis()-gpsWaitAt)>=90000) {
+      waitingGps=false;pending=false;storeReport("REFUSED: GPS profile unverified; no recording");
+      FieldTrace::note(FieldTrace::Kind::GpsFailed,millis());
+    } else return; // Keep the existing store untouched until receiver readback succeeds.
+  }
   if(owned && !locked){
     uint64_t now=MonotonicClock::now();
     const auto& b=BatteryRuntime::monitor();
@@ -221,6 +244,7 @@ void update(bool allow){
     if(!finishing && capReached(now))stop(Tcb3::Reason::Clean);
     if(now>=deadline()){
       stop(Tcb3::Reason::Overflow);store.halt("reusable finalisation deadline");locked=true;pending=false;storeReport("FAULT: drain timeout");
+      FieldTrace::note(FieldTrace::Kind::Fault,millis(),store.stats.session);
     }
   }
 #endif
@@ -248,6 +272,7 @@ void update(bool allow){
     uint64_t elapsed=MonotonicClock::now()-before;if(elapsed>maxServiceUs)maxServiceUs=elapsed;
     if(store.state()==Tcb3::State::Fault){
       stop(Tcb3::Reason::Overflow);pending=false;locked=true;storeReport("FAULT: reboot required");
+      FieldTrace::note(FieldTrace::Kind::Fault,millis(),store.stats.session);
     }else if(pending && store.state()==Tcb3::State::Idle){
 #if TACTICPOD_REUSABLE
       // Conservative raw-fallback admission reserves all headers/footer slots.
@@ -269,6 +294,7 @@ void update(bool allow){
       if(store.start(m) && CompactRecorder::start()){
         cleanCompletionPending=false;
         testStartedUs=MonotonicClock::now();testUsed=true;
+        FieldTrace::note(FieldTrace::Kind::SessionCreated,millis(),store.stats.session);
         memset(offered,0,sizeof(offered));storeMissed=maxServiceUs=0;finishing=false;owned=true;pending=false;storeReport("STARTED");
       }else{pending=false;storeReport("REFUSED: full/retained RAM");}
     }
@@ -285,6 +311,7 @@ void update(bool allow){
       if(store.stats.finished){
         // A full partition is finalised with its reserved footer page: a complete, readable session.
         cleanCompletionPending=(reason==Tcb3::Reason::Clean || reason==Tcb3::Reason::Full) && !locked;
+        FieldTrace::note(cleanCompletionPending?FieldTrace::Kind::Complete:FieldTrace::Kind::Fault,millis(),store.stats.session,unsigned(reason));
         owned=false;finishing=false;storeReport("STOPPED");
 #if TACTICPOD_REUSABLE
         if(reason!=Tcb3::Reason::Clean && reason!=Tcb3::Reason::Full)locked=true;

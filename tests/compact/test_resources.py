@@ -14,8 +14,10 @@ with firmware.open('rb') as stream:
              s['st_value']>=0x20000000}
 # Phase 3B.4 adds a fixed 552-byte read-only identity snapshot/state. Keep a
 # normal-build budget while checking compact pipeline objects independently.
-assert static<=119000
-assert sum(objects.values())<=38000
+print('RESOURCE: production static RAM',static,'limit',119000,
+      '; compact objects',sum(objects.values()),'limit',38000,flush=True)
+assert static<=119000, f'production static RAM {static} exceeds 119000 bytes'
+assert sum(objects.values())<=38000, f'compact objects {sum(objects.values())} exceed 38000 bytes'
 command=next(k for k in native.symbols if 'handleCommand' in k and 'CompactRecorder' in k)
 m=native.machine();low=[0x201FF000]
 def stack(uc,access,address,size,value,_):low[0]=min(low[0],address)
@@ -25,10 +27,10 @@ for text in (b'COMP START\0',b'COMP STATUS\0',b'COMP STOP\0',b'COMP CLEAR\0'):
     assert native.call(m,command,native.symbols['compactTestInput'])==1
 m.hook_del(hook)
 stack_bytes=0x201FF000-low[0]
-assert stack_bytes<=1024
+assert stack_bytes<=1024, f'command stack {stack_bytes} exceeds 1024 bytes'
 profiles=json.loads((native.ROOT/'.pio/phase3a-native-results.json').read_text())['cases'].values()
 encoder_stack=max(v.get('max_stack_bytes',v.get('stack_bytes',0)) for v in profiles)
-assert encoder_stack<=1024
+assert encoder_stack<=1024, f'encoder stack {encoder_stack} exceeds 1024 bytes'
 result=dict(firmware_static_bytes=static,phase2_static_bytes=80456,
             static_increase_bytes=static-80456,compact_objects=objects,
             compact_objects_bytes=sum(objects.values()),measured_command_stack_bytes=stack_bytes,

@@ -23,7 +23,10 @@ for data,error in ((bad,ValueError),(raw[:10],TimeoutError),(b'FAULT\n'+raw,Valu
     assert link.sent==b'TCB READ\n' and dest.getvalue()
 print('PASS: bad CRC, interruption and unexpected text preserve partial data; no retry')
 before=(ROOT/'tests/reusable/fixtures/physical-three-sessions.bin').read_bytes()
-r=verify(before,raw,10);assert r['counts']==[1001,100,10,0] and r['session_id']==58
+r=verify(before,raw,10)
+# Fresh GPS admission shifts the acquisition phase; either edge may contain a
+# boundary sample. Retain the verifier's duration/rate/gap/CRC/footer checks.
+assert abs(r['counts'][0]-1000)<=2 and r['counts'][1:]==[100,10,0] and r['session_id']==58
 for a,b,d in ((before,raw,30),(before,before,10),(before,bytes(bad),10)):
     try:verify(a,b,d)
     except ValueError:pass

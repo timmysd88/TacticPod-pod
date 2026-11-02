@@ -117,7 +117,10 @@ bool navPeriod(uint32_t& period) {
 }
 void complete(Result result, uint32_t value = 0) {
   if (query == 0) versionResult = result;
-  else values[query - 1] = {value, result};
+  else {
+    values[query - 1] = {value, result};
+    if(result==Result::Value && queryLayer(query-1)==0)GpsProfile::observeCurrent(keys[query-1].id,value);
+  }
   ++query; phase = Phase::Gap; phaseAt = millis();
 }
 void frame() {
