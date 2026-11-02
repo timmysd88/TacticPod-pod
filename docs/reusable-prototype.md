@@ -170,17 +170,34 @@ seen by the 100 ms standby poll (10 ms once pressed), so it is accurate to rough
 design bound, not a measurement. Releasing earlier cancels the start and standby
 resumes after the settle time. A button held at boot never starts recording.
 
-**Optional GPS backup standby (`TACTICPOD_GPS_BACKUP_STANDBY`, default 0, hardware-unverified):**
-build `tacticpod_reusable_usb_gpsbackup` to enable it. On standby entry the firmware sends
-UBX-RXM-PMREQ (v0, duration 0, `backup` flag, wake source `uartrx` = 0x08, override with
-`TACTICPOD_GPS_WAKE_MASK`; u-blox `ubxlib` uses 0xE4, so confirm on hardware) before
-stopping `Serial1`. On wake it restarts `Serial1`, sends 0xFF bytes (a UART start-bit edge)
-every 1 s up to 8 times until NMEA returns, then the existing RAM profile audit re-applies
-the 10 Hz configuration; recording stays refused until the profile is verified (90 s limit).
-If the receiver never wakes there is no wire to reset it: remove USB and battery to power-cycle.
-Whether MAX-M10S backup needs a V_BCKP supply on this breakout is unknown. Not implemented:
-VBUS-present standby (USB/serial recovery stays awake), reducing the 1 s battery poll
-(trusted low-battery needs readings within 3 s), IMU rail cut, System OFF.
+**GPS software standby (hardware-unverified; both features default OFF):**
+the MAX-M10S "software standby" (UBX-RXM-PMREQ, v0, duration 0, `backup` flag, wake source
+`uartrx` = 0x08, override with `TACTICPOD_GPS_WAKE_MASK`) is available in two independent
+opt-in forms. u-blox `ubxlib` sends 0xE4 ("all sources"), which does not contain bit 3, so the
+mask itself is a hardware question. The integration manual says software standby needs VCC and
+V_IO supplied and V_BCKP may be left open; this breakout's pin wiring is unconfirmed.
+Neither RESET nor EXTINT is wired, so the only recovery from a receiver that does not wake is
+to remove USB and battery (a software reset cannot recover a receiver in standby).
+
+- **`TACTICPOD_GPS_BACKUP_TEST=1`** (env `tacticpod_reusable_usb_gpsbackup`) adds the serial
+  command `GPS BACKUP TEST`: one supervised cycle with USB kept awake. Automatic standby
+  remains off. It is refused unless recording, sessions, flash/IMU capture, CSV export,
+  recorder faults and other GPS operations are all idle, the UART transmitter is free, the
+  10 Hz profile is verified and NMEA is fresh. The cycle: send the request, park the UART as
+  standby does (3 s), restart it and confirm it stays silent (1.5 s), send 0xFF wake bytes
+  every 1 s (8 attempts), time the first valid NMEA at 38400, let the existing RAM audit
+  re-verify the 10 Hz profile (45 s limit), and report the fix status (10 s). The report lists:
+  request sent, standby confirmed, wake attempted, time to valid NMEA, baud confirmed, 10 Hz
+  verified, fix, and `PASS`/`FAIL`. Recording is refused throughout, and after a failed wake it
+  stays refused until valid NMEA and a verified 10 Hz profile return. Recording or capture
+  starting mid-test aborts it and restores the UART. USB serial is never touched; VBUS keeps
+  normal standby disabled, which is why the test is a command.
+- **`TACTICPOD_GPS_BACKUP_STANDBY=1`** (compile-checked env `tacticpod_reusable_usb_gpsbackup_auto`)
+  sends the request on every standby entry and wakes on exit. Do not flash it until the
+  supervised test has passed; it has no hardware-verified wake.
+
+Not implemented: VBUS-present standby (USB/serial recovery stays awake), reducing the 1 s
+battery poll (trusted low-battery needs readings within 3 s), IMU rail cut, System OFF.
 
 **No automatic recording:** reset, bootloader exit, USB insertion and firmware
 install never start a session; only a debounced 3-second hold does. The recorder

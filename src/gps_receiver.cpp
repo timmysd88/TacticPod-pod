@@ -28,13 +28,30 @@ TinyGPSCustom gpRmc(gps, "GPRMC", 2), gnRmc(gps, "GNRMC", 2);
 TinyGPSCustom gpHdop(gps, "GPGGA", 8), gnHdop(gps, "GNGGA", 8);
 TinyGPSCustom gpSats(gps, "GPGGA", 7), gnSats(gps, "GNGGA", 7);
 bool suspended = false;
+#if TACTICPOD_GPS_BACKUP_STANDBY || TACTICPOD_GPS_BACKUP_TEST
+void writeWakeBytes() {
+  static const uint8_t ff[GpsPower::kWakeByteCount] = {0xFF, 0xFF, 0xFF, 0xFF};
+  GpsUartTx::write(ff, sizeof(ff));
+}
+#endif
+#if TACTICPOD_GPS_BACKUP_TEST
+GpsPower::BackupTest backupTest;
+bool backupReported = false, backupLatched = false;
+#endif
+// The supervised test owns the UART while it runs; automatic wake must stay out of it.
+bool backupTestRunning() {
+#if TACTICPOD_GPS_BACKUP_TEST
+  return backupTest.running();
+#else
+  return false;
+#endif
+}
 #if TACTICPOD_GPS_BACKUP_STANDBY
 bool wakePending = false;
 unsigned wakeAttempts = 0;
 uint32_t lastWakeAt = 0;
 void sendWakeBytes() {
-  static const uint8_t ff[GpsPower::kWakeByteCount] = {0xFF, 0xFF, 0xFF, 0xFF};
-  GpsUartTx::write(ff, sizeof(ff));
+  writeWakeBytes();
   ++wakeAttempts; lastWakeAt = millis();
 }
 #endif
@@ -315,7 +332,7 @@ void reportLoopback() {
 namespace GpsReceiver {
 bool hasFreshFix() { return !suspended && liveFix(); }
 bool busy() {
-  return startupPending ||
+  return backupTestRunning() || startupPending ||
 #if TACTICPOD_REUSABLE
          profileRequested || profileRunning ||
 #endif
@@ -351,8 +368,10 @@ void resume() {
   Serial1.begin(GpsUartConfig::kNormalBaud);
   suspended = false;
 #if TACTICPOD_GPS_BACKUP_STANDBY
-  GpsUartTx::resetIdle();
-  wakeAttempts = 0; wakePending = true; sendWakeBytes();
+  if (!backupTestRunning()) {
+    GpsUartTx::resetIdle();
+    wakeAttempts = 0; wakePending = true; sendWakeBytes();
+  }
 #endif
   fixReported = false;
   receivedByte = false;
@@ -375,7 +394,113 @@ void begin() {
   printing = false;
   startupPending = true; startupNoCommunication = false;
 }
+#if TACTICPOD_GPS_BACKUP_TEST
+static GpsPower::BackupTest::Guards backupGuards() {
+  GpsPower::BackupTest::Guards g;
+  g.recording = Tcb3Session::recording();
+  g.sessionBusy = Tcb3Session::exclusive();
+  g.flashBusy = CompactRecorder::capturing() || RamObservations::capturing() || RamObservations::fastImu() ||
+                Recorder::exclusive() || Recorder::exporting() || Tcb3Session::exporting();
+  g.faulted = Tcb3Session::faulted();
+  g.gpsBusy = busy() || GpsProfile::active();
+  g.suspended = suspended;
+  g.uartTxBusy = !uartTxReady();
+  g.profileVerified = recordingReady();
+  g.nmeaFresh = receivedValid && uint32_t(millis() - lastValidAt) <= kFreshMs;
+  return g;
+}
+static void backupReport() {
+  backupReported = true;
+  using R = GpsPower::BackupTest::Result;
+  const GpsPower::BackupTest& t = backupTest;
+  const R r = t.result();
+  backupLatched = t.blocksRecording();
+  if (!Serial) return;
+  Serial.print("GPS BACKUP TEST RESULT (wake mask 0x"); Serial.print(unsigned(TACTICPOD_GPS_WAKE_MASK), HEX); Serial.println(")");
+  Serial.print("  standby request sent: "); Serial.println(t.requestOk() ? "YES" : "NO");
+  Serial.print("  standby confirmed (UART silent "); Serial.print(unsigned(GpsPower::BackupTest::kListenMs));
+  Serial.print(" ms after "); Serial.print(unsigned(GpsPower::BackupTest::kDwellMs)); Serial.print(" ms parked): ");
+  Serial.println(!t.requestOk() ? "NOT TESTED" : t.standbySilent() ? "YES" : r == R::Aborted ? "NOT TESTED" : "NO (NMEA kept flowing; receiver did not enter standby)");
+  Serial.print("  UART wake attempted: ");
+  if (t.wakeAttempts()) { Serial.print("YES ("); Serial.print(t.wakeAttempts()); Serial.println(" attempts of 0xFF bytes)"); }
+  else Serial.println("NO");
+  Serial.print("  time until valid NMEA: ");
+  if (t.wakeSucceeded()) { Serial.print(unsigned(t.validAfter())); Serial.println(" ms from first wake attempt"); }
+  else Serial.println("NOT RETURNED");
+  Serial.print("  GPS baud 38400: ");
+  if (t.baudConfirmed()) Serial.println("CONFIRMED (checksum-valid NMEA)");
+  else if (t.strayBytes() && r != R::EntryNotConfirmed) Serial.println("NOT CONFIRMED (bytes seen but no valid NMEA; receiver may have restarted at another baud)");
+  else Serial.println("NOT CONFIRMED");
+  Serial.print("  10 Hz configuration: ");
+  Serial.println(t.profileVerified() ? "VERIFIED" : t.profileWasChecked() ? "FAILED" : "NOT CHECKED");
+  Serial.print("  GPS fix: ");
+  Serial.println(t.fixSeen() ? "YES" : t.profileVerified() ? "NO (not within 10 s; depends on sky view)" : "NOT CHECKED");
+  switch (r) {
+    case R::Pass: Serial.println("GPS BACKUP TEST: PASS"); break;
+    case R::RequestNotSent: Serial.println("GPS BACKUP TEST: FAIL - request not sent (UART busy); GPS untouched."); break;
+    case R::EntryNotConfirmed: Serial.println("GPS BACKUP TEST: FAIL - standby not confirmed; receiver kept running (baseline power). Wake was not tested."); break;
+    case R::NoWake: Serial.println("GPS BACKUP TEST: FAIL - GPS did not wake. Recording is BLOCKED. A software reset cannot recover a receiver in standby: remove USB and battery to power-cycle it."); break;
+    case R::NoValidNmea: Serial.println("GPS BACKUP TEST: FAIL - bytes returned but no valid NMEA at 38400. Recording is BLOCKED. Power-cycle (remove USB and battery) to restore the receiver."); break;
+    case R::ProfileFailed: Serial.println("GPS BACKUP TEST: FAIL - NMEA returned but the 10 Hz configuration is not verified. Recording is BLOCKED until it verifies (GPS CONFIG / GPS RESTORE) or power is cycled."); break;
+    default: Serial.println("GPS BACKUP TEST: ABORTED - recording/flash activity started; UART restored."); break;
+  }
+  Serial.println("GPS BACKUP TEST END");
+}
+static void backupStep() {
+  if (backupLatched && receivedValid && GpsProfile::currentVerified()) backupLatched = false;
+  if (!backupTest.running()) {
+    if (backupTest.done() && !backupReported) backupReport();
+    return;
+  }
+  GpsPower::BackupTest::Obs o;
+  o.now = millis(); o.bytes = byteCount; o.txReady = uartTxReady();
+  o.validNmea = receivedValid;
+  o.profileVerified = recordingReady();
+  o.profileFailed = profileFailed;
+  o.fix = liveFix();
+  const GpsPower::BackupTest::Guards g = backupGuards();
+  o.guardViolated = g.recording || g.sessionBusy || g.flashBusy || g.faulted;
+  switch (backupTest.step(o)) {
+    case GpsPower::BackupTest::Action::SendRequest: {
+      uint8_t frame[GpsPower::kFrameSize];
+      GpsPower::buildBackupRequest(frame);
+      backupTest.requestSent(GpsUartTx::write(frame, sizeof(frame)) == sizeof(frame), millis());
+      break;
+    }
+    case GpsPower::BackupTest::Action::ParkUart:
+      Serial1.end();
+      pinMode(PIN_SERIAL1_TX, OUTPUT);
+      digitalWrite(PIN_SERIAL1_TX, HIGH);
+      suspended = true;
+      GpsProfile::invalidate("UNVERIFIED (GPS BACKUP TEST; receiver RAM not observed)");
+      break;
+    case GpsPower::BackupTest::Action::ResumeUart:
+      resume();
+      GpsUartTx::resetIdle();
+      break;
+    case GpsPower::BackupTest::Action::SendWake:
+      writeWakeBytes();
+      break;
+    default: break;
+  }
+  if (backupTest.done()) backupReport();
+}
+static void backupStart() {
+  const GpsPower::BackupTest::Guards g = backupGuards();
+  const char* why = GpsPower::BackupTest::refusal(g);
+  if (backupTest.running()) why = "test already running";
+  if (!why && !Serial) why = "USB serial is not open";
+  if (why) { Serial.print("GPS BACKUP TEST refused: "); Serial.println(why); return; }
+  backupTest.start(g, millis());
+  backupReported = false;
+  Serial.print("GPS BACKUP TEST started (about 20 s, USB stays awake; recording blocked). Wake mask 0x");
+  Serial.println(unsigned(TACTICPOD_GPS_WAKE_MASK), HEX);
+}
+#endif
 void update() {
+#if TACTICPOD_GPS_BACKUP_TEST
+  backupStep();
+#endif
   if (suspended) return;
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
@@ -446,7 +571,7 @@ void update() {
 }
 bool prepareRecording() {
 #if TACTICPOD_REUSABLE
-  if(suspended || GpsConfig::active() || GpsRate::active() || GpsUartScan::active() ||
+  if(backupTestRunning() || suspended || GpsConfig::active() || GpsRate::active() || GpsUartScan::active() ||
      GpsUartScan::faulted() || rawPhase!=RawPhase::Idle || loopPhase!=LoopPhase::Idle ||
      (GpsProfile::active() && !GpsProfile::automaticStartup()))return false;
   profileFailed=false;
@@ -461,19 +586,34 @@ bool prepareRecording() {
 }
 bool recordingReady() {
 #if TACTICPOD_REUSABLE
-  return !startupPending && !profileRequested && !profileRunning && GpsProfile::currentVerified();
+  return !startupPending && !profileRequested && !profileRunning && GpsProfile::currentVerified()
+#if TACTICPOD_GPS_BACKUP_TEST
+      && !backupLatched && !backupTestRunning()
+#endif
+      ;
 #else
   return true;
 #endif
 }
 bool preparationFailed() {
 #if TACTICPOD_REUSABLE
-  return profileFailed || startupNoCommunication;
+  return profileFailed || startupNoCommunication
+#if TACTICPOD_GPS_BACKUP_TEST
+      || backupLatched
+#endif
+      ;
 #else
   return false;
 #endif
 }
 bool handleCommand(const char* line) {
+#if TACTICPOD_GPS_BACKUP_TEST
+  if (strcmp(line, "GPS BACKUP TEST") == 0) { backupStart(); return true; }
+  if (backupTest.running() && (strncmp(line, "GPS ", 4) == 0 || strcmp(line, "UART LOOPBACK TEST") == 0)) {
+    Serial.println("GPS BACKUP TEST running; wait for GPS BACKUP TEST END before another GPS/UART command.");
+    return true;
+  }
+#endif
   if (strcmp(line, "GPS 10HZ TEST") == 0 || strcmp(line, "GPS RESTORE") == 0) {
     const bool test = strcmp(line, "GPS 10HZ TEST") == 0;
     if (rawPhase != RawPhase::Idle || loopPhase != LoopPhase::Idle || GpsRate::active() ||

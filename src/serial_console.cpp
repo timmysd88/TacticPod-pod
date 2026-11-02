@@ -33,6 +33,9 @@ void printMenu() {
   Serial.println("  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls");
   Serial.println("  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test");
   Serial.println("  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot");
+#if TACTICPOD_GPS_BACKUP_TEST
+  Serial.println("  GPS BACKUP TEST - stopped-only, one GPS software-standby/UART-wake cycle (USB stays awake)");
+#endif
   Serial.println("  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes");
   Serial.println("  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes");
   if(Tcb3Test::Reusable){

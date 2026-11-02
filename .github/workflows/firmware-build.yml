@@ -60,10 +60,14 @@ jobs:
         run: |
           pio run -e tacticpod_reusable_usb -v 2>&1 | Tee-Object -FilePath build.log
           if ($LASTEXITCODE -ne 0) { throw "Firmware build failed" }
-      - name: Compile-check GPS backup standby (experimental flag)
+      - name: Build GPS backup test environment (command only)
         run: |
           pio run -e tacticpod_reusable_usb_gpsbackup
-          if ($LASTEXITCODE -ne 0) { throw "GPS backup build failed" }
+          if ($LASTEXITCODE -ne 0) { throw "GPS backup test build failed" }
+      - name: Compile-check automatic GPS backup (experimental flags)
+        run: |
+          pio run -e tacticpod_reusable_usb_gpsbackup_auto
+          if ($LASTEXITCODE -ne 0) { throw "GPS automatic backup build failed" }
       - name: Regression tests
         id: tests
         continue-on-error: true
