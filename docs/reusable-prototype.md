@@ -129,14 +129,11 @@ so storage, battery, duration and fault admission remain firmware-owned:
   read-only scan and never resumes or starts a session automatically.
 
 The reusable build drives the active-LOW XIAO RGB LED using the variant's
-`LED_RED`, `LED_GREEN` and `LED_BLUE` mappings. Ready/acquiring/no-fix uses a
-100ms blue flash every 3 seconds; a current valid GPS fix alternates blue/green
-on those same intervals. A trusted calibrated low-battery warning overrides
-this with orange. Startup accepted is two brief blue flashes, capture actually
-started is a 400ms blue flash, successful finalisation is two brief green
-flashes, and a recorder fault repeats three red flashes. GPS fix freshness is
-the same 5-second RMC/GGA validity used by GPS STATUS. LED updates do not delay
-sensor/flash service.
+`LED_RED`, `LED_GREEN` and `LED_BLUE` mappings. GPS fix state is not shown. The
+patterns are in `src/status_led.h` (see the LED summary below). All timing is
+non-blocking and phased from the first LED update, so each cadence is measured from
+the start of one flash to the start of the next. LED updates do not delay sensor or
+flash service.
 
 ## Standby, wake and USB recovery (System ON)
 
@@ -202,10 +199,22 @@ unverified. The 60-second finalisation watchdog still applies after a stop.
 
 ## LED summary
 
-Ready/recording without fix: blue 100 ms every 3 s. Fresh fix: alternating blue/green.
-Trusted calibrated low battery: orange, overriding GPS patterns. Start accepted: two
-blue flashes; recording started: 400 ms blue; stopped: two green flashes; start refused:
-three red flashes (2 s); fault: repeating red. Standby: off.
+Priority, highest first: recorder fault, one-shot events, low battery, ready/recording pulse.
+
+| State | Pattern |
+| --- | --- |
+| Power on | Solid blue 1 s, then the status pattern |
+| Ready | Blue 100 ms every 2 s |
+| Recording started | Solid green 1 s, then the recording pulse |
+| Recording | Green 100 ms every 2 s |
+| Recording stopped (finalised cleanly) | Two green 100 ms flashes, then ready |
+| Low battery (trusted, calibrated) | Two orange 100 ms flashes every 5 s, replacing the ready/recording pulse; recording is unaffected |
+| Start refused | Three red 100 ms flashes |
+| Recorder fault | Three red flashes repeating every 2 s |
+| Standby | All LEDs off |
+
+Ready and recording pulses are shown while awake (for example USB connected); standby
+turns the LED off. Recording does not depend on GPS fix.
 
 ## Status and supervised hardware checklist
 
@@ -221,8 +230,8 @@ Flashing is not modified here and recordings are not erased.
 
 Supervised checks, USB-only first, each by the user: (1) connect USB, confirm
 `TCB STATUS` and `BAT STATUS`; (2) disconnect, wait 3 s, tap D0 briefly: no recording,
-no LED; (3) hold D0 3 s: two blue flashes then a blue confirmation; (4) confirm
-GPS-fix alternation outdoors and 10 Hz/100 Hz sampling after download; (5) tap, release,
+no LED; (3) hold D0 3 s: solid green 1 s then a green pulse every 2 s; (4) confirm
+10 Hz/100 Hz sampling after download; (5) tap, release,
 hold 3 s: green flashes and LED off; (6) reconnect USB and `TCB READ`, compare with the
 TPX3 decoder; (7) measure standby current with a meter in the battery lead before any
 claim; (8) battery connection follows the approval-gated procedure in

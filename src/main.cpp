@@ -119,7 +119,6 @@ void updateFieldControls() {
     if (Tcb3Session::startFromButton()) {
       startAttempt = true;
       FieldTrace::note(FieldTrace::Kind::StartAccepted,now);
-      userLed.notify(StatusLed::Event::StartupAccepted, now);
     } else {
       userLed.notify(StatusLed::Event::StartFailed, now);
     }
@@ -175,7 +174,7 @@ void updateFieldControls() {
 
   const auto& battery = BatteryRuntime::monitor();
   const bool lowBattery = battery.trusted(MonotonicClock::now()) && battery.s.warning;
-  setUserLed(userLed.update(now, GpsReceiver::hasFreshFix(), lowBattery, Tcb3Session::faulted(), recording));
+  setUserLed(userLed.update(now, lowBattery, Tcb3Session::faulted(), recording));
 }
 
 // Requested explicitly while stopped; one bounded line per foreground slice.
@@ -525,6 +524,7 @@ void setup() {
   pinMode(LED_BLUE, OUTPUT);
 #if TACTICPOD_REUSABLE
   pinMode(PIN_A0, INPUT_PULLUP);
+  userLed.notify(StatusLed::Event::PowerOn, millis());
 #endif
 
   Serial.begin(115200);  // USB CDC serial; do not wait for a host connection.

@@ -85,32 +85,99 @@ int main() {
   }
 
   {
+    // Ready: 100 ms blue, start-to-start cadence exactly 2 s; GPS plays no part.
     StatusLed::Scheduler led;
-    if (led.update(0, false, false, false, true) != Color::Blue) return 21;
-    if (led.update(100, false, false, false, true) != Color::Off) return 22;
-    if (led.update(3000, true, false, false, true) != Color::Green) return 23;
-    if (led.update(6000, true, true, false, true) != Color::Orange) return 24;
-    if (led.update(6100, true, true, false, true) != Color::Off) return 25;
-    if (led.update(6200, true, true, true, true) != Color::Red) return 26;
-    if (led.update(6300, true, false, true, true) != Color::Off) return 27;
-
-    led.notify(Event::StartupAccepted, 7000);
-    if (led.update(7000, false, false, false, true) != Color::Blue) return 28;
-    if (led.update(7100, false, false, false, true) != Color::Off) return 29;
-    if (led.update(7200, false, false, false, true) != Color::Blue) return 30;
-    led.notify(Event::RecordingStarted, 8000);
-    if (led.update(8399, false, false, false, true) != Color::Blue) return 31;
-    if (led.update(8400, false, false, false, true) != Color::Off) return 32;
-    led.notify(Event::RecordingStopped, 9000);
-    if (led.update(9000, false, false, false, true) != Color::Green) return 33;
-    if (led.update(9100, false, false, false, true) != Color::Off) return 34;
-    if (led.update(9200, false, false, false, true) != Color::Green) return 35;
+    int starts = 0;
+    uint32_t lastStart = 0;
+    bool prevOn = false;
+    for (uint32_t t = 0; t <= 10000; t++) {
+      const Color c = led.update(t, false, false, false);
+      const bool on = c != Color::Off;
+      if (on && c != Color::Blue) return 21;
+      if (on && !prevOn) {
+        if (starts && t - lastStart != 2000) return 22;
+        lastStart = t;
+        starts++;
+      }
+      if ((t % 2000 < 100) != on) return 23;
+      prevOn = on;
+    }
+    if (starts != 6) return 24;
   }
-
   {
-    StatusLed::Scheduler idle;
-    for (uint32_t t=0;t<9000;t+=25)
-      if(idle.update(t,true,true,false,false)!=Color::Off)return 40;
+    // Recording: 100 ms green every 2 s.
+    StatusLed::Scheduler led;
+    if (led.update(0, false, false, true) != Color::Green) return 25;
+    if (led.update(99, false, false, true) != Color::Green) return 26;
+    if (led.update(100, false, false, true) != Color::Off) return 27;
+    if (led.update(1999, false, false, true) != Color::Off) return 28;
+    if (led.update(2000, false, false, true) != Color::Green) return 29;
+  }
+  {
+    // Low battery: two 100 ms orange flashes every 5 s, overriding ready and recording.
+    for (int rec = 0; rec < 2; rec++) {
+      StatusLed::Scheduler led;
+      const bool r = rec;
+      if (led.update(0, true, false, r) != Color::Orange) return 30;
+      if (led.update(100, true, false, r) != Color::Off) return 31;
+      if (led.update(200, true, false, r) != Color::Orange) return 32;
+      if (led.update(300, true, false, r) != Color::Off) return 33;
+      if (led.update(2000, true, false, r) != Color::Off) return 34;
+      if (led.update(5000, true, false, r) != Color::Orange) return 35;
+      if (led.update(5200, true, false, r) != Color::Orange) return 36;
+      if (led.update(5400, true, false, r) != Color::Off) return 37;
+    }
+  }
+  {
+    // Fault repeats three red flashes and overrides everything.
+    StatusLed::Scheduler led;
+    led.update(0, true, false, true);
+    if (led.update(6000, true, true, true) != Color::Red) return 41;
+    if (led.update(6100, true, true, true) != Color::Off) return 42;
+    if (led.update(6200, true, true, true) != Color::Red) return 43;
+    if (led.update(6400, true, true, true) != Color::Red) return 44;
+    if (led.update(6500, true, true, true) != Color::Off) return 45;
+    if (led.update(8000, true, true, true) != Color::Red) return 46;
+  }
+  {
+    // Power on: solid blue 1 s, then ready pulse (next at 2 s).
+    StatusLed::Scheduler led;
+    led.notify(Event::PowerOn, 0);
+    if (led.update(0, false, false, false) != Color::Blue) return 50;
+    if (led.update(999, false, false, false) != Color::Blue) return 51;
+    if (!led.eventActive()) return 52;
+    if (led.update(1000, false, false, false) != Color::Off) return 53;
+    if (led.eventActive()) return 54;
+    if (led.update(2000, false, false, false) != Color::Blue) return 55;
+  }
+  {
+    // Recording started: solid green 1 s, then green pulse; stopped: two green flashes.
+    StatusLed::Scheduler led;
+    led.update(0, false, false, false);
+    led.notify(Event::RecordingStarted, 3000);
+    if (led.update(3000, false, false, true) != Color::Green) return 60;
+    if (led.update(3999, false, false, true) != Color::Green) return 61;
+    if (led.update(4000, false, false, true) != Color::Green) return 62;  // 2 s pulse phase
+    if (led.update(4100, false, false, true) != Color::Off) return 63;
+    led.notify(Event::RecordingStopped, 9001);
+    if (led.update(9001, false, false, false) != Color::Green) return 64;
+    if (led.update(9101, false, false, false) != Color::Off) return 65;
+    if (led.update(9201, false, false, false) != Color::Green) return 66;
+    if (led.update(9301, false, false, false) != Color::Off) return 67;
+    if (led.update(9501, false, false, false) != Color::Off) return 68;
+    if (led.eventActive()) return 69;
+  }
+  {
+    // Recording refused: three red flashes, then back to ready.
+    StatusLed::Scheduler led;
+    led.update(0, false, false, false);
+    led.notify(Event::StartFailed, 1000);
+    if (led.update(1000, false, false, false) != Color::Red) return 70;
+    if (led.update(1100, false, false, false) != Color::Off) return 71;
+    if (led.update(1200, false, false, false) != Color::Red) return 72;
+    if (led.update(1400, false, false, false) != Color::Red) return 73;
+    if (led.update(1500, false, false, false) != Color::Off) return 74;
+    if (led.eventActive()) return 75;
   }
   return 0;
 }
