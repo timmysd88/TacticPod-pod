@@ -13,6 +13,7 @@
 #include "ram_observations.h"
 #include "compact_recorder.h"
 #include "tcb3_session.h"
+#include "gps_power.h"
 
 // Verified in Seeed_XIAO_nRF52840/variant.h and cores/nRF5/Uart.cpp:
 // Serial1 = UARTE0, RX = D7/P1.12, TX = D6/P1.11.
@@ -27,6 +28,16 @@ TinyGPSCustom gpRmc(gps, "GPRMC", 2), gnRmc(gps, "GNRMC", 2);
 TinyGPSCustom gpHdop(gps, "GPGGA", 8), gnHdop(gps, "GNGGA", 8);
 TinyGPSCustom gpSats(gps, "GPGGA", 7), gnSats(gps, "GNGGA", 7);
 bool suspended = false;
+#if TACTICPOD_GPS_BACKUP_STANDBY
+bool wakePending = false;
+unsigned wakeAttempts = 0;
+uint32_t lastWakeAt = 0;
+void sendWakeBytes() {
+  static const uint8_t ff[GpsPower::kWakeByteCount] = {0xFF, 0xFF, 0xFF, 0xFF};
+  GpsUartTx::write(ff, sizeof(ff));
+  ++wakeAttempts; lastWakeAt = millis();
+}
+#endif
 bool printing = false, receivedByte = false, receivedValid = false;
 bool startupPending = false, startupNoCommunication = false;
 #if TACTICPOD_REUSABLE
@@ -314,6 +325,18 @@ bool busy() {
 }
 void suspend() {
   if (suspended) return;
+#if TACTICPOD_GPS_BACKUP_STANDBY
+  {
+    // Unacknowledged request; failing to enter only costs power, so never block on it.
+    uint8_t frame[GpsPower::kFrameSize];
+    GpsPower::buildBackupRequest(frame);
+    if (GpsUartTx::write(frame, sizeof(frame)) == sizeof(frame)) {
+      const uint32_t t0 = millis();
+      while (!GpsUartTx::ready() && uint32_t(millis() - t0) < GpsPower::kTxDrainMs) delay(1);
+      delay(5);
+    }
+  }
+#endif
   Serial1.end();
   // Park our TX at the UART idle level instead of leaving the GPS RX input floating.
   pinMode(PIN_SERIAL1_TX, OUTPUT);
@@ -327,6 +350,10 @@ void resume() {
   if (!suspended) return;
   Serial1.begin(GpsUartConfig::kNormalBaud);
   suspended = false;
+#if TACTICPOD_GPS_BACKUP_STANDBY
+  GpsUartTx::resetIdle();
+  wakeAttempts = 0; wakePending = true; sendWakeBytes();
+#endif
   fixReported = false;
   receivedByte = false;
 #if TACTICPOD_REUSABLE
@@ -352,6 +379,16 @@ void update() {
   if (suspended) return;
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
+#if TACTICPOD_GPS_BACKUP_STANDBY
+  if (wakePending) {
+    if (receivedValid) wakePending = false;
+    else if (GpsPower::wakeRetryDue(millis(), lastWakeAt, wakeAttempts, false)) sendWakeBytes();
+    else if (wakeAttempts >= GpsPower::kWakeAttempts && uint32_t(millis() - lastWakeAt) >= GpsPower::kWakeIntervalMs) {
+      wakePending = false;  // Existing 30 s profile timeout reports REFUSED; recovery needs a power cycle.
+      if (Serial) Serial.println("GPS WAKE FAILED: no NMEA after wake attempts; remove USB and battery to power-cycle the receiver.");
+    }
+  }
+#endif
 #if TACTICPOD_REUSABLE
   const bool sensorCapture=CompactRecorder::capturing() || Recorder::exclusive() || Tcb3Session::exporting();
   if(!Serial && !sensorCapture && !startupPending && !profileRequested && !profileRunning &&

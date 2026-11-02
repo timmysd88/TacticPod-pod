@@ -148,7 +148,7 @@ software idle state, not System OFF:
   (`src/flash_power.h`); otherwise standby is refused. It is released (0xAB) at wake
   and always at boot, since a reset can occur while it sleeps.
 - The 1 MHz TIMER4 clock is stopped; time continues from the RTC-based `millis()`.
-- The user RGB LED is off. `loop()` only polls D0 (every 50 ms, 10 ms while pressed)
+- The user RGB LED is off. `loop()` only polls D0 (every 100 ms, 10 ms while pressed)
   using FreeRTOS `delay()` (tickless idle).
 - D0 (pull-up), P0.14 (`VBAT_ENABLE`, LOW) and P0.13 (charge-current select) are never
   modified. The divider stays enabled; its current is unmeasured.
@@ -166,9 +166,21 @@ implemented** (source scan in `standby_tests.py`), and no sleep current is claim
 It can be revisited after measuring the System ON standby current and bootloader.
 
 **Hold timing:** the 3-second hold is measured from the debounced press (25 ms) as
-seen by the 50 ms standby poll, so it is accurate to roughly +75 ms; this is a
+seen by the 100 ms standby poll (10 ms once pressed), so it is accurate to roughly +125 ms; this is a
 design bound, not a measurement. Releasing earlier cancels the start and standby
 resumes after the settle time. A button held at boot never starts recording.
+
+**Optional GPS backup standby (`TACTICPOD_GPS_BACKUP_STANDBY`, default 0, hardware-unverified):**
+build `tacticpod_reusable_usb_gpsbackup` to enable it. On standby entry the firmware sends
+UBX-RXM-PMREQ (v0, duration 0, `backup` flag, wake source `uartrx` = 0x08, override with
+`TACTICPOD_GPS_WAKE_MASK`; u-blox `ubxlib` uses 0xE4, so confirm on hardware) before
+stopping `Serial1`. On wake it restarts `Serial1`, sends 0xFF bytes (a UART start-bit edge)
+every 1 s up to 8 times until NMEA returns, then the existing RAM profile audit re-applies
+the 10 Hz configuration; recording stays refused until the profile is verified (90 s limit).
+If the receiver never wakes there is no wire to reset it: remove USB and battery to power-cycle.
+Whether MAX-M10S backup needs a V_BCKP supply on this breakout is unknown. Not implemented:
+VBUS-present standby (USB/serial recovery stays awake), reducing the 1 s battery poll
+(trusted low-battery needs readings within 3 s), IMU rail cut, System OFF.
 
 **No automatic recording:** reset, bootloader exit, USB insertion and firmware
 install never start a session; only a debounced 3-second hold does. The recorder

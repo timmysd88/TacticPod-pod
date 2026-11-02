@@ -191,7 +191,7 @@ void flushFieldTrace() {
 // Standby pace: no GPS/IMU/flash/LED work. D0 is polled; sleeping is the RTOS tickless idle.
 void standbyIdle() {
   if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);  // Keeps armed-cell trust warm.
-  delay(digitalRead(PIN_A0) == LOW ? 10 : 50);
+  delay(digitalRead(PIN_A0) == LOW ? Standby::Policy::kPressedPollMs : Standby::Policy::kIdlePollMs);
 }
 #endif
 

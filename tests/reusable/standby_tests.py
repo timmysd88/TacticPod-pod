@@ -21,6 +21,28 @@ for path in ("src/standby_policy.h", "src/flash_power.h"):
     text = (root / path).read_text()
     assert not re.search(r"0x(06|20|02|C7|60|D8)\b", text), "standby helpers must not use erase/write opcodes"
 
+# Source guards for the new behaviours.
+gps = (root / "src/gps_receiver.cpp").read_text()
+assert "TACTICPOD_GPS_BACKUP_STANDBY" in gps and "buildBackupRequest" in gps
+power = (root / "src/gps_power.h").read_text()
+assert "#define TACTICPOD_GPS_BACKUP_STANDBY 0" in power, "backup standby must default OFF"
+# PMREQ is sent before the UART is stopped, never with the USB-only force flag.
+sus = re.search(r"void suspend\(\)\s*\{.*?\n\}\n", gps, re.S).group(0)
+assert sus.index("buildBackupRequest") < sus.index("Serial1.end()")
+# Recording still gates on a verified receiver profile after wake (profile audit restores 10 Hz).
+res = re.search(r"void resume\(\)\s*\{.*?\n\}\n", gps, re.S).group(0)
+assert "profileRequested=true" in res and "GpsProfile::invalidate" in res
+assert "currentVerified()" in gps and "recordingReady" in gps
+# Flash is finalised/idle before standby: policy blocks on recording/sessionBusy; flash deep power-down refuses busy parts.
+assert "FlashPower::deepPowerDown" in enter and "enterStandby" in main
+# USB/serial recovery: VBUS or an open port always keeps the device awake (policy test above); VBUS standby not implemented.
+assert "TACTICPOD_STANDBY_ON_VBUS" not in main
+polled = (root / "src/standby_policy.h").read_text()
+assert "kIdlePollMs = 100" in polled and "kPressedPollMs = 10" in polled
+assert "System OFF" not in gps
+ini = (root / "platformio.ini").read_text()
+assert "tacticpod_reusable_usb_gpsbackup" in ini and ini.count("-DTACTICPOD_GPS_BACKUP_STANDBY=1") == 1
+
 # The established TCB3 storage format is unchanged.
 digests = {
     "src/tcb3_store.cpp": "9f0734c9c0d061b3b1b386b0bcc00d31fba5deab7690fdf8fd1b0c6210ef8ca1",

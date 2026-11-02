@@ -20,6 +20,8 @@ struct Inputs {
 class Policy {
  public:
   static const uint32_t kSettleMs = 2000;
+  static const uint32_t kIdlePollMs = 100;    // Released button: fewer CPU wake-ups.
+  static const uint32_t kPressedPollMs = 10;  // Pressed: keep the 3000 ms hold accurate.
   enum class Change : uint8_t { None, Enter, Exit };
 
   Change update(const Inputs& in, uint32_t now) {
