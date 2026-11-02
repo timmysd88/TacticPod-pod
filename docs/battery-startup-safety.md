@@ -1,5 +1,7 @@
 # Battery sensing startup safety review
 
+> **Update 2026-11-02:** Seeed Technical Support has confirmed the P0.14/P0.13/bootloader behaviour (see [seeed-confirmation.md](seeed-confirmation.md)). The bootloader-interval concern and "NO-GO for LiPo connection" below are historical; battery testing now follows [supervised-validation.md](supervised-validation.md) and still needs explicit approval. No electrical measurement by this project is implied.
+
 **NO-GO for connecting or charging the LiPo.** The known variant HIGH interval
 is corrected in the separate reusable build. Reset, power ramp and bootloader
 behaviour remain electrically unqualified. **GO for review of a separately

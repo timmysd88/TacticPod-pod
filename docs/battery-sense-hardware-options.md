@@ -1,5 +1,7 @@
 # Safest practical sensing architecture
 
+> **Update 2026-11-02:** Seeed Technical Support has confirmed the P0.14/P0.13/bootloader behaviour (see [seeed-confirmation.md](seeed-confirmation.md)). The bootloader-interval concern and "NO-GO for LiPo connection" below are historical; battery testing now follows [supervised-validation.md](supervised-validation.md) and still needs explicit approval. No electrical measurement by this project is implied.
+
 Design recommendation only: **no rework, battery connection, charging or upload
 is authorised or performed here**. The corrected reusable variant removes the
 known HIGH interval, but cannot qualify reset/bootloader states. See the

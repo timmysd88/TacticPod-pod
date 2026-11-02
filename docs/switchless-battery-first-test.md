@@ -1,5 +1,7 @@
 # Switchless reusable firmware — first-test procedure for review
 
+> **Update 2026-11-02:** Seeed Technical Support has confirmed the P0.14/P0.13/bootloader behaviour (see [seeed-confirmation.md](seeed-confirmation.md)). The bootloader-interval concern and "NO-GO for LiPo connection" below are historical; battery testing now follows [supervised-validation.md](supervised-validation.md) and still needs explicit approval. No electrical measurement by this project is implied.
+
 Firmware environment: **tacticpod_reusable_usb**. No new firmware behaviour was
 needed: the corrected reusable application already supports USB-started timed
 recording independent of USB. New host tools and offline regression cases verify
