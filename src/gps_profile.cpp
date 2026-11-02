@@ -48,9 +48,12 @@ unsigned readRetries = 0;
 const char* configuration = "UNKNOWN (not verified)";
 char configurationValues[220];
 enum class Job { Version, Snapshot, Write, Verify, Audit };
+#if TACTICPOD_REUSABLE
+// Field-only audit state must not consume the default build's RAM budget.
 bool currentValid=false, auditRecover=false, auditMismatch=false;
 uint32_t checkedMs=0;
 const char* currentDetail="UNVERIFIED (no current RAM readback)";
+#endif
 enum class Phase { Idle, Send, Wait, Gap, Report };
 Job job = Job::Version;
 Phase phase = Phase::Idle;
@@ -159,8 +162,10 @@ void flushTrace() {
 }
 void gap(uint32_t duration) { phase = Phase::Gap; gapMs = duration; phaseAt = millis(); }
 void report(const char* result) {
+#if TACTICPOD_REUSABLE
   if (!verified && job != Job::Audit) currentValid=false;
   if(!currentValid && *reason){currentDetail="UNVERIFIED (profile operation failed; see detail)";FieldTrace::note(FieldTrace::Kind::GpsFailed,millis(),0,failedKey);}
+#endif
   if (!verified && touched) configuration = "UNKNOWN (configuration failed; GPS RESTORE may be required)";
   outcome = result; phase = Phase::Report; reportLine = 0; outputLength = 0; outputIsTrace = false; noticePending = false;
 }
@@ -194,6 +199,7 @@ bool preflight() {
 }
 void advanceValue(uint32_t value) {
   readRetries = 0;
+#if TACTICPOD_REUSABLE
   if (job == Job::Audit) {
     if (keys[keyIndex].target != kKeep && value != keys[keyIndex].target) {
       auditMismatch=true;
@@ -215,6 +221,7 @@ void advanceValue(uint32_t value) {
     FieldTrace::note(FieldTrace::Kind::GpsVerified,millis());
     report("CURRENT RAM PROFILE VERIFIED (read-only)"); return;
   }
+#endif
   if (job == Job::Snapshot) saved[keyIndex] = value;
   else {
     (restoring ? restoreRead : testRead)[keyIndex] = Readback{value, millis(), ReadState::Value};
@@ -238,8 +245,10 @@ void advanceValue(uint32_t value) {
       if (!startup) { fail("receiver already matches test profile; original snapshot may have been lost"); return; }
       // A board-only reset loses the old snapshot. Never invent a baseline.
       verified = testApplied = true;
+#if TACTICPOD_REUSABLE
       currentValid=true; checkedMs=millis();
       FieldTrace::note(FieldTrace::Kind::GpsVerified,millis());
+#endif
       configuration = "10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)";
       report("STARTUP 10HZ ALREADY VERIFIED (no writes; original snapshot unavailable)"); return;
     }
@@ -247,8 +256,10 @@ void advanceValue(uint32_t value) {
   }
   if (verificationFailed) { report("RESTORE FAILED/UNVERIFIED: snapshot retained; retry GPS RESTORE"); return; }
   verified = true;
+#if TACTICPOD_REUSABLE
   currentValid=!restoring; checkedMs=millis();
   if(currentValid)FieldTrace::note(FieldTrace::Kind::GpsVerified,millis());
+#endif
   if (restoring) {
     testApplied = false; snapshotValid = false;
     outputLength = 0;
@@ -313,26 +324,53 @@ void render() {
 
 namespace GpsProfile {
 bool active() { return Profile::phase != Profile::Phase::Idle && !(Profile::startup && Profile::phase == Profile::Phase::Report); }
-const char* status() { return active() ? "CONFIGURING (RAM only; not yet verified)" :
+const char* status() {
+#if TACTICPOD_REUSABLE
+  return active() ? "CONFIGURING (RAM only; not yet verified)" :
   Profile::currentValid ? (uint32_t(millis()-Profile::checkedMs)>15000 ?
     "STALE RAM snapshot (last readback matched; current configuration unverified)" :
-    "CURRENT RAM readback verified: 100ms / RMC 10Hz / GGA 1Hz / GPS+Galileo") : Profile::currentDetail; }
+    "CURRENT RAM readback verified: 100ms / RMC 10Hz / GGA 1Hz / GPS+Galileo") : Profile::currentDetail;
+#else
+  return active() ? "CONFIGURING (RAM only)" : Profile::configuration;
+#endif
+}
 const char* lastApplied() { return Profile::configuration; }
-bool currentVerified() { return Profile::currentValid && !active(); }
-uint32_t checkedAt() { return Profile::checkedMs; }
+bool currentVerified() {
+#if TACTICPOD_REUSABLE
+  return Profile::currentValid && !active();
+#else
+  return false; // Current field-audit readiness is unavailable in legacy builds.
+#endif
+}
+uint32_t checkedAt() {
+#if TACTICPOD_REUSABLE
+  return Profile::checkedMs;
+#else
+  return 0; // The legacy profile has no field-audit timestamp.
+#endif
+}
 bool automaticStartup() { return Profile::startup; }
 void invalidate(const char* why) {
+#if TACTICPOD_REUSABLE
   if(Profile::currentValid)FieldTrace::note(FieldTrace::Kind::GpsInvalidated,millis());
   Profile::currentValid=false;Profile::currentDetail=why;
+#else
+  (void)why;
+#endif
 }
 void observeCurrent(uint32_t key, uint32_t value) {
+#if TACTICPOD_REUSABLE
   for(unsigned i=0;i<Profile::kKeys;++i) {
     if(Profile::keys[i].id==key && Profile::keys[i].target!=Profile::kKeep && Profile::keys[i].target!=value) {
       invalidate("PROFILE LOST (current GPS CONFIG readback mismatch)");return;
     }
   }
+#else
+  (void)key;(void)value;
+#endif
 }
 bool startCheck(bool recover) {
+#if TACTICPOD_REUSABLE
   using namespace Profile;
   if(active() || GpsConfig::active() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed())return false;
   currentValid=false; currentDetail="UNVERIFIED (RAM audit pending)";
@@ -341,6 +379,9 @@ bool startCheck(bool recover) {
   startup=true;verified=false;touched=false;restoring=automatic=false;reason=outcome="";
   eventHead=eventCount=0;outputLength=0;outputIsTrace=false;noticePending=false;
   job=Job::Audit;phase=Phase::Send;phaseAt=attemptAt=millis();return true;
+#else
+  (void)recover;return false;
+#endif
 }
 const char* error() { return Profile::reason; }
 bool startTest() {

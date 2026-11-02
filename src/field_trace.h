@@ -24,7 +24,7 @@ inline void note(Kind kind, uint32_t ms, uint32_t session=0, uint32_t detail=0) 
 #endif
 }
 inline const char* name(Kind k) {
-  static const char* names[]={"standby_enter","wake","button_press","button_release",
+  static const char* const names[]={"standby_enter","wake","button_press","button_release",
     "start_accepted","session_created","stop_armed","stop_accepted","finalising",
     "finalised_clean","fault","gps_invalidated","gps_verified","gps_failed"};
   return names[unsigned(k)];

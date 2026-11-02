@@ -76,7 +76,7 @@ unexplained until timestamped physical evidence is collected.
 ## Validation and artifacts
 
 Use the pinned PlatformIO environment `tacticpod_reusable_usb`. The release bundle
-is preserved locally under `logs/field-fix-review-2026-11-02/` with firmware.bin,
+is preserved locally under `logs/resource-review-2026-11-02/release/` with firmware.bin,
 application DFU ZIP, HEX, ELF, build/test logs and SHA256SUMS.txt. Its validation
 summary records the final results. No bootloader, framework, charging setting,
 battery GPIO, calibration, D0 wiring or storage-format change is part of this PR.
@@ -93,14 +93,14 @@ available, otherwise pinned ARM GCC and Unicorn; no toolchain upgrade is needed.
 
 Application environment: `tacticpod_reusable_usb`, Seeed XIAO nRF52840 Sense,
 pinned PlatformIO 6.2.0 / Seeed a6fd41d / Arduino 1.1.1 / GCC ARM 7.2.1.
-Clean application build: flash 202312/811008 bytes, RAM 122096/237568 bytes.
+Clean application build: flash 202320/811008 bytes, RAM 122040/237568 bytes.
 The unchanged bootloader and SoftDevice are not included in the application ZIP.
 
 | Artifact | SHA-256 |
 | --- | --- |
-| firmware.bin | `77829105dd9943da9a13634d271ae7b6e381354b91cba788f6a945f9a90f00da` |
-| firmware.hex | `c522e89ffa5fe32308d94aee960f7743e58a7cd8d296665905209f8350f8e231` |
-| firmware.zip | `fd93c753131901e3500ede98e2f388fa3fed4e338bc75542b5c9efba0a70b787` |
+| firmware.bin | `40bced328dbcc453eb8326297fabab40c268063140d6c909a4359b4024a9a585` |
+| firmware.hex | `4cbabc9cc9b4a6306a502bb3312a455bc72a506a1a495f8f1873ccabb3265787` |
+| firmware.zip | `c38561e5004ec88bf5d1b6b8b21c4d50a55cbbd19db41a7065c804438a6ae007` |
 
 The binary is extracted directly from that application-only ZIP. No on-device
 result is claimed for this release. Upload and recording need separate approval.
