@@ -1,0 +1,30 @@
+{
+  "outcome": "BLOCKED",
+  "phase": "read_only_preflight_retry_1",
+  "candidate_verification": "PASS",
+  "serial_port": "COM8",
+  "source_and_binary_unchanged": true,
+  "binary_sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051",
+  "external_flash_jedec_reads": [
+    "000000",
+    "000000",
+    "000000",
+    "000000",
+    "000000"
+  ],
+  "sfdp": "all zero; qualification UNRESOLVED",
+  "recorder_idle": true,
+  "existing_firmware_gps": "NMEA VALID at 38400, CURRENT RAM 10Hz verified; NO FIX",
+  "session_backup_attempted": false,
+  "session_integrity": "INCONCLUSIVE: flash cannot be identified",
+  "flash_upload_attempted": false,
+  "device_reset": false,
+  "bootloader_entered": false,
+  "gps_backup_command_sent": false,
+  "cycles": [],
+  "recording_or_erase_commands_sent": false,
+  "automatic_backup_enabled": false,
+  "firmware_modified": false,
+  "merged_or_pushed": false,
+  "serial_released": true
+}

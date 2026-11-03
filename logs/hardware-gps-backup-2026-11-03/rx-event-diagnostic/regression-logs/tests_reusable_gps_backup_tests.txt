@@ -1,0 +1,22 @@
+Pinned ARM GCC + Unicorn fallback (host g++ unavailable)
+PASS: GPS BACKUP TEST state machine, default-off flags, entry guards, recording block, USB left untouched
+PASS: three recovered cycles; recording blocked until each PASS
+PASS: no wake; bounded retries; repeated test refused
+PASS: invalid NMEA never confirms baud or passes
+PASS: 10 Hz readback timeout blocks recording
+PASS: profile verification lost during fix wait cannot pass
+PASS: stale NMEA during fix wait cannot pass
+PASS: failed cycle; genuine recovery clears latch; next cycle passes
+PASS: complete checksum-valid NMEA during listen fails entry; deferred trace
+PASS: partial residual/unclassified bytes fail entry without claiming valid NMEA
+PASS: complete invalid-checksum NMEA fails entry and is counted separately
+PASS: isolated byte remains FAIL after 1500ms RX-only observation
+PASS: linked UART vector/isolation seeed_xiao_nrf52840_sense
+PASS: linked UART vector/isolation tcb3_first_write
+PASS: linked UART vector/isolation tcb3_append_30s
+PASS: linked UART vector/isolation tcb3_movement_120s
+PASS: linked UART vector/isolation tacticpod_reusable_usb
+PASS: linked UART vector/isolation tacticpod_reusable_usb_gpsbackup
+PASS: linked UART vector/isolation tacticpod_reusable_usb_gpsbackup_auto
+PASS: retained ENDRX snapshot before BSP clears event
+PASS: new RX after restart; TX-only IRQ does not consume RX snapshot

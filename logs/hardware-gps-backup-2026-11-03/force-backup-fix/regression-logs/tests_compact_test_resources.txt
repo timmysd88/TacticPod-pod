@@ -1,0 +1,2 @@
+RESOURCE: production static RAM 118992 limit 119000 ; compact objects 37966 limit 38000
+PASS: production static RAM 118992 bytes; compact objects 37966 bytes; observed command stack 456 bytes

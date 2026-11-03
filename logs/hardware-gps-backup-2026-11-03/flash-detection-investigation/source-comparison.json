@@ -1,0 +1,52 @@
+{
+  "working_source_commit": "155a999122f0ce85ab6817c6eba690e9501fe4b3",
+  "firmware_functions_unchanged": {
+    "struct FlashIo": true,
+    "bool enterStandby()": true,
+    "void leaveStandby(uint32_t now)": true,
+    "JedecId readFlashJedecId()": true,
+    "void readSfdp(uint32_t address": true,
+    "bool identityRead(": true,
+    "bool identityIdle()": true,
+    "void updateIdentity()": true,
+    "void requestIdentity()": true
+  },
+  "unchanged_files": [
+    "src/flash_power.h",
+    "src/flash_identity.h",
+    "src/recorder.cpp",
+    "src/tcb3_session.cpp",
+    "variants/tacticpod/Seeed_XIAO_nRF52840/variant.h",
+    "variants/tacticpod/Seeed_XIAO_nRF52840/variant.cpp"
+  ],
+  "startup_order_verified": [
+    "digitalWrite(kFlashCsPin, HIGH)",
+    "pinMode(kFlashCsPin, OUTPUT)",
+    "SPI.begin()",
+    "FlashPower::release(flash)",
+    "imu.begin()",
+    "Recorder::begin(imuReady)"
+  ],
+  "boot_release": true,
+  "standby_exit_release": true,
+  "release_opcode": "AB",
+  "cs_high_after_release_us": 100,
+  "diagnostic_releases_flash": false,
+  "flash_ready_readback_after_release": false,
+  "pins": {
+    "CS": "D2 / P0.28",
+    "SCK": "D8 / P1.13",
+    "MISO": "D9 / P1.14",
+    "MOSI": "D10 / P1.15"
+  },
+  "protocol": "SPI mode 0, MSB first, 1MHz; software CS; 9F then 3 result bytes; 5A then 24-bit address and one dummy byte",
+  "prior_good_diagnostic_also_printed_qualification_unresolved": true,
+  "host_preflight_qualification_rejection_is_incorrect": true,
+  "physical_root_cause": "INCONCLUSIVE",
+  "leading_software_hypothesis": "Flash left asleep or AB release not effective; not a demonstrated new source regression",
+  "no_new_firmware_changes": true,
+  "approved_candidate_hashes_unchanged": true,
+  "no_upload": true,
+  "no_gps_backup_test": true,
+  "no_flash_wake_reset_program_erase_or_status_write": true
+}

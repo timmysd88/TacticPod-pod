@@ -1,0 +1,28 @@
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-sbrkr.o): In function `_sbrk_r':
+sbrkr.c:(.text._sbrk_r+0xc): undefined reference to `_sbrk'
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-writer.o): In function `_write_r':
+writer.c:(.text._write_r+0x12): undefined reference to `_write'
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-closer.o): In function `_close_r':
+closer.c:(.text._close_r+0xc): undefined reference to `_close'
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-lseekr.o): In function `_lseek_r':
+lseekr.c:(.text._lseek_r+0x12): undefined reference to `_lseek'
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-readr.o): In function `_read_r':
+readr.c:(.text._read_r+0x12): undefined reference to `_read'
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-fstatr.o): In function `_fstat_r':
+fstatr.c:(.text._fstat_r+0x10): undefined reference to `_fstat'
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.worktrees/pr6-gpsbackup-20261103/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-isattyr.o): In function `_isatty_r':
+isattyr.c:(.text._isatty_r+0xc): undefined reference to `_isatty'
+collect2.exe: error: ld returned 1 exit status
+
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\reusable\gps_backup_tests.py", line 6, in <module>
+    run_cpp('tests/reusable/gps_backup_test.cpp', 'gps-backup-test')
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\reusable\host_checks.py", line 15, in run_cpp
+    elf=compile(source,name,extra=('-Wall','-Wextra','-Werror','-Wl,-e,main'))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\tcb3\native.py", line 19, in compile
+    print(result.stderr.decode('utf-8','replace'));result.check_returncode()
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\.platformio\python3\Lib\subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio-core\\packages\\toolchain-gccarmnoneeabi\\bin\\arm-none-eabi-g++.exe', '-std=c++11', '-Ofast', '-DARDUINO=10819', '-mcpu=cortex-m4', '-mthumb', '-fno-exceptions', '-fno-rtti', '-fno-unwind-tables', '-ffunction-sections', '-fdata-sections', '-nostartfiles', '-fstack-usage', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\reusable\\gps_backup_test.cpp', '-Wall', '-Wextra', '-Werror', '-Wl,-e,main', '-Wl,-Ttext=0x10000', '-Wl,-Tdata=0x20000000', '-lm', '-o', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio\\gps-backup-test.elf']' returned non-zero exit status 1.

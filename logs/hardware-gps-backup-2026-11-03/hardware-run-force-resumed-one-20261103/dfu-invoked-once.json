@@ -1,0 +1,27 @@
+{
+  "uploaded": false,
+  "approved_application_sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434",
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "loader": {
+    "port": "COM7",
+    "vid": 10374,
+    "pid": 69,
+    "serial": "0E8A89B7289430BD",
+    "hwid": "USB VID:PID=2886:0045 SER=0E8A89B7289430BD LOCATION=1-8:x.0",
+    "identity_basis": "Same unique serial as confirmed COM8 and previously verified Sense bootloader; expected 2886:0045"
+  },
+  "command": [
+    "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\.pio-core\\packages\\tool-adafruit-nrfutil\\adafruit-nrfutil.py",
+    "dfu",
+    "serial",
+    "-pkg",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\logs\\hardware-gps-backup-2026-11-03\\force-backup-fix\\tacticpod_reusable_usb_gpsbackup\\firmware.zip",
+    "-p",
+    "COM7",
+    "-b",
+    "115200",
+    "--singlebank"
+  ]
+}

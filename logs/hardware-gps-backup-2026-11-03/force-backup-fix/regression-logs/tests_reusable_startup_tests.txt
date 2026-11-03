@@ -1,0 +1,8 @@
+PASS: USB-only startup
+PASS: battery-present startup (model)
+PASS: USB charging startup (model)
+PASS: inherited HIGH remains a pre-variant hazard
+PASS: old variant negative control
+PASS: ten simulated resets
+PASS: ideal voltage hazard bounds LOW=1.418543V HIGH=3.603974V high-Z approaches 4.2V
+PASS: default build isolation, original pin map/header and core sequence checks

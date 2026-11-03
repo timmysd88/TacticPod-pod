@@ -1,0 +1,13 @@
+In file included from c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\math.h:36:0,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write\Arduino.h:5,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write\harness.cpp:1:
+c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\cmath:41:10: fatal error: bits/c++config.h: No such file or directory
+ #include <bits/c++config.h>
+          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write\run_tests.py", line 14, in <module>
+    subprocess.run([str(compiler), '-std=c++11', '-mcpu=cortex-m4', '-mthumb', '-O1',
+  File "C:\Users\timot\.platformio\python3\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio-core\\packages\\toolchain-gccarmnoneeabi\\bin\\arm-none-eabi-g++.exe', '-std=c++11', '-mcpu=cortex-m4', '-mthumb', '-O1', '-fno-exceptions', '-fno-rtti', '-fno-unwind-tables', '-nostartfiles', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\flash_write', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\flash_write\\harness.cpp', '-Wl,-Ttext=0x10000', '-Wl,-Tdata=0x20000000', '-Wl,-e,runCase', '-o', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio\\flash-write-tests.elf']' returned non-zero exit status 1.

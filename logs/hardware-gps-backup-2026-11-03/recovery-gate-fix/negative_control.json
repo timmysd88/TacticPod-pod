@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "original_gate_rejected": true,
+  "integration_case": 0,
+  "observed_failure_code": 11,
+  "production_sources_modified": false
+}

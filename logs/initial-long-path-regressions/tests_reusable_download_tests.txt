@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\reusable\download_tests.py", line 12, in <module>
+    raw=(ROOT/'.pio/switchless-example.tpx3').read_bytes()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\.platformio\python3\Lib\pathlib.py", line 1050, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\.platformio\python3\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio\\switchless-example.tpx3'

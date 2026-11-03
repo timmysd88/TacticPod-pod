@@ -1,0 +1,25 @@
+{
+  "outcome": "PREUPLOAD STOP: GPS NOT READY",
+  "approved_binary_sha256": "56d9fb3539fd2b164f432eb5c7fa557c94489b77405494fd17eb28f426b747ad",
+  "bytes": 211648,
+  "candidate_verified": true,
+  "diagnostic_vector_verified": true,
+  "device": {
+    "port": "COM8",
+    "vid": 10374,
+    "pid": 32836,
+    "serial": "0E8A89B7289430BD",
+    "description": "USB Serial Device (COM8)",
+    "hwid": "USB VID:PID=2886:8044 SER=0E8A89B7289430BD LOCATION=1-8:x.0",
+    "known_board": "Previously verified XIAO nRF52840 Sense; unique USB serial matches prior approved upload"
+  },
+  "idle_checks_passed": true,
+  "gps_status": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=NONE | bytes=11797 | checksum_ok=161 | checksum_fail=0 | last_valid_message_age_ms=N/A\nGPS configuration: UNVERIFIED (no receiver communication after wake/start)\nGPS last applied profile (historical): 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS RAM readback t_ms=8090 (snapshot, not proof of navigation cadence)\nGPS ERROR: UART data stopped; check power and TX wiring.\nGPS fix=STALE/UNKNOWN | lat=50.775245 | lon=0.089874 | position=LAST_KNOWN/UNAVAILABLE | satellites=N/A | HDOP=N/A\nGPS speed_km/h=N/A | UTC=N/A | position_age_ms=1614757\n",
+  "flash_identity": "NOT CHECKED: stopped on GPS failure",
+  "upload_count": 0,
+  "cycle_count": 0,
+  "serial_closed": true,
+  "firmware_modified": false,
+  "recording_erase_or_reset_commands": false,
+  "automatic_standby_enabled": false
+}

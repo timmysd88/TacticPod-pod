@@ -14,6 +14,10 @@
 #include "compact_recorder.h"
 #include "tcb3_session.h"
 #include "gps_power.h"
+#if TACTICPOD_GPS_BACKUP_TEST
+#include "gps_backup_trace.h"
+#include "gps_backup_uart_diag.h"
+#endif
 
 // Verified in Seeed_XIAO_nRF52840/variant.h and cores/nRF5/Uart.cpp:
 // Serial1 = UARTE0, RX = D7/P1.12, TX = D6/P1.11.
@@ -37,6 +41,8 @@ void writeWakeBytes() {
 #if TACTICPOD_GPS_BACKUP_TEST
 GpsPower::BackupTest backupTest;
 bool backupReported = false, backupLatched = false;
+GpsPower::BackupTrace backupTrace;
+TinyGPSPlus backupValidator;  // Fresh at every phase: partial prior sentences cannot count.
 #endif
 // The supervised test owns the UART while it runs; automatic wake must stay out of it.
 bool backupTestRunning() {
@@ -135,6 +141,14 @@ void pollUart() {
   for (unsigned budget = 0; budget < 64 && Serial1.available(); ++budget) {
     const int value = Serial1.read();
     if (value < 0) break;
+#if TACTICPOD_GPS_BACKUP_TEST
+    if (backupTest.running()) {
+      const uint32_t badBefore = backupValidator.failedChecksum();
+      const bool valid = backupValidator.encode(char(value));
+      backupTrace.observe(millis(), backupTest.current(), uint8_t(value), valid,
+                          backupValidator.failedChecksum() != badBefore);
+    }
+#endif
     if (loopPhase == LoopPhase::Quiet) {
       ++loopDiscarded;  // Count pre-existing/noisy input instead of hiding it.
       continue;
@@ -156,6 +170,9 @@ void pollUart() {
     if (ubx) { RamObservations::interruptFrame(); continue; }
     RamObservations::observe(uint8_t(value));
     receivedByte = true; lastByteAt = millis(); ++byteCount;
+#if TACTICPOD_GPS_BACKUP_TEST
+    backupTest.unexpectedRx(millis(), byteCount);
+#endif
     if (gps.encode(char(value))) {
       receivedValid = true; lastValidAt = millis();
 #if TACTICPOD_REUSABLE
@@ -395,6 +412,13 @@ void begin() {
   startupPending = true; startupNoCommunication = false;
 }
 #if TACTICPOD_GPS_BACKUP_TEST
+// Recovery is an observation, independent of permission to record. The latter
+// deliberately stays false while this test runs or a failed recovery is latched.
+static bool backupRecoveryVerified() {
+  return !suspended && receivedValid && uint32_t(millis() - lastValidAt) <= kFreshMs &&
+      !startupPending && !profileRequested && !profileRunning && !profileFailed &&
+      GpsProfile::currentVerified();
+}
 static GpsPower::BackupTest::Guards backupGuards() {
   GpsPower::BackupTest::Guards g;
   g.recording = Tcb3Session::recording();
@@ -409,7 +433,56 @@ static GpsPower::BackupTest::Guards backupGuards() {
   g.nmeaFresh = receivedValid && uint32_t(millis() - lastValidAt) <= kFreshMs;
   return g;
 }
+static void backupTraceReport() {
+  Serial.println("  UARTE snapshots: tags 0=before-stop 1=after-stop 2=before-restart 3=after-restart 4=first-ENDRX-IRQ (before BSP)");
+  Serial.println("  Fields: tag/us/ENDRX/RXDRDY/RXSTARTED/RXTO/ERROR/AMOUNT/ERRORSRC/INTEN/ENABLE/NVIC-enabled/pending/active/PRIMASK/TX-AMOUNT/ENDTX; values decimal");
+  for (unsigned i = 0; i < GpsBackupUartDiag::Count; ++i) {
+    GpsBackupUartDiag::Snapshot s;
+    if (!GpsBackupUartDiag::get(GpsBackupUartDiag::Tag(i), s)) {
+      Serial.print("  UARTE snapshot absent: "); Serial.println(i); continue;
+    }
+    Serial.print("  UARTE snapshot: "); Serial.print(i);
+    const uint32_t fields[] = {s.us,s.endrx,s.rxdrdy,s.rxstarted,s.rxto,s.error,s.amount,s.errorsrc,
+      s.inten,s.enabled,s.irqEnabled,s.irqPending,s.irqActive,s.primask,s.txAmount,s.endtx};
+    for (auto value : fields) { Serial.print('/'); Serial.print(value); }
+    Serial.println();
+  }
+  Serial.print("  UART ERRORSRC observed OR (sticky/pre-existing possible; not cleared): "); Serial.println(GpsBackupUartDiag::errorsSeen(), HEX);
+  Serial.println("  UART trace: host-read ms from test start, not wire arrival; no live trace output");
+  Serial.print("  queued RX bytes at start/park (cleared by UART end): ");
+  Serial.print(backupTrace.pendingAtStart); Serial.print('/'); Serial.println(backupTrace.pendingAtPark);
+  Serial.println("  phases: 1=drain 2=parked 3=listen 4=wake 5=profile 6=fix 7=done");
+  Serial.println("  actions: 0=none 1=request queued 2=park 3=resume 4=wake queued; TX-ready is an observation, not receiver ACK");
+  for (unsigned i = 0; i < backupTrace.eventCount; ++i) {
+    const auto& e = backupTrace.events[i];
+    Serial.print("  event ms/phase/action/tx-ready: "); Serial.print(e.ms); Serial.print('/');
+    Serial.print(unsigned(e.phase)); Serial.print('/'); Serial.print(unsigned(e.action));
+    Serial.print('/'); Serial.println(e.txReady ? 1 : 0);
+  }
+  for (unsigned p = 1; p < GpsPower::BackupTrace::kPhases; ++p) {
+    const auto& w = backupTrace.windows[p];
+    Serial.print("  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: ");
+    Serial.print(p); Serial.print('/'); Serial.print(w.bytes); Serial.print('/');
+    Serial.print(w.valid); Serial.print('/'); Serial.print(w.badChecksum); Serial.print('/');
+    Serial.print(w.first); Serial.print('/'); Serial.println(w.last);
+    Serial.print("  RX classification: ");
+    Serial.println(w.valid ? "complete checksum-valid NMEA observed" : w.bytes == 1 ? "isolated byte; origin unclassified" :
+                   w.starts ? "NMEA candidate fragments/checksum failures; no valid complete sentence" :
+                   w.bytes ? "unclassified bytes without complete valid NMEA" : "no bytes observed");
+    Serial.print("  NMEA starts/incomplete-ended/open-fragment: "); Serial.print(w.starts); Serial.print('/');
+    Serial.print(w.incomplete); Serial.print('/'); Serial.println(w.open ? 1 : 0);
+    const int slot = GpsPower::BackupTrace::slot(GpsPower::BackupTest::Phase(p));
+    if (slot < 0) continue;
+    Serial.print("  raw prefix captured/total: "); Serial.print(w.stored); Serial.print('/'); Serial.println(w.bytes);
+    for (unsigned i = 0; i < w.stored; ++i) {
+      const auto& s = backupTrace.samples[slot][i];
+      Serial.print("  RX ms/hex: "); Serial.print(s.ms); Serial.print('/'); Serial.println(unsigned(s.value), HEX);
+    }
+  }
+  Serial.println("  Bytes without a complete valid sentence are partial/residual/unclassified; residual origin cannot be proven from read times.");
+}
 static void backupReport() {
+  GpsBackupUartDiag::stop();
   backupReported = true;
   using R = GpsPower::BackupTest::Result;
   const GpsPower::BackupTest& t = backupTest;
@@ -417,10 +490,10 @@ static void backupReport() {
   backupLatched = t.blocksRecording();
   if (!Serial) return;
   Serial.print("GPS BACKUP TEST RESULT (wake mask 0x"); Serial.print(unsigned(TACTICPOD_GPS_WAKE_MASK), HEX); Serial.println(")");
-  Serial.print("  standby request sent: "); Serial.println(t.requestOk() ? "YES" : "NO");
+  Serial.print("  standby request queued (24 bytes, flags 0x06; no PMREQ ACK expected): "); Serial.println(t.requestOk() ? "YES" : "NO");
   Serial.print("  standby confirmed (UART silent "); Serial.print(unsigned(GpsPower::BackupTest::kListenMs));
   Serial.print(" ms after "); Serial.print(unsigned(GpsPower::BackupTest::kDwellMs)); Serial.print(" ms parked): ");
-  Serial.println(!t.requestOk() ? "NOT TESTED" : t.standbySilent() ? "YES" : r == R::Aborted ? "NOT TESTED" : "NO (NMEA kept flowing; receiver did not enter standby)");
+  Serial.println(!t.requestOk() ? "NOT TESTED" : t.standbySilent() ? "YES (silence confirmed)" : r == R::Aborted ? "NOT TESTED" : "NO (RX bytes observed; inspect trace for complete valid NMEA versus fragments)");
   Serial.print("  UART wake attempted: ");
   if (t.wakeAttempts()) { Serial.print("YES ("); Serial.print(t.wakeAttempts()); Serial.println(" attempts of 0xFF bytes)"); }
   else Serial.println("NO");
@@ -438,29 +511,36 @@ static void backupReport() {
   switch (r) {
     case R::Pass: Serial.println("GPS BACKUP TEST: PASS"); break;
     case R::RequestNotSent: Serial.println("GPS BACKUP TEST: FAIL - request not sent (UART busy); GPS untouched."); break;
-    case R::EntryNotConfirmed: Serial.println("GPS BACKUP TEST: FAIL - standby not confirmed; receiver kept running (baseline power). Wake was not tested."); break;
+    case R::EntryNotConfirmed: Serial.println("GPS BACKUP TEST: FAIL - backup entry not confirmed; RX activity before deliberate wake. Never entered versus early wake is unresolved. Wake was not tested."); break;
     case R::NoWake: Serial.println("GPS BACKUP TEST: FAIL - GPS did not wake. Recording is BLOCKED. A software reset cannot recover a receiver in standby: remove USB and battery to power-cycle it."); break;
     case R::NoValidNmea: Serial.println("GPS BACKUP TEST: FAIL - bytes returned but no valid NMEA at 38400. Recording is BLOCKED. Power-cycle (remove USB and battery) to restore the receiver."); break;
     case R::ProfileFailed: Serial.println("GPS BACKUP TEST: FAIL - NMEA returned but the 10 Hz configuration is not verified. Recording is BLOCKED until it verifies (GPS CONFIG / GPS RESTORE) or power is cycled."); break;
     default: Serial.println("GPS BACKUP TEST: ABORTED - recording/flash activity started; UART restored."); break;
   }
+  backupTraceReport();
   Serial.println("GPS BACKUP TEST END");
 }
 static void backupStep() {
-  if (backupLatched && receivedValid && GpsProfile::currentVerified()) backupLatched = false;
+  if (backupLatched && backupRecoveryVerified()) backupLatched = false;
   if (!backupTest.running()) {
     if (backupTest.done() && !backupReported) backupReport();
     return;
   }
   GpsPower::BackupTest::Obs o;
   o.now = millis(); o.bytes = byteCount; o.txReady = uartTxReady();
-  o.validNmea = receivedValid;
-  o.profileVerified = recordingReady();
+  o.validNmea = receivedValid && uint32_t(o.now - lastValidAt) <= kFreshMs;
+  o.profileVerified = backupRecoveryVerified();
   o.profileFailed = profileFailed;
   o.fix = liveFix();
   const GpsPower::BackupTest::Guards g = backupGuards();
   o.guardViolated = g.recording || g.sessionBusy || g.flashBusy || g.faulted;
-  switch (backupTest.step(o)) {
+  const auto previousPhase = backupTest.current();
+  const auto action = backupTest.step(o);
+  if (action != GpsPower::BackupTest::Action::None || previousPhase != backupTest.current()) {
+    backupTrace.event(o.now, backupTest.current(), action, o.txReady);
+    if (previousPhase != backupTest.current()) backupValidator = TinyGPSPlus();
+  }
+  switch (action) {
     case GpsPower::BackupTest::Action::SendRequest: {
       uint8_t frame[GpsPower::kFrameSize];
       GpsPower::buildBackupRequest(frame);
@@ -468,14 +548,20 @@ static void backupStep() {
       break;
     }
     case GpsPower::BackupTest::Action::ParkUart:
+      backupTrace.pendingAtPark = Serial1.available();
+      GpsBackupUartDiag::capture(GpsBackupUartDiag::BeforeStop);
       Serial1.end();
+      GpsBackupUartDiag::capture(GpsBackupUartDiag::AfterStop);
       pinMode(PIN_SERIAL1_TX, OUTPUT);
       digitalWrite(PIN_SERIAL1_TX, HIGH);
       suspended = true;
       GpsProfile::invalidate("UNVERIFIED (GPS BACKUP TEST; receiver RAM not observed)");
       break;
     case GpsPower::BackupTest::Action::ResumeUart:
+      GpsBackupUartDiag::capture(GpsBackupUartDiag::BeforeRestart);
+      GpsBackupUartDiag::armFirstRx();
       resume();
+      GpsBackupUartDiag::capture(GpsBackupUartDiag::AfterRestart);
       GpsUartTx::resetIdle();
       break;
     case GpsPower::BackupTest::Action::SendWake:
@@ -492,6 +578,10 @@ static void backupStart() {
   if (!why && !Serial) why = "USB serial is not open";
   if (why) { Serial.print("GPS BACKUP TEST refused: "); Serial.println(why); return; }
   backupTest.start(g, millis());
+  backupTrace.reset(millis());
+  GpsBackupUartDiag::start();
+  backupTrace.pendingAtStart = Serial1.available();
+  backupValidator = TinyGPSPlus();
   backupReported = false;
   Serial.print("GPS BACKUP TEST started (about 20 s, USB stays awake; recording blocked). Wake mask 0x");
   Serial.println(unsigned(TACTICPOD_GPS_WAKE_MASK), HEX);
@@ -504,6 +594,15 @@ void update() {
   if (suspended) return;
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
+#if TACTICPOD_GPS_BACKUP_TEST
+  if (backupTest.running()) {
+    GpsBackupUartDiag::observeErrors();
+    // No automatic wake, configuration or profile service before deliberate
+    // wake, including the sticky-failure receive-only observation window.
+    const auto p = backupTest.current();
+    if (p == GpsPower::BackupTest::Phase::Drain || p == GpsPower::BackupTest::Phase::Listen) return;
+  }
+#endif
 #if TACTICPOD_GPS_BACKUP_STANDBY
   if (wakePending) {
     if (receivedValid) wakePending = false;

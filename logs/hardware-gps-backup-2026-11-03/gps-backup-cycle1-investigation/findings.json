@@ -1,0 +1,102 @@
+{
+  "offline_only": true,
+  "device_connected": false,
+  "firmware_modified": false,
+  "base_commit": "29f90966d868f68b85d63d64d27bab9584f7628a",
+  "patch_sha256": "0a4ffaa21e61a320e9e30ef2f3b79271afc2f757808063fd0c1312c876aa8eaa",
+  "approved_source_and_artifact_hashes_unchanged": true,
+  "binary_sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051",
+  "evidence": [
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\hardware-run-approved-20261103\\post-upload-and-cycles-serial.txt",
+      "sha256": "c78a87c11de98e85c2e1da068bcfe586100f2b7c0755a138d224a784653be45b"
+    },
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\hardware-run-approved-20261103\\cycle-1.json",
+      "sha256": "e35611ee8f38df120c57fbd8575312a490c93898aa2dc4a6acbe9739bd41ed65"
+    },
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\hardware-run-approved-20261103\\cycle-1-response.txt",
+      "sha256": "fe0c5d633ec9f9765c35c0874212f529d415681058682716f49e01fe184a132c"
+    },
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\hardware-run-approved-20261103\\upload-result.json",
+      "sha256": "e2542bee4c6e8e7a40a48f965ca4d14579122fbed73ffd3b62b01598f589d691"
+    },
+    {
+      "path": "src\\gps_power.h",
+      "sha256": "9f0c0ace661043cd56d4d67fb1f378486d4625f06a2d77685c1876f9bee8aba5"
+    },
+    {
+      "path": "src\\gps_receiver.cpp",
+      "sha256": "10e5410e77579429038f1b21be036797863f579c371dd84f9957dcfa3b6f253c"
+    },
+    {
+      "path": "src\\gps_uart_tx.h",
+      "sha256": "7ab22b09094b23e0acd04bda5f24cf872ad08361e785346c6b5d7d39543cbb9a"
+    },
+    {
+      "path": ".pio-core\\packages\\framework-arduinoadafruitnrf52\\cores\\nRF5\\Uart.cpp",
+      "sha256": "64beea228cec9971bef7ec1bc7cb5a6bbf77dd3bda9334395c7e8eb2b7f0c646"
+    },
+    {
+      "path": ".pio-core\\packages\\framework-arduinoadafruitnrf52\\cores\\nRF5\\RingBuffer.cpp",
+      "sha256": "349b6b6a2a23c0a42e4c80ce23ed12d171291dd934340835b9378853e8f3b253"
+    }
+  ],
+  "reconstructed_packet_from_source_hex": "B5 62 02 41 10 00 00 00 00 00 00 00 00 00 02 00 00 00 08 00 00 00 5D 4B",
+  "reconstructed_packet_is_not_an_on_wire_capture": true,
+  "payload": {
+    "version": 0,
+    "duration_ms": 0,
+    "flags": 2,
+    "backup": true,
+    "force": false,
+    "wakeup_sources": 8
+  },
+  "proposed_packet_not_applied_or_transmitted_hex": "B5 62 02 41 10 00 00 00 00 00 00 00 00 00 06 00 00 00 08 00 00 00 61 6B",
+  "expected_24_byte_8n1_wire_time_ms": 6.25,
+  "timing": {
+    "tx_minimum_from_request_callback_ms": 5,
+    "tx_forced_fallback_ms": 105,
+    "dwell_target_ms": 3000,
+    "listen_target_ms": 1500,
+    "actual_rx_timestamps": null,
+    "actual_listen_duration_ms": null,
+    "actual_rx_bytes": null,
+    "actual_rx_count": null,
+    "fail_on_first_observed_non_ubx_byte_count_change": true
+  },
+  "uart_buffer": {
+    "software_rx_ring_cleared_by_core_end": true,
+    "ring_is_not_explicitly_drained_at_listen_start": true,
+    "core_begin_does_not_explicitly_clear_endrx": true,
+    "stale_peripheral_event_or_restart_transient_cannot_be_excluded": true
+  },
+  "tx_conclusion": "24-byte MCU UART write accepted; physical full delivery/receiver acceptance not measured",
+  "ack_conclusion": "No PMREQ ACK recorded or checked; u-blox ubxlib identifies this command as unacknowledged",
+  "traffic_classification": "INCONCLUSIVE: only non-UBX parser-input counter change recorded; no raw data or NMEA checksum evidence for listen phase",
+  "leading_cause": "Required MAX-M10S software-standby force bit omitted (flags 02 instead of 06)",
+  "alternatives": [
+    "Restart-induced UART RX wake edge",
+    "Peripheral stale RX event/character or other unclassified input"
+  ],
+  "power_wiring": "Breakout schematic/module rail and V_BCKP mapping not available; no wiring defect established",
+  "corrective_action": "Propose backup|force with documented UART wake mask, preserve guards; add bounded TX/RX/phase evidence and verify recovery prerequisites before a separately approved test",
+  "references": [
+    {
+      "url": "https://content.u-blox.com/sites/default/files/MAX-M10S_IntegrationManual_UBX-20053088.pdf",
+      "revision": "R04",
+      "section": "3.6.3.2 / page 42"
+    },
+    {
+      "url": "https://content.u-blox.com/sites/default/files/u-blox-M10-SPG-5.10_InterfaceDescription_UBX-21035062.pdf",
+      "revision": "R03 / protocol 34.10",
+      "section": "3.16.6.1 / pages 116-117"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/u-blox/ubxlib/master/gnss/src/u_gnss_pwr.c",
+      "section": "uGnssPwrOffBackup; primary implementation explicitly notes no acknowledgement"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "commands": [
+    "RECORD STATUS",
+    "OBS STATUS",
+    "COMP STATUS",
+    "TCB STATUS",
+    "BAT STATUS",
+    "DIAG"
+  ],
+  "firmware_modified": false,
+  "uploaded": false,
+  "reset": false,
+  "flash_wake_command_sent": false,
+  "flash_array_or_status_writes": false,
+  "initial": "GPS PROFILE: CURRENT RAM PROFILE VERIFIED (read-only)\nTacticPod command menu (115200 baud; finish each command with Enter):\r\n  IMU ON       - print IMU readings at 10 Hz\r\n  IMU OFF      - stop printing; sampling continues (100 Hz when recording)\r\n  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions\r\n  RECORD READ  - export committed recordings as CSV while stopped\r\n  DIAG         - display JEDEC and SFDP information once (while idle)\r\n  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)\r\n  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives\r\n  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS\r\n  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400\r\n  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed\r\n  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls\r\n  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test\r\n  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot\r\n  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes\r\n  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes\r\n  TCB START / STOP / STATUS / READ - bounded append-only compact sessions\r\n  TCB DURATION seconds|UNLIMITED - stopped only, 1..1800 or until stop; default 120; drain deadline 60 seconds\r\n  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop\r\n  FIELD EVENTS - drain bounded timestamped RAM events while stopped; overwritten count explicit\r\n  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake\r\n  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference\r\n  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming\r\n  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds\r\n  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first\r\nIMU printing: OFF (default after boot)\r\nTCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.\r\nReason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0\nFirst mismatch before recovery: NONE\nGPS PROFILE END | UART=38400 | snapshot=retained in XIAO RAM | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.\n",
+  "states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xA40000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=0 rejected=0 blocks sealed=0 completed=0\nCOMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=53222853 max_block_step_us=0 max_slice_us=141 max_units=1\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed\n"
+  },
+  "battery": "BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4126 filtered_mV=4123 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000\n",
+  "serial_released": true,
+  "legacy_diag": "FLASH JEDEC read 1/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00\nFLASH JEDEC read 2/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00\nFLASH JEDEC read 3/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00\nFLASH JEDEC read 4/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00\nFLASH JEDEC read 5/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00\nJEDEC consistency: PASS (5/5 identical)\nFlash NOT DETECTED: uniform response is not a valid chip identity\nSFDP header: 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00\nSFDP INVALID / unavailable: missing SFDP signature; capacity/commands unknown\n",
+  "collector_error": "Host waited for healthy-SFDP summary marker, but firmware correctly took the invalid-SFDP early-return branch. Full reply is retained; this is not a proven SPI timeout.",
+  "raw_diag_in_this_run": false,
+  "raw_diag_reference": "../hardware-run-20261103-retry1/preflight-result.json"
+}

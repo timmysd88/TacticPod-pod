@@ -1,0 +1,13 @@
+# Paused GPS backup experiment — 3 November 2026
+
+This branch is an archival snapshot, not the working field firmware. Do not upload or resume experiments without new explicit approval. The preferred USB-tested firmware is PR #5, commit `3d4693207d459b1565af2e8b3955cd897f5d519c`, environment `tacticpod_reusable_usb`; see branch `backup/pr5-field-handover-20261103`.
+
+Snapshot parent: PR #6 source commit `29f90966d868f68b85d63d64d27bab9584f7628a`. Original `.p6` worktree and its branch were not switched, reset or overwritten. Eight substantively modified tracked files, new diagnostic source/tests, investigation documents and curated text evidence are preserved here. `logs/shutdown-20261103/preserved-files.json` records original byte hashes and paths. Some differences also reflect pre-existing line endings; no implementation was edited for this snapshot. Initial long-path worktree logs are archived separately under `logs/shutdown-20261103/initial-long-path/`.
+
+Unmerged work includes corrected recovery gating, software-backup flags 0x06 / wake mask 0x08, bounded UART observations, and test-local UARTE RX event instrumentation with passive follow-up. Reports and existing test results describe the tested candidates; this archival commit is not a new tested or approved firmware candidate. Experimental automatic-backup build environments may exist, but must not be selected as field firmware. No hardware test, build, upload or release was performed for this backup.
+
+The last reported test saw one byte 0x32 at approximately 3007 ms after a 3000 ms UART park, without complete NMEA or deliberate wake. Stale RX DMA state remains a hypothesis, not a proven cause. Experimental development was paused in favor of PR #5 field testing. The diagnostic candidate originally approved for a final test was 211648 bytes, SHA-256 `56d9fb3539fd2b164f432eb5c7fa557c94489b77405494fd17eb28f426b747ad`; its generated binary is local-only, while its manifest, source and results are archived. No approval to run it persists from this handover.
+
+Generated binaries, duplicate recording exports and large decoded JSON are excluded; exact paths, sizes and hashes are listed in `logs/shutdown-20261103/local-only-files.json`. These excluded bytes are not recoverable from this branch alone. The field backup branch preserves the canonical pre/post-session-162 TPX3 recording exports.
+
+Resume read-only review on this PC with `git -C .s6 status` and open this document. To reconstruct elsewhere: `git fetch origin`, then `git worktree add -b review/gps-paused .p6 origin/backup/gps-experiment-paused-20261103`. Do not execute archived hardware/upload scripts automatically: they contain previous approval-specific actions and some original absolute paths.

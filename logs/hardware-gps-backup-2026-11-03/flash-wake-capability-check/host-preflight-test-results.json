@@ -1,0 +1,19 @@
+{
+  "passed": 11,
+  "failed": 0,
+  "tests": {
+    "known-good hardware capture with qualification UNRESOLVED": "PASS",
+    "qualification text is informational": "PASS",
+    "actual all-zero failed-device capture with repeatability PASS": "PASS",
+    "one inconsistent JEDEC result": "PASS",
+    "all-FF JEDEC results": "PASS",
+    "busy status despite valid JEDEC/SFDP": "PASS",
+    "changed protection/status state": "PASS",
+    "missing SFDP chunk": "PASS",
+    "corrupt SFDP signature": "PASS",
+    "incomplete capture": "PASS",
+    "invalid saved reference": "PASS"
+  },
+  "hardware_accessed": false,
+  "uploader_executed": false
+}

@@ -1,0 +1,57 @@
+GPS BACKUP TEST started (about 20 s, USB stays awake; recording blocked). Wake mask 0x8
+GPS BACKUP TEST RESULT (wake mask 0x8)
+  standby request queued (24 bytes, flags 0x06; no PMREQ ACK expected): YES
+  standby confirmed (UART silent 1500 ms after 3000 ms parked): NO (RX bytes observed; inspect trace for complete valid NMEA versus fragments)
+  UART wake attempted: NO
+  time until valid NMEA: NOT RETURNED
+  GPS baud 38400: NOT CONFIRMED
+  10 Hz configuration: NOT CHECKED
+  GPS fix: NOT CHECKED
+GPS BACKUP TEST: FAIL - backup entry not confirmed; RX activity before deliberate wake. Never entered versus early wake is unresolved. Wake was not tested.
+  UART trace: host-read ms from test start, not wire arrival; no live trace output
+  queued RX bytes at start/park (cleared by UART end): 1/1
+  phases: 1=drain 2=parked 3=listen 4=wake 5=profile 6=fix 7=done
+  actions: 0=none 1=request queued 2=park 3=resume 4=wake queued; TX-ready is an observation, not receiver ACK
+  event ms/phase/action/tx-ready: 1/1/1/1
+  event ms/phase/action/tx-ready: 7/2/2/1
+  event ms/phase/action/tx-ready: 3007/3/3/1
+  event ms/phase/action/tx-ready: 3007/7/0/1
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 1/26/0/0/1/7
+  raw prefix captured/total: 26/26
+  RX ms/hex: 1/2E
+  RX ms/hex: 1/36
+  RX ms/hex: 1/30
+  RX ms/hex: 1/2C
+  RX ms/hex: 1/41
+  RX ms/hex: 2/2C
+  RX ms/hex: 2/35
+  RX ms/hex: 2/30
+  RX ms/hex: 2/34
+  RX ms/hex: 3/36
+  RX ms/hex: 3/2E
+  RX ms/hex: 3/35
+  RX ms/hex: 4/31
+  RX ms/hex: 4/34
+  RX ms/hex: 4/36
+  RX ms/hex: 4/37
+  RX ms/hex: 5/2C
+  RX ms/hex: 5/4E
+  RX ms/hex: 5/2C
+  RX ms/hex: 5/30
+  RX ms/hex: 6/30
+  RX ms/hex: 6/30
+  RX ms/hex: 6/30
+  RX ms/hex: 6/35
+  RX ms/hex: 7/2E
+  RX ms/hex: 7/33
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 2/0/0/0/0/0
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 3/1/0/0/3007/3007
+  raw prefix captured/total: 1/1
+  RX ms/hex: 3007/32
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 4/0/0/0/0/0
+  raw prefix captured/total: 0/0
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 5/0/0/0/0/0
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 6/0/0/0/0/0
+  RX phase/bytes/complete-valid-NMEA/bad-checksum/first-ms/last-ms: 7/0/0/0/0/0
+  Bytes without a complete valid sentence are partial/residual/unclassified; residual origin cannot be proven from read times.
+GPS BACKUP TEST END

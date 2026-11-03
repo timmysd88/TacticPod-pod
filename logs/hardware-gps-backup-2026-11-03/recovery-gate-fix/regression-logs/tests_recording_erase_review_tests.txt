@@ -1,0 +1,7 @@
+PASS: complete partition
+PASS: erase readback failure
+PASS: denied WEL
+PASS: changed JEDEC
+PASS: WEL retained after erase
+PASS: exactly 4095 ascending 20h erases and 4095 WREN, first 000000 last FFE000; no page programs
+PASS: all 16773120 recording bytes FF, protected 4096-byte diagnostic canary unchanged, recorder stopped

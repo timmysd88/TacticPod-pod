@@ -1,0 +1,16 @@
+ca9053779ec379351d27c2d25a39fe1a457d73bb697b48c4048a6ee31f8ab6de  logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.elf
+e9a39d7e1617f4f33ef1416cd566ed68ef14511b04c0944a0a27af322b4ec439  logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.hex
+a352ebdb1d3e9a22d1466f85292da37428d030b1cf8a468e2de27009bc797c3e  logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.zip
+eefb4721bcf585b77c23fc36f1c037fc99174ef427da5c18427adcf66fea1a6b  logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.bin
+3c63eb4f602af6a7dccfe34c26c301f9e4b508d14d56e3aea323c9eebca967a8  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.elf
+7ccb7f0dc46f0b9b1522d2adb05bcd69501ba40118ba4ecd44d92dc8beaeff64  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.hex
+5e0e17148cce1ce4f9dfc3467ff8c45ee7b07379c7ad090bcae04dde5867ff73  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.zip
+2fdc70037c01ba6dff10d0631046e6bc7f10d8c3e3225f23786df95292b734bd  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.bin
+917d0d3501f65b7e29b19b6febd9ca9c6b0a738e02bef0162887b2ff3be6364c  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.elf
+bd8a694942484371a4ab88193342807243a3618f77f3891d97b732d1920ef992  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.hex
+f2c116fa73d0993f0dfed69bfaecc787ecf92081690d3c4aa157ee0b4e981140  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.zip
+f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.bin
+81cae8fb5491183eb45bb88b8b33ad8301984529a9dcd49d025331e7e578ee52  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.elf
+3b388c987b871d135a792dbe1fb889e643489199bc5edd0f5d6dd0bb4bca2b8a  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.hex
+91715ea64eecb8f39cf78ad3b8b09c9ed1b2e89698a6089dba22650f8a26d927  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.zip
+df85f2956af0f4dd4d1c82508903b474899515460e5b3e485963257cd5213a45  logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.bin

@@ -1,0 +1,14 @@
+Upgrading target on COM7 with DFU package C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.p6\logs\hardware-gps-backup-2026-11-03\force-backup-fix\tacticpod_reusable_usb_gpsbackup\firmware.zip. Flow control is disabled, Single bank, Touch disabled
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+##########
+Activating new firmware
+Device programmed.

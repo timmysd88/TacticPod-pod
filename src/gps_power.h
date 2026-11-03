@@ -14,7 +14,7 @@
 #if TACTICPOD_GPS_BACKUP_TEST && !TACTICPOD_REUSABLE
 #error "GPS BACKUP TEST requires the reusable firmware"
 #endif
-// wakeupSources: bit3 = uartrx (u-blox/SparkFun docs). ubxlib uses 0xE4; override if hardware proves otherwise.
+// MAX-M10S / M10 SPG 5.10: wakeupSources bit3 = UART RX (either edge).
 #ifndef TACTICPOD_GPS_WAKE_MASK
 #define TACTICPOD_GPS_WAKE_MASK 0x08u
 #endif
@@ -22,17 +22,18 @@
 namespace GpsPower {
 constexpr unsigned kFrameSize = 24;
 constexpr uint32_t kFlagBackup = 0x02;
+constexpr uint32_t kFlagForce = 0x04;  // MAX-M10S Integration Manual R04, 3.6.3.2.
 constexpr uint32_t kWakeIntervalMs = 1000;  // Re-send wake bytes until NMEA returns.
 constexpr unsigned kWakeAttempts = 8;
 constexpr uint32_t kTxDrainMs = 100;
 constexpr unsigned kWakeByteCount = 4;       // 0xFF bytes: a start-bit falling edge on receiver RX.
 
-// duration 0 = sleep until a wake source fires. Backup mode; never sets "force".
+// duration 0 = sleep until a wake source fires. MAX-M10S software standby requires force.
 inline unsigned buildBackupRequest(uint8_t* f, uint32_t wakeMask = TACTICPOD_GPS_WAKE_MASK) {
   const uint8_t head[6] = {0xB5, 0x62, 0x02, 0x41, 0x10, 0x00};
   for (unsigned i = 0; i < 6; ++i) f[i] = head[i];
   for (unsigned i = 6; i < 22; ++i) f[i] = 0;
-  const uint32_t flags = kFlagBackup;
+  const uint32_t flags = kFlagBackup | kFlagForce;
   for (unsigned i = 0; i < 4; ++i) {
     f[14 + i] = uint8_t(flags >> (8 * i));
     f[18 + i] = uint8_t(wakeMask >> (8 * i));
@@ -103,13 +104,22 @@ class BackupTest {
     if (!ok) finish(Result::RequestNotSent);
   }
   bool parked() const { return uartParked; }
+  bool observingFailure() const { return phase == Phase::Listen && res == Result::EntryNotConfirmed; }
+  // Called by the RX reader on the first unexpected non-UBX byte, before any
+  // other services can run. Failure is sticky; only observation continues.
+  void unexpectedRx(uint32_t now, uint32_t bytes) {
+    if (phase == Phase::Listen && res == Result::None) {
+      res = Result::EntryNotConfirmed; silent = false; failureAt = now;
+      listenBytes = bytes - baseBytes;
+    }
+  }
 
   Action step(const Obs& o) {
     if (!running()) return Action::None;
     if (o.guardViolated) {
       const bool resume = uartParked;
       uartParked = false;
-      finish(Result::Aborted);
+      finish(res == Result::EntryNotConfirmed ? res : Result::Aborted);
       return resume ? Action::ResumeUart : Action::None;
     }
     const uint32_t el = uint32_t(o.now - phaseAt);
@@ -128,8 +138,11 @@ class BackupTest {
         }
         break;
       case Phase::Listen:
-        if (o.bytes != baseBytes) { silent = false; listenBytes = o.bytes - baseBytes; finish(Result::EntryNotConfirmed); }
-        else if (el >= kListenMs) {
+        if (o.bytes != baseBytes) unexpectedRx(o.now, o.bytes);
+        if (observingFailure()) {
+          listenBytes = o.bytes - baseBytes;
+          if (uint32_t(o.now - failureAt) >= kListenMs) finish(Result::EntryNotConfirmed);
+        } else if (el >= kListenMs) {
           silent = true; phase = Phase::Wake; phaseAt = o.now; lastWakeAt = o.now; wakes = 1;
           return Action::SendWake;
         }
@@ -147,11 +160,15 @@ class BackupTest {
         }
         break;
       case Phase::Profile:
-        if (o.profileVerified) { profileOk = true; profileChecked = true; phase = Phase::Fix; phaseAt = o.now; }
-        else if (o.profileFailed || el >= kProfileMs) { profileChecked = true; finish(Result::ProfileFailed); }
+        if (o.profileFailed) { profileChecked = true; finish(Result::ProfileFailed); }
+        else if (o.validNmea && o.profileVerified) { profileOk = true; profileChecked = true; phase = Phase::Fix; phaseAt = o.now; }
+        else if (el >= kProfileMs) { profileChecked = true; finish(Result::ProfileFailed); }
         break;
       case Phase::Fix:
-        if (o.fix) { fixOk = true; finish(Result::Pass); }
+        // Fix is optional; continued NMEA/profile recovery is not.
+        if (!o.validNmea || !o.profileVerified || o.profileFailed) {
+          profileOk = false; finish(Result::ProfileFailed);
+        } else if (o.fix) { fixOk = true; finish(Result::Pass); }
         else if (el >= kFixMs) finish(Result::Pass);
         break;
       default: break;
@@ -178,7 +195,7 @@ class BackupTest {
   void finish(Result r) { res = r; phase = Phase::Done; }
   Phase phase = Phase::Idle;
   Result res = Result::None;
-  uint32_t phaseAt = 0, lastWakeAt = 0, baseBytes = 0, validAfterMs = 0, listenBytes = 0;
+  uint32_t phaseAt = 0, lastWakeAt = 0, baseBytes = 0, validAfterMs = 0, listenBytes = 0, failureAt = 0;
   unsigned wakes = 0;
   bool wantRequest = false, sent = false, uartParked = false, silent = false;
   bool wakeValid = false, baudOk = false, profileChecked = false, profileOk = false, fixOk = false;

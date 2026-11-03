@@ -26,7 +26,7 @@ gps = (root / "src/gps_receiver.cpp").read_text()
 assert "TACTICPOD_GPS_BACKUP_STANDBY" in gps and "buildBackupRequest" in gps
 power = (root / "src/gps_power.h").read_text()
 assert "#define TACTICPOD_GPS_BACKUP_STANDBY 0" in power, "backup standby must default OFF"
-# PMREQ is sent before the UART is stopped, never with the USB-only force flag.
+# PMREQ is sent before the UART is stopped; MAX-M10S requires backup + force.
 sus = re.search(r"void suspend\(\)\s*\{.*?\n\}\n", gps, re.S).group(0)
 assert sus.index("buildBackupRequest") < sus.index("Serial1.end()")
 # Recording still gates on a verified receiver profile after wake (profile audit restores 10 Hz).

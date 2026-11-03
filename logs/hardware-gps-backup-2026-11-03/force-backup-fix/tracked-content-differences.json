@@ -1,0 +1,8 @@
+[
+  "src/gps_power.h",
+  "src/gps_receiver.cpp",
+  "tests/reusable/gps_backup_test.cpp",
+  "tests/reusable/gps_backup_tests.py",
+  "tests/reusable/standby.cpp",
+  "tests/reusable/standby_tests.py"
+]

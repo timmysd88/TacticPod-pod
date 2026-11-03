@@ -92,14 +92,14 @@ int main() {
       for (; u < 1000 + 2900; u += 10) if (c.update(true, u, false, false) == PhysicalButton::Action::Start) return 74;
     }
   }
-  // GPS backup request: exact UBX-RXM-PMREQ v0 frame, backup flag only, UART wake source, valid checksum.
+  // GPS backup request: exact UBX-RXM-PMREQ v0 frame, backup + force flags, UART wake source, valid checksum.
   {
     static_assert(TACTICPOD_GPS_BACKUP_STANDBY == 0, "GPS backup must be disabled by default");
     uint8_t f[GpsPower::kFrameSize];
     if (GpsPower::buildBackupRequest(f, 0x08) != 24) return 100;
-    const uint8_t want[24] = {0xB5,0x62,0x02,0x41,0x10,0x00, 0,0,0,0, 0,0,0,0, 0x02,0,0,0, 0x08,0,0,0, 0x5D,0x4B};
+    const uint8_t want[24] = {0xB5,0x62,0x02,0x41,0x10,0x00, 0,0,0,0, 0,0,0,0, 0x06,0,0,0, 0x08,0,0,0, 0x61,0x6B};
     for (unsigned i = 0; i < 24; ++i) if (f[i] != want[i]) return 101;
-    if (f[14] & 0x04) return 102;  // "force" is USB-only and must never be set.
+    if (f[14] != 0x06) return 102;  // MAX-M10S software standby requires force.
     GpsPower::buildBackupRequest(f, 0x12345678);
     if (f[18] != 0x78 || f[21] != 0x12) return 103;
     uint8_t a = 0, b = 0;

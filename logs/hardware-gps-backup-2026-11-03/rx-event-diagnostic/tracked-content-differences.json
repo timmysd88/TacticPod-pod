@@ -1,0 +1,10 @@
+[
+  "platformio.ini",
+  "src/gps_power.h",
+  "src/gps_receiver.cpp",
+  "tests/flash_write/Arduino.h",
+  "tests/reusable/gps_backup_test.cpp",
+  "tests/reusable/gps_backup_tests.py",
+  "tests/reusable/standby.cpp",
+  "tests/reusable/standby_tests.py"
+]

@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "port": "COM8",
+  "vid": 10374,
+  "pid": 32836,
+  "serial": "0E8A89B7289430BD",
+  "base_commit": "29f90966d868f68b85d63d64d27bab9584f7628a",
+  "uncommitted_patch_sha256": "0a4ffaa21e61a320e9e30ef2f3b79271afc2f757808063fd0c1312c876aa8eaa",
+  "zip_sha256": "91727831db63198d2c007134803526125a096adc47eeecbe1d8c3879e2004e28",
+  "binary_sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051",
+  "elf_binary_matches_package": true,
+  "recovery_helper_symbols": [],
+  "source_hashes_verified": true,
+  "differs_from_original_pr_binary": true,
+  "selected_environment": "tacticpod_reusable_usb_gpsbackup",
+  "automatic_backup": false,
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "upload_method": "existing bootloader, Adafruit serial DFU application ZIP, singlebank",
+  "package": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\.pio\\build\\tacticpod_reusable_usb_gpsbackup\\firmware.zip"
+}

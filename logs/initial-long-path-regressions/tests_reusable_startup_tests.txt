@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\reusable\startup_tests.py", line 8, in <module>
+    assert (local/'variant.h').read_bytes()==(vendor/'variants/Seeed_XIAO_nRF52840/variant.h').read_bytes()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

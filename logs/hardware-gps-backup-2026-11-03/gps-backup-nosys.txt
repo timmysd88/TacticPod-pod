@@ -1,0 +1,2 @@
+Pinned ARM GCC + Unicorn fallback (host g++ unavailable)
+PASS: GPS BACKUP TEST state machine, default-off flags, entry guards, recording block, USB left untouched

@@ -1,0 +1,13 @@
+PASS: no confirmation
+PASS: success / single execution / repeat only on fresh confirmation
+PASS: wrong JEDEC
+PASS: WEL denied
+PASS: all mismatches reported
+PASS: erase verification failure
+PASS: busy timeout lockout
+PASS: disconnect clears partial confirmation
+PASS: overlong input rejected
+PASS: erase timeout lockout
+PASS: program timeout lockout
+PASS: 10 Hz sampling while muted/disconnected, ON/OFF commands, menu and LED
+PASS: DIAG via real serial parser is read-only and never repeats periodically

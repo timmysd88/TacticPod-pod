@@ -1,0 +1,6 @@
+{
+  "uploaded": false,
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "approval": "Owner explicitly approved corrected supervised test candidate on COM8; no auto standby/erase/push"
+}

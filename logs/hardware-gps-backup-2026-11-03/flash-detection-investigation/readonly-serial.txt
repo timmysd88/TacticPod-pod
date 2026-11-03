@@ -1,0 +1,67 @@
+GPS PROFILE: CURRENT RAM PROFILE VERIFIED (read-only)
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions
+  RECORD READ  - export committed recordings as CSV while stopped
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - bounded append-only compact sessions
+  TCB DURATION seconds|UNLIMITED - stopped only, 1..1800 or until stop; default 120; drain deadline 60 seconds
+  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop
+  FIELD EVENTS - drain bounded timestamped RAM events while stopped; overwritten count explicit
+  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake
+  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference
+  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming
+  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+IMU printing: OFF (default after boot)
+TCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.
+Reason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0
+First mismatch before recovery: NONE
+GPS PROFILE END | UART=38400 | snapshot=retained in XIAO RAM | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xA40000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=53222853 max_block_step_us=0 max_slice_us=141 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed
+
+HOST TX BAT STATUS
+BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4126 filtered_mV=4123 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000
+
+HOST TX DIAG
+FLASH JEDEC read 1/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00
+FLASH JEDEC read 2/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00
+FLASH JEDEC read 3/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00
+FLASH JEDEC read 4/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00
+FLASH JEDEC read 5/5 | manufacturer=0x00 memory_type=0x00 capacity_id=0x00
+JEDEC consistency: PASS (5/5 identical)
+Flash NOT DETECTED: uniform response is not a valid chip identity
+SFDP header: 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+SFDP INVALID / unavailable: missing SFDP signature; capacity/commands unknown

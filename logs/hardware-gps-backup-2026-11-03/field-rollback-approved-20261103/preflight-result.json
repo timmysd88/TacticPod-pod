@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "uploaded": false,
+  "recording_started": false,
+  "error": "'int' object is not callable",
+  "serial_released": true
+}

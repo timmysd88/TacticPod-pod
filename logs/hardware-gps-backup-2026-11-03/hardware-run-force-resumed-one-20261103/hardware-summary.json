@@ -1,0 +1,277 @@
+{
+  "outcome": "UPLOAD AND STARTUP PASS; ONE BACKUP CYCLE FAIL - ENTRY NOT CONFIRMED",
+  "binary_sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434",
+  "binary_bytes": 209536,
+  "upload_count": 1,
+  "dfu_exit_code": 0,
+  "device": {
+    "port": "COM8",
+    "vid": 10374,
+    "pid": 32836,
+    "serial": "0E8A89B7289430BD",
+    "description": "USB Serial Device (COM8)",
+    "hwid": "USB VID:PID=2886:8044 SER=0E8A89B7289430BD LOCATION=1-8:x.0",
+    "known_board": "Previously verified XIAO nRF52840 Sense; unique USB serial matches prior approved upload"
+  },
+  "preflight_passed": true,
+  "preflight_flash": {
+    "passed": true,
+    "jedec": "0B4018",
+    "sr1_before": "00",
+    "sr1_after": "00",
+    "sr2": "02",
+    "sfdp_bytes_per_pass": 256,
+    "sfdp_passes": 2,
+    "sfdp_header_hex": "53464450000101FF",
+    "sfdp_reference_sha256": "fb55c78de1f723eb5048b7f004658c75128c515881efae7d9dcc918afafafdec",
+    "qualification_label_used_for_admission": false
+  },
+  "startup_flash": {
+    "passed": true,
+    "jedec": "0B4018",
+    "sr1_before": "00",
+    "sr1_after": "00",
+    "sr2": "02",
+    "sfdp_bytes_per_pass": 256,
+    "sfdp_passes": 2,
+    "sfdp_header_hex": "53464450000101FF",
+    "sfdp_reference_sha256": "fb55c78de1f723eb5048b7f004658c75128c515881efae7d9dcc918afafafdec",
+    "qualification_label_used_for_admission": false
+  },
+  "startup_gps": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=10200 | checksum_ok=139 | checksum_fail=0 | last_valid_message_age_ms=82\nGPS configuration: CURRENT RAM readback verified: 100ms / RMC 10Hz / GGA 1Hz / GPS+Galileo\nGPS last applied profile (historical): 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS RAM readback t_ms=8090 (snapshot, not proof of navigation cadence)\nGPS fix=VALID | lat=50.775250 | lon=0.089875 | position=CURRENT | satellites=6 | HDOP=1.93\nGPS speed_km/h=1.722 | UTC=10:04:33Z | position_age_ms=83\n",
+  "cycle_count": 1,
+  "cycle_result": "EntryNotConfirmed",
+  "events": [
+    {
+      "ms": 1,
+      "phase": 1,
+      "action": 1,
+      "tx_ready": true
+    },
+    {
+      "ms": 7,
+      "phase": 2,
+      "action": 2,
+      "tx_ready": true
+    },
+    {
+      "ms": 3007,
+      "phase": 3,
+      "action": 3,
+      "tx_ready": true
+    },
+    {
+      "ms": 3007,
+      "phase": 7,
+      "action": 0,
+      "tx_ready": true
+    }
+  ],
+  "windows": [
+    {
+      "phase": 1,
+      "bytes": 26,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 1,
+      "last_ms": 7
+    },
+    {
+      "phase": 2,
+      "bytes": 0,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 0,
+      "last_ms": 0
+    },
+    {
+      "phase": 3,
+      "bytes": 1,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 3007,
+      "last_ms": 3007
+    },
+    {
+      "phase": 4,
+      "bytes": 0,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 0,
+      "last_ms": 0
+    },
+    {
+      "phase": 5,
+      "bytes": 0,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 0,
+      "last_ms": 0
+    },
+    {
+      "phase": 6,
+      "bytes": 0,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 0,
+      "last_ms": 0
+    },
+    {
+      "phase": 7,
+      "bytes": 0,
+      "valid_nmea": 0,
+      "bad_checksum": 0,
+      "first_ms": 0,
+      "last_ms": 0
+    }
+  ],
+  "raw_samples": [
+    {
+      "phase": 1,
+      "ms": 1,
+      "hex": "2E"
+    },
+    {
+      "phase": 1,
+      "ms": 1,
+      "hex": "36"
+    },
+    {
+      "phase": 1,
+      "ms": 1,
+      "hex": "30"
+    },
+    {
+      "phase": 1,
+      "ms": 1,
+      "hex": "2C"
+    },
+    {
+      "phase": 1,
+      "ms": 1,
+      "hex": "41"
+    },
+    {
+      "phase": 1,
+      "ms": 2,
+      "hex": "2C"
+    },
+    {
+      "phase": 1,
+      "ms": 2,
+      "hex": "35"
+    },
+    {
+      "phase": 1,
+      "ms": 2,
+      "hex": "30"
+    },
+    {
+      "phase": 1,
+      "ms": 2,
+      "hex": "34"
+    },
+    {
+      "phase": 1,
+      "ms": 3,
+      "hex": "36"
+    },
+    {
+      "phase": 1,
+      "ms": 3,
+      "hex": "2E"
+    },
+    {
+      "phase": 1,
+      "ms": 3,
+      "hex": "35"
+    },
+    {
+      "phase": 1,
+      "ms": 4,
+      "hex": "31"
+    },
+    {
+      "phase": 1,
+      "ms": 4,
+      "hex": "34"
+    },
+    {
+      "phase": 1,
+      "ms": 4,
+      "hex": "36"
+    },
+    {
+      "phase": 1,
+      "ms": 4,
+      "hex": "37"
+    },
+    {
+      "phase": 1,
+      "ms": 5,
+      "hex": "2C"
+    },
+    {
+      "phase": 1,
+      "ms": 5,
+      "hex": "4E"
+    },
+    {
+      "phase": 1,
+      "ms": 5,
+      "hex": "2C"
+    },
+    {
+      "phase": 1,
+      "ms": 5,
+      "hex": "30"
+    },
+    {
+      "phase": 1,
+      "ms": 6,
+      "hex": "30"
+    },
+    {
+      "phase": 1,
+      "ms": 6,
+      "hex": "30"
+    },
+    {
+      "phase": 1,
+      "ms": 6,
+      "hex": "30"
+    },
+    {
+      "phase": 1,
+      "ms": 6,
+      "hex": "35"
+    },
+    {
+      "phase": 1,
+      "ms": 7,
+      "hex": "2E"
+    },
+    {
+      "phase": 1,
+      "ms": 7,
+      "hex": "33"
+    },
+    {
+      "phase": 3,
+      "ms": 3007,
+      "hex": "32"
+    }
+  ],
+  "listen_rx_hex": "32",
+  "listen_rx_ascii": "2",
+  "complete_valid_listen_nmea": 0,
+  "deliberate_wake_attempts": 0,
+  "recovery_and_baud_profile_after_cycle": "NOT TESTED/NOT CONFIRMED; stopped on entry failure",
+  "post_failure_flash_and_recording_checks": "NOT PERFORMED; serial closed immediately",
+  "recording_or_erase_commands_sent": false,
+  "automatic_standby_enabled": false,
+  "firmware_source_modified": false,
+  "extra_cycles": false,
+  "serial_closed": true,
+  "drain_ascii": ".60,A,5046.51467,N,00005.3"
+}

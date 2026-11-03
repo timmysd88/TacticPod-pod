@@ -1,0 +1,12 @@
+Pinned ARM GCC + Unicorn fallback (host g++ unavailable)
+PASS: GPS BACKUP TEST state machine, default-off flags, entry guards, recording block, USB left untouched
+PASS: three recovered cycles; recording blocked until each PASS
+PASS: no wake; bounded retries; repeated test refused
+PASS: invalid NMEA never confirms baud or passes
+PASS: 10 Hz readback timeout blocks recording
+PASS: profile verification lost during fix wait cannot pass
+PASS: stale NMEA during fix wait cannot pass
+PASS: failed cycle; genuine recovery clears latch; next cycle passes
+PASS: complete checksum-valid NMEA during listen fails entry; deferred trace
+PASS: partial residual/unclassified bytes fail entry without claiming valid NMEA
+PASS: complete invalid-checksum NMEA fails entry and is counted separately

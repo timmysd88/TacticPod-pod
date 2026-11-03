@@ -1,0 +1,248 @@
+Processing seeed_xiao_nrf52840_sense (platform: https://github.com/Seeed-Studio/platform-seeedboards.git; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 15 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+|-- TinyGPSPlus @ 1.0.3
+|-- Seeed Arduino LSM6DS3 @ 2.0.7
+Building in release mode
+Checking size .pio\build\seeed_xiao_nrf52840_sense\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=====     ]  50.1% (used 118992 bytes from 237568 bytes)
+Flash: [==        ]  20.5% (used 166360 bytes from 811008 bytes)
+========================= [SUCCESS] Took 1.42 seconds =========================
+
+Processing tacticpod_reusable_usb (platform: https://github.com/Seeed-Studio/platform-seeedboards.git; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 15 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+|-- TinyGPSPlus @ 1.0.3
+|-- Seeed Arduino LSM6DS3 @ 2.0.7
+Building in release mode
+Building .pio\build\tacticpod_reusable_usb\firmware.zip
+Checking size .pio\build\tacticpod_reusable_usb\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=====     ]  51.4% (used 122040 bytes from 237568 bytes)
+Flash: [==        ]  24.9% (used 202192 bytes from 811008 bytes)
+Zip created at .pio\build\tacticpod_reusable_usb\firmware.zip
+========================= [SUCCESS] Took 1.67 seconds =========================
+
+Processing tacticpod_reusable_usb_gpsbackup (platform: https://github.com/Seeed-Studio/platform-seeedboards.git; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 15 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+|-- TinyGPSPlus @ 1.0.3
+|-- Seeed Arduino LSM6DS3 @ 2.0.7
+Building in release mode
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\Adafruit_TinyUSB_API.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\Adafruit_USBD_CDC.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\Adafruit_USBD_Device.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\hid\Adafruit_USBD_HID.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\midi\Adafruit_USBD_MIDI.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\msc\Adafruit_USBD_MSC.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\ports\esp32\Adafruit_TinyUSB_esp32.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\ports\nrf\Adafruit_TinyUSB_nrf.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\ports\rp2040\Adafruit_TinyUSB_rp2040.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\ports\samd\Adafruit_TinyUSB_samd.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\arduino\webusb\Adafruit_USBD_WebUSB.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\audio\audio_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\bth\bth_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\cdc\cdc_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\dfu\dfu_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\dfu\dfu_rt_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\hid\hid_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\midi\midi_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\msc\msc_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\net\ecm_rndis_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\net\ncm_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\usbtmc\usbtmc_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\class\vendor\vendor_device.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\common\tusb_fifo.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\device\usbd.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\device\usbd_control.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\espressif\esp32sx\dcd_esp32sx.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\microchip\samd\dcd_samd.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\nordic\nrf5x\dcd_nrf5x.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\nxp\transdimension\dcd_transdimension.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\dcd_rp2040.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\hcd_rp2040.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\rp2040_usb.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib37a\Adafruit_TinyUSB_Arduino\tusb.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\battery_runtime.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\compact_recorder.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\flash_write_test.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\gps_config.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\gps_profile.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\gps_rate.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\gps_receiver.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\gps_uart_scan.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\main.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\monotonic_clock.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\ram_observations.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\recorder.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\serial_console.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\tcb3_session.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\src\tcb3_store.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib7cc\SPI\SPI.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib7cc\SPI\SPI_nrf52832.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib578\TinyGPSPlus\TinyGPS++.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib3b6\Wire\Wire_nRF52.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\lib596\Seeed_Arduino_LSM6DS3\LSM6DS3.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduinoVariant\variant.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\HardwarePWM.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\Print.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\RingBuffer.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\Stream.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\Uart.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\WInterrupts.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\abi.cpp.o
+Archiving .pio\build\tacticpod_reusable_usb_gpsbackup\libFrameworkArduinoVariant.a
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\avr\dtostrf.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\delay.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\croutine.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\event_groups.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\list.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\portable\MemMang\heap_3.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\queue.c.o
+src\battery_runtime.cpp: In function 'bool {anonymous}::BatteryDetail::decimal(const char*&, uint32_t&)':
+src\battery_runtime.cpp:21:5: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+     if(value>1000000)return false;value=value*10+(*p++-'0');++digits;
+     ^~
+src\battery_runtime.cpp:21:35: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+     if(value>1000000)return false;value=value*10+(*p++-'0');++digits;
+                                   ^~~~~
+src\battery_runtime.cpp: In function 'void BatteryRuntime::begin()':
+src\battery_runtime.cpp:38:3: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+   if(initialized)return;initialized=true;
+   ^~
+src\battery_runtime.cpp:38:25: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+   if(initialized)return;initialized=true;
+                         ^~~~~~~~~~~
+src\battery_runtime.cpp: In function 'bool BatteryRuntime::command(const char*)':
+src\battery_runtime.cpp:101:5: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+     if(*p)return false;Battery::Limits l;l.warn=a[0];l.stop=a[1];l.hard=a[2];l.recover=a[3];return policy.configure(l);
+     ^~
+src\battery_runtime.cpp:101:24: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+     if(*p)return false;Battery::Limits l;l.warn=a[0];l.stop=a[1];l.hard=a[2];l.recover=a[3];return policy.configure(l);
+                        ^~~~~~~
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\stream_buffer.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\tasks.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\Source\timers.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\portable\CMSIS\nrf52\port_cmsis.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\portable\CMSIS\nrf52\port_cmsis_systick.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\freertos\portable\GCC\nrf52\port.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\hooks.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\itoa.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\linker\gcc_startup_nrf52.S.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\linker\gcc_startup_nrf52840.S.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\main.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\new.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_gpiote.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_power.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_pwm.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_qspi.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_spim.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_timer.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\mdk\system_nrf52.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\nordic\nrfx\mdk\system_nrf52840.c.o
+Archiving .pio\build\tacticpod_reusable_usb_gpsbackup\lib7cc\libSPI.a
+Archiving .pio\build\tacticpod_reusable_usb_gpsbackup\lib578\libTinyGPSPlus.a
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\pulse.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\pulse_asm.S.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\rtos.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\sysview\Config\SEGGER_SYSVIEW_Config_FreeRTOS.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\sysview\SEGGER\SEGGER_RTT.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\sysview\SEGGER\SEGGER_RTT_ASM_ARMv7M.S.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\sysview\SEGGER\SEGGER_RTT_printf.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\sysview\SEGGER\SEGGER_SYSVIEW.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\sysview\SEGGER_SYSVIEW_FreeRTOS.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\utility\AdaCallback.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\utility\SoftwareTimer.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\utility\adafruit_fifo.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\utility\debug.cpp.o
+Archiving .pio\build\tacticpod_reusable_usb_gpsbackup\lib3b6\libWire.a
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\utility\utilities.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\wiring.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\wiring_analog.cpp.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\wiring_analog_nRF52.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\wiring_digital.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\wiring_private.c.o
+Compiling .pio\build\tacticpod_reusable_usb_gpsbackup\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\tacticpod_reusable_usb_gpsbackup\lib596\libSeeed_Arduino_LSM6DS3.a
+Archiving .pio\build\tacticpod_reusable_usb_gpsbackup\libFrameworkArduino.a
+Linking .pio\build\tacticpod_reusable_usb_gpsbackup\firmware.elf
+Building .pio\build\tacticpod_reusable_usb_gpsbackup\firmware.hex
+Checking size .pio\build\tacticpod_reusable_usb_gpsbackup\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=====     ]  51.4% (used 122080 bytes from 237568 bytes)
+Flash: [===       ]  25.6% (used 207520 bytes from 811008 bytes)
+Building .pio\build\tacticpod_reusable_usb_gpsbackup\firmware.zip
+Zip created at .pio\build\tacticpod_reusable_usb_gpsbackup\firmware.zip
+========================= [SUCCESS] Took 7.03 seconds =========================
+
+Environment                       Status    Duration
+--------------------------------  --------  ------------
+seeed_xiao_nrf52840_sense         SUCCESS   00:00:01.423
+tacticpod_reusable_usb            SUCCESS   00:00:01.673
+tacticpod_reusable_usb_gpsbackup  SUCCESS   00:00:07.027
+========================= 3 succeeded in 00:00:10.122 =========================

@@ -1,0 +1,137 @@
+{
+  "outcome": "FAIL",
+  "failure": "Cycle 1: standby entry/silence not confirmed",
+  "approved_binary_sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051",
+  "zip_sha256": "91727831db63198d2c007134803526125a096adc47eeecbe1d8c3879e2004e28",
+  "base_commit": "29f90966d868f68b85d63d64d27bab9584f7628a",
+  "local_patch_sha256": "0a4ffaa21e61a320e9e30ef2f3b79271afc2f757808063fd0c1312c876aa8eaa",
+  "actual_dfu_process_invocations": 1,
+  "firmware_upload": "PASS",
+  "loader": "COM7 2886:0045, matching unique serial",
+  "uf2_disk_exposed": false,
+  "fresh_info_uf2_read": false,
+  "initial_helper_stopped_before_sending_firmware": true,
+  "application_port": "COM8",
+  "usb_baud": 115200,
+  "external_spi_erase_intended": false,
+  "startup_flash_validation": {
+    "passed": true,
+    "jedec": "0B4018",
+    "sr1_before": "00",
+    "sr1_after": "00",
+    "sr2": "02",
+    "sfdp_bytes_per_pass": 256,
+    "sfdp_passes": 2,
+    "sfdp_header_hex": "53464450000101FF",
+    "sfdp_reference_sha256": "fb55c78de1f723eb5048b7f004658c75128c515881efae7d9dcc918afafafdec",
+    "qualification_label_used_for_admission": false
+  },
+  "startup_idle": true,
+  "startup_gps_nmea": true,
+  "startup_ram_10hz_verified": true,
+  "standby_request_uart_sent": true,
+  "standby_silence_confirmed": false,
+  "explicit_wake_attempted": false,
+  "wake_recovery_verified": false,
+  "time_to_valid_nmea_ms": null,
+  "time_to_valid_nmea_reason": "Not measured: Wake phase never entered",
+  "post_cycle_10hz_verification": "NOT RUN after failure",
+  "post_cycle_flash_verification": "NOT RUN after failure",
+  "post_failure_recording_readiness": "INCONCLUSIVE: no console readiness flag and no recording probe; stopped immediately",
+  "cycles_attempted": 1,
+  "cycles_successful": 0,
+  "cycles_2_and_3": "NOT RUN",
+  "recording_or_erase_commands_sent": false,
+  "automatic_gps_standby_enabled": false,
+  "post_upload_recording_contents": "INCONCLUSIVE: no post-cycle export after immediate stop",
+  "before_upload_recording_backup": {
+    "bytes": 721344,
+    "sha256": "9cdc66e807012d2330439fde8761e3137cc7a3431627269c856fd2974c39bb72",
+    "packets": 2578,
+    "image_sha256": "d1c398b03deee2e8ea88a86779e856154ab0dfbac4a1165df1f62faf678e0379",
+    "image_bytes": 659456,
+    "sessions": [
+      {
+        "id": 1,
+        "status": "complete",
+        "records": 555
+      },
+      {
+        "id": 3,
+        "status": "complete",
+        "records": 3330
+      },
+      {
+        "id": 12,
+        "status": "complete",
+        "records": 13321
+      },
+      {
+        "id": 58,
+        "status": "complete",
+        "records": 1110
+      },
+      {
+        "id": 61,
+        "status": "complete",
+        "records": 4702
+      },
+      {
+        "id": 74,
+        "status": "complete",
+        "records": 8550
+      },
+      {
+        "id": 96,
+        "status": "complete",
+        "records": 1802
+      },
+      {
+        "id": 101,
+        "status": "complete",
+        "records": 7575
+      },
+      {
+        "id": 119,
+        "status": "complete",
+        "records": 1107
+      },
+      {
+        "id": 122,
+        "status": "complete",
+        "records": 4042
+      },
+      {
+        "id": 133,
+        "status": "interrupted",
+        "records": 1105
+      },
+      {
+        "id": 137,
+        "status": "complete",
+        "records": 2247
+      },
+      {
+        "id": 144,
+        "status": "complete",
+        "records": 6498
+      },
+      {
+        "id": 159,
+        "status": "complete",
+        "records": 1110
+      }
+    ],
+    "existing_decode_issues": [
+      {
+        "address": 552960,
+        "error": "interrupted final block"
+      }
+    ]
+  },
+  "recovery_commands_sent": false,
+  "firmware_changes_after_failure": false,
+  "additional_uploads_after_failure": false,
+  "merge_push_or_release": false,
+  "serial_released": true
+}

@@ -1,0 +1,6 @@
+{
+  "number": 1,
+  "passed": false,
+  "response": "GPS BACKUP TEST started (about 20 s, USB stays awake; recording blocked). Wake mask 0x8\r\nGPS BACKUP TEST RESULT (wake mask 0x8)\r\n  standby request sent: YES\r\n  standby confirmed (UART silent 1500 ms after 3000 ms parked): NO (NMEA kept flowing; receiver did not enter standby)\r\n  UART wake attempted: NO\r\n  time until valid NMEA: NOT RETURNED\r\n  GPS baud 38400: NOT CONFIRMED\r\n  10 Hz configuration: NOT CHECKED\r\n  GPS fix: NOT CHECKED\r\nGPS BACKUP TEST: FAIL - standby not confirmed; receiver kept running (baseline power). Wake was not tested.\r\nGPS BACKUP TEST END\r\n",
+  "error": "GPS backup did not pass all recovery requirements"
+}

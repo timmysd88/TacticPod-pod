@@ -1,0 +1,13 @@
+{
+  "commit": "155a999122f0ce85ab6817c6eba690e9501fe4b3",
+  "environment": "tacticpod_reusable_usb",
+  "bytes": 202320,
+  "bin_sha256": "40bced328dbcc453eb8326297fabab40c268063140d6c909a4359b4024a9a585",
+  "zip_sha256": "c38561e5004ec88bf5d1b6b8b21c4d50a55cbbd19db41a7065c804438a6ae007",
+  "package": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\field-retest-2026-11-02\\firmware.zip",
+  "binary": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\field-retest-2026-11-02\\firmware.bin",
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "experimental_gps_backup": false,
+  "verified_previous_upload": true
+}

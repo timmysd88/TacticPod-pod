@@ -1,0 +1,548 @@
+[
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/baseline-artifacts/tacticpod_reusable_usb_gpsbackup/firmware.elf",
+    "bytes": 370760,
+    "sha256": "6fc55d8415c917f193ebb9a08c9aeac309749e42f37001700a4f1b28592d2dda"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/baseline-artifacts/tacticpod_reusable_usb_gpsbackup/firmware.hex",
+    "bytes": 583778,
+    "sha256": "60447b5779ff6542ff7f6058692b9783cc4fd3fd85271841b0bebac3967afb1f"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/baseline-artifacts/tacticpod_reusable_usb_gpsbackup/firmware.zip",
+    "bytes": 208340,
+    "sha256": "d65ba9325d5b7a63f562929ec35f054345afd20c4117e26ff8cfd97f8614046f"
+  },
+  {
+    "scope": ".p6",
+    "reason": "large derived text/decoded data; original TPX3 or summary retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/recordings-readonly-decoded.json",
+    "bytes": 19006852,
+    "sha256": "245201d9e91cf7a4ff28ca3298cf8fd5fbae5774f227599226de3e25e879b41d"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/recordings-readonly-image.bin",
+    "bytes": 659456,
+    "sha256": "d1c398b03deee2e8ea88a86779e856154ab0dfbac4a1165df1f62faf678e0379"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/recordings-readonly.tpx3",
+    "bytes": 721344,
+    "sha256": "9cdc66e807012d2330439fde8761e3137cc7a3431627269c856fd2974c39bb72"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/verified-from-elf.bin",
+    "bytes": 207808,
+    "sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/seeed_xiao_nrf52840_sense/firmware.elf",
+    "bytes": 292688,
+    "sha256": "ca9053779ec379351d27c2d25a39fe1a457d73bb697b48c4048a6ee31f8ab6de"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/seeed_xiao_nrf52840_sense/firmware.hex",
+    "bytes": 467992,
+    "sha256": "e9a39d7e1617f4f33ef1416cd566ed68ef14511b04c0944a0a27af322b4ec439"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/seeed_xiao_nrf52840_sense/firmware.zip",
+    "bytes": 167179,
+    "sha256": "0f8b5371341a1f51689e001a331e6a459b29a5f11f373f2ca4a49c093a6aaa23"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb/firmware.elf",
+    "bytes": 370168,
+    "sha256": "3c63eb4f602af6a7dccfe34c26c301f9e4b508d14d56e3aea323c9eebca967a8"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb/firmware.hex",
+    "bytes": 568793,
+    "sha256": "7ccb7f0dc46f0b9b1522d2adb05bcd69501ba40118ba4ecd44d92dc8beaeff64"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb/firmware.zip",
+    "bytes": 203012,
+    "sha256": "74543f821c08158f5580c9cb430fa160e29725ad770fd72ceb5e008c8d0ea195"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb_gpsbackup/firmware.elf",
+    "bytes": 370792,
+    "sha256": "079c04431cb12a494e4fbd77f18f96fa943eff2171c030ed23d968234f3ea5cd"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb_gpsbackup/firmware.hex",
+    "bytes": 584588,
+    "sha256": "b99db4d6c8b1b860b43561538c62e4e83a45bdb38052a1f8eb4fc0b490630a8a"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb_gpsbackup/firmware.zip",
+    "bytes": 208627,
+    "sha256": "91727831db63198d2c007134803526125a096adc47eeecbe1d8c3879e2004e28"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb_gpsbackup_auto/firmware.elf",
+    "bytes": 370984,
+    "sha256": "2cb01bf5857f9d51608f4cf5bbe97b373bc6209b0c7e8e9124c4433db3ca2d70"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb_gpsbackup_auto/firmware.hex",
+    "bytes": 585623,
+    "sha256": "84c097ac4fb21a47ac2cd3bf2c7ef1f772ac453828daf9feca1b9363f5905c27"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/previous-build-artifacts/tacticpod_reusable_usb_gpsbackup_auto/firmware.zip",
+    "bytes": 208996,
+    "sha256": "ae6d2e5183a1e19cdbbf79ef675060b8d31107f449f05ad39597bc6d7cc73079"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.bin",
+    "bytes": 166360,
+    "sha256": "eefb4721bcf585b77c23fc36f1c037fc99174ef427da5c18427adcf66fea1a6b"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.elf",
+    "bytes": 292688,
+    "sha256": "ca9053779ec379351d27c2d25a39fe1a457d73bb697b48c4048a6ee31f8ab6de"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.hex",
+    "bytes": 467992,
+    "sha256": "e9a39d7e1617f4f33ef1416cd566ed68ef14511b04c0944a0a27af322b4ec439"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/seeed_xiao_nrf52840_sense/firmware.zip",
+    "bytes": 167179,
+    "sha256": "a352ebdb1d3e9a22d1466f85292da37428d030b1cf8a468e2de27009bc797c3e"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.bin",
+    "bytes": 202192,
+    "sha256": "2fdc70037c01ba6dff10d0631046e6bc7f10d8c3e3225f23786df95292b734bd"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.elf",
+    "bytes": 370168,
+    "sha256": "3c63eb4f602af6a7dccfe34c26c301f9e4b508d14d56e3aea323c9eebca967a8"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.hex",
+    "bytes": 568793,
+    "sha256": "7ccb7f0dc46f0b9b1522d2adb05bcd69501ba40118ba4ecd44d92dc8beaeff64"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb/firmware.zip",
+    "bytes": 203012,
+    "sha256": "5e0e17148cce1ce4f9dfc3467ff8c45ee7b07379c7ad090bcae04dde5867ff73"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.bin",
+    "bytes": 209536,
+    "sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.elf",
+    "bytes": 371068,
+    "sha256": "917d0d3501f65b7e29b19b6febd9ca9c6b0a738e02bef0162887b2ff3be6364c"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.hex",
+    "bytes": 589448,
+    "sha256": "bd8a694942484371a4ab88193342807243a3618f77f3891d97b732d1920ef992"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup/firmware.zip",
+    "bytes": 210355,
+    "sha256": "f2c116fa73d0993f0dfed69bfaecc787ecf92081690d3c4aa157ee0b4e981140"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.bin",
+    "bytes": 209904,
+    "sha256": "df85f2956af0f4dd4d1c82508903b474899515460e5b3e485963257cd5213a45"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.elf",
+    "bytes": 371244,
+    "sha256": "81cae8fb5491183eb45bb88b8b33ad8301984529a9dcd49d025331e7e578ee52"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.hex",
+    "bytes": 590483,
+    "sha256": "3b388c987b871d135a792dbe1fb889e643489199bc5edd0f5d6dd0bb4bca2b8a"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.zip",
+    "bytes": 210724,
+    "sha256": "91715ea64eecb8f39cf78ad3b8b09c9ed1b2e89698a6089dba22650f8a26d927"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/gps-backup-test-application.bin",
+    "bytes": 207520,
+    "sha256": "6ff93d183794191f90506208b73eb57aaf3885fb89d9beee120e608b9cbef28c"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103-retry1/verified-from-elf.bin",
+    "bytes": 207808,
+    "sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/before-upload.tpx3",
+    "bytes": 20,
+    "sha256": "73afb976a66eb539bed2287736583039908c387157eab7758c854616fdaf06e8"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/verified-from-elf.bin",
+    "bytes": 207808,
+    "sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051"
+  },
+  {
+    "scope": ".p6",
+    "reason": "large derived text/decoded data; original TPX3 or summary retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/before-upload-decoded.json",
+    "bytes": 19006852,
+    "sha256": "245201d9e91cf7a4ff28ca3298cf8fd5fbae5774f227599226de3e25e879b41d"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/before-upload-image.bin",
+    "bytes": 659456,
+    "sha256": "d1c398b03deee2e8ea88a86779e856154ab0dfbac4a1165df1f62faf678e0379"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/before-upload.tpx3",
+    "bytes": 721344,
+    "sha256": "9cdc66e807012d2330439fde8761e3137cc7a3431627269c856fd2974c39bb72"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/verified-from-elf.bin",
+    "bytes": 207808,
+    "sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-approved-one-20261103/verified-elf.bin",
+    "bytes": 209536,
+    "sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/verified-elf.bin",
+    "bytes": 209536,
+    "sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-rx-diagnostic-approved-one-20261103/verified-elf.bin",
+    "bytes": 211648,
+    "sha256": "56d9fb3539fd2b164f432eb5c7fa557c94489b77405494fd17eb28f426b747ad"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/seeed_xiao_nrf52840_sense/firmware.bin",
+    "bytes": 166360,
+    "sha256": "eefb4721bcf585b77c23fc36f1c037fc99174ef427da5c18427adcf66fea1a6b"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/tacticpod_reusable_usb/firmware.bin",
+    "bytes": 202192,
+    "sha256": "2fdc70037c01ba6dff10d0631046e6bc7f10d8c3e3225f23786df95292b734bd"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/tacticpod_reusable_usb_gpsbackup/firmware.bin",
+    "bytes": 207808,
+    "sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/tacticpod_reusable_usb_gpsbackup_auto/firmware.bin",
+    "bytes": 208176,
+    "sha256": "7b20d3acb33cdbc298db7ae6d95dee90544b74e49bff9bc44919812d378eabc6"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/seeed_xiao_nrf52840_sense/firmware.bin",
+    "bytes": 166360,
+    "sha256": "eefb4721bcf585b77c23fc36f1c037fc99174ef427da5c18427adcf66fea1a6b"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/seeed_xiao_nrf52840_sense/firmware.elf",
+    "bytes": 292688,
+    "sha256": "ca9053779ec379351d27c2d25a39fe1a457d73bb697b48c4048a6ee31f8ab6de"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/seeed_xiao_nrf52840_sense/firmware.hex",
+    "bytes": 467992,
+    "sha256": "e9a39d7e1617f4f33ef1416cd566ed68ef14511b04c0944a0a27af322b4ec439"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/seeed_xiao_nrf52840_sense/firmware.zip",
+    "bytes": 167179,
+    "sha256": "762af8650cb19e33a309aa1765e6fa9d0b42372ba38963fcff0fceb32b422fa8"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb/firmware.bin",
+    "bytes": 202192,
+    "sha256": "2fdc70037c01ba6dff10d0631046e6bc7f10d8c3e3225f23786df95292b734bd"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb/firmware.elf",
+    "bytes": 370168,
+    "sha256": "3c63eb4f602af6a7dccfe34c26c301f9e4b508d14d56e3aea323c9eebca967a8"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb/firmware.hex",
+    "bytes": 568793,
+    "sha256": "7ccb7f0dc46f0b9b1522d2adb05bcd69501ba40118ba4ecd44d92dc8beaeff64"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb/firmware.zip",
+    "bytes": 203012,
+    "sha256": "12a1b37b610a77335d6e4d2c6975a048e2d796eb7667b3cab96351f28e3809a0"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup/firmware.bin",
+    "bytes": 211648,
+    "sha256": "56d9fb3539fd2b164f432eb5c7fa557c94489b77405494fd17eb28f426b747ad"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup/firmware.elf",
+    "bytes": 372164,
+    "sha256": "5bae34386b1d0717328a6d211a6e5f4c34769f64535b9f6920b1f92c55c4c521"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup/firmware.hex",
+    "bytes": 595388,
+    "sha256": "759a546286fa2db7015c14bba31adfb950c3865944a46d925d1f5c2100310e1f"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup/firmware.zip",
+    "bytes": 212468,
+    "sha256": "3b90ae5131ae271c9aa50844ff104e8d1ffb16d2c70df61365f5d4cb582885f9"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup_auto/firmware.bin",
+    "bytes": 211984,
+    "sha256": "f9efa44b94407598f985dd6926f43418431125978fbcd8c9701e71634d96e8ca"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup_auto/firmware.elf",
+    "bytes": 372388,
+    "sha256": "4ebebde7ed0dc2c18aa2b7e5758138d95f779cbb7a4c9804a73616d711db80ee"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup_auto/firmware.hex",
+    "bytes": 596333,
+    "sha256": "0efdd9a51cb148719b07334dee9afb68ee8cf436c1028d42eddd22ab34653c0e"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tacticpod_reusable_usb_gpsbackup_auto/firmware.zip",
+    "bytes": 212804,
+    "sha256": "807cd6be26a169a01b11dc1ce3fd8e70e1459c12d83c0eb58446dc214a278e34"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_append_30s/firmware.bin",
+    "bytes": 183880,
+    "sha256": "dfc0581140f05bd6f55f49e26d22ee44c43bdd216b81d1aa7460fde6e82d1900"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_append_30s/firmware.elf",
+    "bytes": 298936,
+    "sha256": "6c81f41ccb28ae20778d788e0f08b2c3f5a6f4527436097521b31446c1cd8faa"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_append_30s/firmware.hex",
+    "bytes": 517284,
+    "sha256": "9e43d3c8b3f4b5964f07f8231a5d2d4a40f84f1a2014ae262479b05c196ae23e"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_append_30s/firmware.zip",
+    "bytes": 184700,
+    "sha256": "0dd9e7606898a8b8814d7ec4a149dc99334b99a9aceed7c7a2dffa7b2ff6a64b"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_first_write/firmware.bin",
+    "bytes": 182880,
+    "sha256": "950f44842d629e3af2f9a036be06cfbeff5344515ef790beec93a5703499081f"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_first_write/firmware.elf",
+    "bytes": 298992,
+    "sha256": "78edfadf27a1019072467a70648520babe7276dfd0c740e33a31cb2fd2270e40"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_first_write/firmware.hex",
+    "bytes": 514478,
+    "sha256": "30ebedff41fb7b275bdd19b7e249df58bc06c14e8ffc84b6fc13d9285bee5bb7"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_first_write/firmware.zip",
+    "bytes": 183700,
+    "sha256": "9e2c38be8784ea5e13d098b563daa7efd0aef1fb35132891fbff122bd20dfe3c"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_movement_120s/firmware.bin",
+    "bytes": 183920,
+    "sha256": "1afa68b45dee139687875e45b3d3c9da93e358b41105bd09999f62007d0f9af6"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_movement_120s/firmware.elf",
+    "bytes": 298936,
+    "sha256": "c9792eec2526344a67c07028cef95fe83427d5a2db5bb97506bfad8c74378d44"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_movement_120s/firmware.hex",
+    "bytes": 517403,
+    "sha256": "03706dc3070a90d82f9cf7a28cfdef9de2cef1def4ad1712b64aa2209cb7b2d1"
+  },
+  {
+    "scope": ".p6",
+    "reason": "generated binary/duplicate recording/export; canonical PR5 package and two latest TPX3 exports retained",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tcb3_movement_120s/firmware.zip",
+    "bytes": 184740,
+    "sha256": "973f4d3b5d9ea86ab6fac71eb9d49059b714ecbf1d183c6917a86ad36fbf0b44"
+  }
+]

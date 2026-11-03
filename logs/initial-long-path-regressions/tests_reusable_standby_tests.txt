@@ -1,0 +1,6 @@
+Pinned ARM GCC + Unicorn fallback (host g++ unavailable)
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\reusable\standby_tests.py", line 52, in <module>
+    assert hashlib.sha256((root / path).read_bytes()).hexdigest() == expected, path + " changed"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: src/tcb3_store.cpp changed

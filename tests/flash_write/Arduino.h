@@ -30,7 +30,7 @@ struct MockUarte {
   struct { uint32_t AMOUNT = 0; } TXD;
   struct { uint32_t PTR = 0, MAXCNT = 0, AMOUNT = 0; } RXD;
   struct { uint32_t RXD = 0, TXD = 0; } PSEL;
-  uint32_t EVENTS_ENDTX = 0, EVENTS_ENDRX = 0, EVENTS_RXSTARTED = 0, EVENTS_RXTO = 0, EVENTS_ERROR = 0;
+  uint32_t EVENTS_ENDTX = 0, EVENTS_RXDRDY = 0, EVENTS_ENDRX = 0, EVENTS_RXSTARTED = 0, EVENTS_RXTO = 0, EVENTS_ERROR = 0;
   uint32_t ENABLE = 0, BAUDRATE = 0, CONFIG = 0, INTENSET = 0, INTENCLR = 0;
   MockW1C ERRORSRC;
   MockTask TASKS_STOPRX{mockStopRx}, TASKS_STARTRX{mockStartRx};
@@ -83,6 +83,11 @@ inline void mockCaptureClock() {
 inline void NVIC_ClearPendingIRQ(int) {}
 inline void NVIC_SetPriority(int, int) {}
 inline void NVIC_EnableIRQ(int) {}
+#define UARTE0_UART0_IRQn 2
+inline uint32_t NVIC_GetEnableIRQ(int) { return 1; }
+inline uint32_t NVIC_GetPendingIRQ(int) { return 0; }
+inline uint32_t NVIC_GetActive(int) { return 0; }
+inline void __DMB() {}
 inline uint32_t __get_PRIMASK() { return mockPrimask; }
 inline void __disable_irq() { mockPrimask = 1; }
 inline void __enable_irq() { mockPrimask = 0; }
@@ -133,6 +138,7 @@ struct MockSerial {
 };
 extern MockSerial Serial;
 struct MockUart {
+  void IrqHandler() { mockUarte.EVENTS_ENDRX = 0; }
   const char* rx = "";
   const uint8_t* binary = nullptr;
   size_t binaryRemaining = 0;

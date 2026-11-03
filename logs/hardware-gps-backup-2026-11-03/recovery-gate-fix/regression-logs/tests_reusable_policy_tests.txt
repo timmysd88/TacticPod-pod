@@ -1,0 +1,16 @@
+PASS: USB only
+PASS: uncalibrated cell
+PASS: calibrated but absent
+PASS: warning hysteresis
+PASS: low dwell and recovery
+PASS: hard threshold and outlier
+PASS: invalid readings
+PASS: staleness
+PASS: configuration and divider
+PASS: backward timestamp
+PASS: single outlier
+PASS: USB mode clears battery actions
+PASS: duplicate timestamps cannot confirm low voltage
+PASS: low initial voltage refuses start before dwell expires
+PASS: startup median rejects a single low outlier
+PASS: instantaneous low refuses start without falsely stopping an existing session

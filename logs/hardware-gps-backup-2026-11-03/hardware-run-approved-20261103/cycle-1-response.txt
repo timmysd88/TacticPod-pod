@@ -1,0 +1,11 @@
+GPS BACKUP TEST started (about 20 s, USB stays awake; recording blocked). Wake mask 0x8
+GPS BACKUP TEST RESULT (wake mask 0x8)
+  standby request sent: YES
+  standby confirmed (UART silent 1500 ms after 3000 ms parked): NO (NMEA kept flowing; receiver did not enter standby)
+  UART wake attempted: NO
+  time until valid NMEA: NOT RETURNED
+  GPS baud 38400: NOT CONFIRMED
+  10 Hz configuration: NOT CHECKED
+  GPS fix: NOT CHECKED
+GPS BACKUP TEST: FAIL - standby not confirmed; receiver kept running (baseline power). Wake was not tested.
+GPS BACKUP TEST END

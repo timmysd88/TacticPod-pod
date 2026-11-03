@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "purpose": "supervised-hardware-test-candidate",
+  "repository": "timmysd88/TacticPod-pod",
+  "base_commit": "29f90966d868f68b85d63d64d27bab9584f7628a",
+  "source_is_uncommitted": true,
+  "branch": "test/pr6-gpsbackup-short-20261103",
+  "patch_sha256": "0a4ffaa21e61a320e9e30ef2f3b79271afc2f757808063fd0c1312c876aa8eaa",
+  "changed_source_and_tests": [
+    {
+      "path": "src/gps_receiver.cpp",
+      "sha256": "10e5410e77579429038f1b21be036797863f579c371dd84f9957dcfa3b6f253c"
+    },
+    {
+      "path": "src/gps_power.h",
+      "sha256": "9f0c0ace661043cd56d4d67fb1f378486d4625f06a2d77685c1876f9bee8aba5"
+    },
+    {
+      "path": "tests/reusable/gps_backup_test.cpp",
+      "sha256": "2b0d750d39bd38012e5c6316fb7609f8792738b455894fc6dd6a7740d7f6d9c0"
+    },
+    {
+      "path": "tests/reusable/gps_backup_tests.py",
+      "sha256": "c8f87bc57e6c726de54af9763e39f523265929684c2a12af1d6f2ac6b87dfb55"
+    },
+    {
+      "path": "tests/reusable/gps_backup_integration.cpp",
+      "sha256": "8a7004660b16c595e2cefb81295e02dbfe0b8bf68b7f095f1c4f205249ecb03d"
+    }
+  ],
+  "artifacts": [
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": ".pio\\build\\seeed_xiao_nrf52840_sense\\firmware.zip",
+      "bytes": 167179,
+      "sha256": "0f8b5371341a1f51689e001a331e6a459b29a5f11f373f2ca4a49c093a6aaa23"
+    },
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": ".pio\\build\\seeed_xiao_nrf52840_sense\\firmware.hex",
+      "bytes": 467992,
+      "sha256": "e9a39d7e1617f4f33ef1416cd566ed68ef14511b04c0944a0a27af322b4ec439"
+    },
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": ".pio\\build\\seeed_xiao_nrf52840_sense\\firmware.elf",
+      "bytes": 292688,
+      "sha256": "ca9053779ec379351d27c2d25a39fe1a457d73bb697b48c4048a6ee31f8ab6de"
+    },
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": "logs\\hardware-gps-backup-2026-11-03\\recovery-gate-fix\\seeed_xiao_nrf52840_sense\\firmware.bin",
+      "bytes": 166360,
+      "sha256": "eefb4721bcf585b77c23fc36f1c037fc99174ef427da5c18427adcf66fea1a6b"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": ".pio\\build\\tacticpod_reusable_usb\\firmware.zip",
+      "bytes": 203012,
+      "sha256": "74543f821c08158f5580c9cb430fa160e29725ad770fd72ceb5e008c8d0ea195"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": ".pio\\build\\tacticpod_reusable_usb\\firmware.hex",
+      "bytes": 568793,
+      "sha256": "7ccb7f0dc46f0b9b1522d2adb05bcd69501ba40118ba4ecd44d92dc8beaeff64"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": ".pio\\build\\tacticpod_reusable_usb\\firmware.elf",
+      "bytes": 370168,
+      "sha256": "3c63eb4f602af6a7dccfe34c26c301f9e4b508d14d56e3aea323c9eebca967a8"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": "logs\\hardware-gps-backup-2026-11-03\\recovery-gate-fix\\tacticpod_reusable_usb\\firmware.bin",
+      "bytes": 202192,
+      "sha256": "2fdc70037c01ba6dff10d0631046e6bc7f10d8c3e3225f23786df95292b734bd"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup",
+      "path": ".pio\\build\\tacticpod_reusable_usb_gpsbackup\\firmware.zip",
+      "bytes": 208627,
+      "sha256": "91727831db63198d2c007134803526125a096adc47eeecbe1d8c3879e2004e28"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup",
+      "path": ".pio\\build\\tacticpod_reusable_usb_gpsbackup\\firmware.hex",
+      "bytes": 584588,
+      "sha256": "b99db4d6c8b1b860b43561538c62e4e83a45bdb38052a1f8eb4fc0b490630a8a"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup",
+      "path": ".pio\\build\\tacticpod_reusable_usb_gpsbackup\\firmware.elf",
+      "bytes": 370792,
+      "sha256": "079c04431cb12a494e4fbd77f18f96fa943eff2171c030ed23d968234f3ea5cd"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup",
+      "path": "logs\\hardware-gps-backup-2026-11-03\\recovery-gate-fix\\tacticpod_reusable_usb_gpsbackup\\firmware.bin",
+      "bytes": 207808,
+      "sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup_auto",
+      "path": ".pio\\build\\tacticpod_reusable_usb_gpsbackup_auto\\firmware.zip",
+      "bytes": 208996,
+      "sha256": "ae6d2e5183a1e19cdbbf79ef675060b8d31107f449f05ad39597bc6d7cc73079"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup_auto",
+      "path": ".pio\\build\\tacticpod_reusable_usb_gpsbackup_auto\\firmware.hex",
+      "bytes": 585623,
+      "sha256": "84c097ac4fb21a47ac2cd3bf2c7ef1f772ac453828daf9feca1b9363f5905c27"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup_auto",
+      "path": ".pio\\build\\tacticpod_reusable_usb_gpsbackup_auto\\firmware.elf",
+      "bytes": 370984,
+      "sha256": "2cb01bf5857f9d51608f4cf5bbe97b373bc6209b0c7e8e9124c4433db3ca2d70"
+    },
+    {
+      "environment": "tacticpod_reusable_usb_gpsbackup_auto",
+      "path": "logs\\hardware-gps-backup-2026-11-03\\recovery-gate-fix\\tacticpod_reusable_usb_gpsbackup_auto\\firmware.bin",
+      "bytes": 208176,
+      "sha256": "7b20d3acb33cdbc298db7ae6d95dee90544b74e49bff9bc44919812d378eabc6"
+    }
+  ],
+  "selected_environment": "tacticpod_reusable_usb_gpsbackup",
+  "selected_build_flags": [
+    "-DTARGET_SEEED_XIAO_NRF52840_SENSE",
+    "-DTACTICPOD_TCB3_FLASH_ENABLED=1",
+    "-DTACTICPOD_REUSABLE=1",
+    "-DTACTICPOD_GPS_BACKUP_TEST=1"
+  ],
+  "automatic_backup_enabled_in_selected_environment": false,
+  "automatic_environment_compile_check_only": true,
+  "device_flashed": false,
+  "hardware_verified": false,
+  "installation_authorized": false,
+  "pilot_ready": false,
+  "port_observed": "COM8",
+  "usb_baud": 115200,
+  "gps_uart_baud": 38400,
+  "regression_results": {
+    "tests/gps/run_tests.py": 0,
+    "tests/recording/run_tests.py": 0,
+    "tests/flash_write/run_tests.py": 0,
+    "tests/recorder_v2/run_tests.py": 0,
+    "tests/storage_benchmark/run_tests.py": 0,
+    "tests/compact/run_tests.py": 0,
+    "tests/compact/test_decoder.py": 0,
+    "tests/compact/test_timing_model.py": 0,
+    "tests/compact/test_resources.py": 0,
+    "tests/tcb3/run_tests.py": 0,
+    "tests/tcb3/integration_tests.py": 0,
+    "tests/tcb3/console_tests.py": 0,
+    "tests/flash_identity/run_tests.py": 0,
+    "tests/tcb3/sustained_tests.py": 0,
+    "tests/tcb3/long_integration_tests.py": 0,
+    "tests/recording/erase_review_tests.py": 0,
+    "tests/tcb3/first_write_tests.py": 0,
+    "tests/tcb3/append_30s_tests.py": 0,
+    "tests/tcb3/movement_120s_tests.py": 0,
+    "tests/tcb3/movement_controls_tests.py": 0,
+    "tests/reusable/policy_tests.py": 0,
+    "tests/reusable/store_tests.py": 0,
+    "tests/reusable/adc_tests.py": 0,
+    "tests/reusable/console_tests.py": 0,
+    "tests/reusable/integration_tests.py": 0,
+    "tests/reusable/startup_tests.py": 0,
+    "tests/reusable/switchless_tests.py": 0,
+    "tests/reusable/download_tests.py": 0,
+    "tests/reusable/button_tests.py": 0,
+    "tests/reusable/standby_tests.py": 0,
+    "tests/reusable/gps_backup_tests.py": 0,
+    "tests/reusable/field_tests.py": 0
+  },
+  "software_ready_for_supervised_test": true,
+  "full_suite_exit_code": 0,
+  "special_linker_adapters": false,
+  "negative_control": "PASS",
+  "linked_startup": "PASS"
+}

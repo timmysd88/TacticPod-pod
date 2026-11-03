@@ -1,0 +1,27 @@
+[
+  {
+    "path": "candidate-verification.json",
+    "bytes": 701,
+    "sha256": "17d6b1316227082c61fca519384c658e46d96ae59a286e8b857f55838041f1b6"
+  },
+  {
+    "path": "hardware-summary.json",
+    "bytes": 3367,
+    "sha256": "df02190d829c4b9e65c15823e490892014d9b0c9d7cac6111b30aaf1ad23381e"
+  },
+  {
+    "path": "latest-gps-status.json",
+    "bytes": 701,
+    "sha256": "5d68e9e18d7afc68f5c4eee41f02a4e7b8ed203b49fca14dbd0228a177329b96"
+  },
+  {
+    "path": "pre-upload-serial.txt",
+    "bytes": 4281,
+    "sha256": "41f71396d94fd15cd638efa76ef44b91f53d15cab7670e9525e1383df7f128ca"
+  },
+  {
+    "path": "preflight-result.json",
+    "bytes": 5468,
+    "sha256": "f3c138644abfab9168f6a7e8b72e55ea98f8f6e78e85de22698e9c0f09f07dc1"
+  }
+]

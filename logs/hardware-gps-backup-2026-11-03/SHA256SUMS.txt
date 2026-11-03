@@ -1,0 +1,4 @@
+d65ba9325d5b7a63f562929ec35f054345afd20c4117e26ff8cfd97f8614046f  logs\hardware-gps-backup-2026-11-03\baseline-artifacts\tacticpod_reusable_usb_gpsbackup\firmware.zip
+60447b5779ff6542ff7f6058692b9783cc4fd3fd85271841b0bebac3967afb1f  logs\hardware-gps-backup-2026-11-03\baseline-artifacts\tacticpod_reusable_usb_gpsbackup\firmware.hex
+6fc55d8415c917f193ebb9a08c9aeac309749e42f37001700a4f1b28592d2dda  logs\hardware-gps-backup-2026-11-03\baseline-artifacts\tacticpod_reusable_usb_gpsbackup\firmware.elf
+6ff93d183794191f90506208b73eb57aaf3885fb89d9beee120e608b9cbef28c  logs\hardware-gps-backup-2026-11-03\gps-backup-test-application.bin

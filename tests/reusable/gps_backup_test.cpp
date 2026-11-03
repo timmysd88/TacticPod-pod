@@ -1,5 +1,5 @@
 #include "../../src/gps_power.h"
-#include <stdio.h>
+#include "../../src/gps_backup_trace.h"
 
 using GpsPower::BackupTest;
 using Action = BackupTest::Action;
@@ -60,6 +60,32 @@ struct Sim {
 static bool startOk(Sim& s) { BackupTest::Guards g; return s.t.start(g, s.now); }
 
 int main() {
+  // Independent full-frame oracle: version/reserved/duration, flags, UART wake and checksum.
+  {
+    const uint8_t expected[24] = {0xB5,0x62,0x02,0x41,0x10,0x00,0,0,0,0,0,0,0,0,
+                                0x06,0,0,0,0x08,0,0,0,0x61,0x6B};
+    uint8_t actual[24];
+    if (GpsPower::buildBackupRequest(actual) != sizeof(expected)) return 160;
+    for (unsigned i = 0; i < sizeof(expected); ++i) if (actual[i] != expected[i]) return 161;
+  }
+  // Capture is bounded but counters keep counting; phase prefixes are independent.
+  // Unsigned relative timestamps survive millis() wrap and a new cycle clears evidence.
+  {
+    GpsPower::BackupTrace trace;
+    trace.started = 0xfffffff0u;
+    for (unsigned i = 0; i < 200; ++i) trace.observe(0x10u + i, Phase::Drain, uint8_t(i), i == 199);
+    trace.observe(0x100, Phase::Listen, '$', false);
+    trace.observe(0x101, Phase::Listen, '\n', true);
+    auto& w = trace.windows[unsigned(Phase::Drain)];
+    if (w.bytes != 200 || w.stored != GpsPower::BackupTrace::kSamples || w.valid != 1 ||
+        trace.samples[0][0].ms != 32 || trace.windows[unsigned(Phase::Listen)].valid != 1 ||
+        trace.samples[1][0].value != '$') return 162;
+    for (unsigned i = 0; i < 100; ++i) trace.event(i, Phase::Wake, Action::SendWake, true);
+    if (trace.eventCount != GpsPower::BackupTrace::kEvents) return 163;
+    trace.reset(123);
+    if (trace.windows[unsigned(Phase::Drain)].bytes || trace.eventCount || trace.started != 123 ||
+        trace.windows[unsigned(Phase::Listen)].stored) return 164;
+  }
   // Guard refusals: every blocker alone refuses; clear guards start.
   {
     bool BackupTest::Guards::*blockers[] = {&BackupTest::Guards::recording, &BackupTest::Guards::sessionBusy,
@@ -137,6 +163,59 @@ int main() {
     Sim s; s.wakeWorks = false; startOk(s); s.run(60000);
     if (s.wakes != 8) return 120;
   }
-  puts("PASS");
+  // Losing NMEA or the audited profile during the optional fix wait must fail,
+  // including the exact step where the fix/timeout could otherwise report PASS.
+  for (unsigned loss = 0; loss < 3; ++loss) {
+    Sim s; s.fixDelayMs = 999999; startOk(s);
+    while (s.t.running() && s.t.current() != Phase::Fix) s.step();
+    if (s.t.current() != Phase::Fix || !s.t.profileVerified()) return 130;
+    BackupTest::Obs o; o.now = s.now + BackupTest::kFixMs;
+    o.validNmea = loss != 0; o.profileVerified = loss != 1;
+    o.profileFailed = loss == 2; o.fix = true;
+    s.t.step(o);
+    if (s.t.result() != Result::ProfileFailed || !s.t.blocksRecording() || s.t.profileVerified()) return 131 + loss;
+  }
+  // A stale "verified" observation cannot override an explicit failed audit or
+  // the absence of valid NMEA, and a stalled profile phase has a bounded timeout.
+  for (unsigned failure = 0; failure < 3; ++failure) {
+    Sim s; s.profileDelayMs = 999999; startOk(s);
+    while (s.t.running() && s.t.current() != Phase::Profile) s.step();
+    BackupTest::Obs o; o.now = s.now + BackupTest::kProfileMs;
+    o.validNmea = failure != 1; o.profileVerified = failure != 2;
+    o.profileFailed = failure == 0;
+    s.t.step(o);
+    if (s.t.result() != Result::ProfileFailed || !s.t.blocksRecording()) return 140 + failure;
+  }
+  // Starting subsequent cycles resets previous success/failure observations.
+  {
+    Sim s;
+    for (unsigned cycle = 0; cycle < 3; ++cycle) {
+      s.wakeGoodAt = s.validSince = 0; s.receivedValid = s.profileOk = s.fix = false;
+      s.profileFail = cycle == 1;
+      if (!startOk(s) || s.t.wakeSucceeded() || s.t.profileVerified() || s.t.fixSeen()) return 150;
+      if (!s.run(90000)) return 151;
+      if (s.t.result() != (cycle == 1 ? Result::ProfileFailed : Result::Pass)) return 152;
+      if (s.t.blocksRecording() != (cycle == 1)) return 153;
+    }
+  }
+  // Failure latches at the RX reader, remains running/blocked for exactly a
+  // bounded observation window, and cannot become PASS despite later recovery.
+  {
+    Sim s; startOk(s);
+    while (s.t.current() != Phase::Listen) s.step();
+    const uint32_t first = s.now;
+    s.t.unexpectedRx(first, ++s.bytes);
+    if (!s.t.observingFailure() || s.t.result() != Result::EntryNotConfirmed || !s.t.running()) return 170;
+    BackupTest::Obs o; o.now = first + 1499; o.bytes = ++s.bytes;
+    o.validNmea = o.profileVerified = o.fix = true;
+    if (s.t.step(o) != Action::None || !s.t.running()) return 171;
+    o.now = first + 1500;
+    if (s.t.step(o) != Action::None || !s.t.done() || s.t.result() != Result::EntryNotConfirmed || s.t.wakeAttempts()) return 172;
+    // Unsigned time wrap, and a safety abort cannot erase an existing failure.
+    Sim q; startOk(q); while (q.t.current() != Phase::Listen) q.step();
+    q.t.unexpectedRx(0xfffffff0u, ++q.bytes);
+    o.now = 0x5cc; o.bytes = q.bytes; o.guardViolated = true;
+    q.t.step(o); if (q.t.result() != Result::EntryNotConfirmed || !q.t.done()) return 173;
+  }
   return 0;
 }

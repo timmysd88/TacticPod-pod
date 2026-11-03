@@ -1,0 +1,9 @@
+{
+  "source_commit": "29f90966d868f68b85d63d64d27bab9584f7628a",
+  "source_verification": "FAIL",
+  "physical_verification": "NOT_RUN",
+  "finding": "Profile phase is running, so recordingReady() is false and o.profileVerified cannot become true. The profile phase must fail or time out even with a recovered receiver.",
+  "timeout_ms": 45000,
+  "device_accessed": false,
+  "firmware_modified": false
+}

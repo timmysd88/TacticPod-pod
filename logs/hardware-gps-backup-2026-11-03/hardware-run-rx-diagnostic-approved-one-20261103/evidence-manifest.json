@@ -1,0 +1,27 @@
+[
+  {
+    "path": "candidate-verification.json",
+    "bytes": 1051,
+    "sha256": "b691568e6eacdf672e2213bbc8335ffacea1796d074ba1ef09caf3cd9da57e8d"
+  },
+  {
+    "path": "hardware-summary.json",
+    "bytes": 1564,
+    "sha256": "2a0e7f6003bcec5a3b7399e0fd89d6ef6af4f421bbb7679f0b276f7aa2bf62f6"
+  },
+  {
+    "path": "pre-upload-serial.txt",
+    "bytes": 4210,
+    "sha256": "5fdb7767c1765bed08cfa2b38d1c7a0c7ff06002e8b8eb59d56775aba1311793"
+  },
+  {
+    "path": "preflight-result.json",
+    "bytes": 6258,
+    "sha256": "3b1243499c260c73f3ae15e539629d3d4a7cce50ecd1dda9bd601f4e4aacd495"
+  },
+  {
+    "path": "verified-elf.bin",
+    "bytes": 211648,
+    "sha256": "56d9fb3539fd2b164f432eb5c7fa557c94489b77405494fd17eb28f426b747ad"
+  }
+]

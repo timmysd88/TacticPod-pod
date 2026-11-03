@@ -1,0 +1,28 @@
+In file included from c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\math.h:36:0,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write/Arduino.h:5,
+                 from c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\tests\gps\harness.cpp:1,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\tcb3\integration.cpp:17,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\tcb3\append_30s.cpp:6:
+c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\cmath:41:10: fatal error: bits/c++config.h: No such file or directory
+ #include <bits/c++config.h>
+          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+In file included from c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\math.h:36:0,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write/Arduino.h:5,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\lib\TinyGPSPlus\src\TinyGPS++.h:28,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\lib\TinyGPSPlus\src\TinyGPS++.cpp:24:
+c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\cmath:41:10: fatal error: bits/c++config.h: No such file or directory
+ #include <bits/c++config.h>
+          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\tcb3\append_30s_tests.py", line 9, in <module>
+    elf=compile('tests/tcb3/append_30s.cpp','tcb3-append-30s-tests',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\tcb3\native.py", line 19, in compile
+    print(result.stderr.decode('utf-8','replace'));result.check_returncode()
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\.platformio\python3\Lib\subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio-core\\packages\\toolchain-gccarmnoneeabi\\bin\\arm-none-eabi-g++.exe', '-std=c++11', '-Ofast', '-DARDUINO=10819', '-mcpu=cortex-m4', '-mthumb', '-fno-exceptions', '-fno-rtti', '-fno-unwind-tables', '-ffunction-sections', '-fdata-sections', '-nostartfiles', '-fstack-usage', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\recording', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\flash_write', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\lib\\TinyGPSPlus\\src', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\tcb3\\append_30s.cpp', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\lib\\TinyGPSPlus\\src\\TinyGPS++.cpp', '-Wl,-Ttext=0x10000', '-Wl,-Tdata=0x20000000', '-lm', '-o', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio\\tcb3-append-30s-tests.elf']' returned non-zero exit status 1.

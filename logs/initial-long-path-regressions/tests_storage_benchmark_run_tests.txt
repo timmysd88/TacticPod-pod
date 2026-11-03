@@ -1,0 +1,31 @@
+test_all_movement_profiles_and_v2_validity (__main__.StorageCompression.test_all_movement_profiles_and_v2_validity) ... ok
+test_bitpacking_zero_width_extremes_and_padding (__main__.StorageCompression.test_bitpacking_zero_width_extremes_and_padding) ... ok
+test_block_size_comparison_uses_identical_source_bytes (__main__.StorageCompression.test_block_size_comparison_uses_identical_source_bytes) ... ok
+test_crc_valid_invalid_deflate_is_rejected_without_unbounded_output (__main__.StorageCompression.test_crc_valid_invalid_deflate_is_rejected_without_unbounded_output) ... ok
+test_equal_timestamps_preserve_original_type_order (__main__.StorageCompression.test_equal_timestamps_preserve_original_type_order) ... ok
+test_every_block_byte_corruption_detected (__main__.StorageCompression.test_every_block_byte_corruption_detected) ... ok
+test_every_codec_and_backend_reconstructs_every_record (__main__.StorageCompression.test_every_codec_and_backend_reconstructs_every_record) ... ok
+test_exact_capacity_targets_and_20pct_safety_reserve (__main__.StorageCompression.test_exact_capacity_targets_and_20pct_safety_reserve) ... ok
+test_independently_decodable_blocks_and_exact_page_accounting (__main__.StorageCompression.test_independently_decodable_blocks_and_exact_page_accounting) ... ok
+test_invalid_fix_missing_utc_and_source_precision_unchanged (__main__.StorageCompression.test_invalid_fix_missing_utc_and_source_precision_unchanged) ... ok
+test_invalid_sector_header_never_exposes_unowned_records (__main__.StorageCompression.test_invalid_sector_header_never_exposes_unowned_records) ... ok
+test_lzss_empty_overlap_repeated_and_incompressible (__main__.StorageCompression.test_lzss_empty_overlap_repeated_and_incompressible) ... ok
+test_lzss_rejects_bad_distance_and_output_bombs (__main__.StorageCompression.test_lzss_rejects_bad_distance_and_output_bombs) ... ok
+test_power_cut_after_each_program_byte_preserves_prior_blocks (__main__.StorageCompression.test_power_cut_after_each_program_byte_preserves_prior_blocks) ... ok
+test_random_full_precision_samples_cannot_expand_beyond_raw_fallback (__main__.StorageCompression.test_random_full_precision_samples_cannot_expand_beyond_raw_fallback) ... ok
+test_real_csv_all_samples_and_partial_tail (__main__.StorageCompression.test_real_csv_all_samples_and_partial_tail) ... ok
+test_recovery_resynchronises_at_a_later_complete_block (__main__.StorageCompression.test_recovery_resynchronises_at_a_later_complete_block) ... ok
+test_rice_escape_is_bounded_and_preserves_large_residuals (__main__.StorageCompression.test_rice_escape_is_bounded_and_preserves_large_residuals) ... ok
+test_signed_extrema_large_deltas_and_u64_rollover_domains (__main__.StorageCompression.test_signed_extrema_large_deltas_and_u64_rollover_domains) ... ok
+test_stream_capacity_includes_final_frame_and_diagnostic_sector (__main__.StorageCompression.test_stream_capacity_includes_final_frame_and_diagnostic_sector) ... ok
+test_stream_packing_and_sector_utilisation_are_exact (__main__.StorageCompression.test_stream_packing_and_sector_utilisation_are_exact) ... ok
+test_stream_power_cut_each_byte_and_independent_resynchronisation (__main__.StorageCompression.test_stream_power_cut_each_byte_and_independent_resynchronisation) ... ok
+test_stream_valid_crc_invalid_page_envelope_is_rejected (__main__.StorageCompression.test_stream_valid_crc_invalid_page_envelope_is_rejected) ... ok
+test_timestamp_gcd_and_run_encoding_are_exact_not_assumed (__main__.StorageCompression.test_timestamp_gcd_and_run_encoding_are_exact_not_assumed) ... ok
+test_truncation_and_crc_valid_length_corruption (__main__.StorageCompression.test_truncation_and_crc_valid_length_corruption) ... ok
+test_zigzag_varints_and_reject_overlong (__main__.StorageCompression.test_zigzag_varints_and_reject_overlong) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 4.598s
+
+OK

@@ -1,0 +1,21 @@
+In file included from c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\math.h:36:0,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write/Arduino.h:5,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\gps\harness.cpp:1:
+c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\cmath:41:10: fatal error: bits/c++config.h: No such file or directory
+ #include <bits/c++config.h>
+          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+In file included from c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\math.h:36:0,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\flash_write/Arduino.h:5,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\lib\TinyGPSPlus\src\TinyGPS++.h:28,
+                 from C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\lib\TinyGPSPlus\src\TinyGPS++.cpp:24:
+c:\users\timot\onedrive\documents\projects\tacticpod_prototype\.worktrees\pr6-gpsbackup-20261103\.pio-core\packages\toolchain-gccarmnoneeabi\arm-none-eabi\include\c++\7.2.1\cmath:41:10: fatal error: bits/c++config.h: No such file or directory
+ #include <bits/c++config.h>
+          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.worktrees\pr6-gpsbackup-20261103\tests\gps\run_tests.py", line 18, in <module>
+    subprocess.run([str(compiler), '-std=c++11', '-mcpu=cortex-m4', '-mthumb', '-O1',
+  File "C:\Users\timot\.platformio\python3\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio-core\\packages\\toolchain-gccarmnoneeabi\\bin\\arm-none-eabi-g++.exe', '-std=c++11', '-mcpu=cortex-m4', '-mthumb', '-O1', '-DARDUINO=10819', '-fno-exceptions', '-fno-rtti', '-fno-unwind-tables', '-ffunction-sections', '-fdata-sections', '-nostartfiles', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\recording', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\flash_write', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\lib\\TinyGPSPlus\\src', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\tests\\gps\\harness.cpp', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\lib\\TinyGPSPlus\\src\\TinyGPS++.cpp', '-Wl,-Ttext=0x10000', '-Wl,-Tdata=0x20000000', '-Wl,-e,runCase', '-Wl,--gc-sections', '-lm', '-o', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.worktrees\\pr6-gpsbackup-20261103\\.pio\\gps-tests.elf']' returned non-zero exit status 1.

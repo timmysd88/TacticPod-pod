@@ -1,0 +1,2 @@
+LONG result 0 metrics (12000, 1200, 120, 9908, 10092, 0, 2, 1, 0, 60, 837, 544, 245760, 1, 1, 345600, 0, 0, 0, 0, 357, 898, 0, 0)
+PASS: sustained nominal-rate high-entropy acquisition, CPU load and busy flash; exact reconstruction

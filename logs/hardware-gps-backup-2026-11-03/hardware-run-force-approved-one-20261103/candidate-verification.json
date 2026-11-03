@@ -1,0 +1,14 @@
+{
+  "binary": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\logs\\hardware-gps-backup-2026-11-03\\force-backup-fix\\tacticpod_reusable_usb_gpsbackup\\firmware.bin",
+  "package": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\logs\\hardware-gps-backup-2026-11-03\\force-backup-fix\\tacticpod_reusable_usb_gpsbackup\\firmware.zip",
+  "bytes": 209536,
+  "binary_sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434",
+  "zip_sha256": "f2c116fa73d0993f0dfed69bfaecc787ecf92081690d3c4aa157ee0b4e981140",
+  "manifest_sha256": "67eda32b57504ee01d72a82ff564cbf27d79f126ac1147dd1072aa0e3ff38283",
+  "source_and_artifacts_verified": true,
+  "elf_matches_application": true,
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "upload_method": "Existing verified Seeed bootloader; Adafruit application-only serial DFU, singlebank. Bootloader writes internal MCU application flash; no external SPI erase command.",
+  "automatic_backup": false
+}

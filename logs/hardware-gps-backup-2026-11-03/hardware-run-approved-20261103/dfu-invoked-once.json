@@ -1,0 +1,27 @@
+{
+  "uploaded": false,
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "approval": "Owner explicitly approved corrected supervised test candidate on COM8; no auto standby/erase/push",
+  "loader_port": "COM7",
+  "loader_hwid": "USB VID:PID=2886:0045 SER=0E8A89B7289430BD LOCATION=1-8:x.0",
+  "bootloader_info": [],
+  "loader_identity_verified_by": "Same unique device serial as approved COM8, expected 2886:0045 serial DFU bootloader, recorded Sense identity; no new reset",
+  "uf2_disk_exposed": false,
+  "fresh_info_uf2_read": false,
+  "approved_binary_sha256": "aced1874981173ebfbb3904390f6088214aca3419f72f6a5fae0deb4f4c14051",
+  "no_firmware_bytes_sent_by_initial_helper": true,
+  "command": [
+    "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\.pio-core\\packages\\tool-adafruit-nrfutil\\adafruit-nrfutil.py",
+    "dfu",
+    "serial",
+    "-pkg",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p6\\.pio\\build\\tacticpod_reusable_usb_gpsbackup\\firmware.zip",
+    "-p",
+    "COM7",
+    "-b",
+    "115200",
+    "--singlebank"
+  ]
+}

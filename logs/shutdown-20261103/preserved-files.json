@@ -1,0 +1,2273 @@
+[
+  {
+    "source_scope": ".p6",
+    "path": "platformio.ini",
+    "bytes": 2565,
+    "sha256": "d72dca9837bf5a31c3a472555c6d2aa6c40fc656681522a900b05ecd2a5f3efb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "src/gps_power.h",
+    "bytes": 9555,
+    "sha256": "17e716e5044fd830a1259cb0dba4de91d262f5135cf25c668b751082f694a964"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "src/gps_receiver.cpp",
+    "bytes": 39294,
+    "sha256": "fc5886727a2ab56e1a792a5d7cf48ad4e917f9ba47ed352033e3d5d9c8489aca"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "tests/flash_write/Arduino.h",
+    "bytes": 7776,
+    "sha256": "b8cf345b2bb4f9259e96cf57efc8b37ac48b06daa278ec325afc53d2545dd52d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "tests/reusable/gps_backup_test.cpp",
+    "bytes": 11780,
+    "sha256": "f64f198b6744d640fef252b557460a7a165eb60e5345f8aa618b98a5da255d2a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "tests/reusable/gps_backup_tests.py",
+    "bytes": 8128,
+    "sha256": "a208453d82ed6f637f2bde94ea27d3540445f1a16466875a82ffb6b4f9117a88"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "tests/reusable/standby.cpp",
+    "bytes": 6522,
+    "sha256": "2f1881a2ff5a1d7698de87a666f74e6b547331c503ea78e91e16c25d31e377c6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "tests/reusable/standby_tests.py",
+    "bytes": 3155,
+    "sha256": "d9230d1291eff0d6d73488051abc3d3fc23ab342e0a314f34124ee7cd0aea2a5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "docs/flash-detection-investigation.md",
+    "bytes": 16673,
+    "sha256": "2deb200cfb9fb628176283bf5328b45c777626d2548344137df45c11f0fbdb36"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "docs/gps-backup-cycle1-investigation.md",
+    "bytes": 30361,
+    "sha256": "fea5a0d047ae9cfef9e4cfa082d67a00136c36cf0d06a40099567b5b6944c6f7"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "docs/gps-backup-rx-diagnostic.md",
+    "bytes": 10895,
+    "sha256": "03a0176388e18ce425f34f6a711cee75966b98b6ca4e782e7c5da85cf1a837de"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "docs/hardware-gps-backup-test-report.md",
+    "bytes": 62579,
+    "sha256": "db86c79b37466d017446573a5a2863c5c5e7910a682d1ed56afe8777e79e0963"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/SHA256SUMS.txt",
+    "bytes": 639,
+    "sha256": "345dae8153b498f16c5806954b71048a1b372a7e35cd40ea3f98cf7d39a976b4"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/analyse_saved_gps_cycle1.py",
+    "bytes": 4605,
+    "sha256": "f6434a2173d7b98917778846855500e2f4f924dd90c0d71db8359022c37fd96f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/approved_field_rollback.py",
+    "bytes": 3705,
+    "sha256": "ca348042c796e8ee9e9fd316cf45f1c1b1cfcadedae213162a7d62b4d2521ef3"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/approved_force_one_cycle.py",
+    "bytes": 9557,
+    "sha256": "44a066a5e7e42f98f9a44d7fd79602fdb6d7ddbe22c917fe97d548e4e1493837"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/approved_hardware_test.py",
+    "bytes": 8488,
+    "sha256": "c39b59e35d815144b65e12cf8ae822439f0c332ee826eefe4a38db37b211fdd9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/approved_rx_diagnostic_one_cycle.py",
+    "bytes": 10014,
+    "sha256": "f326725df939b5ab8024fbd4d5416690731d973e92cac2960ab4209933ef298f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/build.txt",
+    "bytes": 42978,
+    "sha256": "5ed5db8ce3306fb625e53c9a5b6af9c8dc2344a48860bfdf7b54b917f74a3945"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/check_flash_wake_capability.py",
+    "bytes": 1797,
+    "sha256": "b9434932f7907db2e5559ae91bdf08f7f605b987bc9fb23bb635662e83dcd266"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/check_profile_gate.py",
+    "bytes": 1406,
+    "sha256": "bbae903c3e6ca9fe8242c9c97d8f08fd3bd9868dd1197104f46d6d7963dab6da"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/checkout-normalization.json",
+    "bytes": 68107,
+    "sha256": "f874b879d12281d9a5d115d8ec65e8e8df24d6ff0af03eccba3e31f14e2806a7"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/collect_preflight.py",
+    "bytes": 2716,
+    "sha256": "ea1a6f497f4dcb334f38b07d3e6ef5b9008d0c3c44936c935b70dd38589ff929"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/continue_approved_serial_dfu.py",
+    "bytes": 3095,
+    "sha256": "126935ad90d4fdef5f01848663615ccbdcd15deb68d8a1b99046b696bb7d40da"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/diag-id-20261103-100303-525881.txt",
+    "bytes": 5131,
+    "sha256": "15d7a3570af4b9387b5a897c4a98266ae96f40e198a2d5f4c8ea4f11c168bec1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/diag-id-recheck-20261103-090933/result.json",
+    "bytes": 3218,
+    "sha256": "c71c2fb6d66d2e1f46aba93ea0b2f104634148734963935038616cfbe971148d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/diag-id-recheck-20261103-090933/serial-transcript.txt",
+    "bytes": 4654,
+    "sha256": "0c3abdc90c00bae06c127995f0f3d9a9b4c1730d290a86299aa50e1b5aa3524b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/diag-id-recheck-20261103-091015/result.json",
+    "bytes": 7378,
+    "sha256": "12175b05c5b885d11638ffdada7ffef3e5e042aa420e553b61524749b6206f0e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/diag-id-recheck-20261103-091015/serial-transcript.txt",
+    "bytes": 6372,
+    "sha256": "774a076aada58d48802ee54d04dac06d4e0ad349c5ef39a28b4b753c21223007"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-20261103/preflight-result.json",
+    "bytes": 150,
+    "sha256": "053ecdad0627ed328905e66c8f055b215855869e36ede3c1bca4c5a75211e6b9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-ready-20261103/candidate-verification.json",
+    "bytes": 701,
+    "sha256": "17d6b1316227082c61fca519384c658e46d96ae59a286e8b857f55838041f1b6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-ready-20261103/evidence-manifest.json",
+    "bytes": 765,
+    "sha256": "dfaa9d6b6371c9db9d9c7ab8c42a6d85a164ee4bab4595faef200d1772b2bca0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-ready-20261103/hardware-summary.json",
+    "bytes": 3367,
+    "sha256": "df02190d829c4b9e65c15823e490892014d9b0c9d7cac6111b30aaf1ad23381e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-ready-20261103/latest-gps-status.json",
+    "bytes": 701,
+    "sha256": "5d68e9e18d7afc68f5c4eee41f02a4e7b8ed203b49fca14dbd0228a177329b96"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-ready-20261103/pre-upload-serial.txt",
+    "bytes": 4281,
+    "sha256": "41f71396d94fd15cd638efa76ef44b91f53d15cab7670e9525e1383df7f128ca"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/field-rollback-approved-ready-20261103/preflight-result.json",
+    "bytes": 5468,
+    "sha256": "f3c138644abfab9168f6a7e8b72e55ea98f8f6e78e85de22698e9c0f09f07dc1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/candidate-verification.json",
+    "bytes": 1003,
+    "sha256": "341663cb3bbf55b72e812c2042c70d1bec84dec7cddf6f5ab01bc0120e361a1d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/result.json",
+    "bytes": 14864,
+    "sha256": "ac40c666b917d93663bda0b9499867546d9a2e516b59b5db98c61ba61cca9790"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/final-readonly-preflight-20261103-091526/serial-transcript.txt",
+    "bytes": 8537,
+    "sha256": "8a61a82b28e0e97dd3d84f1a256e1cc53efc8773a7187643011e5e994bf6c238"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/final_readonly_preflight.py",
+    "bytes": 4176,
+    "sha256": "0c2ee1544c87e7b171d41e55ca63188ab0b3467823ac1f7980a9ae1f4f1041fd"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/finish_final_preflight_report.py",
+    "bytes": 8128,
+    "sha256": "e3834ee545ae9048a33116e70cf8dd3dcf70613f5f159f98de09c5556e559ea8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-detection-investigation/collect_findings.py",
+    "bytes": 4442,
+    "sha256": "380178b83018cd56739709945f61a24f8363ea4fc16b5e8c61b1442c9a445ac6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-detection-investigation/readonly-result.json",
+    "bytes": 5449,
+    "sha256": "15fa36593e3fdbdc188396694d38c6851f97cb7a59004810bc33f2d3287a032c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-detection-investigation/readonly-serial.txt",
+    "bytes": 4691,
+    "sha256": "9e3a72a0d2fbf13c7d194237fa3a48ead11b3f7223138871a34eee4e5f13325d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-detection-investigation/source-comparison.json",
+    "bytes": 1890,
+    "sha256": "e75dafe6ab79a181a8c5fb5c36461d1766df150cf532dc04d86645e2d5b08262"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-wake-capability-check/capability-result.json",
+    "bytes": 5245,
+    "sha256": "337dc54921f37b52f5ba31f8f1f7de95d2828b47cda972af8f7b6f06798ef926"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-wake-capability-check/host-preflight-test-results.json",
+    "bytes": 656,
+    "sha256": "0ea6b479bc3c23c8ce03ff6a1306cf748b0c7ce1ea551fda085244383fac4772"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/flash-wake-capability-check/status-only-serial.txt",
+    "bytes": 3381,
+    "sha256": "6ea5431630f7b5a3bfa80a644f0deace75cfa33224077fad9486734c4836b1a2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/SHA256SUMS.txt",
+    "bytes": 2608,
+    "sha256": "a4b19c1f528c3ad6c6a6ea8e10a580824ad1e85bcb1ffe487aa22f3ca36ea33f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/src/gps_power.h",
+    "bytes": 8632,
+    "sha256": "9f0c0ace661043cd56d4d67fb1f378486d4625f06a2d77685c1876f9bee8aba5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/src/gps_receiver.cpp",
+    "bytes": 33634,
+    "sha256": "10e5410e77579429038f1b21be036797863f579c371dd84f9957dcfa3b6f253c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/tests/reusable/gps_backup_integration.cpp",
+    "bytes": 5434,
+    "sha256": "8a7004660b16c595e2cefb81295e02dbfe0b8bf68b7f095f1c4f205249ecb03d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/tests/reusable/gps_backup_test.cpp",
+    "bytes": 9084,
+    "sha256": "2b0d750d39bd38012e5c6316fb7609f8792738b455894fc6dd6a7740d7f6d9c0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/tests/reusable/gps_backup_tests.py",
+    "bytes": 6034,
+    "sha256": "c8f87bc57e6c726de54af9763e39f523265929684c2a12af1d6f2ac6b87dfb55"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/tests/reusable/standby.cpp",
+    "bytes": 6383,
+    "sha256": "6b7720717a96746944aae52ef3c869228bdbfc61dc9c9ef1ad4cd0a2a8c3a3cf"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/before/tests/reusable/standby_tests.py",
+    "bytes": 3104,
+    "sha256": "b02debe96deec7074c0d771776afa51d85dd28eaef6054aebfa62c20c0cfd19e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/collect_candidate.py",
+    "bytes": 2777,
+    "sha256": "a3f0ec19cd082a0344072683f6204b5e7927a0157847825fa820c6745b18a414"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/command-stack-prologue.txt",
+    "bytes": 760,
+    "sha256": "ee1696759545b1f84bf0f21d2bf5035dc4c726a97993fe0e4f9667b775f9f43e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/finalize.py",
+    "bytes": 2889,
+    "sha256": "6263582ea47b12f0bc03e39907ae89af574a1e426ab7d9d32d02e0df76036eb7"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/generated-after/logs/stock-battery-review/compiled-startup-results.json",
+    "bytes": 3023,
+    "sha256": "bfb1cd2885e72587bddbda2079fd911fa0f1df24ddfefc92a56594e13c2bddac"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/generated-before/logs/stock-battery-review/compiled-startup-results.json",
+    "bytes": 2835,
+    "sha256": "1cb5354ad1b3e95414142c05d287ba5f712b48f19d8229cc0f97b1996e8ac758"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/manifest.json",
+    "bytes": 22930,
+    "sha256": "67eda32b57504ee01d72a82ff564cbf27d79f126ac1147dd1072aa0e3ff38283"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/negative-force.json",
+    "bytes": 155,
+    "sha256": "fab509a81152949ded6b45ed3501c116914525411cc12934b23ff166d0e75a00"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/negative_control.json",
+    "bytes": 160,
+    "sha256": "0961c10442660396671121a0903b7436f13413eea81546fafdfdcc593326aa7b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/negative_control.py",
+    "bytes": 1593,
+    "sha256": "e9ebe7ad88acc74efde333966780c4720b03b4feda2b9b6e8dece84317318318"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/negative_force.py",
+    "bytes": 931,
+    "sha256": "b82943c969824424ff20e1ea7eb683f7b3c02fae4d7bb5ea6fad4734cd451037"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/preservation-and-safety-checks.json",
+    "bytes": 4047,
+    "sha256": "d511d33e9dea935592cef3415548b4ef77ad24cb425aee63a63980f89f483cf4"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/results.json",
+    "bytes": 1311,
+    "sha256": "1886ee776b978e61db9f451d5cadc9aca2a6f06c196168574b20f4592f8c1296"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_compact_run_tests.txt",
+    "bytes": 1076,
+    "sha256": "e6398aa65ba570822137907930d62a6206174ced09ecc9751c5f38ba096a93bb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_compact_test_decoder.txt",
+    "bytes": 117,
+    "sha256": "f38a0c6bf3c06ed740e731fe6479ae53c0f043f4180f0a4735dfe02aece8b381"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_compact_test_resources.txt",
+    "bytes": 194,
+    "sha256": "2456bdeb357315828796246191f63ab23f53ea5720cb385f39837676eb428f34"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_compact_test_timing_model.txt",
+    "bytes": 74,
+    "sha256": "9aae3803c6d3cf007578ac286a5e0c3f0d2329b6d9b7e264a708e024b2e1c6a8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_flash_identity_run_tests.txt",
+    "bytes": 536,
+    "sha256": "21a6f13231840b5ac2eba74df596be9a1cba3062b1a776864169fd5bb19da298"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_flash_write_run_tests.txt",
+    "bytes": 517,
+    "sha256": "ad139c12ea29733acbec35708b1606266af45456af0d0d7ef7ce77243b16a3dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_gps_run_tests.txt",
+    "bytes": 11728,
+    "sha256": "94f3a361acc78ee358defc686ac38cc3ea1bf05050d50489528922d71f4d4974"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_recorder_v2_run_tests.txt",
+    "bytes": 3788,
+    "sha256": "9ed200667ba2a4aad6c8f4e02c6b95947776f7c250e343e754910eecda3b9a1d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_recording_erase_review_tests.txt",
+    "bytes": 332,
+    "sha256": "ccc912fdc1a8fa51f55dfd0669b8f284b4120c23fefa87e066a9376d2040a185"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_recording_run_tests.txt",
+    "bytes": 1084,
+    "sha256": "49fb38578c771d559c11018041a9a66df9d716f0705921378d25cf8ef356ef35"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_adc_tests.txt",
+    "bytes": 233,
+    "sha256": "841692a1c24e509c2edc0c31acdb659ba2a2bdb13de6a23ef9fa6101952e30a9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_button_tests.txt",
+    "bytes": 133,
+    "sha256": "ca9dc10ddd25b14de6262225116440fcbc7206b35cbafe2e3e17260c6acd2b7a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_console_tests.txt",
+    "bytes": 112,
+    "sha256": "4f64c85aeb5f46d557d76facf7209168ea2ca262792c17296b8b402b564378c0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_download_tests.txt",
+    "bytes": 270,
+    "sha256": "66957f060cc300536b3c6a0a66bdf326d8888ea9b8e098d7bfad694e7571cd99"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_field_tests.txt",
+    "bytes": 533,
+    "sha256": "be4925a1d17b933d76d1ddad4879565ade5b92d1caa181a5afb256c1451674c9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_gps_backup_tests.txt",
+    "bytes": 795,
+    "sha256": "a77718a400cbc6ca7e7a0bf974276924806dbd4ef2d19a4cdb1c3081a828d46e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_integration_tests.txt",
+    "bytes": 1855,
+    "sha256": "f78c1f39a43d42d1104ff23b96d30e200698a6982a0a3b29507f014478221005"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_policy_tests.txt",
+    "bytes": 573,
+    "sha256": "692f6628af623e1107702ad4f0570f98ab61e397c0651791d14169f72f78f2f5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_standby_tests.txt",
+    "bytes": 173,
+    "sha256": "f12b0e829ab764fd20d45ae5f435b40c9b8d875cf13f7c43ab1ea03aac96e207"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_startup_tests.txt",
+    "bytes": 382,
+    "sha256": "54760e19e35963a4ab6160151acf347a156692ac60ac6f92598a4bfeb3e65cc2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_store_tests.txt",
+    "bytes": 335,
+    "sha256": "1cb6e0239e743fa0cac46c8936d1e6c70221de370f9a0d9d31c68f5a687c27e2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_reusable_switchless_tests.txt",
+    "bytes": 884,
+    "sha256": "49f989fd87a63974e28704909056e7c946e7ccc07f40a7ec54a432b1068fa39a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_storage_benchmark_run_tests.txt",
+    "bytes": 3940,
+    "sha256": "d50a1583dc7fa6c709bcf3509fbb85f447452055b90d35b78336906e32953bf7"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_append_30s_tests.txt",
+    "bytes": 3135,
+    "sha256": "3055c96e23d44d15848ac90125c4dd54ab7331a093312798d7dd5ee10d35b5dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_console_tests.txt",
+    "bytes": 94,
+    "sha256": "b64fa5fa9718e4fc0457232c4a5a9d7578788284abf9e1ffd79f5ea1c2a0c368"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_first_write_tests.txt",
+    "bytes": 1203,
+    "sha256": "ae9adf252ec8ebac580a87cb1056fd20c4db5e38e41cb6b053c858a196d45e83"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_integration_tests.txt",
+    "bytes": 948,
+    "sha256": "9ed58c72d4d71f66d79ebf98a8e7e638356df9f8767d3d82c46cfa401184630b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_long_integration_tests.txt",
+    "bytes": 233,
+    "sha256": "49d69e58bcd112d752e4a67d193d5eaa50241a89d7d661d5db2be7979be2e1b2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_movement_120s_tests.txt",
+    "bytes": 3275,
+    "sha256": "aa201f7931fa3d7629f6bb9be9f26aac80540992283a6f7cb1b61a35b022624f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_movement_controls_tests.txt",
+    "bytes": 112,
+    "sha256": "2b9a4a0b754020e0e31d81fd10854185c39bd4c6e70ef3ba0d09da575a93a896"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_run_tests.txt",
+    "bytes": 3796,
+    "sha256": "3ee2ff8d0794bcef248cf276e884d72964a7f80e06a2e3423375356aeb3a8311"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-logs/tests_tcb3_sustained_tests.txt",
+    "bytes": 405,
+    "sha256": "62e7a741a6b87abc134ca14c1a95ae4348fa2b696b1a09820fd6327d54b232b0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regression-summary.json",
+    "bytes": 1636,
+    "sha256": "725e49375006d9252bea8fc59e54d615897334a9811423337ed1f2bf3e95404c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/src/gps_backup_trace.h",
+    "bytes": 1882,
+    "sha256": "41d80db430f54bcd8f68a3b5764bea76573a0ee9371c278718211a52c15c9849"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/src/gps_power.h",
+    "bytes": 8888,
+    "sha256": "0a5f0df5ba9116aebcaf7129ed7daaeddf145db760ee5721607ce0e8780e1f03"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/src/gps_receiver.cpp",
+    "bytes": 36790,
+    "sha256": "16004361d633e7f59968c1c1fa12ab8e10fe5861bfd5a8ff61b52737737216fe"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/tests/reusable/gps_backup_integration.cpp",
+    "bytes": 6799,
+    "sha256": "33f1e3a221fb054124eef57f1d326b05fd6b98aecf7919fd26e0d6c2a32d4679"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/tests/reusable/gps_backup_test.cpp",
+    "bytes": 10664,
+    "sha256": "b638c7bdbb0f616b646382e67050f0836312ad037ba40d3b83318af5400a44cb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/tests/reusable/gps_backup_tests.py",
+    "bytes": 6285,
+    "sha256": "013610ce9477d6644fe58fd11b6127528b0aa0e862d524be81067ace12c83745"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/tests/reusable/standby.cpp",
+    "bytes": 6522,
+    "sha256": "2f1881a2ff5a1d7698de87a666f74e6b547331c503ea78e91e16c25d31e377c6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/source/tests/reusable/standby_tests.py",
+    "bytes": 3155,
+    "sha256": "d9230d1291eff0d6d73488051abc3d3fc23ab342e0a314f34124ee7cd0aea2a5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/tracked-content-differences.json",
+    "bytes": 207,
+    "sha256": "687b2d61b3f67cb5a72187e24fd694f160edcd75d12c7186db24e3ce6a2d4d35"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/github-pr6-metadata.json",
+    "bytes": 1927,
+    "sha256": "10516acd07ab1d217df6728297e92805d87ea803ee8d081a65f4bb755c5f41d3"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/gps-backup-cycle1-investigation/findings.json",
+    "bytes": 4749,
+    "sha256": "38df1870a5501d40db289e6b479de1d9fbae72f26a01b2c70ddac407f7f4870d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/gps-backup-nosys.txt",
+    "bytes": 165,
+    "sha256": "fa0c12b21bd487f9e858b7caf28948c4e6f6e63b457ea0d480c36133e87e984f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/gps-status-20261103-100146-572928.txt",
+    "bytes": 3052,
+    "sha256": "e2f2195a40b78de3d7179f4e48d767e3186b7bf132cfa42bd0edcdcf21429c46"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/gps-status-20261103-100219-771295.txt",
+    "bytes": 4584,
+    "sha256": "582e92639e03178378be8fca3a867b8c8662ac50bd62071103d669db6ab1a878"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/gps-status-20261103-104017-030922.txt",
+    "bytes": 5273,
+    "sha256": "bb30774707195b9972a5b5912218714a134a8f81b33da215aa4f3df97a583958"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103-retry1/before-upload-serial.txt",
+    "bytes": 7225,
+    "sha256": "a3ad78df9d859f9a0c7898e30efed309cae2f6389819a26e4ce5fba444186ff8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103-retry1/candidate-verification.json",
+    "bytes": 1003,
+    "sha256": "341663cb3bbf55b72e812c2042c70d1bec84dec7cddf6f5ab01bc0120e361a1d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103-retry1/hardware-result.json",
+    "bytes": 967,
+    "sha256": "bdfd03e651a41df5d4e8a8eb1580bba4f6b0f16971eb0c4749ac1383e3b34b2f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103-retry1/preflight-result.json",
+    "bytes": 5981,
+    "sha256": "82ce94c22e7e0798b541e6991095e1b79488d1ab08e0236d8b7ad17aa4d868c2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103-retry1/record_outcome.py",
+    "bytes": 3415,
+    "sha256": "2440bd067cb28e57808f0a28d6466a55f855a0e8b068bd045e589459f1d0c862"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/before-upload-serial.txt",
+    "bytes": 8533,
+    "sha256": "9fee2111fc09d4481a7ac8d51058217f3ec61b425bf9aa6b99f6db706355077e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/candidate-verification.json",
+    "bytes": 1003,
+    "sha256": "341663cb3bbf55b72e812c2042c70d1bec84dec7cddf6f5ab01bc0120e361a1d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/hardware-result.json",
+    "bytes": 1556,
+    "sha256": "22e452c022460aa2e9483d6a64825e22bc49634a1b61e2f07981321800ca1652"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/preflight-result.json",
+    "bytes": 5979,
+    "sha256": "d26bca20e6165e1a2f44262741c768ca952afaa2c30653e21dff266a179bbe63"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-20261103/record_outcome.py",
+    "bytes": 8458,
+    "sha256": "dd6815391dda5685de500e2f9936012893a35bb103ae25651f51fc707c272df8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/candidate-verification.json",
+    "bytes": 1003,
+    "sha256": "341663cb3bbf55b72e812c2042c70d1bec84dec7cddf6f5ab01bc0120e361a1d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/cycle-1-response.txt",
+    "bytes": 567,
+    "sha256": "fe0c5d633ec9f9765c35c0874212f529d415681058682716f49e01fe184a132c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/cycle-1.json",
+    "bytes": 714,
+    "sha256": "e35611ee8f38df120c57fbd8575312a490c93898aa2dc4a6acbe9739bd41ed65"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/dfu-invoked-once.json",
+    "bytes": 1205,
+    "sha256": "55755205ceab09160cf909c7f40bf81c32eb6d03b157dd3c3d7ed9e9ff1c70dd"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/hardware-summary.json",
+    "bytes": 3995,
+    "sha256": "480b17f33acd294cad4afb0d99af283e4872e12587b9be72792e51678cacda2f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/post-upload-and-cycles-serial.txt",
+    "bytes": 9857,
+    "sha256": "c78a87c11de98e85c2e1da068bcfe586100f2b7c0755a138d224a784653be45b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/pre-upload-serial.txt",
+    "bytes": 8318,
+    "sha256": "55bae98cd24edc1cb348cb913f99ca1769afbfba223007637c1a7ae80d2954e1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/preflight-result.json",
+    "bytes": 11827,
+    "sha256": "284e26077f18e2b541535f2e9a898c50d73cee6fb926417ff56f99f9bce168b2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/test-result.json",
+    "bytes": 11534,
+    "sha256": "91b485570851f718077c4c205fbd01222409f0b203a337c38a78491f5628e301"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/upload-attempted.json",
+    "bytes": 211,
+    "sha256": "25fd1dcc3b14009e536a519cb2d799b1b5ebe3f4aa120a4516a5d552268b9302"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/upload-result.json",
+    "bytes": 1256,
+    "sha256": "e2542bee4c6e8e7a40a48f965ca4d14579122fbed73ffd3b62b01598f589d691"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-approved-20261103/upload.txt",
+    "bytes": 695,
+    "sha256": "5f0537906f6692f2baee6be01944dd59884110e779a840899b2b657ea160879e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-approved-one-20261103/candidate-verification.json",
+    "bytes": 1045,
+    "sha256": "82ba08091810a70a89126d882840d3d7a3b28c981d6a5d72f3ce78435b1f11a5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-approved-one-20261103/hardware-summary.json",
+    "bytes": 943,
+    "sha256": "09575af161520a424c971f37ed285c953dcd413c7e9f95f497dc91ce2c760a49"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-approved-one-20261103/pre-upload-serial.txt",
+    "bytes": 4281,
+    "sha256": "4832a9410ecd28c8c10a2750bff5a01444dd8b6855c9ae9ca4272a9e91372e9f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-approved-one-20261103/preflight-result.json",
+    "bytes": 6538,
+    "sha256": "9b7c0da11715f2ac8bc639811eb76dbe9f1cbe57ecdb81161f5ed4fe67086070"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/candidate-verification.json",
+    "bytes": 1045,
+    "sha256": "82ba08091810a70a89126d882840d3d7a3b28c981d6a5d72f3ce78435b1f11a5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/cycle-1-response.txt",
+    "bytes": 2567,
+    "sha256": "04b92686fcb456c8afff14ab43974c0d7ce807924c534b45aa4c30a9280e0519"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/cycle-command-issued.json",
+    "bytes": 87,
+    "sha256": "a732bd0fa4d28717a8ce303a3cf3f187ce162a05afbc763332c71016635be3b1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/dfu-invoked-once.json",
+    "bytes": 1038,
+    "sha256": "3b8b09b3f265d92e96cbf4a64b79b44671d266830bf4a789f8b5baca7a2d1f27"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/evidence-manifest.json",
+    "bytes": 1965,
+    "sha256": "47d1ad374a192da0fd2b28dfd5af06133408e75332cf28fbcbe9964acd456549"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/hardware-summary.json",
+    "bytes": 5981,
+    "sha256": "11e2c8a65d685e56dbc6dd39b8840a763f6c5f40019a02d8d60b31e999e57fde"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/post-upload-one-cycle-serial.txt",
+    "bytes": 11702,
+    "sha256": "c37a9e2df2b403e25f96e914c55a0d0395a30fef9e7408003efce84d286ad6e9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/pre-upload-serial.txt",
+    "bytes": 9015,
+    "sha256": "d9e84e2ad9920c8f11aee3ffb6a9d01cf4f88dc70f89e280351c78d2a289b005"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/preflight-result.json",
+    "bytes": 11184,
+    "sha256": "51faed0d3daa3427d19a9b8434ce6f26481a00728498c40029aa023efeb20de9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/test-result.json",
+    "bytes": 13051,
+    "sha256": "dd6e17147cac067450874ccadd595aa9ffe541a49f94b1e42a695486e55f5b16"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/upload-attempted.json",
+    "bytes": 197,
+    "sha256": "31990f57c0ef588b6467420ad8c2766605e745916bcc3fa502de573c6d3e56ce"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/upload-result.json",
+    "bytes": 1089,
+    "sha256": "4f30d3c3838d0d887558eb78366029228646625ed826babc450d36f13a5e8da2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-force-resumed-one-20261103/upload.txt",
+    "bytes": 741,
+    "sha256": "c953f828a08b510853d7577c6cf46e8550a88f438d3f5613a1cb04f3f0b2dd86"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-rx-diagnostic-approved-one-20261103/candidate-verification.json",
+    "bytes": 1051,
+    "sha256": "b691568e6eacdf672e2213bbc8335ffacea1796d074ba1ef09caf3cd9da57e8d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-rx-diagnostic-approved-one-20261103/evidence-manifest.json",
+    "bytes": 763,
+    "sha256": "8e8b94f4e79cf1ac1e5a59e45cfd4c521780de97a8ead181894cd6ce0054825d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-rx-diagnostic-approved-one-20261103/hardware-summary.json",
+    "bytes": 1564,
+    "sha256": "2a0e7f6003bcec5a3b7399e0fd89d6ef6af4f421bbb7679f0b276f7aa2bf62f6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-rx-diagnostic-approved-one-20261103/pre-upload-serial.txt",
+    "bytes": 4210,
+    "sha256": "5fdb7767c1765bed08cfa2b38d1c7a0c7ff06002e8b8eb59d56775aba1311793"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware-run-rx-diagnostic-approved-one-20261103/preflight-result.json",
+    "bytes": 6258,
+    "sha256": "3b1243499c260c73f3ae15e539629d3d4a7cce50ecd1dda9bd601f4e4aacd495"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/hardware_run.py",
+    "bytes": 13645,
+    "sha256": "3971acc7787dadec74bb9406428b3fab47d999510cc45464d206ff8ae77ec6f3"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/investigate_flash_readonly.py",
+    "bytes": 1833,
+    "sha256": "aa10b1f74e4bf911e041c1c4128e7521cfabc02cfeda7bf2d5e7e6ef85ae557e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/preflight-manifest.json",
+    "bytes": 4792,
+    "sha256": "92db7faef10c56ee2111eeabf63fac41260a896036dd82dfd430ac797b5d4145"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/profile-gate-finding.json",
+    "bytes": 412,
+    "sha256": "745e3c73a884470e0b037bd674468eaf2213ca90024b2694d3417bd94669f93f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recheck_diag_id.py",
+    "bytes": 1974,
+    "sha256": "6deeab6b17a86ee5aabce2cacc41448a1b5ed8d3e082fd218239f16771c4846f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/record_approved_test_outcome.py",
+    "bytes": 10848,
+    "sha256": "c3e9c4ed8bba3dd95b56f6bc31e9d6527490d7a2f9b7e63fdca0254f194d61c6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recorder-v2-lf-rerun.txt",
+    "bytes": 3788,
+    "sha256": "fa620df03f4b3ebf4df188fa433e36b8636f739f2e7f3de610e44a16dbbee98d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/SHA256SUMS.txt",
+    "bytes": 2108,
+    "sha256": "16e1335b16888a04e3533982b740e0548add7d453ab954c6e45f97ec5c4006a9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/audit_scope.py",
+    "bytes": 778,
+    "sha256": "6eb7a59f8e1dc1a8dd2949cc2ab1ddc001cf9ffec41c4968a0b36cb164ffeb2b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/baseline-report.md",
+    "bytes": 13116,
+    "sha256": "427f1dd90d92106f392e1f3f4436f36ebd69faed79c1d0d3637aa7e4b3a163f5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/build.txt",
+    "bytes": 34254,
+    "sha256": "211bb57716de136fe6a74341b42f957d104072b300d3b58e7b4e090443806674"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/collect_evidence.py",
+    "bytes": 3345,
+    "sha256": "87695447e01086975ecf2ef57673fe7faafe7d92d0a2e591a2c804e9c56d82cb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/finalize_results.py",
+    "bytes": 4890,
+    "sha256": "1b38432165d187b9c8781a0407a991bfbbae42bf895b9675370c0f534229b8a3"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/generated-outputs/logs/stock-battery-review/compiled-startup-results.json",
+    "bytes": 3023,
+    "sha256": "bfb1cd2885e72587bddbda2079fd911fa0f1df24ddfefc92a56594e13c2bddac"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/manifest.json",
+    "bytes": 7517,
+    "sha256": "45de85eb533333dcd9fb743b482d5ac8e8ce386bb193d15ddaf4f5c4e7b356d1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/negative_control.json",
+    "bytes": 160,
+    "sha256": "0961c10442660396671121a0903b7436f13413eea81546fafdfdcc593326aa7b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/negative_control.py",
+    "bytes": 1593,
+    "sha256": "e9ebe7ad88acc74efde333966780c4720b03b4feda2b9b6e8dece84317318318"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/preserve_baseline.py",
+    "bytes": 949,
+    "sha256": "aa711b999134a43ff30f90a37d626420b1d7554caed1a1883fbb894277b043d6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/recovery-gate.patch",
+    "bytes": 13798,
+    "sha256": "0a4ffaa21e61a320e9e30ef2f3b79271afc2f757808063fd0c1312c876aa8eaa"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/results.json",
+    "bytes": 1311,
+    "sha256": "1886ee776b978e61db9f451d5cadc9aca2a6f06c196168574b20f4592f8c1296"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_compact_run_tests.txt",
+    "bytes": 1076,
+    "sha256": "e6398aa65ba570822137907930d62a6206174ced09ecc9751c5f38ba096a93bb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_compact_test_decoder.txt",
+    "bytes": 117,
+    "sha256": "9eab86c9d56ff0e5d93ad2a89649cb0e34737e474454df9c985a7fcfe34e7694"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_compact_test_resources.txt",
+    "bytes": 194,
+    "sha256": "2456bdeb357315828796246191f63ab23f53ea5720cb385f39837676eb428f34"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_compact_test_timing_model.txt",
+    "bytes": 74,
+    "sha256": "9aae3803c6d3cf007578ac286a5e0c3f0d2329b6d9b7e264a708e024b2e1c6a8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_flash_identity_run_tests.txt",
+    "bytes": 536,
+    "sha256": "21a6f13231840b5ac2eba74df596be9a1cba3062b1a776864169fd5bb19da298"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_flash_write_run_tests.txt",
+    "bytes": 517,
+    "sha256": "ad139c12ea29733acbec35708b1606266af45456af0d0d7ef7ce77243b16a3dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_gps_run_tests.txt",
+    "bytes": 11728,
+    "sha256": "94f3a361acc78ee358defc686ac38cc3ea1bf05050d50489528922d71f4d4974"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_recorder_v2_run_tests.txt",
+    "bytes": 3788,
+    "sha256": "b1ae6ccc76abcf00ff28bed3b812b8f779108cc06dbb9b0a48e3964e347f7bb1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_recording_erase_review_tests.txt",
+    "bytes": 332,
+    "sha256": "ccc912fdc1a8fa51f55dfd0669b8f284b4120c23fefa87e066a9376d2040a185"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_recording_run_tests.txt",
+    "bytes": 1084,
+    "sha256": "49fb38578c771d559c11018041a9a66df9d716f0705921378d25cf8ef356ef35"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_adc_tests.txt",
+    "bytes": 233,
+    "sha256": "841692a1c24e509c2edc0c31acdb659ba2a2bdb13de6a23ef9fa6101952e30a9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_button_tests.txt",
+    "bytes": 133,
+    "sha256": "ca9dc10ddd25b14de6262225116440fcbc7206b35cbafe2e3e17260c6acd2b7a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_console_tests.txt",
+    "bytes": 112,
+    "sha256": "4f64c85aeb5f46d557d76facf7209168ea2ca262792c17296b8b402b564378c0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_download_tests.txt",
+    "bytes": 270,
+    "sha256": "66957f060cc300536b3c6a0a66bdf326d8888ea9b8e098d7bfad694e7571cd99"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_field_tests.txt",
+    "bytes": 533,
+    "sha256": "be4925a1d17b933d76d1ddad4879565ade5b92d1caa181a5afb256c1451674c9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_gps_backup_tests.txt",
+    "bytes": 559,
+    "sha256": "820618cdf3ff7d7ab72c793ed945644bd47c9515237c0992f2cdd7798c5aac1e"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_integration_tests.txt",
+    "bytes": 1855,
+    "sha256": "f78c1f39a43d42d1104ff23b96d30e200698a6982a0a3b29507f014478221005"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_policy_tests.txt",
+    "bytes": 573,
+    "sha256": "692f6628af623e1107702ad4f0570f98ab61e397c0651791d14169f72f78f2f5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_standby_tests.txt",
+    "bytes": 173,
+    "sha256": "f12b0e829ab764fd20d45ae5f435b40c9b8d875cf13f7c43ab1ea03aac96e207"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_startup_tests.txt",
+    "bytes": 382,
+    "sha256": "54760e19e35963a4ab6160151acf347a156692ac60ac6f92598a4bfeb3e65cc2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_store_tests.txt",
+    "bytes": 335,
+    "sha256": "1cb6e0239e743fa0cac46c8936d1e6c70221de370f9a0d9d31c68f5a687c27e2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_reusable_switchless_tests.txt",
+    "bytes": 884,
+    "sha256": "49f989fd87a63974e28704909056e7c946e7ccc07f40a7ec54a432b1068fa39a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_storage_benchmark_run_tests.txt",
+    "bytes": 3940,
+    "sha256": "4839ed8f1981a42513f91975497e3f265e644f182b77d5713537198ab9ade648"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_append_30s_tests.txt",
+    "bytes": 3135,
+    "sha256": "3055c96e23d44d15848ac90125c4dd54ab7331a093312798d7dd5ee10d35b5dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_console_tests.txt",
+    "bytes": 94,
+    "sha256": "b64fa5fa9718e4fc0457232c4a5a9d7578788284abf9e1ffd79f5ea1c2a0c368"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_first_write_tests.txt",
+    "bytes": 1203,
+    "sha256": "ae9adf252ec8ebac580a87cb1056fd20c4db5e38e41cb6b053c858a196d45e83"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_integration_tests.txt",
+    "bytes": 948,
+    "sha256": "9ed58c72d4d71f66d79ebf98a8e7e638356df9f8767d3d82c46cfa401184630b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_long_integration_tests.txt",
+    "bytes": 233,
+    "sha256": "49d69e58bcd112d752e4a67d193d5eaa50241a89d7d661d5db2be7979be2e1b2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_movement_120s_tests.txt",
+    "bytes": 3275,
+    "sha256": "aa201f7931fa3d7629f6bb9be9f26aac80540992283a6f7cb1b61a35b022624f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_movement_controls_tests.txt",
+    "bytes": 112,
+    "sha256": "2b9a4a0b754020e0e31d81fd10854185c39bd4c6e70ef3ba0d09da575a93a896"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_run_tests.txt",
+    "bytes": 3796,
+    "sha256": "e3185404b0ada6c1a7ad76874a2e7202f48639447f53db85bee4172846ac7214"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-logs/tests_tcb3_sustained_tests.txt",
+    "bytes": 405,
+    "sha256": "62e7a741a6b87abc134ca14c1a95ae4348fa2b696b1a09820fd6327d54b232b0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regression-summary.json",
+    "bytes": 1640,
+    "sha256": "011cce2cdccea81f04e95e667d79495bd9633bfe696a59f1f78138a20e169f7b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/regressions.txt",
+    "bytes": 2388,
+    "sha256": "6769fa3675677673721c0c32557c42f12a648d077ab42a571c25b927313ffaa3"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/tracked-content-differences.json",
+    "bytes": 136,
+    "sha256": "ba743cf99f8ad0cd0f3c16abbdbbc3a8526de3535f439a2bbbebb226ef70b3c0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/update_report.py",
+    "bytes": 13978,
+    "sha256": "a58c1e3bb917a2a17bb578c0a6faf5e826eaa3a6401de7479eb5e34d219d0f60"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/results.json",
+    "bytes": 1311,
+    "sha256": "fb55dcd7bfbe86f1250c75eb11561c3883546720b5c4b379b8cc790178132759"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_compact_run_tests.txt",
+    "bytes": 1076,
+    "sha256": "e6398aa65ba570822137907930d62a6206174ced09ecc9751c5f38ba096a93bb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_compact_test_decoder.txt",
+    "bytes": 117,
+    "sha256": "9eab86c9d56ff0e5d93ad2a89649cb0e34737e474454df9c985a7fcfe34e7694"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_compact_test_resources.txt",
+    "bytes": 194,
+    "sha256": "2456bdeb357315828796246191f63ab23f53ea5720cb385f39837676eb428f34"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_compact_test_timing_model.txt",
+    "bytes": 74,
+    "sha256": "9aae3803c6d3cf007578ac286a5e0c3f0d2329b6d9b7e264a708e024b2e1c6a8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_flash_identity_run_tests.txt",
+    "bytes": 536,
+    "sha256": "21a6f13231840b5ac2eba74df596be9a1cba3062b1a776864169fd5bb19da298"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_flash_write_run_tests.txt",
+    "bytes": 517,
+    "sha256": "ad139c12ea29733acbec35708b1606266af45456af0d0d7ef7ce77243b16a3dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_gps_run_tests.txt",
+    "bytes": 11728,
+    "sha256": "94f3a361acc78ee358defc686ac38cc3ea1bf05050d50489528922d71f4d4974"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_recorder_v2_run_tests.txt",
+    "bytes": 10660,
+    "sha256": "532271de007e4c2d36223b4fe4d22b067e3557e0bab9aca1037188f78bd108ea"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_recording_erase_review_tests.txt",
+    "bytes": 332,
+    "sha256": "ccc912fdc1a8fa51f55dfd0669b8f284b4120c23fefa87e066a9376d2040a185"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_recording_run_tests.txt",
+    "bytes": 1084,
+    "sha256": "49fb38578c771d559c11018041a9a66df9d716f0705921378d25cf8ef356ef35"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_adc_tests.txt",
+    "bytes": 233,
+    "sha256": "841692a1c24e509c2edc0c31acdb659ba2a2bdb13de6a23ef9fa6101952e30a9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_button_tests.txt",
+    "bytes": 133,
+    "sha256": "ca9dc10ddd25b14de6262225116440fcbc7206b35cbafe2e3e17260c6acd2b7a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_console_tests.txt",
+    "bytes": 112,
+    "sha256": "4f64c85aeb5f46d557d76facf7209168ea2ca262792c17296b8b402b564378c0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_download_tests.txt",
+    "bytes": 270,
+    "sha256": "66957f060cc300536b3c6a0a66bdf326d8888ea9b8e098d7bfad694e7571cd99"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_field_tests.txt",
+    "bytes": 533,
+    "sha256": "be4925a1d17b933d76d1ddad4879565ade5b92d1caa181a5afb256c1451674c9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_gps_backup_tests.txt",
+    "bytes": 3894,
+    "sha256": "9e03f72331e180146185ccb5720b077be72a5f90326c6b54c25672427e243a33"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_integration_tests.txt",
+    "bytes": 1855,
+    "sha256": "f78c1f39a43d42d1104ff23b96d30e200698a6982a0a3b29507f014478221005"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_policy_tests.txt",
+    "bytes": 573,
+    "sha256": "692f6628af623e1107702ad4f0570f98ab61e397c0651791d14169f72f78f2f5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_standby_tests.txt",
+    "bytes": 173,
+    "sha256": "f12b0e829ab764fd20d45ae5f435b40c9b8d875cf13f7c43ab1ea03aac96e207"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_startup_tests.txt",
+    "bytes": 382,
+    "sha256": "54760e19e35963a4ab6160151acf347a156692ac60ac6f92598a4bfeb3e65cc2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_store_tests.txt",
+    "bytes": 335,
+    "sha256": "1cb6e0239e743fa0cac46c8936d1e6c70221de370f9a0d9d31c68f5a687c27e2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_reusable_switchless_tests.txt",
+    "bytes": 884,
+    "sha256": "49f989fd87a63974e28704909056e7c946e7ccc07f40a7ec54a432b1068fa39a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_storage_benchmark_run_tests.txt",
+    "bytes": 3940,
+    "sha256": "34a76989076327d293d26f886700b6ae47fdb7694ebb8fe74d392fed132bac95"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_append_30s_tests.txt",
+    "bytes": 3135,
+    "sha256": "3055c96e23d44d15848ac90125c4dd54ab7331a093312798d7dd5ee10d35b5dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_console_tests.txt",
+    "bytes": 94,
+    "sha256": "b64fa5fa9718e4fc0457232c4a5a9d7578788284abf9e1ffd79f5ea1c2a0c368"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_first_write_tests.txt",
+    "bytes": 1203,
+    "sha256": "ae9adf252ec8ebac580a87cb1056fd20c4db5e38e41cb6b053c858a196d45e83"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_integration_tests.txt",
+    "bytes": 948,
+    "sha256": "9ed58c72d4d71f66d79ebf98a8e7e638356df9f8767d3d82c46cfa401184630b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_long_integration_tests.txt",
+    "bytes": 233,
+    "sha256": "49d69e58bcd112d752e4a67d193d5eaa50241a89d7d661d5db2be7979be2e1b2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_movement_120s_tests.txt",
+    "bytes": 3275,
+    "sha256": "aa201f7931fa3d7629f6bb9be9f26aac80540992283a6f7cb1b61a35b022624f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_movement_controls_tests.txt",
+    "bytes": 112,
+    "sha256": "2b9a4a0b754020e0e31d81fd10854185c39bd4c6e70ef3ba0d09da575a93a896"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_run_tests.txt",
+    "bytes": 3796,
+    "sha256": "368d690eb7a6d71a98a1efec3fb762407901aaa09d5bee03712d9e89b26ee2a0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-logs/tests_tcb3_sustained_tests.txt",
+    "bytes": 405,
+    "sha256": "62e7a741a6b87abc134ca14c1a95ae4348fa2b696b1a09820fd6327d54b232b0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regression-summary.json",
+    "bytes": 1916,
+    "sha256": "aaf10c555412293a4f7d97fdb89b1116abb35614af0c0b7a453ac378e26e8523"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/regressions.txt",
+    "bytes": 2388,
+    "sha256": "411fab19218b56c13633730a8962db218baaedfe68bdd3041cccafb5a9a96941"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/resume_approved_force_one_cycle.py",
+    "bytes": 9705,
+    "sha256": "92aba5d720d30745e6d56f479283ffda34a964301bdfec12e5e16277983fe256"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/run_gps_backup_arm.py",
+    "bytes": 777,
+    "sha256": "518bd7bcde1f6542b31bcb59c2fcfcded409ea910e15efddf06c7cc8e29187e8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/SHA256SUMS.txt",
+    "bytes": 4496,
+    "sha256": "bd8d9e3d49bf679dd48275fa0ec129d1de4c1b2554c1e78d4b292122db5121f2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/logs/stock-battery-review/compiled-startup-results.json",
+    "bytes": 2835,
+    "sha256": "1cb5354ad1b3e95414142c05d287ba5f712b48f19d8229cc0f97b1996e8ac758"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/platformio.ini",
+    "bytes": 2262,
+    "sha256": "f1a68468d21f7b614db7d9618be8cbbdfa1a31a98a6146cd5e1505dee00462fe"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/src/gps_backup_trace.h",
+    "bytes": 1882,
+    "sha256": "41d80db430f54bcd8f68a3b5764bea76573a0ee9371c278718211a52c15c9849"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/src/gps_power.h",
+    "bytes": 8888,
+    "sha256": "0a5f0df5ba9116aebcaf7129ed7daaeddf145db760ee5721607ce0e8780e1f03"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/src/gps_receiver.cpp",
+    "bytes": 36790,
+    "sha256": "16004361d633e7f59968c1c1fa12ab8e10fe5861bfd5a8ff61b52737737216fe"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/tests/flash_write/Arduino.h",
+    "bytes": 7316,
+    "sha256": "58e727ab5437146a0e54a2d00df92e2c5d9b0c3bc7124691b11c2bae4b4daadd"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/tests/reusable/gps_backup_integration.cpp",
+    "bytes": 6799,
+    "sha256": "33f1e3a221fb054124eef57f1d326b05fd6b98aecf7919fd26e0d6c2a32d4679"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/tests/reusable/gps_backup_test.cpp",
+    "bytes": 10664,
+    "sha256": "b638c7bdbb0f616b646382e67050f0836312ad037ba40d3b83318af5400a44cb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/before/tests/reusable/gps_backup_tests.py",
+    "bytes": 6285,
+    "sha256": "013610ce9477d6644fe58fd11b6127528b0aa0e862d524be81067ace12c83745"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/collect_candidate.py",
+    "bytes": 2932,
+    "sha256": "c6e80e0c05dbdfbcce5ffbe4e869f6f53ef354313b2663f6d6f474ae17d6e794"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/finalize.py",
+    "bytes": 3417,
+    "sha256": "aa220e1ac83a858848f0b237aa0a8cdbae8b4cdfa56543ac1093095cd5c3a29c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/generated-after/logs/stock-battery-review/compiled-startup-results.json",
+    "bytes": 3023,
+    "sha256": "bfb1cd2885e72587bddbda2079fd911fa0f1df24ddfefc92a56594e13c2bddac"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/manifest.json",
+    "bytes": 27075,
+    "sha256": "8b3de953cafd4c36d2a9c9c5f05fc84ff0090416a84dff7aa5b1f3fedc4fffa6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/negative-force.json",
+    "bytes": 155,
+    "sha256": "fab509a81152949ded6b45ed3501c116914525411cc12934b23ff166d0e75a00"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/negative-tx-guard.json",
+    "bytes": 132,
+    "sha256": "536763a31dbeaecef96cee65b1ea0d122d916816cdb285de4c17e40c2420fc0c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/negative_control.json",
+    "bytes": 160,
+    "sha256": "0961c10442660396671121a0903b7436f13413eea81546fafdfdcc593326aa7b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/negative_control.py",
+    "bytes": 1624,
+    "sha256": "9353f3d9b240330e86746f4f816e446eb21b9e3ff00bd14205775c3f7858c82a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/negative_force.py",
+    "bytes": 945,
+    "sha256": "3f30be31529b386225f6be20cbe4f710deb516ff8043331a9c6d9d40482fa26d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/results.json",
+    "bytes": 1311,
+    "sha256": "1886ee776b978e61db9f451d5cadc9aca2a6f06c196168574b20f4592f8c1296"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_compact_run_tests.txt",
+    "bytes": 1076,
+    "sha256": "e6398aa65ba570822137907930d62a6206174ced09ecc9751c5f38ba096a93bb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_compact_test_decoder.txt",
+    "bytes": 117,
+    "sha256": "1ed53281e1d3c667a9429a4b3d4146bf1497f748bc12807c3b53500729a29ea9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_compact_test_resources.txt",
+    "bytes": 194,
+    "sha256": "2456bdeb357315828796246191f63ab23f53ea5720cb385f39837676eb428f34"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_compact_test_timing_model.txt",
+    "bytes": 74,
+    "sha256": "9aae3803c6d3cf007578ac286a5e0c3f0d2329b6d9b7e264a708e024b2e1c6a8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_flash_identity_run_tests.txt",
+    "bytes": 536,
+    "sha256": "21a6f13231840b5ac2eba74df596be9a1cba3062b1a776864169fd5bb19da298"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_flash_write_run_tests.txt",
+    "bytes": 517,
+    "sha256": "ad139c12ea29733acbec35708b1606266af45456af0d0d7ef7ce77243b16a3dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_gps_run_tests.txt",
+    "bytes": 11728,
+    "sha256": "94f3a361acc78ee358defc686ac38cc3ea1bf05050d50489528922d71f4d4974"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_recorder_v2_run_tests.txt",
+    "bytes": 3788,
+    "sha256": "294e7ba626e2377217359b257a0f203ddd3d359d2b919f8a857c9fb0cc280a11"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_recording_erase_review_tests.txt",
+    "bytes": 332,
+    "sha256": "ccc912fdc1a8fa51f55dfd0669b8f284b4120c23fefa87e066a9376d2040a185"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_recording_run_tests.txt",
+    "bytes": 1084,
+    "sha256": "49fb38578c771d559c11018041a9a66df9d716f0705921378d25cf8ef356ef35"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_adc_tests.txt",
+    "bytes": 233,
+    "sha256": "841692a1c24e509c2edc0c31acdb659ba2a2bdb13de6a23ef9fa6101952e30a9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_button_tests.txt",
+    "bytes": 133,
+    "sha256": "ca9dc10ddd25b14de6262225116440fcbc7206b35cbafe2e3e17260c6acd2b7a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_console_tests.txt",
+    "bytes": 112,
+    "sha256": "4f64c85aeb5f46d557d76facf7209168ea2ca262792c17296b8b402b564378c0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_download_tests.txt",
+    "bytes": 270,
+    "sha256": "66957f060cc300536b3c6a0a66bdf326d8888ea9b8e098d7bfad694e7571cd99"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_field_tests.txt",
+    "bytes": 533,
+    "sha256": "be4925a1d17b933d76d1ddad4879565ade5b92d1caa181a5afb256c1451674c9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_gps_backup_tests.txt",
+    "bytes": 1411,
+    "sha256": "7d4b1fb30703b91db9ac0211c82bfab57c47d12adecb18923aa0b3a5af3924e3"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_integration_tests.txt",
+    "bytes": 1855,
+    "sha256": "f78c1f39a43d42d1104ff23b96d30e200698a6982a0a3b29507f014478221005"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_policy_tests.txt",
+    "bytes": 573,
+    "sha256": "692f6628af623e1107702ad4f0570f98ab61e397c0651791d14169f72f78f2f5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_standby_tests.txt",
+    "bytes": 173,
+    "sha256": "f12b0e829ab764fd20d45ae5f435b40c9b8d875cf13f7c43ab1ea03aac96e207"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_startup_tests.txt",
+    "bytes": 382,
+    "sha256": "54760e19e35963a4ab6160151acf347a156692ac60ac6f92598a4bfeb3e65cc2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_store_tests.txt",
+    "bytes": 335,
+    "sha256": "1cb6e0239e743fa0cac46c8936d1e6c70221de370f9a0d9d31c68f5a687c27e2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_reusable_switchless_tests.txt",
+    "bytes": 884,
+    "sha256": "49f989fd87a63974e28704909056e7c946e7ccc07f40a7ec54a432b1068fa39a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_storage_benchmark_run_tests.txt",
+    "bytes": 3940,
+    "sha256": "f87995a8d3a070180ee3b61f0bb5e8de3512f76b7e0d753c3232367c2489ef15"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_append_30s_tests.txt",
+    "bytes": 3135,
+    "sha256": "3055c96e23d44d15848ac90125c4dd54ab7331a093312798d7dd5ee10d35b5dc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_console_tests.txt",
+    "bytes": 94,
+    "sha256": "b64fa5fa9718e4fc0457232c4a5a9d7578788284abf9e1ffd79f5ea1c2a0c368"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_first_write_tests.txt",
+    "bytes": 1203,
+    "sha256": "ae9adf252ec8ebac580a87cb1056fd20c4db5e38e41cb6b053c858a196d45e83"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_integration_tests.txt",
+    "bytes": 948,
+    "sha256": "9ed58c72d4d71f66d79ebf98a8e7e638356df9f8767d3d82c46cfa401184630b"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_long_integration_tests.txt",
+    "bytes": 233,
+    "sha256": "49d69e58bcd112d752e4a67d193d5eaa50241a89d7d661d5db2be7979be2e1b2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_movement_120s_tests.txt",
+    "bytes": 3275,
+    "sha256": "aa201f7931fa3d7629f6bb9be9f26aac80540992283a6f7cb1b61a35b022624f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_movement_controls_tests.txt",
+    "bytes": 112,
+    "sha256": "2b9a4a0b754020e0e31d81fd10854185c39bd4c6e70ef3ba0d09da575a93a896"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_run_tests.txt",
+    "bytes": 3796,
+    "sha256": "7b7fff42e835e6e9c6fefe7f560e91ef7cc4fda8f7b6fef2a0e8e73dd51e599d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-logs/tests_tcb3_sustained_tests.txt",
+    "bytes": 405,
+    "sha256": "62e7a741a6b87abc134ca14c1a95ae4348fa2b696b1a09820fd6327d54b232b0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regression-summary.json",
+    "bytes": 1780,
+    "sha256": "71b89a6dd75ce8fb0fc93e30729a6debad9e6c45fc142dbb181491f160d3fe1d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/platformio.ini",
+    "bytes": 2565,
+    "sha256": "d72dca9837bf5a31c3a472555c6d2aa6c40fc656681522a900b05ecd2a5f3efb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/src/gps_backup_trace.h",
+    "bytes": 2142,
+    "sha256": "0f239d5183b39fd14cda1c96f3e0c056bb3a3fa52604516ac605de6dbe121aed"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/src/gps_backup_uart_diag.cpp",
+    "bytes": 2254,
+    "sha256": "f497b90f2b84adc9832635a854973280c18451da00bc6fd6503c27debe65d66c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/src/gps_backup_uart_diag.h",
+    "bytes": 562,
+    "sha256": "f8bd2467d57b246aca0db06fc72d0e1f66fbba6d84c212f1e2c7d1995115d445"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/src/gps_power.h",
+    "bytes": 9555,
+    "sha256": "17e716e5044fd830a1259cb0dba4de91d262f5135cf25c668b751082f694a964"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/src/gps_receiver.cpp",
+    "bytes": 39294,
+    "sha256": "fc5886727a2ab56e1a792a5d7cf48ad4e917f9ba47ed352033e3d5d9c8489aca"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/tests/flash_write/Arduino.h",
+    "bytes": 7776,
+    "sha256": "b8cf345b2bb4f9259e96cf57efc8b37ac48b06daa278ec325afc53d2545dd52d"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/tests/reusable/gps_backup_integration.cpp",
+    "bytes": 9291,
+    "sha256": "2ee2ed4c7b45483971fba29ce8600b6ecb13fb3e5c760d6b1d2790a34df4f0fc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/tests/reusable/gps_backup_test.cpp",
+    "bytes": 11780,
+    "sha256": "f64f198b6744d640fef252b557460a7a165eb60e5345f8aa618b98a5da255d2a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/source/tests/reusable/gps_backup_tests.py",
+    "bytes": 8128,
+    "sha256": "a208453d82ed6f637f2bde94ea27d3540445f1a16466875a82ffb6b4f9117a88"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/tracked-content-differences.json",
+    "bytes": 262,
+    "sha256": "f23d560e9f7baed85602f36ca20cd9e32f268ca7f36ffb847a73e9fcb331c38c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/source-integrity.json",
+    "bytes": 1450,
+    "sha256": "facdee71172410c5f61d54e1450ebf21a14199f829d576b224b0ce3a5dbc2cd0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/hardware-gps-backup-2026-11-03/test_host_flash_preflight.py",
+    "bytes": 2444,
+    "sha256": "7579f11793a9b2bdb5ad915efff4f2f8c1d01434fde208e0291b40e64aa295a6"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-attempt/build-short-path.txt",
+    "bytes": 19284,
+    "sha256": "7714dd1145b3f72092ba7a0d7706a2981fff710a6fd796a8d5a476bebf9b843c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-attempt/regressions.txt",
+    "bytes": 2388,
+    "sha256": "843486c66cceb6d670ccf352b0b07f042fee9ff51852f2a0a199a0333f981b09"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/results.json",
+    "bytes": 1311,
+    "sha256": "881159d0284c4b67caf9ad30a13e9935158ece78f46de85018b810872454dbfd"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_compact_run_tests.txt",
+    "bytes": 2237,
+    "sha256": "a3d4051d8e273771fa4eb15ca1f4e44cc485a51d434b755a6f9717fd65094c87"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_compact_test_decoder.txt",
+    "bytes": 117,
+    "sha256": "2bf501978c5586f2fb671e3fe7ba73519b02928149c7fc3461ed6f5e36927c56"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_compact_test_resources.txt",
+    "bytes": 2429,
+    "sha256": "8bdf46c05aae1e9f6058cac4a8aeb72d83e6cb5924807b108e66d1449d9e5de5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_compact_test_timing_model.txt",
+    "bytes": 2432,
+    "sha256": "78ec0bf240f6a9f16b2e67edbb90d249ddcfeb4fe093910e1eaba12cd08c02f1"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_flash_identity_run_tests.txt",
+    "bytes": 2810,
+    "sha256": "3cfb3cac0b268fae592b233cca281a48c2e7524682bc4e663634ae652b0333cb"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_flash_write_run_tests.txt",
+    "bytes": 2119,
+    "sha256": "91adb609c49c3d0e0aedd9abca9372695839eb14b7c046ebb3c300c9a3ea8344"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_gps_run_tests.txt",
+    "bytes": 3586,
+    "sha256": "46fac92b3ced2cbb5d5b99102955a329aee1b47682c36067cdb2314ed7eda9f7"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_recorder_v2_run_tests.txt",
+    "bytes": 10900,
+    "sha256": "8b44497bc093a9dfc0fe7e8c3773699b7a60bdc870a24dc17fa3c8ee69b6caf2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_recording_erase_review_tests.txt",
+    "bytes": 2968,
+    "sha256": "3223166dc09979376c71fb8d896762eef7f56116012e4148504c3ed79d631c95"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_recording_run_tests.txt",
+    "bytes": 2239,
+    "sha256": "e15c76e7cbfdd68c4264053b790197041452e4a23e791121efd2ce5502717705"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_adc_tests.txt",
+    "bytes": 233,
+    "sha256": "841692a1c24e509c2edc0c31acdb659ba2a2bdb13de6a23ef9fa6101952e30a9"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_button_tests.txt",
+    "bytes": 133,
+    "sha256": "ca9dc10ddd25b14de6262225116440fcbc7206b35cbafe2e3e17260c6acd2b7a"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_console_tests.txt",
+    "bytes": 3105,
+    "sha256": "ef74fc355b1e2839fa49a3210ecfaf19108a2040ace58572f19bcbe2bda16244"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_download_tests.txt",
+    "bytes": 887,
+    "sha256": "44d43391dc8a6ea0743f254be87d2dfdaac3bbf4233ea8ee50372b8f8ffb6313"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_field_tests.txt",
+    "bytes": 4503,
+    "sha256": "8579e546acd261439ca4d3ea2b018b13a25e3ae13329c3ca005a27c784b54630"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_gps_backup_tests.txt",
+    "bytes": 4287,
+    "sha256": "7016a2c1b1c968d31282491fd6dbd150fc8cb496e6f1bf2ca0a40ebe61dceeb8"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_integration_tests.txt",
+    "bytes": 4339,
+    "sha256": "0f6abd3409513ae231d63723cf6e250f0090dea271d56e79852b37fe83c23ad0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_policy_tests.txt",
+    "bytes": 573,
+    "sha256": "692f6628af623e1107702ad4f0570f98ab61e397c0651791d14169f72f78f2f5"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_standby_tests.txt",
+    "bytes": 476,
+    "sha256": "5238e268ff47d3e26331721df0f03d041ce1d54c696a6f096b3708f60d913921"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_startup_tests.txt",
+    "bytes": 430,
+    "sha256": "8a660cb4cb733c9e90b2d307a961a56684ac3110bc8a13d99994bca15460af21"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_store_tests.txt",
+    "bytes": 335,
+    "sha256": "1cb6e0239e743fa0cac46c8936d1e6c70221de370f9a0d9d31c68f5a687c27e2"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_reusable_switchless_tests.txt",
+    "bytes": 4486,
+    "sha256": "941b3f2f0f4af92dc8a5a3b184e486f8414b4b049639dc3afd8a4510af174d38"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_storage_benchmark_run_tests.txt",
+    "bytes": 3940,
+    "sha256": "8b0bbb4688a6de5199f8ed439a5ad59fbf718c3c63de1375728e6951d43404ce"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_append_30s_tests.txt",
+    "bytes": 4298,
+    "sha256": "7b2151324ea3dcfb3fae8f8d6bfe64db48a1475c188d442ee1d9078a5320a252"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_console_tests.txt",
+    "bytes": 2920,
+    "sha256": "099f595b582f3a14d1d8db6ec49a1c957815f60a413cf87d7cd1030120c7defc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_first_write_tests.txt",
+    "bytes": 4306,
+    "sha256": "01ddf6b22dccfd86d94ded2444acc9a1907226013baf7c1939803ef2d0bdbbdc"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_integration_tests.txt",
+    "bytes": 4155,
+    "sha256": "aeb503a9faaef740289f5d4b49e819567fc504f0b1110eb12f3032e0ca017e7f"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_long_integration_tests.txt",
+    "bytes": 4310,
+    "sha256": "956ba335ced920d7c8f45ae599f5160843322c07ba5e9770fa506b9e171edb58"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_movement_120s_tests.txt",
+    "bytes": 4322,
+    "sha256": "3db8b46bedc87b54b1ed925f4927bac32534798ca72ba97bb4fd823f1b6f5cda"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_movement_controls_tests.txt",
+    "bytes": 3072,
+    "sha256": "f4ef8f15b751e114e1ddb80f67e33569741ed268ea34dacc351633a01f810e25"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_run_tests.txt",
+    "bytes": 3796,
+    "sha256": "70acb868cf2b8e0e2789f1e22483fccc3b00d07c0aea22d108b390c58ebbf428"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "logs/initial-long-path-regressions/tests_tcb3_sustained_tests.txt",
+    "bytes": 405,
+    "sha256": "62e7a741a6b87abc134ca14c1a95ae4348fa2b696b1a09820fd6327d54b232b0"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "src/gps_backup_trace.h",
+    "bytes": 2142,
+    "sha256": "0f239d5183b39fd14cda1c96f3e0c056bb3a3fa52604516ac605de6dbe121aed"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "src/gps_backup_uart_diag.cpp",
+    "bytes": 2254,
+    "sha256": "f497b90f2b84adc9832635a854973280c18451da00bc6fd6503c27debe65d66c"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "src/gps_backup_uart_diag.h",
+    "bytes": 562,
+    "sha256": "f8bd2467d57b246aca0db06fc72d0e1f66fbba6d84c212f1e2c7d1995115d445"
+  },
+  {
+    "source_scope": ".p6",
+    "path": "tests/reusable/gps_backup_integration.cpp",
+    "bytes": 9291,
+    "sha256": "2ee2ed4c7b45483971fba29ce8600b6ecb13fb3e5c760d6b1d2790a34df4f0fc"
+  },
+  {
+    "source_scope": ".worktrees/pr6-gpsbackup-20261103",
+    "source_path": "logs/hardware-gps-backup-2026-11-03/build-short-path.txt",
+    "path": "logs/shutdown-20261103/initial-long-path/build-short-path.txt",
+    "bytes": 19284,
+    "sha256": "7714dd1145b3f72092ba7a0d7706a2981fff710a6fd796a8d5a476bebf9b843c"
+  },
+  {
+    "source_scope": ".worktrees/pr6-gpsbackup-20261103",
+    "source_path": "logs/hardware-gps-backup-2026-11-03/build.txt",
+    "path": "logs/shutdown-20261103/initial-long-path/build.txt",
+    "bytes": 28138,
+    "sha256": "2a712fcd37798d6da084fb62629b80ac55c7115076387c458b87884d44334416"
+  },
+  {
+    "source_scope": ".worktrees/pr6-gpsbackup-20261103",
+    "source_path": "logs/hardware-gps-backup-2026-11-03/regressions.txt",
+    "path": "logs/shutdown-20261103/initial-long-path/regressions.txt",
+    "bytes": 2388,
+    "sha256": "843486c66cceb6d670ccf352b0b07f042fee9ff51852f2a0a199a0333f981b09"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/compiled-startup.txt",
+    "bytes": 636,
+    "sha256": "b99abcdc90874193b5aabd6313b776e67ebd8a5fcca14eb2ef6fb84e645bb8d0",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/build-final.txt",
+    "bytes": 16172,
+    "sha256": "34332ef60d89752079f68a5ba0cbfcbba7048832ee1f70eefd136fd299fdaf13",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/build.txt",
+    "bytes": 119002,
+    "sha256": "5b72f327af21d7b425b3a37ee8f84a2ce1880da7d696e47ef490b6a1f7ed6010",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/compiled-startup.txt",
+    "bytes": 636,
+    "sha256": "b99abcdc90874193b5aabd6313b776e67ebd8a5fcca14eb2ef6fb84e645bb8d0",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/focused-tests.txt",
+    "bytes": 1592,
+    "sha256": "0a52acfdf71533066c2f5e87a1c5ccbf5704cda9857e186b93bc0aaad564026c",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/force-backup-fix/regressions.txt",
+    "bytes": 4778,
+    "sha256": "2719e7dd2c08ff0a50c3563b120d06e1b11eebb38febb070f643e590add298f6",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/recovery-gate-fix/compiled-startup.txt",
+    "bytes": 636,
+    "sha256": "b99abcdc90874193b5aabd6313b776e67ebd8a5fcca14eb2ef6fb84e645bb8d0",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/build-alias.txt",
+    "bytes": 64736,
+    "sha256": "2fa3fe9dd9ac8fe1505de266b7e00b7bec78bbbe457730137e0ce5ea2ba5dcc7",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/build-all-final.txt",
+    "bytes": 24812,
+    "sha256": "d95259ea841793e9f38c56e430f673fed754cb5685cb88ac2cd5c53c81809949",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/build-final.txt",
+    "bytes": 63082,
+    "sha256": "b1c22b7f892ba492587564161fc33ae13d5e0db20eb554ea0f4ca84b64984663",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/build-tcb.txt",
+    "bytes": 72440,
+    "sha256": "9604f75c015ee235ee0797f8e8d8deec6a3652e5db8349594600691a4009924c",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/build.txt",
+    "bytes": 119666,
+    "sha256": "c5e7a58c7cfeb33392430ffe6b54fe59fae18673bb125f2d0acb00316384c77f",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/compiled-startup.txt",
+    "bytes": 636,
+    "sha256": "b99abcdc90874193b5aabd6313b776e67ebd8a5fcca14eb2ef6fb84e645bb8d0",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/focused-final.txt",
+    "bytes": 2824,
+    "sha256": "0a5b2341b3f488806596215a714dc2463fa1cf9f5d451723616e88291dada005",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/focused.txt",
+    "bytes": 3810,
+    "sha256": "970e38ff76b1f386b6c39778fde51ccc75b956f0217a62a7e9bbeb9df9dd10ed",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/hardware-gps-backup-2026-11-03/rx-event-diagnostic/regressions.txt",
+    "bytes": 4778,
+    "sha256": "2719e7dd2c08ff0a50c3563b120d06e1b11eebb38febb070f643e590add298f6",
+    "source_scope": ".p6"
+  },
+  {
+    "path": "logs/initial-long-path-attempt/build.txt",
+    "bytes": 28138,
+    "sha256": "2a712fcd37798d6da084fb62629b80ac55c7115076387c458b87884d44334416",
+    "source_scope": ".p6"
+  }
+]

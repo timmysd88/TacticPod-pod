@@ -1,0 +1,2 @@
+Pinned ARM GCC + Unicorn fallback (host g++ unavailable)
+PASS: button debouncing/start/stop sequence and nonblocking LED schedules

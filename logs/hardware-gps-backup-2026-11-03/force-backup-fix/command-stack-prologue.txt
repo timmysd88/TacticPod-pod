@@ -1,0 +1,16 @@
+
+C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\.p6\.pio\build\tacticpod_reusable_usb_gpsbackup\firmware.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+0003a7ac <_ZN11GpsReceiver13handleCommandEPKc>:
+   3a7ac:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+   3a7b0:	49b3      	ldr	r1, [pc, #716]	; (3aa80 <_ZN11GpsReceiver13handleCommandEPKc+0x2d4>)
+   3a7b2:	b0ba      	sub	sp, #232	; 0xe8
+   3a7b4:	4604      	mov	r4, r0
+   3a7b6:	f016 fd22 	bl	511fe <strcmp>
+   3a7ba:	2800      	cmp	r0, #0
+   3a7bc:	f000 8116 	beq.w	3a9ec <_ZN11GpsReceiver13handleCommandEPKc+0x240>
+   3a7c0:	4bb0      	ldr	r3, [pc, #704]	; (3aa84 <_ZN11GpsReceiver13handleCommandEPKc+0x2d8>)
+   3a7c2:	781b      	ldrb	r3, [r3, #0]

@@ -1,0 +1,3 @@
+PASS: split raw reads, exact bytes/hash, only existing read-only command
+PASS: bad CRC, interruption and unexpected text preserve partial data; no retry
+PASS: offline append preservation, counts, CRCs, timestamps; invalid duration/missing session/corruption rejected

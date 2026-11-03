@@ -1,0 +1,24 @@
+{
+  "outcome": "STOPPED BEFORE UPLOAD",
+  "approved_binary_sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434",
+  "approved_size": 209536,
+  "candidate_verification": "PASS",
+  "device": {
+    "port": "COM8",
+    "vid": 10374,
+    "pid": 32836,
+    "serial": "0E8A89B7289430BD",
+    "description": "USB Serial Device (COM8)",
+    "hwid": "USB VID:PID=2886:8044 SER=0E8A89B7289430BD LOCATION=1-8:x.0",
+    "known_board": "Previously verified XIAO nRF52840 Sense; unique USB serial matches prior approved upload"
+  },
+  "recording_exports_captures": "inactive",
+  "gps_communication": "FAIL: no current NMEA; unverified profile; UART data stopped",
+  "external_flash_check": "NOT RUN: stopped on GPS failure",
+  "external_spi_erase_intended": false,
+  "upload_attempted": false,
+  "gps_backup_test_cycles": 0,
+  "firmware_modified": false,
+  "reset_command_sent": false,
+  "serial_closed": true
+}

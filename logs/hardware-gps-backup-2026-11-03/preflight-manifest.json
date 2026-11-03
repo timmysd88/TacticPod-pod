@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "hardware-test-preflight",
+  "release_version": null,
+  "pilot_ready": false,
+  "installation_authorized": false,
+  "repository": "timmysd88/TacticPod-pod",
+  "pr_number": 6,
+  "pr_state_at_sync": "open",
+  "source_commit": "29f90966d868f68b85d63d64d27bab9584f7628a",
+  "branch": "test/pr6-gpsbackup-short-20261103",
+  "environment": "tacticpod_reusable_usb_gpsbackup",
+  "platformio_core": "6.2.0",
+  "seeed_platform_commit": "a6fd41debbbcda13b5340fff50c9092ed3289194",
+  "library_commits": {
+    "LSM6DS3": "e063c3a544b8bb89238accddf24f0028bcd1ca20",
+    "TinyGPSPlus": "ca29434514a5c5172bd807af0608df7f296582a2"
+  },
+  "build_flags": [
+    "-DTARGET_SEEED_XIAO_NRF52840_SENSE",
+    "-DTACTICPOD_TCB3_FLASH_ENABLED=1",
+    "-DTACTICPOD_REUSABLE=1",
+    "-DTACTICPOD_GPS_BACKUP_TEST=1"
+  ],
+  "automatic_gps_backup": false,
+  "usb_monitor_baud": 115200,
+  "gps_uart_baud": 38400,
+  "enumerated_device": {
+    "port": "COM8",
+    "vid": "2886",
+    "pid": "8044",
+    "serial": "0E8A89B7289430BD"
+  },
+  "bootloader_currently_verified": false,
+  "historical_bootloader": "UF2 0.6.1; S140 7.3.0 (2026-11-02 capture)",
+  "upload": {
+    "method": "Adafruit nrfutil serial DFU",
+    "application_only": true,
+    "baud": 115200,
+    "singlebank": true,
+    "package": ".pio/build/tacticpod_reusable_usb_gpsbackup/firmware.zip"
+  },
+  "source_blocker": "Circular profile gate prevents GPS BACKUP TEST from passing",
+  "hardware_cycles": [],
+  "artifacts": [
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\baseline-artifacts\\tacticpod_reusable_usb_gpsbackup\\firmware.zip",
+      "bytes": 208340,
+      "sha256": "d65ba9325d5b7a63f562929ec35f054345afd20c4117e26ff8cfd97f8614046f"
+    },
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\baseline-artifacts\\tacticpod_reusable_usb_gpsbackup\\firmware.hex",
+      "bytes": 583778,
+      "sha256": "60447b5779ff6542ff7f6058692b9783cc4fd3fd85271841b0bebac3967afb1f"
+    },
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\baseline-artifacts\\tacticpod_reusable_usb_gpsbackup\\firmware.elf",
+      "bytes": 370760,
+      "sha256": "6fc55d8415c917f193ebb9a08c9aeac309749e42f37001700a4f1b28592d2dda"
+    },
+    {
+      "path": "logs\\hardware-gps-backup-2026-11-03\\gps-backup-test-application.bin",
+      "bytes": 207520,
+      "sha256": "6ff93d183794191f90506208b73eb57aaf3885fb89d9beee120e608b9cbef28c"
+    }
+  ],
+  "regression_adjustments": {
+    "fixture_rerun": "Exact committed LF bytes; recorder-v2 rerun passed all 32 test cases",
+    "gps_backup_unit_rerun": "Unchanged suite passed under ARM emulator with test-only --specs=nosys.specs syscall stubs"
+  },
+  "regression_results": {
+    "raw_runner_exit_code": 1,
+    "raw_runner_passed": 30,
+    "suites": 32,
+    "raw_results": {
+      "tests/gps/run_tests.py": 0,
+      "tests/recording/run_tests.py": 0,
+      "tests/flash_write/run_tests.py": 0,
+      "tests/recorder_v2/run_tests.py": 1,
+      "tests/storage_benchmark/run_tests.py": 0,
+      "tests/compact/run_tests.py": 0,
+      "tests/compact/test_decoder.py": 0,
+      "tests/compact/test_timing_model.py": 0,
+      "tests/compact/test_resources.py": 0,
+      "tests/tcb3/run_tests.py": 0,
+      "tests/tcb3/integration_tests.py": 0,
+      "tests/tcb3/console_tests.py": 0,
+      "tests/flash_identity/run_tests.py": 0,
+      "tests/tcb3/sustained_tests.py": 0,
+      "tests/tcb3/long_integration_tests.py": 0,
+      "tests/recording/erase_review_tests.py": 0,
+      "tests/tcb3/first_write_tests.py": 0,
+      "tests/tcb3/append_30s_tests.py": 0,
+      "tests/tcb3/movement_120s_tests.py": 0,
+      "tests/tcb3/movement_controls_tests.py": 0,
+      "tests/reusable/policy_tests.py": 0,
+      "tests/reusable/store_tests.py": 0,
+      "tests/reusable/adc_tests.py": 0,
+      "tests/reusable/console_tests.py": 0,
+      "tests/reusable/integration_tests.py": 0,
+      "tests/reusable/startup_tests.py": 0,
+      "tests/reusable/switchless_tests.py": 0,
+      "tests/reusable/download_tests.py": 0,
+      "tests/reusable/button_tests.py": 0,
+      "tests/reusable/standby_tests.py": 0,
+      "tests/reusable/gps_backup_tests.py": 1,
+      "tests/reusable/field_tests.py": 0
+    },
+    "qualified_rerun_passed": 2,
+    "covered_suites_with_passing_evidence": 32,
+    "all_passed_without_adjustments": false,
+    "linked_startup": "PASS",
+    "source_integration": "FAIL",
+    "hardware": "NOT_RUN",
+    "pilot_ready": false,
+    "reruns": {
+      "tests/recorder_v2/run_tests.py": "recorder-v2-lf-rerun.txt (exact LF fixtures)",
+      "tests/reusable/gps_backup_tests.py": "gps-backup-nosys.txt (test-only no-OS linker stubs)"
+    }
+  }
+}

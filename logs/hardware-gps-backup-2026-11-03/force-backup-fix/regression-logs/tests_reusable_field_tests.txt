@@ -1,0 +1,8 @@
+PASS: main-loop delayed footer then exactly one green stop event; held/bounced button; idle off
+PASS: failed finalisation never confirms green
+PASS: receiver RAM reset during standby recovered before one button session
+PASS: awake profile loss uses ACK and actual readback recovery
+PASS: GPS recovery commit rejection prevents capture after rollback
+PASS: missing receiver prevents capture and reports failure
+PASS: button held through boot never starts
+PASS: bounded field trace accounts for overwrites and USB backpressure

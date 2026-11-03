@@ -1,0 +1,67 @@
+[
+  {
+    "path": "candidate-verification.json",
+    "bytes": 1045,
+    "sha256": "82ba08091810a70a89126d882840d3d7a3b28c981d6a5d72f3ce78435b1f11a5"
+  },
+  {
+    "path": "cycle-1-response.txt",
+    "bytes": 2567,
+    "sha256": "04b92686fcb456c8afff14ab43974c0d7ce807924c534b45aa4c30a9280e0519"
+  },
+  {
+    "path": "cycle-command-issued.json",
+    "bytes": 87,
+    "sha256": "a732bd0fa4d28717a8ce303a3cf3f187ce162a05afbc763332c71016635be3b1"
+  },
+  {
+    "path": "dfu-invoked-once.json",
+    "bytes": 1038,
+    "sha256": "3b8b09b3f265d92e96cbf4a64b79b44671d266830bf4a789f8b5baca7a2d1f27"
+  },
+  {
+    "path": "hardware-summary.json",
+    "bytes": 5981,
+    "sha256": "11e2c8a65d685e56dbc6dd39b8840a763f6c5f40019a02d8d60b31e999e57fde"
+  },
+  {
+    "path": "post-upload-one-cycle-serial.txt",
+    "bytes": 11702,
+    "sha256": "c37a9e2df2b403e25f96e914c55a0d0395a30fef9e7408003efce84d286ad6e9"
+  },
+  {
+    "path": "pre-upload-serial.txt",
+    "bytes": 9015,
+    "sha256": "d9e84e2ad9920c8f11aee3ffb6a9d01cf4f88dc70f89e280351c78d2a289b005"
+  },
+  {
+    "path": "preflight-result.json",
+    "bytes": 11184,
+    "sha256": "51faed0d3daa3427d19a9b8434ce6f26481a00728498c40029aa023efeb20de9"
+  },
+  {
+    "path": "test-result.json",
+    "bytes": 13051,
+    "sha256": "dd6e17147cac067450874ccadd595aa9ffe541a49f94b1e42a695486e55f5b16"
+  },
+  {
+    "path": "upload-attempted.json",
+    "bytes": 197,
+    "sha256": "31990f57c0ef588b6467420ad8c2766605e745916bcc3fa502de573c6d3e56ce"
+  },
+  {
+    "path": "upload-result.json",
+    "bytes": 1089,
+    "sha256": "4f30d3c3838d0d887558eb78366029228646625ed826babc450d36f13a5e8da2"
+  },
+  {
+    "path": "upload.txt",
+    "bytes": 741,
+    "sha256": "c953f828a08b510853d7577c6cf46e8550a88f438d3f5613a1cb04f3f0b2dd86"
+  },
+  {
+    "path": "verified-elf.bin",
+    "bytes": 209536,
+    "sha256": "f6dcdf4ca6a3617153cecea7eff977327d8c932948e7912da1743c7103ba1434"
+  }
+]
