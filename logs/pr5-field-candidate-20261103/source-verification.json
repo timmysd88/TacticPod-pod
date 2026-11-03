@@ -1,0 +1,14 @@
+{
+  "commit": "3d4693207d459b1565af2e8b3955cd897f5d519c",
+  "detached": true,
+  "tracked_bytes_match_commit": true,
+  "source_LF_verified_with_git_show": true,
+  "libraries_exported_exact_pinned_LF_blobs": true,
+  "experimental_gps_backup_absent": true,
+  "changed_from_155a999": [
+    "docs/reusable-prototype.md",
+    "src/main.cpp",
+    "src/status_led.h",
+    "tests/reusable/button_led.cpp"
+  ]
+}

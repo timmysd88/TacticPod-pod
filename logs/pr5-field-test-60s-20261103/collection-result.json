@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "host_start_sent": false,
+  "host_stop_sent": false,
+  "states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xB4000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=8048 rejected=0 blocks sealed=37 completed=37\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=2 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=2683931 max_block_step_us=53999 max_slice_us=308 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=162 blocks=37 committed=8048 offered=8048 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=278 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=timed free_sectors=3915\n"
+  },
+  "events": {
+    "response": "",
+    "events": []
+  },
+  "gps": {
+    "response": "Serial marker timeout: GPS speed_\nGPS profile operation active; wait for GPS PROFILE END before another UART diagnostic.\r\nGPS PROFILE: CURRENT RAM PROFILE VERIFIED (read-only)\nFIELD t_ms=265703 event=gps_verified session=0 detail=0 overwritten=0\nReason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0\nFIELD t_ms=286784 event=gps_verified session=0 detail=0 overwritten=0\nFirst mismatch before recovery: NONE\nFIELD t_ms=307875 event=gps_verified session=0 detail=0 overwritten=0\nGPS PROFILE END | UART=38400 | snapshot=none | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.\nFIELD t_ms=347429 event=button_press session=0 detail=0 overwritten=0\nFIELD t_ms=350429 event=start_accepted session=0 detail=0 overwritten=0\nFIELD t_ms=356490 event=gps_verified session=0 detail=0 overwritten=0\nFIELD t_ms=356631 event=button_release session=0 detail=0 overwritten=0\nFIELD t_ms=357498 event=button_press session=0 detail=0 overwritten=0\nFIELD t_ms=357647 event=button_release session=0 detail=0 overwritten=0\nFIELD t_ms=357878 event=button_press session=0 detail=0 overwritten=0\nFIELD t_ms=358416 event=session_created session=162 detail=0 overwritten=0\nFIELD t_ms=362444 event=button_release session=0 detail=0 overwritten=0\nFIELD t_ms=427564 event=button_press session=0 detail=0 overwritten=0\nFIELD t_ms=427724 event=button_release session=0 detail=0 overwritten=0\nFIELD t_ms=427724 event=stop_armed session=0 detail=0 overwritten=0\nFIELD t_ms=427909 event=button_press session=0 detail=0 overwritten=0\nFIELD t_ms=430909 event=stop_accepted session=0 detail=0 overwritten=0\nFIELD t_ms=430909 event=finalising session=162 detail=0 overwritten=0\nFIELD t_ms=431161 event=finalised_clean session=162 detail=0 overwritten=0\nFIELD t_ms=432438 event=button_release session=0 detail=0 overwritten=0\n",
+    "nmea_valid": false,
+    "profile_verified": false,
+    "error": "GPS status unavailable/refused; no recovery attempted"
+  },
+  "flash": {
+    "response": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n",
+    "validation": {
+      "passed": true,
+      "jedec": "0B4018",
+      "sr1_before": "00",
+      "sr1_after": "00",
+      "sr2": "02",
+      "sfdp_bytes_per_pass": 256,
+      "sfdp_passes": 2,
+      "sfdp_header_hex": "53464450000101FF",
+      "sfdp_reference_sha256": "fb55c78de1f723eb5048b7f004658c75128c515881efae7d9dcc918afafafdec",
+      "qualification_label_used_for_admission": false
+    }
+  },
+  "archive": {
+    "bytes": 806464,
+    "sha256": "cf43251fd301f1eac71b5bd85c2850d195de5f9c2741956554abb2fbcbfbb934",
+    "packets": 2882,
+    "image_sha256": "75be48ff3152051a9213a47cbe8f1237455bc6d683c2ae40e3722353ef552607",
+    "image_bytes": 737280,
+    "sessions": [
+      {
+        "id": 1,
+        "status": "complete",
+        "records": 555
+      },
+      {
+        "id": 3,
+        "status": "complete",
+        "records": 3330
+      },
+      {
+        "id": 12,
+        "status": "complete",
+        "records": 13321
+      },
+      {
+        "id": 58,
+        "status": "complete",
+        "records": 1110
+      },
+      {
+        "id": 61,
+        "status": "complete",
+        "records": 4702
+      },
+      {
+        "id": 74,
+        "status": "complete",
+        "records": 8550
+      },
+      {
+        "id": 96,
+        "status": "complete",
+        "records": 1802
+      },
+      {
+        "id": 101,
+        "status": "complete",
+        "records": 7575
+      },
+      {
+        "id": 119,
+        "status": "complete",
+        "records": 1107
+      },
+      {
+        "id": 122,
+        "status": "complete",
+        "records": 4042
+      },
+      {
+        "id": 133,
+        "status": "interrupted",
+        "records": 1105
+      },
+      {
+        "id": 137,
+        "status": "complete",
+        "records": 2247
+      },
+      {
+        "id": 144,
+        "status": "complete",
+        "records": 6498
+      },
+      {
+        "id": 159,
+        "status": "complete",
+        "records": 1110
+      },
+      {
+        "id": 162,
+        "status": "complete",
+        "records": 8048
+      }
+    ],
+    "existing_decode_issues": [
+      {
+        "address": 552960,
+        "error": "interrupted final block"
+      }
+    ]
+  },
+  "final_states": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xB4000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=8048 rejected=0 blocks sealed=37 completed=37\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=2 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=3096567 max_block_step_us=53999 max_slice_us=308 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=162 blocks=37 committed=8048 offered=8048 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=278 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=timed free_sectors=3915\n"
+  },
+  "serial_released": true
+}

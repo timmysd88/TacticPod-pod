@@ -1,0 +1,139 @@
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions
+  RECORD READ  - export committed recordings as CSV while stopped
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - bounded append-only compact sessions
+  TCB DURATION seconds|UNLIMITED - stopped only, 1..1800 or until stop; default 120; drain deadline 60 seconds
+  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop
+  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake
+  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference
+  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming
+  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+IMU printing: OFF (default after boot)
+TCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x49000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=2261436 max_block_step_us=0 max_slice_us=137 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed
+
+HOST TX BAT STATUS
+BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4123 filtered_mV=4118 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=28872 | checksum_ok=1048 | checksum_fail=0 | last_valid_message_age_ms=16
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)
+GPS fix=NO FIX | lat=N/A | lon=N/A | position=LAST_KNOWN/UNAVAILABLE | satellites=0 | HDOP=99.99
+GPS speed_km/h=N/A | UTC=00:00:00Z | position_age_ms=N/A
+
+HOST TX DIAG ID
+BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2
+FLASH ID JEDEC 01 0B4018
+FLASH ID JEDEC 02 0B4018
+FLASH ID JEDEC 03 0B4018
+FLASH ID JEDEC 04 0B4018
+FLASH ID JEDEC 05 0B4018
+FLASH ID SR1 before=00 after=00 SR2=02
+FLASH ID REMS address=000000 0B17
+FLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+END_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED
+
+HOST TX IMU ON
+IMU printing ON at 10 Hz; recording acquisition stays at 100 Hz.
+t_ms=95306 | accel_g X=0.1250 Y=-0.4377 Z=0.9113 | gyro_dps X=1.452 Y=-3.605 Z=0.849
+t_ms=95406 | accel_g X=0.1254 Y=-0.4376 Z=0.9104 | gyro_dps X=1.321 Y=-3.605 Z=0.805
+t_ms=95506 | accel_g X=0.1257 Y=-0.4383 Z=0.9104 | gyro_dps X=1.435 Y=-3.553 Z=0.875
+t_ms=95606 | accel_g X=0.1257 Y=-0.4368 Z=0.9114 | gyro_dps X=1.374 Y=-3.561 Z=0.805
+t_ms=95706 | accel_g X=0.1250 Y=-0.4381 Z=0.9113 | gyro_dps X=1.452 Y=-3.535 Z=0.849
+t_ms=95806 | accel_g X=0.1249 Y=-0.4378 Z=0.9112 | gyro_dps X=1.374 Y=-3.614 Z=0.822
+t_ms=95906 | accel_g X=0.1252 Y=-0.4376 Z=0.9118 | gyro_dps X=1.400 Y=-3.579 Z=0.858
+t_ms=96006 | accel_g X=0.1257 Y=-0.4379 Z=0.9105 | gyro_dps X=1.496 Y=-3.588 Z=0.866
+t_ms=96106 | accel_g X=0.1253 Y=-0.4379 Z=0.9112 | gyro_dps X=1.514 Y=-3.561 Z=0.822
+t_ms=96206 | accel_g X=0.1251 Y=-0.4379 Z=0.9110 | gyro_dps X=1.505 Y=-3.614 Z=0.814
+t_ms=96306 | accel_g X=0.1252 Y=-0.4379 Z=0.9105 | gyro_dps X=1.356 Y=-3.622 Z=0.796
+t_ms=96406 | accel_g X=0.1257 Y=-0.4376 Z=0.9113 | gyro_dps X=1.356 Y=-3.614 Z=0.752
+t_ms=96506 | accel_g X=0.1244 Y=-0.4376 Z=0.9109 | gyro_dps X=1.558 Y=-3.474 Z=0.858
+t_ms=96606 | accel_g X=0.1253 Y=-0.4380 Z=0.9117 | gyro_dps X=1.487 Y=-3.579 Z=0.788
+t_ms=96706 | accel_g X=0.1249 Y=-0.4378 Z=0.9108 | gyro_dps X=1.549 Y=-3.544 Z=0.875
+t_ms=96806 | accel_g X=0.1254 Y=-0.4380 Z=0.9109 | gyro_dps X=1.330 Y=-3.631 Z=0.726
+t_ms=96906 | accel_g X=0.1256 Y=-0.4376 Z=0.9102 | gyro_dps X=1.409 Y=-3.596 Z=0.805
+t_ms=97006 | accel_g X=0.1254 Y=-0.4379 Z=0.9103 | gyro_dps X=1.444 Y=-3.553 Z=0.858
+t_ms=97106 | accel_g X=0.1248 Y=-0.4373 Z=0.9121 | gyro_dps X=1.330 Y=-3.622 Z=0.761
+t_ms=97206 | accel_g X=0.1246 Y=-0.4374 Z=0.9108 | gyro_dps X=1.435 Y=-3.561 Z=0.822
+
+HOST TX IMU OFF
+IMU printing OFF; sampling continues (100 Hz while recording).
+
+HOST TX GPS RATE
+GPS RATE: observing checksum-valid GGA and RMC for 15000 ms at 38400 baud; no fix required. Receiver settings unchanged.
+GPS RATE RESULT | window_ms=15000 | UART=38400 | bytes=4547 | checksum_valid=164 | checksum_failed=0 | overlong_frames=0
+GPS RATE GGA | sentences=15 | sentence_hz=1.000 | valid_fix=0 | no_fix=15 | unknown_fix=0 | mean_wire_bytes=33.0 | role=SUPPORTING
+GPS RATE GGA | utc_epochs=0 | utc_epoch_hz=0.000 | duplicate_utc=0 | missing_utc=15 | backwards_utc=0 | role=SUPPORTING
+GPS RATE RMC | sentences=149 | sentence_hz=9.933 | valid_fix=0 | no_fix=149 | unknown_fix=0 | mean_wire_bytes=27.0
+GPS RATE RMC | utc_epochs=0 | utc_epoch_hz=0.000 | duplicate_utc=0 | missing_utc=149 | backwards_utc=0
+GPS RATE BANDWIDTH | current_Bps=303.1 | UART_capacity_Bps=3840 | GGA_RMC_only_at10Hz_Bps=600.0 | all_stream_scaled_to10Hz_Bps=N/A
+GPS RATE OBSERVED | primary=RMC | position_sentence_hz=9.933 | utc_epoch_hz=0.000 | output_cadence_10hz=UNKNOWN (insufficient advancing UTC)
+GPS RATE END | fixes=NONE_OBSERVED | GGA/RMC epochs are NOT summed; output cadence does not prove valid 10 Hz navigation solutions.
+
+HOST RX archive saved; serial closing

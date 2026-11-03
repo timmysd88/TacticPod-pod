@@ -1,0 +1,14 @@
+{
+  "commit": "3d4693207d459b1565af2e8b3955cd897f5d519c",
+  "environment": "tacticpod_reusable_usb",
+  "binary_bytes": 202192,
+  "binary_sha256": "e8015cd7f400a5fdfcad784d211d72482451468783c8c9160566bf5cb3f612d6",
+  "zip_bytes": 203012,
+  "zip_sha256": "b6d37fcabadd341e7f732a6bb2af46054387b9ea8a08ca8955befc52c05334a5",
+  "manifest_sha256": "4dd9b22faa926170f6689b1b07f57eb2da6c01cf32d8ffc997ae73a6784cc082",
+  "package": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\pr5-field-candidate-20261103\\tacticpod_reusable_usb\\firmware.zip",
+  "source_verified": true,
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "experimental_backup": false
+}

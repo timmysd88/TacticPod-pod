@@ -1,0 +1,9 @@
+{
+  "uploaded": false,
+  "application_only": true,
+  "recording_started": false,
+  "calibration_changed": false,
+  "zip_sha256": "c38561e5004ec88bf5d1b6b8b21c4d50a55cbbd19db41a7065c804438a6ae007",
+  "bin_sha256": "40bced328dbcc453eb8326297fabab40c268063140d6c909a4359b4024a9a585",
+  "approval": "Owner requested merged firmware upload and one user-performed 30-second test; physical preconditions reconfirmed"
+}

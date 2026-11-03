@@ -1,0 +1,620 @@
+{
+  "status": "clean_idle_observed",
+  "host_start_sent": false,
+  "host_stop_sent": false,
+  "polls": [
+    {
+      "host_monotonic": 185511.859,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185512.921,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185513.984,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185515.078,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185516.062,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185517.203,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185518.234,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185519.328,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185520.39,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185521.437,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185522.468,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185523.562,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185524.593,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185525.687,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185526.75,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185527.828,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185528.984,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185529.968,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185531.093,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185532.093,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185533.109,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185534.109,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185535.203,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185536.203,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185537.203,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185538.203,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185539.343,
+      "line": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed",
+      "state": 1,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185545.484,
+      "line": "TCB START GPS verified; scanning state=0 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop",
+      "state": 0,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185545.593,
+      "line": "TCB STATUS state=0 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=413 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3934",
+      "state": 0,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185546.718,
+      "line": "TCB STATUS state=0 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=413 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3934",
+      "state": 0,
+      "session": 0
+    },
+    {
+      "host_monotonic": 185547.359,
+      "line": "TCB STARTED state=2 session=162 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3934",
+      "state": 2,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185547.781,
+      "line": "TCB STATUS state=4 session=162 blocks=0 committed=0 offered=38 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=999 error=none programs=1 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3933",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185548.765,
+      "line": "TCB STATUS state=4 session=162 blocks=0 committed=0 offered=153 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=999 error=none programs=1 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3933",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185549.796,
+      "line": "TCB STATUS state=4 session=162 blocks=0 committed=0 offered=267 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=999 error=none programs=6 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3933",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185550.89,
+      "line": "TCB STATUS state=4 session=162 blocks=1 committed=223 offered=389 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1017 error=none programs=8 max_block_ms=201 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3933",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185551.921,
+      "line": "TCB STATUS state=4 session=162 blocks=2 committed=446 offered=503 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1017 error=none programs=14 max_block_ms=201 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3933",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185553.0,
+      "line": "TCB STATUS state=4 session=162 blocks=2 committed=446 offered=622 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1017 error=none programs=14 max_block_ms=201 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3933",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185554.0,
+      "line": "TCB STATUS state=6 session=162 blocks=2 committed=446 offered=733 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1017 error=none programs=21 max_block_ms=201 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3932",
+      "state": 6,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185555.078,
+      "line": "TCB STATUS state=4 session=162 blocks=3 committed=668 offered=847 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=23 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3932",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185556.109,
+      "line": "TCB STATUS state=4 session=162 blocks=4 committed=891 offered=968 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=30 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3932",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185557.14,
+      "line": "TCB STATUS state=4 session=162 blocks=4 committed=891 offered=1083 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=30 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3932",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185558.234,
+      "line": "TCB STATUS state=4 session=162 blocks=5 committed=1114 offered=1204 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=38 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3931",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185559.328,
+      "line": "TCB STATUS state=4 session=162 blocks=5 committed=1114 offered=1325 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=38 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3931",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185560.343,
+      "line": "TCB STATUS state=4 session=162 blocks=6 committed=1337 offered=1437 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=45 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3931",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185561.437,
+      "line": "TCB STATUS state=4 session=162 blocks=6 committed=1337 offered=1559 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=45 max_block_ms=389 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3931",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185562.468,
+      "line": "TCB STATUS state=4 session=162 blocks=7 committed=1560 offered=1673 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=54 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3930",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185563.562,
+      "line": "TCB STATUS state=4 session=162 blocks=7 committed=1560 offered=1795 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=54 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3930",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185564.578,
+      "line": "TCB STATUS state=4 session=162 blocks=8 committed=1783 offered=1907 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=62 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3929",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185565.687,
+      "line": "TCB STATUS state=4 session=162 blocks=8 committed=1783 offered=2030 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=62 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3929",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185566.734,
+      "line": "TCB STATUS state=4 session=162 blocks=9 committed=2006 offered=2148 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=69 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3929",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185567.765,
+      "line": "TCB STATUS state=6 session=162 blocks=9 committed=2006 offered=2261 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=70 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3929",
+      "state": 6,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185568.812,
+      "line": "TCB STATUS state=4 session=162 blocks=10 committed=2229 offered=2376 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=77 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3928",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185569.812,
+      "line": "TCB STATUS state=6 session=162 blocks=10 committed=2229 offered=2488 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=79 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3928",
+      "state": 6,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185570.89,
+      "line": "TCB STATUS state=4 session=162 blocks=11 committed=2452 offered=2608 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=84 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3928",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185571.984,
+      "line": "TCB STATUS state=2 session=162 blocks=11 committed=2452 offered=2730 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=90 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3928",
+      "state": 2,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185573.078,
+      "line": "TCB STATUS state=4 session=162 blocks=12 committed=2675 offered=2851 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=92 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3927",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185574.218,
+      "line": "TCB STATUS state=4 session=162 blocks=13 committed=2898 offered=2972 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=99 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3927",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185575.265,
+      "line": "TCB STATUS state=4 session=162 blocks=13 committed=2898 offered=3094 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=99 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3927",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185576.265,
+      "line": "TCB STATUS state=4 session=162 blocks=14 committed=3121 offered=3205 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=107 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3926",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185577.359,
+      "line": "TCB STATUS state=4 session=162 blocks=14 committed=3121 offered=3326 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=107 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3926",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185578.437,
+      "line": "TCB STATUS state=4 session=162 blocks=15 committed=3344 offered=3446 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=114 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3926",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185579.515,
+      "line": "TCB STATUS state=4 session=162 blocks=15 committed=3344 offered=3565 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=114 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3926",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185580.609,
+      "line": "TCB STATUS state=4 session=162 blocks=16 committed=3567 offered=3686 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=122 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3925",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185581.687,
+      "line": "TCB STATUS state=4 session=162 blocks=16 committed=3567 offered=3807 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=122 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3925",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185582.703,
+      "line": "TCB STATUS state=4 session=162 blocks=17 committed=3789 offered=3920 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=129 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3925",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185583.765,
+      "line": "TCB STATUS state=4 session=162 blocks=17 committed=3789 offered=4038 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=129 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3925",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185584.781,
+      "line": "TCB STATUS state=4 session=162 blocks=18 committed=4012 offered=4150 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=137 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3924",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185585.781,
+      "line": "TCB STATUS state=4 session=162 blocks=18 committed=4012 offered=4261 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=137 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3924",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185586.906,
+      "line": "TCB STATUS state=4 session=162 blocks=19 committed=4235 offered=4385 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=144 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3924",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185587.921,
+      "line": "TCB STATUS state=6 session=162 blocks=19 committed=4235 offered=4498 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=148 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3924",
+      "state": 6,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185589.0,
+      "line": "TCB STATUS state=4 session=162 blocks=20 committed=4458 offered=4619 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=152 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3923",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185590.046,
+      "line": "TCB STATUS state=4 session=162 blocks=21 committed=4681 offered=4735 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=159 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3923",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185591.093,
+      "line": "TCB STATUS state=4 session=162 blocks=21 committed=4681 offered=4851 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=159 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3923",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185592.156,
+      "line": "TCB STATUS state=3 session=162 blocks=21 committed=4681 offered=4969 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=166 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3922",
+      "state": 3,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185593.25,
+      "line": "TCB STATUS state=4 session=162 blocks=22 committed=4904 offered=5084 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=167 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3922",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185594.281,
+      "line": "TCB STATUS state=4 session=162 blocks=23 committed=5127 offered=5204 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=174 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3922",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185595.328,
+      "line": "TCB STATUS state=4 session=162 blocks=23 committed=5127 offered=5315 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=174 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3922",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185596.421,
+      "line": "TCB STATUS state=4 session=162 blocks=24 committed=5349 offered=5441 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=182 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3921",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185597.531,
+      "line": "TCB STATUS state=4 session=162 blocks=24 committed=5349 offered=5558 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=182 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3921",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185598.531,
+      "line": "TCB STATUS state=4 session=162 blocks=25 committed=5572 offered=5676 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=189 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3921",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185599.531,
+      "line": "TCB STATUS state=4 session=162 blocks=25 committed=5572 offered=5788 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=189 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3921",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185600.625,
+      "line": "TCB STATUS state=4 session=162 blocks=26 committed=5795 offered=5908 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=197 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3920",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185601.671,
+      "line": "TCB STATUS state=4 session=162 blocks=26 committed=5795 offered=6026 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=197 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3920",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185602.687,
+      "line": "TCB STATUS state=4 session=162 blocks=27 committed=6018 offered=6138 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=204 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3920",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185603.781,
+      "line": "TCB STATUS state=4 session=162 blocks=27 committed=6018 offered=6260 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=204 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3920",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185604.812,
+      "line": "TCB STATUS state=4 session=162 blocks=28 committed=6241 offered=6374 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=212 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3919",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185605.859,
+      "line": "TCB STATUS state=4 session=162 blocks=28 committed=6241 offered=6484 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=212 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3919",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185606.875,
+      "line": "TCB STATUS state=4 session=162 blocks=29 committed=6464 offered=6603 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=219 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3919",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185607.875,
+      "line": "TCB STATUS state=5 session=162 blocks=29 committed=6464 offered=6714 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=219 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3919",
+      "state": 5,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185608.906,
+      "line": "TCB STATUS state=4 session=162 blocks=30 committed=6687 offered=6828 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=227 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3918",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185610.046,
+      "line": "TCB STATUS state=6 session=162 blocks=30 committed=6687 offered=6949 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=230 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3918",
+      "state": 6,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185611.078,
+      "line": "TCB STATUS state=4 session=162 blocks=31 committed=6910 offered=7070 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=234 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3918",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185612.171,
+      "line": "TCB STATUS state=2 session=162 blocks=31 committed=6910 offered=7190 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=240 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3918",
+      "state": 2,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185613.187,
+      "line": "TCB STATUS state=4 session=162 blocks=32 committed=7132 offered=7303 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=242 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3917",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185614.203,
+      "line": "TCB STATUS state=4 session=162 blocks=33 committed=7354 offered=7416 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=249 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3917",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185615.343,
+      "line": "TCB STATUS state=4 session=162 blocks=33 committed=7354 offered=7536 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=249 max_block_ms=400 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3917",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185616.421,
+      "line": "TCB STATUS state=4 session=162 blocks=34 committed=7576 offered=7661 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=259 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3916",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185617.562,
+      "line": "TCB STATUS state=4 session=162 blocks=34 committed=7576 offered=7783 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=259 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3916",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185618.578,
+      "line": "TCB STATUS state=4 session=162 blocks=35 committed=7799 offered=7901 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=267 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3916",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185619.687,
+      "line": "TCB STATUS state=4 session=162 blocks=35 committed=7799 offered=8024 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=267 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3916",
+      "state": 4,
+      "session": 162
+    },
+    {
+      "host_monotonic": 185620.093,
+      "line": "TCB STOPPED state=1 session=162 blocks=37 committed=8048 offered=8048 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=278 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=timed free_sectors=3915",
+      "state": 1,
+      "session": 162
+    }
+  ],
+  "session": 162,
+  "capture_first_observed_monotonic": 185547.359,
+  "capture_first_observed_line": "TCB STARTED state=2 session=162 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=until_stop free_sectors=3934",
+  "elapsed_s": 72.59400000001187,
+  "elapsed_until_idle": 72.73399999999674,
+  "final_tcb": "TCB STOPPED state=1 session=162 blocks=37 committed=8048 offered=8048 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=278 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=timed free_sectors=3915",
+  "serial_released": true
+}

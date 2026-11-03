@@ -1,0 +1,503 @@
+{
+  "schema_version": 1,
+  "commit": "3d4693207d459b1565af2e8b3955cd897f5d519c",
+  "parent_commit": "155a999122f0ce85ab6817c6eba690e9501fe4b3",
+  "environment": "tacticpod_reusable_usb",
+  "source_is_uncommitted": false,
+  "source_archive_sha256": "b9f5ee0036cf697a58c8ed4fbbd69d4140ddbd8f33137e5afb531a23826fef0b",
+  "worktree": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p5",
+  "experimental_gps_backup_absent": true,
+  "automatic_gps_backup": false,
+  "recording_format": "TCB3 3.2.0; TPX3 export unchanged",
+  "unchanged_compatibility_files": [
+    "src/tcb3_store.cpp",
+    "src/tcb3_store.h",
+    "src/tcb3_session.cpp",
+    "src/tcb3_test_limits.h",
+    "src/compact_recorder.cpp",
+    "src/compact_recorder.h",
+    "src/recorder.cpp",
+    "src/recorder_format.h",
+    "src/gps_receiver.cpp",
+    "src/gps_profile.cpp",
+    "src/gps_config.cpp",
+    "src/gps_rate.cpp",
+    "src/physical_button.h",
+    "tools/tcb3_decode.py",
+    "tools/tcb3_download.py"
+  ],
+  "project_input_hashes": [
+    {
+      "path": "src/battery_monitor.h",
+      "sha256": "cd9bcffd47fc9574468d4f3442eff5d773d4e978ff5df6dc3a7b02fcb7069fac"
+    },
+    {
+      "path": "src/battery_runtime.cpp",
+      "sha256": "dedef2f761bdd3b74d6b43944f905590ce2a6079e43d1b7ac274d304dc07b5e4"
+    },
+    {
+      "path": "src/battery_runtime.h",
+      "sha256": "935cc4fb9a4eb5b931a69cebaf63522469017363a184bea06d01ee8611b88024"
+    },
+    {
+      "path": "src/compact_recorder.cpp",
+      "sha256": "5a30195463751c73ca4cece6ae3faf069dbda1272f67d8d76c6dcf82d142af99"
+    },
+    {
+      "path": "src/compact_recorder.h",
+      "sha256": "f4a73fdef22e9722b85d6d8bd5cce64389d521a65a64f0aff4d498bb644d599f"
+    },
+    {
+      "path": "src/field_trace.h",
+      "sha256": "a8d46f7c212fc494f45d929bf14c9f04fd46cc432801d40d0bb957c80a0bd590"
+    },
+    {
+      "path": "src/flash_diagnostics.h",
+      "sha256": "2525f03de987009a3942f69586a3481274f1ffdf19e2fae2d72b793206dd20ee"
+    },
+    {
+      "path": "src/flash_identity.h",
+      "sha256": "69e0fbb38896f60e2f85a5abce10a6283d74b144edbb2fab49783c5061b970fd"
+    },
+    {
+      "path": "src/flash_power.h",
+      "sha256": "d503beb31f0acc0caca74fa7fe020753b06e0926aa5b18f6397a8c2b56d8428b"
+    },
+    {
+      "path": "src/flash_write_test.cpp",
+      "sha256": "e71006b6b419ff093309c6ad1fdedfecd832b5ec88be57cbc1e5fd710c69ad9b"
+    },
+    {
+      "path": "src/flash_write_test.h",
+      "sha256": "9fdceb71cac158b67d4afa1e1a0a5a4ace72b4f8c7ec14df409b4a9550fba086"
+    },
+    {
+      "path": "src/gps_config.cpp",
+      "sha256": "5d0a2f96e4d522b172982a21873a9663ba96bd206b74933cc55195f176e99a84"
+    },
+    {
+      "path": "src/gps_config.h",
+      "sha256": "ec62f7d5418beaf66ecabd5542fc9107f1cc522450b67b88630d13cb4200d2f7"
+    },
+    {
+      "path": "src/gps_profile.cpp",
+      "sha256": "c718804be32dfc70f9cee97a90c1bfd09e0db78663cf888c48b6b56ed29c5471"
+    },
+    {
+      "path": "src/gps_profile.h",
+      "sha256": "3de0dd015555cc447e19f4a1424c7ab3c4e9f979f9a829a1e465490c5f25a692"
+    },
+    {
+      "path": "src/gps_rate.cpp",
+      "sha256": "01ac99dd7d452b1f1631bd88d319890d27665e86f689a0bf652031476c572d15"
+    },
+    {
+      "path": "src/gps_rate.h",
+      "sha256": "255c2292746d3384dc65f5440ab0b1c72a95474c4f23e7b093ffd9be0fa64f2d"
+    },
+    {
+      "path": "src/gps_receiver.cpp",
+      "sha256": "363f8b99d5a0203c0354aa7d8133cc14c3b82fe9573d742ca3ac73569528afdf"
+    },
+    {
+      "path": "src/gps_receiver.h",
+      "sha256": "81ecf6d1232d8ebdce717f430697874334817440a257fa77a20d5384bc80faaa"
+    },
+    {
+      "path": "src/gps_uart_config.h",
+      "sha256": "48ac396732ded5632e7049ffd0d669509b4b3bf6dff30ac22fcf38a6973732a3"
+    },
+    {
+      "path": "src/gps_uart_scan.cpp",
+      "sha256": "ec8bc0c39637afade4727366248648686fb1fb4780c3666dd6fe00156d36fb20"
+    },
+    {
+      "path": "src/gps_uart_scan.h",
+      "sha256": "36951a1daa1f129ffe8941815b8bca6ccbd58af359f73b94c5d2e73d304d683f"
+    },
+    {
+      "path": "src/gps_uart_tx.h",
+      "sha256": "7ab22b09094b23e0acd04bda5f24cf872ad08361e785346c6b5d7d39543cbb9a"
+    },
+    {
+      "path": "src/main.cpp",
+      "sha256": "ebc7014c75e144730bc3a362d82b3f73f1ed0157f0ae33095acc0e405f9e86a7"
+    },
+    {
+      "path": "src/monotonic_clock.cpp",
+      "sha256": "048aaad5a49cc8bdd2f459e814926c05d63a0b44e8ec7559afdd717451d2f32f"
+    },
+    {
+      "path": "src/monotonic_clock.h",
+      "sha256": "b697f53194537d4ea8e7ad0940d35f16d02d8ec5ff2a5a7da8d1ccebff0d3e05"
+    },
+    {
+      "path": "src/physical_button.h",
+      "sha256": "0c288f0c3371da31aae888ebd17c3c20d077fe1acecb9672a0c1994e7b274150"
+    },
+    {
+      "path": "src/ram_observations.cpp",
+      "sha256": "ee395ad4c7de96cab4bf6651cbed67d2ee9f2d44f3a7a01741a9f0b9c92f2a2c"
+    },
+    {
+      "path": "src/ram_observations.h",
+      "sha256": "15aab0b539d2f4b6d46c2a1e8cf5a5065789566f4c56c53dcfd54fc59e9a575c"
+    },
+    {
+      "path": "src/recorder.cpp",
+      "sha256": "2ad10717d20e6f0fbf5dedc014755e33c624180c7da4a6f1ad7a0d24483046dd"
+    },
+    {
+      "path": "src/recorder.h",
+      "sha256": "2d2e661814f0d4fc2a448080f6f15052fa8a8b617816ddf76d4bfd00a2a41035"
+    },
+    {
+      "path": "src/recorder_format.h",
+      "sha256": "3eda601b69b4a454a1e0babbc5f129e047c3e6d2cc6dd1856580ec6d76457ca2"
+    },
+    {
+      "path": "src/serial_console.cpp",
+      "sha256": "92aa0de847a10d290a5d8554c1d05ac2e771efeaca75991565617621dc88288f"
+    },
+    {
+      "path": "src/serial_console.h",
+      "sha256": "0297a79c168a72593eb6e38ffe921f90407f3fd6a14779d0712559f45b2a3a86"
+    },
+    {
+      "path": "src/standby_policy.h",
+      "sha256": "ae00280cf187f45395127ad29820c872c01adff53c8ace264cbbd659fc6fe01f"
+    },
+    {
+      "path": "src/status_led.h",
+      "sha256": "4cc292b36db3a91af83b3c2c3feaabe4245c043a4b54412ca0082fadec4ba5c2"
+    },
+    {
+      "path": "src/tcb3_session.cpp",
+      "sha256": "51489083a994e3a2875e7beb47487e29c663c56efeb1ccd80b9a975a7e58dff5"
+    },
+    {
+      "path": "src/tcb3_session.h",
+      "sha256": "8106fbd27b7c637b87678b2523dae3b804e5ff5557a31bbad3f38943bacdc826"
+    },
+    {
+      "path": "src/tcb3_store.cpp",
+      "sha256": "9f0734c9c0d061b3b1b386b0bcc00d31fba5deab7690fdf8fd1b0c6210ef8ca1"
+    },
+    {
+      "path": "src/tcb3_store.h",
+      "sha256": "1cb2cca79067879880c3a3ba120d013095db27ef2246a425aa69116d2ce6fa2f"
+    },
+    {
+      "path": "src/tcb3_test_limits.h",
+      "sha256": "52d27a228d610dbc74adedebb591a805dd75073242e9c3b345fab2927128ee2d"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.gitattributes",
+      "sha256": "12ca81b43544aad1199998a226e032a9ffd27a827437fbb3e9edb5f2f7223bcc"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.github/workflows/run-cl-arduino.yml",
+      "sha256": "18232208e94825729f46d385c277cabf0c6801a40a01218bc22cd842cd62150f"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.github/workflows/stale.yml",
+      "sha256": "2cdfe92453092b5779e25aed877565013dce61ef3ad8b59e8f408bbc832e81b7"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.github/workflows/sync_issues.yml",
+      "sha256": "8a232b7006233d9351b19402d0ad3bd5b7a42323441de8963c630583ab3a98cb"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.gitignore",
+      "sha256": "b3784236d5918b860397eb78ab374ed8b1dd7508d5a2121e3ed447eabb3e41ca"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.gitlab-ci.yml",
+      "sha256": "792be2ccee4ce5acbb2888e0152d12b8eb5b413af4a88bf90ffc30b2ecfa0cb6"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/.travis.yml",
+      "sha256": "c2bea68c1c3cb00240e988927b2fe9858e32fa97544cd8f6fb237f979ecbc591"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/FifoExample/FifoExample.ino",
+      "sha256": "dbe0c84158793ae9f8429d5359a54247a736177169135d6c856cbf4fe9479aac"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/FreeFallDetect/FreeFallDetect.ino",
+      "sha256": "3c7ca9e3fe42baeb0c512c32d0ddd8c258a83841646abd101656c3eea2e667f5"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/HighLevelExample/HighLevelExample.ino",
+      "sha256": "467d52a7263494d40eb9db9e588cc6f18c90ec610129352855517e16c8004efa"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/IMU_Capture/IMU_Capture.ino",
+      "sha256": "069f77e64c0913bc7937aa3abec5d9f581cfce33f1a20892820ac8096c777b25"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/IMU_Classifier/IMU_Classifier.ino",
+      "sha256": "5a7c92f6a8ce4ec43bfdd6abe5b6ee1b338ba061165773e15ad19bf4972bf63b"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/IMU_Classifier/model.h",
+      "sha256": "1d51ecf173cabf2d640cbd457ea5b1c551e583640f52c654836a2beb72b4a3ca"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/LowLevelExample/LowLevelExample.ino",
+      "sha256": "84ed4747116ee6181548aa1a0d9413c4a4ac0784e72274b54b37414cdde72326"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/examples/Pedometer/Pedometer.ino",
+      "sha256": "1214aa203be77203b1a58491e4d101573035bf472cece91cb76e6072fc195078"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/keywords.txt",
+      "sha256": "a9cff73dda4f771c8ee8b2bb0241b3ebd8cde0d4c7c7109733dc00ad532f745f"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/library.properties",
+      "sha256": "267d3245a8482044eb1a4e7b673381d339ecdce5ab750d346383cc3a8bc314fe"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/LICENSE.md",
+      "sha256": "f8dd6234ec7b1b833ba3e15978139d5a8a28c75ed97e896f4171bf30f5812d92"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/LSM6DS3.cpp",
+      "sha256": "e6130788f2b1d01e25f7fbe8e424f82611e72f45e06ef7ee997f3b0643d663bc"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/LSM6DS3.h",
+      "sha256": "998b0c22c057a63eb483c944252729938a5119e885acaeb921f840bad13ffddc"
+    },
+    {
+      "path": "lib/Seeed_Arduino_LSM6DS3/README.md",
+      "sha256": "f245b1e365f2e4eee1031de5ced620996f3b159e27e031ded356ff27c655217b"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/BasicExample/BasicExample.ino",
+      "sha256": "0c5fc94ab2a109b078686e45608ffd658292dc45a98b7dd9a29f9829ac53a722"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/DeviceExample/DeviceExample.ino",
+      "sha256": "b33a7301773961c9c1bf7c794536c7c8d9204a25f0635e36f9c27f2b7e6b0fe0"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/FullExample/FullExample.ino",
+      "sha256": "fed04ec99c059301f7a3e6e60a3a07a50253958a0c680bc974657b1a27753f95"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/KitchenSink/KitchenSink.ino",
+      "sha256": "c323a414c2e101727b44dce8d8e58b6ea19978ec512cd1d65889e6f761227e82"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/SatElevTracker/sample_satellite_elevation_log.txt",
+      "sha256": "836c915ab4a1fd947ddac3ea76416234a140838c2e7d9b3d23c1ddba5d045157"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/SatElevTracker/SatElevTracker.ino",
+      "sha256": "576043d5084343a5dd472573c0dc6714d444cd2675259133ac98938407c9d7bf"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/SatelliteTracker/SatelliteTracker.ino",
+      "sha256": "619ccc4bb7fef652ad1b53d2a01faf33f71173d17ad88ab0e253f60b1cc953df"
+    },
+    {
+      "path": "lib/TinyGPSPlus/examples/UsingCustomFields/UsingCustomFields.ino",
+      "sha256": "1767507c245ecc7444058640e36f9e765be5f9fcce40ea1bcde79ff7408d3bf8"
+    },
+    {
+      "path": "lib/TinyGPSPlus/keywords.txt",
+      "sha256": "de293a09577a116e06cd8df0edc49707d0bce1df1a520563b014fb5aec32c1d7"
+    },
+    {
+      "path": "lib/TinyGPSPlus/library.json",
+      "sha256": "5736a1f022edc157fd32df4c7d3c7655c0f5c5a5b5ea7dbaa56edb2158eb33b9"
+    },
+    {
+      "path": "lib/TinyGPSPlus/library.properties",
+      "sha256": "ac4ab1359a882f23a67be0a38a906c1ade13cac19c7018a9135ee1dbe63a00da"
+    },
+    {
+      "path": "lib/TinyGPSPlus/README.md",
+      "sha256": "b594d8fe25cdb6bd2ca56edb043e8e10bff1af7fe1231d123d877a2f321f4f48"
+    },
+    {
+      "path": "lib/TinyGPSPlus/src/TinyGPS++.cpp",
+      "sha256": "904b28be515b2b006afd25a7f54c510006edc2d33edf03b834936896a883804d"
+    },
+    {
+      "path": "lib/TinyGPSPlus/src/TinyGPS++.h",
+      "sha256": "16bce71f8442d9cf27e0dadd9a3db522daf5811e7a8c7ce63d2cd5c6f0829c50"
+    },
+    {
+      "path": "lib/TinyGPSPlus/src/TinyGPSPlus.h",
+      "sha256": "75a730dc1fa0225d49feadc89d32558c17e2dc849532797b25960432b1eba03b"
+    },
+    {
+      "path": "variants/tacticpod/README.md",
+      "sha256": "28fb70c342fa1c64ed082a10bd27e7c8089b063d0b3bbd5f1bbb1bb5a8a02627"
+    },
+    {
+      "path": "variants/tacticpod/Seeed_XIAO_nRF52840/variant.cpp",
+      "sha256": "349a7851d337ee5f9a102de9a2e0f374992070af9cd96e79745fb8d39e0c42de"
+    },
+    {
+      "path": "variants/tacticpod/Seeed_XIAO_nRF52840/variant.h",
+      "sha256": "a74818f54005de7f6002b6e2b143686edb9d99a6b98411f469a50960c9d31a0d"
+    },
+    {
+      "path": "platformio.ini",
+      "sha256": "5749d2cf7915b17729660a299d8538b9640ab7ceb330103874053fc6d39a48fc"
+    }
+  ],
+  "artifacts": [
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": "seeed_xiao_nrf52840_sense/firmware.elf",
+      "bytes": 292688,
+      "sha256": "5a0e84bfe011603f042244eaed143294aa240c338549639eef1a9dc86407ea15"
+    },
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": "seeed_xiao_nrf52840_sense/firmware.hex",
+      "bytes": 467992,
+      "sha256": "e9a39d7e1617f4f33ef1416cd566ed68ef14511b04c0944a0a27af322b4ec439"
+    },
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": "seeed_xiao_nrf52840_sense/firmware.zip",
+      "bytes": 167179,
+      "sha256": "0649f935bac2edff440e9dfddcf4580dd586ee674652b46d54f5db49e5bb4bb7"
+    },
+    {
+      "environment": "seeed_xiao_nrf52840_sense",
+      "path": "seeed_xiao_nrf52840_sense/firmware.bin",
+      "bytes": 166360,
+      "sha256": "eefb4721bcf585b77c23fc36f1c037fc99174ef427da5c18427adcf66fea1a6b"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": "tacticpod_reusable_usb/firmware.elf",
+      "bytes": 370168,
+      "sha256": "5ceac3b353efde45c2a0b803c2fc6ceb412ca9c9936bf852981102320fa5e667"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": "tacticpod_reusable_usb/firmware.hex",
+      "bytes": 568793,
+      "sha256": "1589fcd149d39d7bd0a59987fe95c95e203b93447a285d7f251c396a70149106"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": "tacticpod_reusable_usb/firmware.zip",
+      "bytes": 203012,
+      "sha256": "b6d37fcabadd341e7f732a6bb2af46054387b9ea8a08ca8955befc52c05334a5"
+    },
+    {
+      "environment": "tacticpod_reusable_usb",
+      "path": "tacticpod_reusable_usb/firmware.bin",
+      "bytes": 202192,
+      "sha256": "e8015cd7f400a5fdfcad784d211d72482451468783c8c9160566bf5cb3f612d6"
+    }
+  ],
+  "application_only": true,
+  "softdevice_requirement": "0x0123",
+  "bootloader_update": false,
+  "external_spi_erase_intended": false,
+  "hardware_tested": false,
+  "uploaded": false,
+  "installation_authorized": false,
+  "regressions": {
+    "suite_count": 31,
+    "passed": 31,
+    "failed": 0,
+    "results": {
+      "tests/gps/run_tests.py": 0,
+      "tests/recording/run_tests.py": 0,
+      "tests/flash_write/run_tests.py": 0,
+      "tests/recorder_v2/run_tests.py": 0,
+      "tests/storage_benchmark/run_tests.py": 0,
+      "tests/compact/run_tests.py": 0,
+      "tests/compact/test_decoder.py": 0,
+      "tests/compact/test_timing_model.py": 0,
+      "tests/compact/test_resources.py": 0,
+      "tests/tcb3/run_tests.py": 0,
+      "tests/tcb3/integration_tests.py": 0,
+      "tests/tcb3/console_tests.py": 0,
+      "tests/flash_identity/run_tests.py": 0,
+      "tests/tcb3/sustained_tests.py": 0,
+      "tests/tcb3/long_integration_tests.py": 0,
+      "tests/recording/erase_review_tests.py": 0,
+      "tests/tcb3/first_write_tests.py": 0,
+      "tests/tcb3/append_30s_tests.py": 0,
+      "tests/tcb3/movement_120s_tests.py": 0,
+      "tests/tcb3/movement_controls_tests.py": 0,
+      "tests/reusable/policy_tests.py": 0,
+      "tests/reusable/store_tests.py": 0,
+      "tests/reusable/adc_tests.py": 0,
+      "tests/reusable/console_tests.py": 0,
+      "tests/reusable/integration_tests.py": 0,
+      "tests/reusable/startup_tests.py": 0,
+      "tests/reusable/switchless_tests.py": 0,
+      "tests/reusable/download_tests.py": 0,
+      "tests/reusable/button_tests.py": 0,
+      "tests/reusable/standby_tests.py": 0,
+      "tests/reusable/field_tests.py": 0
+    },
+    "focused_led_button": "PASS",
+    "linked_startup": "PASS",
+    "firmware_builds": 2,
+    "hardware_tested": false,
+    "final_source_bytes_match_commit": true,
+    "p6_preserved": true
+  },
+  "platformio_core": "6.2.0",
+  "seeed_platform_commit": "a6fd41debbbcda13b5340fff50c9092ed3289194",
+  "library_commits": {
+    "TinyGPSPlus": "ca29434514a5c5172bd807af0608df7f296582a2",
+    "Seeed_Arduino_LSM6DS3": "e063c3a544b8bb89238accddf24f0028bcd1ca20"
+  },
+  "stock_control_matches_previous_verified_binary": true,
+  "selected_binary_has_no_backup_test_command": true,
+  "framework_toolchain_references": [
+    {
+      "path": ".pio-core/packages/framework-arduinoadafruitnrf52/package.json",
+      "sha256": "4500777ce1fd53d121c3e6cebad77ad48cc807abfcc688c093ddd627cb0dcc71"
+    },
+    {
+      "path": ".pio-core/packages/framework-arduinoadafruitnrf52/cores/nRF5/Uart.cpp",
+      "sha256": "64beea228cec9971bef7ec1bc7cb5a6bbf77dd3bda9334395c7e8eb2b7f0c646"
+    },
+    {
+      "path": ".pio-core/packages/framework-arduinoadafruitnrf52/cores/nRF5/RingBuffer.cpp",
+      "sha256": "349b6b6a2a23c0a42e4c80ce23ed12d171291dd934340835b9378853e8f3b253"
+    },
+    {
+      "path": ".pio-core/packages/framework-arduinoadafruitnrf52/cores/nRF5/main.cpp",
+      "sha256": "25c3a05b2631a6daff58048a517b8f86c33e97aa978d8b365f03a5b4fa371231"
+    },
+    {
+      "path": ".pio-core/packages/toolchain-gccarmnoneeabi/package.json",
+      "sha256": "7f9e905c5e656466e2854677ff994db0655d81519f054443b6684bb8bb2ff904"
+    }
+  ],
+  "board": "seeed-xiao-afruitnrf52-nrf52840",
+  "variant": "variants/tacticpod/Seeed_XIAO_nRF52840",
+  "selected_build_flags": [
+    "-DTARGET_SEEED_XIAO_NRF52840_SENSE",
+    "-DTACTICPOD_TCB3_FLASH_ENABLED=1",
+    "-DTACTICPOD_REUSABLE=1"
+  ],
+  "usb_baud": 115200,
+  "gps_uart_baud": 38400,
+  "imu_recording_hz": 100,
+  "gps_rmc_hz": 10,
+  "gps_gga_hz": 1,
+  "compiler_version": "arm-none-eabi-g++.exe (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 7.2.1 20170904 (release) [ARM/embedded-7-branch revision 255204]",
+  "software_validation_passed": true,
+  "source_bytes_match_commit": true,
+  "p6_preserved": true,
+  "p6_files_checked": 203
+}

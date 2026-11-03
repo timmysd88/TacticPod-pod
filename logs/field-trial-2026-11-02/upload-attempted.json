@@ -1,0 +1,22 @@
+{
+  "uploaded": false,
+  "recording_started": false,
+  "calibration_changed": false,
+  "application_only": true,
+  "zip_sha256": "d90d678ed1840a123756b796bb6a4288df5239d32e0399ed3255b4b831d310ff",
+  "bin_sha256": "b2ea6b3bab286b97ecc4235039944d1be335d07711c579952fe99dea120a4ddc",
+  "command": [
+    "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.pio-core\\packages\\tool-adafruit-nrfutil\\adafruit-nrfutil.py",
+    "dfu",
+    "serial",
+    "-pkg",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\field-trial-2026-11-02\\firmware.zip",
+    "-p",
+    "COM7",
+    "-b",
+    "115200",
+    "--singlebank"
+  ],
+  "approval": "User explicitly approved Phase 4 via DFU COM7; no recording or calibration"
+}

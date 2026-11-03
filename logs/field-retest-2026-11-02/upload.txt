@@ -1,0 +1,13 @@
+Upgrading target on COM7 with DFU package C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\logs\field-retest-2026-11-02\firmware.zip. Flow control is disabled, Single bank, Touch disabled
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+########################################
+####################################
+Activating new firmware
+Device programmed.

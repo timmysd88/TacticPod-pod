@@ -1,0 +1,29 @@
+{
+  "uploaded": true,
+  "application_only": true,
+  "external_spi_erase_intended": false,
+  "approved_binary_sha256": "e8015cd7f400a5fdfcad784d211d72482451468783c8c9160566bf5cb3f612d6",
+  "approved_zip_sha256": "b6d37fcabadd341e7f732a6bb2af46054387b9ea8a08ca8955befc52c05334a5",
+  "loader": {
+    "port": "COM7",
+    "vid": 10374,
+    "pid": 69,
+    "serial": "0E8A89B7289430BD",
+    "hwid": "USB VID:PID=2886:0045 SER=0E8A89B7289430BD LOCATION=1-8:x.0"
+  },
+  "command": [
+    "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.p5\\.pio-core\\packages\\tool-adafruit-nrfutil\\adafruit-nrfutil.py",
+    "dfu",
+    "serial",
+    "-pkg",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\pr5-field-candidate-20261103\\tacticpod_reusable_usb\\firmware.zip",
+    "-p",
+    "COM7",
+    "-b",
+    "115200",
+    "--singlebank"
+  ],
+  "exit_code": 0,
+  "application_port": "COM8"
+}

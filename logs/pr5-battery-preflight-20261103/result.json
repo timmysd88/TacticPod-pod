@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "device_commands_read_only": true,
+  "settings_changed": false,
+  "firmware_identity_method": "Verified archived package/source and recorded successful upload provenance; no live firmware hash command exists in this protocol",
+  "candidate": {
+    "commit": "3d4693207d459b1565af2e8b3955cd897f5d519c",
+    "environment": "tacticpod_reusable_usb",
+    "binary_bytes": 202192,
+    "binary_sha256": "e8015cd7f400a5fdfcad784d211d72482451468783c8c9160566bf5cb3f612d6",
+    "zip_bytes": 203012,
+    "zip_sha256": "b6d37fcabadd341e7f732a6bb2af46054387b9ea8a08ca8955befc52c05334a5",
+    "manifest_sha256": "4dd9b22faa926170f6689b1b07f57eb2da6c01cf32d8ffc997ae73a6784cc082",
+    "package": "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\pr5-field-candidate-20261103\\tacticpod_reusable_usb\\firmware.zip",
+    "source_verified": true,
+    "application_only": true,
+    "external_spi_erase_intended": false,
+    "experimental_backup": false
+  },
+  "device": {
+    "port": "COM8",
+    "vid": 10374,
+    "pid": 32836,
+    "serial": "0E8A89B7289430BD",
+    "hwid": "USB VID:PID=2886:8044 SER=0E8A89B7289430BD LOCATION=1-8:x.0"
+  },
+  "passive_observation": "TacticPod command menu (115200 baud; finish each command with Enter):\r\n  IMU ON       - print IMU readings at 10 Hz\r\n  IMU OFF      - stop printing; sampling continues (100 Hz when recording)\r\n  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions\r\n  RECORD READ  - export committed recordings as CSV while stopped\r\n  DIAG         - display JEDEC and SFDP information once (while idle)\r\n  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)\r\n  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives\r\n  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS\r\n  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400\r\n  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed\r\n  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls\r\n  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test\r\n  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot\r\n  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes\r\n  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes\r\n  TCB START / STOP / STATUS / READ - bounded append-only compact sessions\r\n  TCB DURATION seconds|UNLIMITED - stopped only, 1..1800 or until stop; default 120; drain deadline 60 seconds\r\n  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop\r\n  FIELD EVENTS - drain bounded timestamped RAM events while stopped; overwritten count explicit\r\n  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake\r\n  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference\r\n  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming\r\n  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds\r\n  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first\r\nIMU printing: OFF (default after boot)\r\nTCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.\r\nGPS PROFILE: CURRENT RAM PROFILE VERIFIED (read-only)\nReason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0\nFirst mismatch before recovery: NONE\nGPS PROFILE END | UART=38400 | snapshot=none | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.\n",
+  "idle_before": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xB4000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=8048 rejected=0 blocks sealed=37 completed=37\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=2 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=15336892 max_block_step_us=53999 max_slice_us=308 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=162 blocks=37 committed=8048 offered=8048 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=278 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=timed free_sectors=3915\n"
+  },
+  "gps": "GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=857247 | checksum_ok=11801 | checksum_fail=0 | last_valid_message_age_ms=22\nGPS configuration: CURRENT RAM readback verified: 100ms / RMC 10Hz / GGA 1Hz / GPS+Galileo\nGPS last applied profile (historical): 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400 (snapshot unavailable)\nGPS RAM readback t_ms=1060775 (snapshot, not proof of navigation cadence)\nGPS fix=VALID | lat=50.775060 | lon=0.090197 | position=CURRENT | satellites=5 | HDOP=2.35\nGPS speed_km/h=7.556 | UTC=11:53:19Z | position_age_ms=22\n",
+  "flash": {
+    "response": "BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2\nFLASH ID JEDEC 01 0B4018\nFLASH ID JEDEC 02 0B4018\nFLASH ID JEDEC 03 0B4018\nFLASH ID JEDEC 04 0B4018\nFLASH ID JEDEC 05 0B4018\nFLASH ID SR1 before=00 after=00 SR2=02\nFLASH ID REMS address=000000 0B17\nFLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF\nFLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB\nFLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52\nFLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031\nFLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF\nFLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356\nFLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nEND_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED\n",
+    "validation": {
+      "passed": true,
+      "jedec": "0B4018",
+      "sr1_before": "00",
+      "sr1_after": "00",
+      "sr2": "02",
+      "sfdp_bytes_per_pass": 256,
+      "sfdp_passes": 2,
+      "sfdp_header_hex": "53464450000101FF",
+      "sfdp_reference_sha256": "fb55c78de1f723eb5048b7f004658c75128c515881efae7d9dcc918afafafdec",
+      "qualification_label_used_for_admission": false
+    }
+  },
+  "battery": "BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4113 filtered_mV=4123 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000\n",
+  "idle_after": {
+    "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0xB4000\r\n",
+    "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+    "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=8048 rejected=0 blocks sealed=37 completed=37\nCOMP RAM input=0/2 output=0/2 input_high=2 output_high=2 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=15337432 max_block_step_us=53999 max_slice_us=308 max_units=8\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+    "TCB STATUS": "TCB STATUS state=1 session=162 blocks=37 committed=8048 offered=8048 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=1018 error=none programs=278 max_block_ms=411 reusable duration_s=120 drain_s=60 lock=0 mode=timed free_sectors=3915\n"
+  },
+  "serial_closed": true
+}

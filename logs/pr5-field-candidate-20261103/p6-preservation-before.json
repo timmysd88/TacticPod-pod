@@ -1,0 +1,814 @@
+[
+  {
+    "path": ".p6/src/battery_monitor.h",
+    "sha256": "cd9bcffd47fc9574468d4f3442eff5d773d4e978ff5df6dc3a7b02fcb7069fac"
+  },
+  {
+    "path": ".p6/src/battery_runtime.cpp",
+    "sha256": "dedef2f761bdd3b74d6b43944f905590ce2a6079e43d1b7ac274d304dc07b5e4"
+  },
+  {
+    "path": ".p6/src/battery_runtime.h",
+    "sha256": "935cc4fb9a4eb5b931a69cebaf63522469017363a184bea06d01ee8611b88024"
+  },
+  {
+    "path": ".p6/src/compact_recorder.cpp",
+    "sha256": "5a30195463751c73ca4cece6ae3faf069dbda1272f67d8d76c6dcf82d142af99"
+  },
+  {
+    "path": ".p6/src/compact_recorder.h",
+    "sha256": "f4a73fdef22e9722b85d6d8bd5cce64389d521a65a64f0aff4d498bb644d599f"
+  },
+  {
+    "path": ".p6/src/field_trace.h",
+    "sha256": "a8d46f7c212fc494f45d929bf14c9f04fd46cc432801d40d0bb957c80a0bd590"
+  },
+  {
+    "path": ".p6/src/flash_diagnostics.h",
+    "sha256": "2525f03de987009a3942f69586a3481274f1ffdf19e2fae2d72b793206dd20ee"
+  },
+  {
+    "path": ".p6/src/flash_identity.h",
+    "sha256": "69e0fbb38896f60e2f85a5abce10a6283d74b144edbb2fab49783c5061b970fd"
+  },
+  {
+    "path": ".p6/src/flash_power.h",
+    "sha256": "d503beb31f0acc0caca74fa7fe020753b06e0926aa5b18f6397a8c2b56d8428b"
+  },
+  {
+    "path": ".p6/src/flash_write_test.cpp",
+    "sha256": "e71006b6b419ff093309c6ad1fdedfecd832b5ec88be57cbc1e5fd710c69ad9b"
+  },
+  {
+    "path": ".p6/src/flash_write_test.h",
+    "sha256": "9fdceb71cac158b67d4afa1e1a0a5a4ace72b4f8c7ec14df409b4a9550fba086"
+  },
+  {
+    "path": ".p6/src/gps_backup_trace.h",
+    "sha256": "0f239d5183b39fd14cda1c96f3e0c056bb3a3fa52604516ac605de6dbe121aed"
+  },
+  {
+    "path": ".p6/src/gps_backup_uart_diag.cpp",
+    "sha256": "f497b90f2b84adc9832635a854973280c18451da00bc6fd6503c27debe65d66c"
+  },
+  {
+    "path": ".p6/src/gps_backup_uart_diag.h",
+    "sha256": "f8bd2467d57b246aca0db06fc72d0e1f66fbba6d84c212f1e2c7d1995115d445"
+  },
+  {
+    "path": ".p6/src/gps_config.cpp",
+    "sha256": "5d0a2f96e4d522b172982a21873a9663ba96bd206b74933cc55195f176e99a84"
+  },
+  {
+    "path": ".p6/src/gps_config.h",
+    "sha256": "ec62f7d5418beaf66ecabd5542fc9107f1cc522450b67b88630d13cb4200d2f7"
+  },
+  {
+    "path": ".p6/src/gps_power.h",
+    "sha256": "17e716e5044fd830a1259cb0dba4de91d262f5135cf25c668b751082f694a964"
+  },
+  {
+    "path": ".p6/src/gps_profile.cpp",
+    "sha256": "c718804be32dfc70f9cee97a90c1bfd09e0db78663cf888c48b6b56ed29c5471"
+  },
+  {
+    "path": ".p6/src/gps_profile.h",
+    "sha256": "3de0dd015555cc447e19f4a1424c7ab3c4e9f979f9a829a1e465490c5f25a692"
+  },
+  {
+    "path": ".p6/src/gps_rate.cpp",
+    "sha256": "01ac99dd7d452b1f1631bd88d319890d27665e86f689a0bf652031476c572d15"
+  },
+  {
+    "path": ".p6/src/gps_rate.h",
+    "sha256": "255c2292746d3384dc65f5440ab0b1c72a95474c4f23e7b093ffd9be0fa64f2d"
+  },
+  {
+    "path": ".p6/src/gps_receiver.cpp",
+    "sha256": "fc5886727a2ab56e1a792a5d7cf48ad4e917f9ba47ed352033e3d5d9c8489aca"
+  },
+  {
+    "path": ".p6/src/gps_receiver.h",
+    "sha256": "81ecf6d1232d8ebdce717f430697874334817440a257fa77a20d5384bc80faaa"
+  },
+  {
+    "path": ".p6/src/gps_uart_config.h",
+    "sha256": "48ac396732ded5632e7049ffd0d669509b4b3bf6dff30ac22fcf38a6973732a3"
+  },
+  {
+    "path": ".p6/src/gps_uart_scan.cpp",
+    "sha256": "ec8bc0c39637afade4727366248648686fb1fb4780c3666dd6fe00156d36fb20"
+  },
+  {
+    "path": ".p6/src/gps_uart_scan.h",
+    "sha256": "36951a1daa1f129ffe8941815b8bca6ccbd58af359f73b94c5d2e73d304d683f"
+  },
+  {
+    "path": ".p6/src/gps_uart_tx.h",
+    "sha256": "7ab22b09094b23e0acd04bda5f24cf872ad08361e785346c6b5d7d39543cbb9a"
+  },
+  {
+    "path": ".p6/src/main.cpp",
+    "sha256": "0ecace6fa80706171440635dacf3f3c0df5f62b858a531df2da6974d22eb3198"
+  },
+  {
+    "path": ".p6/src/monotonic_clock.cpp",
+    "sha256": "048aaad5a49cc8bdd2f459e814926c05d63a0b44e8ec7559afdd717451d2f32f"
+  },
+  {
+    "path": ".p6/src/monotonic_clock.h",
+    "sha256": "b697f53194537d4ea8e7ad0940d35f16d02d8ec5ff2a5a7da8d1ccebff0d3e05"
+  },
+  {
+    "path": ".p6/src/physical_button.h",
+    "sha256": "0c288f0c3371da31aae888ebd17c3c20d077fe1acecb9672a0c1994e7b274150"
+  },
+  {
+    "path": ".p6/src/ram_observations.cpp",
+    "sha256": "ee395ad4c7de96cab4bf6651cbed67d2ee9f2d44f3a7a01741a9f0b9c92f2a2c"
+  },
+  {
+    "path": ".p6/src/ram_observations.h",
+    "sha256": "15aab0b539d2f4b6d46c2a1e8cf5a5065789566f4c56c53dcfd54fc59e9a575c"
+  },
+  {
+    "path": ".p6/src/recorder.cpp",
+    "sha256": "2ad10717d20e6f0fbf5dedc014755e33c624180c7da4a6f1ad7a0d24483046dd"
+  },
+  {
+    "path": ".p6/src/recorder.h",
+    "sha256": "2d2e661814f0d4fc2a448080f6f15052fa8a8b617816ddf76d4bfd00a2a41035"
+  },
+  {
+    "path": ".p6/src/recorder_format.h",
+    "sha256": "3eda601b69b4a454a1e0babbc5f129e047c3e6d2cc6dd1856580ec6d76457ca2"
+  },
+  {
+    "path": ".p6/src/serial_console.cpp",
+    "sha256": "71c54c98e78615a44970065fa97035d7ac58c0b27686ff01ff3394bddf110900"
+  },
+  {
+    "path": ".p6/src/serial_console.h",
+    "sha256": "0297a79c168a72593eb6e38ffe921f90407f3fd6a14779d0712559f45b2a3a86"
+  },
+  {
+    "path": ".p6/src/standby_policy.h",
+    "sha256": "9f4ab61ccb9636d0a80b2f14112d9258628cb534dcf2ce0f1726d10e31057f4c"
+  },
+  {
+    "path": ".p6/src/status_led.h",
+    "sha256": "4cc292b36db3a91af83b3c2c3feaabe4245c043a4b54412ca0082fadec4ba5c2"
+  },
+  {
+    "path": ".p6/src/tcb3_session.cpp",
+    "sha256": "51489083a994e3a2875e7beb47487e29c663c56efeb1ccd80b9a975a7e58dff5"
+  },
+  {
+    "path": ".p6/src/tcb3_session.h",
+    "sha256": "8106fbd27b7c637b87678b2523dae3b804e5ff5557a31bbad3f38943bacdc826"
+  },
+  {
+    "path": ".p6/src/tcb3_store.cpp",
+    "sha256": "9f0734c9c0d061b3b1b386b0bcc00d31fba5deab7690fdf8fd1b0c6210ef8ca1"
+  },
+  {
+    "path": ".p6/src/tcb3_store.h",
+    "sha256": "1cb2cca79067879880c3a3ba120d013095db27ef2246a425aa69116d2ce6fa2f"
+  },
+  {
+    "path": ".p6/src/tcb3_test_limits.h",
+    "sha256": "52d27a228d610dbc74adedebb591a805dd75073242e9c3b345fab2927128ee2d"
+  },
+  {
+    "path": ".p6/tests/compact/fixtures/manifest.json",
+    "sha256": "05141f9869510af0f3522f1b11c768762cac608606fe00d49f32560d17a128c3"
+  },
+  {
+    "path": ".p6/tests/compact/fixtures/stillness.tcb3",
+    "sha256": "ad13aa6d95937b3e46494a248f386b78dfa3e1f7be698ab0d4776184a575ad94"
+  },
+  {
+    "path": ".p6/tests/compact/fixtures/stillness.v2wire",
+    "sha256": "ef8e1f3efc504ad55a41689143a6c7f3646f428041d84d039566e03989bd8fb2"
+  },
+  {
+    "path": ".p6/tests/compact/harness.cpp",
+    "sha256": "b77c92b9d6d36de1a9b1454aec1261a3007254fb5addf73c52bec2898e799787"
+  },
+  {
+    "path": ".p6/tests/compact/run_tests.py",
+    "sha256": "aed5c3aa20f00b160689c02a2e57ec52a3d728395fbb20d60d2b81a1f890aad9"
+  },
+  {
+    "path": ".p6/tests/compact/test_decoder.py",
+    "sha256": "bb231b4c957e1bffed3cd24c7c841a6a9e7bf1d2a44d43c885a158ed67330c0a"
+  },
+  {
+    "path": ".p6/tests/compact/test_resources.py",
+    "sha256": "d30265d52c920ad2346a1de4e0911c77610ebfa74982c2ebe314fba304cc9187"
+  },
+  {
+    "path": ".p6/tests/compact/test_timing_model.py",
+    "sha256": "10114b7add0366450f68cdb1de69b99593c2dd3eef12c9f0d6e67b8a1b10010d"
+  },
+  {
+    "path": ".p6/tests/flash_identity/harness.cpp",
+    "sha256": "041c6fd1ea6f3163e52f6307c2de9debdb9ca2156b8afdc0a07f3a7a8d0c11c4"
+  },
+  {
+    "path": ".p6/tests/flash_identity/recording.cpp",
+    "sha256": "0ccfe112cd45c64a33a65f2148fa6134c9bea3cdcc20c0adec7131c5835dc287"
+  },
+  {
+    "path": ".p6/tests/flash_identity/run_tests.py",
+    "sha256": "328a74a51195fdb52418c07deeddf40f41d0a0f79063b3956c67e9e03ad09189"
+  },
+  {
+    "path": ".p6/tests/flash_write/Adafruit_TinyUSB.h",
+    "sha256": "b3adf106d95b8934f690943f2921308b90be5b766c4c8ba250c792de56400201"
+  },
+  {
+    "path": ".p6/tests/flash_write/Arduino.h",
+    "sha256": "b8cf345b2bb4f9259e96cf57efc8b37ac48b06daa278ec325afc53d2545dd52d"
+  },
+  {
+    "path": ".p6/tests/flash_write/harness.cpp",
+    "sha256": "fc535e28cb30dfa787710320f3d2b13b91c758fde1465b208896da0b8a21e293"
+  },
+  {
+    "path": ".p6/tests/flash_write/LSM6DS3.h",
+    "sha256": "eeaaafcf98553e537c11ff00d308e0c6b5c6e2c420feab900f4627736ccad032"
+  },
+  {
+    "path": ".p6/tests/flash_write/run_tests.py",
+    "sha256": "12e68e35f356c5249de9753c9b7675fb7339df26abebb14f6b6a33d16cf45ebc"
+  },
+  {
+    "path": ".p6/tests/flash_write/SPI.h",
+    "sha256": "94f436778b981022d7f9ffff1932b4c3046fe01490ba64f3a1951cc2b1fdd909"
+  },
+  {
+    "path": ".p6/tests/gps/harness.cpp",
+    "sha256": "f62d96908ea58f8aea68e187ad578534b5b8b5d12253d9e9052fe2042ded6a7f"
+  },
+  {
+    "path": ".p6/tests/gps/observation_cases.h",
+    "sha256": "e4f03400e3e01f71d8dc6fd4103b4b5bc1f233329386b6e86843dfca34c7400a"
+  },
+  {
+    "path": ".p6/tests/gps/profile_cases.h",
+    "sha256": "03b029d3dedc66f206e9169fbe3d345a1c422b20071998b43c4cae8247d5988a"
+  },
+  {
+    "path": ".p6/tests/gps/run_tests.py",
+    "sha256": "76a188edb44d544efc3fdc4ee86b5e69d582a0399d0ce6179acffed4df1a460b"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/corrupt_crc.bin",
+    "sha256": "30b698c6d1200f1b6f1f1d71069178e3079bbaece853ae1a635c30d6346851fe"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/corrupt_crc.expected.json",
+    "sha256": "bb249d84c3732ac804221643e4276440dc1f269b39502709f86c1330c3bf1479"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/empty_session.bin",
+    "sha256": "4fe0363d5cf4f9b6eeebfa46aca723d1885463deaee836236526f0660ba154ec"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/empty_session.expected.json",
+    "sha256": "5c917b7e1c908c5cad4b9e74fa7979acf31087287fe2752c59665b1b15cdfae5"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/interrupted.bin",
+    "sha256": "f9657704d526e219374c7af70caebaeaa5e7c0a01fcb48f062ec6b19d5e90953"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/interrupted.expected.json",
+    "sha256": "b975b0a0435a888cdf9029ab52bd2e510ce4091d8afe64aba73d9fc435c8080a"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/missing_gps.bin",
+    "sha256": "2e56484274611ade0c1f19f4569a49b31ef401283631bcf3b7ad29a2c6c7b8c1"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/missing_gps.expected.json",
+    "sha256": "e06153cea4b1f21d1f413d29b3121f53f7b90214603d44b8313592ddba6b4597"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/mixed_v1_v2.bin",
+    "sha256": "3fa2e3efd63479eb99607fe216c040f0377ef39e6df8144e5534b60cb45b8cce"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/mixed_v1_v2.expected.json",
+    "sha256": "cbc2c230ff567977fd9f0c0c92f342004bba68705d26d46536b311dbc90be00b"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/sha256.json",
+    "sha256": "212cf81202986cb986daf3115a4b5d07b7add052a62945c12c239d0e9c4fc92c"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/timestamp_rollover.bin",
+    "sha256": "4403acff946ce2be8e37c9e8acb4aa2ab18e23fe0360a3e9aae1a5e00a7fbc83"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/fixtures/timestamp_rollover.expected.json",
+    "sha256": "5ece212b96af4f78625f3a3933357d73d0423c23691057317361de7ce19a983c"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/generate_fixtures.py",
+    "sha256": "9ddad2bf41bba35e514807c35bb281141d1964b3618206665ab118ff24bf5d65"
+  },
+  {
+    "path": ".p6/tests/recorder_v2/run_tests.py",
+    "sha256": "e5a3db61c938fbfe4cefc0cc3acc105f8bc06a9cf30c4a21451ceb1b0fab5bba"
+  },
+  {
+    "path": ".p6/tests/recording/erase_review.cpp",
+    "sha256": "9955e36c4cfaf1d69d289187b1c0a17b52d08b7c18d8f238a356e3d14cbe66bf"
+  },
+  {
+    "path": ".p6/tests/recording/erase_review_tests.py",
+    "sha256": "2de20f241bfccca8f4766c3e84119ae817aab63faacf13a34522d03a17c5b481"
+  },
+  {
+    "path": ".p6/tests/recording/harness.cpp",
+    "sha256": "acc6a844cfdbfe52272169ab0dcffa3e468eda147cdedc17709acfef62d81c28"
+  },
+  {
+    "path": ".p6/tests/recording/run_tests.py",
+    "sha256": "b60ae7c113c4b58d66cef885609b06ce1e41dee2b85f173253f95e965647c48e"
+  },
+  {
+    "path": ".p6/tests/recording/SPI.h",
+    "sha256": "06d460fd2bb6c522762b91e0d3d048f9761bc7c056927bf0fcb37fb6e0fcf4cf"
+  },
+  {
+    "path": ".p6/tests/reusable/__pycache__/host_checks.cpython-311.pyc",
+    "sha256": "c8de4045912178dc780d4c2a435386349e862e66ae9bc4ae42025d59065c435e"
+  },
+  {
+    "path": ".p6/tests/reusable/__pycache__/host_checks.cpython-313.pyc",
+    "sha256": "77be2d30d6afdb18decc751cc5cb36de2c8f514086ce8862ec161cb8ee055cbe"
+  },
+  {
+    "path": ".p6/tests/reusable/adc.cpp",
+    "sha256": "d0a27bd3c235804069223971aa6a24900a4f9637f4782c0fb84cc6e3c244efe5"
+  },
+  {
+    "path": ".p6/tests/reusable/adc_tests.py",
+    "sha256": "fd1d7842b2fe44c29abc23877d829db9981481faa4c08261ecf0bd66f9bda3d7"
+  },
+  {
+    "path": ".p6/tests/reusable/button_led.cpp",
+    "sha256": "d67d17dfedcfd8116fbb706fd411706d631a3a729058c54c0c241de5cef88ef8"
+  },
+  {
+    "path": ".p6/tests/reusable/button_tests.py",
+    "sha256": "d2d9c129332a717ce1cca1fe32df1fbfc9b3a44a3e60ebae09ef3bbc13dd6d9e"
+  },
+  {
+    "path": ".p6/tests/reusable/compiled_startup_tests.py",
+    "sha256": "38d085d936276e8609c73037fbc506041f59bd7dce44a4bbfb54ad7bb749c6fd"
+  },
+  {
+    "path": ".p6/tests/reusable/console.cpp",
+    "sha256": "a28b1a4036e23c208463ac81c489f1d162b6824e695dcab573a63592e71d65f7"
+  },
+  {
+    "path": ".p6/tests/reusable/console_tests.py",
+    "sha256": "3939a262a504f700ad68981bfad3ef556f2284a5ceaadd906063b1b411990402"
+  },
+  {
+    "path": ".p6/tests/reusable/download_tests.py",
+    "sha256": "7215f12fdd6cdad66f171e8fef641f6c1f3dd844c7d698014a4c7fc5a084da6a"
+  },
+  {
+    "path": ".p6/tests/reusable/field_integration.cpp",
+    "sha256": "1417c4e87034edc6327ac1b31031903f404e893a4de372be7c6a47d929302d40"
+  },
+  {
+    "path": ".p6/tests/reusable/field_tests.py",
+    "sha256": "1b361db6823b309b52e9710c161dd7bd165812c834962e80c3208a2adbd86fb3"
+  },
+  {
+    "path": ".p6/tests/reusable/fixtures/physical-three-sessions.bin",
+    "sha256": "b9ad38d83ac27a61a79bf58cbbba68cc44a03d6dddeebcf287d9166eb76fb6f6"
+  },
+  {
+    "path": ".p6/tests/reusable/fixtures/physical-three-sessions.manifest.json",
+    "sha256": "7c005e4974140f94f356378fe34179fe67a528b973941503731ae9255a74aa96"
+  },
+  {
+    "path": ".p6/tests/reusable/gps_backup_integration.cpp",
+    "sha256": "2ee2ed4c7b45483971fba29ce8600b6ecb13fb3e5c760d6b1d2790a34df4f0fc"
+  },
+  {
+    "path": ".p6/tests/reusable/gps_backup_test.cpp",
+    "sha256": "f64f198b6744d640fef252b557460a7a165eb60e5345f8aa618b98a5da255d2a"
+  },
+  {
+    "path": ".p6/tests/reusable/gps_backup_tests.py",
+    "sha256": "a208453d82ed6f637f2bde94ea27d3540445f1a16466875a82ffb6b4f9117a88"
+  },
+  {
+    "path": ".p6/tests/reusable/host_checks.py",
+    "sha256": "0e18832741dc2c0551c63cacfa19f6b70496149bb347ab4fc3858244a1c7af43"
+  },
+  {
+    "path": ".p6/tests/reusable/hw/Arduino.h",
+    "sha256": "d6b16d4c79a88622a5d3ab5d39ab56f68ad11058bde5153659744eea1a4a6f95"
+  },
+  {
+    "path": ".p6/tests/reusable/integration.cpp",
+    "sha256": "6ac7a36fa8e6d275c9a6efb4ff4d3be223b2803f30ce87af295f42ddf2149dae"
+  },
+  {
+    "path": ".p6/tests/reusable/integration_tests.py",
+    "sha256": "1f40b28c8b8c637247888adef8f88ff7f70e2f5c6ffeb3c27469957b5ae2f885"
+  },
+  {
+    "path": ".p6/tests/reusable/policy.cpp",
+    "sha256": "59ea80ee606358462386921a35fd70cd040c33b6c6c906ef9a0ead166e64bfb2"
+  },
+  {
+    "path": ".p6/tests/reusable/policy_tests.py",
+    "sha256": "abae5a48f001ca40859a42f858666f5e0cb966cb103bed20beda968e86ac8e31"
+  },
+  {
+    "path": ".p6/tests/reusable/run_all_tests.py",
+    "sha256": "387be70d98bbbbdf06353ed9deaffb861836c614d4b7ee28abba819a7c278485"
+  },
+  {
+    "path": ".p6/tests/reusable/standby.cpp",
+    "sha256": "2f1881a2ff5a1d7698de87a666f74e6b547331c503ea78e91e16c25d31e377c6"
+  },
+  {
+    "path": ".p6/tests/reusable/standby_tests.py",
+    "sha256": "d9230d1291eff0d6d73488051abc3d3fc23ab342e0a314f34124ee7cd0aea2a5"
+  },
+  {
+    "path": ".p6/tests/reusable/startup.cpp",
+    "sha256": "934a60b4c2277da407a9f5d2d4ca03c857df1a82d9673e2aefe091a4d26cde30"
+  },
+  {
+    "path": ".p6/tests/reusable/startup_hw/nrf.h",
+    "sha256": "2d80484b105bdadf4499fcf3488264a2b40e8692e0563ef50721abad7e4a2e36"
+  },
+  {
+    "path": ".p6/tests/reusable/startup_hw/wiring_constants.h",
+    "sha256": "f0fbc6f0b8e47313478e80ddb8f8917753db0a0239767c7aaa0d09f028f13ef6"
+  },
+  {
+    "path": ".p6/tests/reusable/startup_hw/wiring_digital.h",
+    "sha256": "dc1ccfaeadbebff6277b85ff10824ce14bff95c7e77d848c037aeb01cb2aed7b"
+  },
+  {
+    "path": ".p6/tests/reusable/startup_hw/WVariant.h",
+    "sha256": "75de354594a1623884553c44bc6fc79e66345f4971580def64ffd8d6d50613e2"
+  },
+  {
+    "path": ".p6/tests/reusable/startup_tests.py",
+    "sha256": "5920ef06e12ed0a280da03a83e6a190b4f87b1a9c3fd6dee15cd15558941732c"
+  },
+  {
+    "path": ".p6/tests/reusable/store.cpp",
+    "sha256": "547e20587e4b5c272dad40c9ed09f53a9a1e062b06838380816dc0eafdedd4c9"
+  },
+  {
+    "path": ".p6/tests/reusable/store_tests.py",
+    "sha256": "b078f1e8094e22266a09013de7fe3fa4a3380b3f2c87daf54487e47181bc9bf1"
+  },
+  {
+    "path": ".p6/tests/reusable/switchless.cpp",
+    "sha256": "620927b1d65d6627ecd3db779ddc664e2e3bf459f17d05e554f3ef635903edd9"
+  },
+  {
+    "path": ".p6/tests/reusable/switchless_tests.py",
+    "sha256": "4f194aa2d3121e245164f81190d7d47afa7de3c0fdc8828456b007de1a1a3a8f"
+  },
+  {
+    "path": ".p6/tests/storage_benchmark/run_tests.py",
+    "sha256": "6364113a99704adec2b56892ec1e1998a677f7fda570950c9d112567097f8d5b"
+  },
+  {
+    "path": ".p6/tests/tcb3/__pycache__/native.cpython-311.pyc",
+    "sha256": "9fe88df8d79489999d61b137bf63c282e282e6638de70649056d02098a638156"
+  },
+  {
+    "path": ".p6/tests/tcb3/__pycache__/native.cpython-313.pyc",
+    "sha256": "b55339f22f699b3ab9c88df90491a93caab8b44a7a2d0f4d0579f28b3d0a5b57"
+  },
+  {
+    "path": ".p6/tests/tcb3/append_30s.cpp",
+    "sha256": "5ce19444e623cbc363162815a535da69c2a9f25b84f855a215ccb83af4003b61"
+  },
+  {
+    "path": ".p6/tests/tcb3/append_30s_stress.cpp",
+    "sha256": "6e15ddd9cf726aebb8153ad8b1a9c27dceedf32193c566045dabb58ae47b994a"
+  },
+  {
+    "path": ".p6/tests/tcb3/append_30s_tests.py",
+    "sha256": "7435d7b9be6e1637a9dae9fb2bbe5a4c68a8c01036a63ee8002a829f8135fa2b"
+  },
+  {
+    "path": ".p6/tests/tcb3/append_store.cpp",
+    "sha256": "160dae0905f48cfcef30c85c7d0345659e2250d4f851f7d3a1834d5574d8a926"
+  },
+  {
+    "path": ".p6/tests/tcb3/console.cpp",
+    "sha256": "ee73b92e5c2be525e5c36b99fa3bae1d987e00a0d28e8b93b52e82e69f5a53de"
+  },
+  {
+    "path": ".p6/tests/tcb3/console_tests.py",
+    "sha256": "cf6d1285a297a6fb75b0a170886235d1461855eb4f9db8f5e4850fec36a7dedc"
+  },
+  {
+    "path": ".p6/tests/tcb3/first_console.cpp",
+    "sha256": "87f4e16a21d3d343182a2d6db4e7b3a35c4b915f82082f8d296c8eb94c8f705e"
+  },
+  {
+    "path": ".p6/tests/tcb3/first_store.cpp",
+    "sha256": "d29db58762d2caaca2940e3a1a777a4ad73ebe086d89302c050f9283a3404da5"
+  },
+  {
+    "path": ".p6/tests/tcb3/first_write.cpp",
+    "sha256": "407d8ec71037e85f0104ab6bf4c23d6203a9e3582f1fe9eefbdd7fd4a269206e"
+  },
+  {
+    "path": ".p6/tests/tcb3/first_write_tests.py",
+    "sha256": "469142939140f519569d2ae0f50cd2a580405e097a628c8b7eb4ac91e68ef736"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/example.tpx3",
+    "sha256": "626637c5b5ee4297f6560fc11f30881ca061141957a2743c9132d758813afa96"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/expected.json",
+    "sha256": "cbe03e9208ed24c0405566d859db91b6ca39f56b60827ecdff3c183a42d98806"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/expected.v2wire",
+    "sha256": "45ac9564fd9af99687af05da241d9aa93703841eb24f2c1b8136fc852d18a060"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/manifest.json",
+    "sha256": "6204811c0e92d4fab33ce1204a2fd61f22c060d7a7542b11e1d0a417df88082e"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/phase3b7-session.bin",
+    "sha256": "8bf910507bac630695a28b2b7c42a9a34d0d06ebda9a30016cc82d0a898dc1bc"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/phase3b7-session.manifest.json",
+    "sha256": "364145ab4bb3703e35e8fe905de415b15f8ef0716b6066f0df8bae6c05ac5e6f"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/phase3b9-two-sessions.bin",
+    "sha256": "ca12e165fa6ce7004f0ca00e60b2e975781834e56ed0d66b07511af70befc48e"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/phase3b9-two-sessions.manifest.json",
+    "sha256": "3bdb2ad1ec9a803f3e734f4be62873ac1cdd8c245c6f30831a47af4882ed9b04"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/v32/example.tpx3",
+    "sha256": "5d2a4c955507d474e2f0b79afe453eb28f07a7c0719c41d4967996ae8bd8bdb5"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/v32/expected.json",
+    "sha256": "60cbf31f5b0618141a183006c6f6a23de33d074035323b913f2e98edaeed8fe3"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/v32/expected.v2wire",
+    "sha256": "45ac9564fd9af99687af05da241d9aa93703841eb24f2c1b8136fc852d18a060"
+  },
+  {
+    "path": ".p6/tests/tcb3/fixtures/v32/manifest.json",
+    "sha256": "de95c0fb323c63790572842c6003bee74a5d2a11b4d3490d9ade640a563e05a0"
+  },
+  {
+    "path": ".p6/tests/tcb3/harness.cpp",
+    "sha256": "9dea2a1db4b99ebd7cb063c8210263b137ee39db3372b5f5f2806fa42a03bbf7"
+  },
+  {
+    "path": ".p6/tests/tcb3/integration.cpp",
+    "sha256": "99dfa5d1ab363c4ac01fc9bcb8a984b8e44e6c89b2e54b1c31390458ad438560"
+  },
+  {
+    "path": ".p6/tests/tcb3/integration_tests.py",
+    "sha256": "0fd607ceec025e5ae5b08efb41d83f2fafb849125b2d9492dcb46ce1957ad2f6"
+  },
+  {
+    "path": ".p6/tests/tcb3/long_integration.cpp",
+    "sha256": "bc5c97d4bec5424cadef5db7308483e701e58b378cf1972f64b38802a7ebdaa1"
+  },
+  {
+    "path": ".p6/tests/tcb3/long_integration_tests.py",
+    "sha256": "a0fe7ec4734964e977ba904b331d5fd55917d81ac201e33c986c6d412b8e2475"
+  },
+  {
+    "path": ".p6/tests/tcb3/movement_120s.cpp",
+    "sha256": "e466f99f6a933d8c4ee324f06b328187b3a5146c861ba86720a6bd260a394afc"
+  },
+  {
+    "path": ".p6/tests/tcb3/movement_120s_stress.cpp",
+    "sha256": "b2b0503a365eacbcb5f814fbbe8bf8bd1f8931c08cf9c0cf76ed3814f4b7c555"
+  },
+  {
+    "path": ".p6/tests/tcb3/movement_120s_tests.py",
+    "sha256": "06e9093f49cdb0cb8f14eff475276a8bd93f13833a00fbf0c8e787232ad6e392"
+  },
+  {
+    "path": ".p6/tests/tcb3/movement_console.cpp",
+    "sha256": "d70c103de2c4119ace80c537cb6542f6fa5ab9661db223521486dff7493999d6"
+  },
+  {
+    "path": ".p6/tests/tcb3/movement_controls_tests.py",
+    "sha256": "c34d5bf126cead3e18aa6a6136a17b705c4864b968ddc1471a1abcb3095d499c"
+  },
+  {
+    "path": ".p6/tests/tcb3/movement_store.cpp",
+    "sha256": "fc3c4548314179f1e331cb31d7a3c9a328f34901988bd2f132fc18f1a4544be0"
+  },
+  {
+    "path": ".p6/tests/tcb3/native.py",
+    "sha256": "f84ed62ae8471cb1850a35b5fe978537cedf8265e2ba78b2891d56ac316fb3e2"
+  },
+  {
+    "path": ".p6/tests/tcb3/run_tests.py",
+    "sha256": "292a47d0d1056c49a38bc11afed1f54f4a1d4484d01effe1366056464701a5a4"
+  },
+  {
+    "path": ".p6/tests/tcb3/sustained_tests.py",
+    "sha256": "43301afb6e10fdc13f4943880e53236ddc84492b135f442254d7bb9f3a2746a4"
+  },
+  {
+    "path": ".p6/variants/tacticpod/README.md",
+    "sha256": "28fb70c342fa1c64ed082a10bd27e7c8089b063d0b3bbd5f1bbb1bb5a8a02627"
+  },
+  {
+    "path": ".p6/variants/tacticpod/Seeed_XIAO_nRF52840/variant.cpp",
+    "sha256": "349a7851d337ee5f9a102de9a2e0f374992070af9cd96e79745fb8d39e0c42de"
+  },
+  {
+    "path": ".p6/variants/tacticpod/Seeed_XIAO_nRF52840/variant.h",
+    "sha256": "a74818f54005de7f6002b6e2b143686edb9d99a6b98411f469a50960c9d31a0d"
+  },
+  {
+    "path": ".p6/docs/battery-bench-checklist.md",
+    "sha256": "08bd0d917d7399fa276efe4000614548f6fb20b9bc0e6ee5c448e860252a2859"
+  },
+  {
+    "path": ".p6/docs/battery-sense-hardware-options.md",
+    "sha256": "f7356395d598430758fe499d92949dba0b3ed707206efc3173d69c18ee1cb87e"
+  },
+  {
+    "path": ".p6/docs/battery-startup-safety.md",
+    "sha256": "67e5f9bd58f24b9fbaf239e7995614d3d5f65dcdcdc2eb81cff6483cceb9968d"
+  },
+  {
+    "path": ".p6/docs/connected-battery-30s-test.md",
+    "sha256": "cc3e7ee4f123e8884894e6c2d519cf31f455723f96dc04f50e2cdec422d36ae1"
+  },
+  {
+    "path": ".p6/docs/field-trial-fixes.md",
+    "sha256": "ca12867534b6024c8cbb35c9e3c22dbe28736e853c04975b55733ac0343c3f29"
+  },
+  {
+    "path": ".p6/docs/flash-detection-investigation.md",
+    "sha256": "2deb200cfb9fb628176283bf5328b45c777626d2548344137df45c11f0fbdb36"
+  },
+  {
+    "path": ".p6/docs/gps-10hz-investigation.md",
+    "sha256": "2f3f4654ccd8763f600699bf3217207acbc8095a3492f605768d658964a59db5"
+  },
+  {
+    "path": ".p6/docs/gps-10hz.md",
+    "sha256": "8205f3dfc76d14d9a1636a47e46fa552bd5641d8d93ff170c39ecced179b8278"
+  },
+  {
+    "path": ".p6/docs/gps-backup-cycle1-investigation.md",
+    "sha256": "fea5a0d047ae9cfef9e4cfa082d67a00136c36cf0d06a40099567b5b6944c6f7"
+  },
+  {
+    "path": ".p6/docs/gps-backup-rx-diagnostic.md",
+    "sha256": "03a0176388e18ce425f34f6a711cee75966b98b6ca4e782e7c5da85cf1a837de"
+  },
+  {
+    "path": ".p6/docs/gps-config.md",
+    "sha256": "9ce6e9ec2589d4da44cab560d986883d16e43055342f6d301485d5b11713e4bf"
+  },
+  {
+    "path": ".p6/docs/gps-rate.md",
+    "sha256": "14d30a2434cdc756d480db210506fc4f921dc3efca3d225186375f1df4280c32"
+  },
+  {
+    "path": ".p6/docs/gps-scan.md",
+    "sha256": "a50d92009457a1e279f67ddecddf2d0ec2eee7ae0eef061145140652224f5c90"
+  },
+  {
+    "path": ".p6/docs/gps.md",
+    "sha256": "3eef33497ac9872472bca73309d28cc6566ef23479279f3b7651c67716e712d3"
+  },
+  {
+    "path": ".p6/docs/hardware-gps-backup-test-report.md",
+    "sha256": "db86c79b37466d017446573a5a2863c5c5e7910a682d1ed56afe8777e79e0963"
+  },
+  {
+    "path": ".p6/docs/phase3b-validation.md",
+    "sha256": "7cae7a48af0170aa7ee7176027d0ec21a888afd0cca1e22768eb79eb9d434753"
+  },
+  {
+    "path": ".p6/docs/phase3b10-movement-120s.md",
+    "sha256": "b2cf6c928ed87a3144223bde8ca9cb4a469f6063383dd773a9ce052652028b15"
+  },
+  {
+    "path": ".p6/docs/phase3b3-flash-safety.md",
+    "sha256": "db197739e1aa1df748bd02180eb123e0fa9adea8e5e52b5c2c4debdac50fad0a"
+  },
+  {
+    "path": ".p6/docs/phase3b4-flash-qualification.md",
+    "sha256": "c5e98d8678e46b9e58daded5ec09330c96d58405f2f0026d808272a71008683e"
+  },
+  {
+    "path": ".p6/docs/phase3b5-clean-flash-plan.md",
+    "sha256": "d09647c03c0c1ca2348ae11ebfca92db12c865de9f2a31396934c0687e396c2c"
+  },
+  {
+    "path": ".p6/docs/phase3b6-first-write.md",
+    "sha256": "0c20ec19b67107b16141b6070ad57296de3e5ad76302e3d2b4f8e24a14e03d24"
+  },
+  {
+    "path": ".p6/docs/phase3b8-append-30s.md",
+    "sha256": "ea28533492f9a8f99044705e5ea71091b2c703b41ae8faac18e290d2cbc1e8e6"
+  },
+  {
+    "path": ".p6/docs/phase3b9-allocator-guards.md",
+    "sha256": "cdafa60d0dc1c9f8720b7004f42c3c84ccb2b5f9280963754a6b6e83d3278e95"
+  },
+  {
+    "path": ".p6/docs/pr4-resource-regression.md",
+    "sha256": "33ec43a2cc8a0e9c8f3e0b98b357d9db725c4cbcf7b3492480881d2af1642306"
+  },
+  {
+    "path": ".p6/docs/recorder-compact-v3.md",
+    "sha256": "01f4b0d1255b180825fcb94d2d9d11d07f8cec6e88fc5f44113384db9dfc3371"
+  },
+  {
+    "path": ".p6/docs/recorder-phase3a.md",
+    "sha256": "88c08aca18298afeba5f1ddc91dd64f2f7b33867e9a7356ed692d6c86403538e"
+  },
+  {
+    "path": ".p6/docs/recorder-tcb3-persistence.md",
+    "sha256": "3691286e66a67478193487a6c13f6f33ffc3dd650a3bb0cb00f3afe12209dccc"
+  },
+  {
+    "path": ".p6/docs/recorder-v2-format.md",
+    "sha256": "3aaeebf3f1890bdf76dda1ac24d412f6bad7d4468dd1d59fcf8f3c4c55d27be6"
+  },
+  {
+    "path": ".p6/docs/recorder-v2-host.md",
+    "sha256": "83159152e3dbab9a0f0b13e02fbf7187e69396e59a39f905e31888e42c4a0c04"
+  },
+  {
+    "path": ".p6/docs/recorder-v2-ram.md",
+    "sha256": "a2c3bcd18603c317495464dc9818ea43771c929688f6bf6179abed8246c62f1b"
+  },
+  {
+    "path": ".p6/docs/recording.md",
+    "sha256": "33edf5c6410391cfc5f6c2abf09548ab1dcece007990091adb21582f01a77452"
+  },
+  {
+    "path": ".p6/docs/reusable-prototype.md",
+    "sha256": "edb8d2f31dd49abe8c65d28fae435b146096df9efcc7913d289940455781236b"
+  },
+  {
+    "path": ".p6/docs/seeed-confirmation.md",
+    "sha256": "ef9cfc6d7e62ffb42913efca23a905b7da18d3a007ae7b31de1a0841507c7206"
+  },
+  {
+    "path": ".p6/docs/stock-board-battery-startup.md",
+    "sha256": "4dfd5f615020ee859c459a273a63b3b8ec1ed66a5ccc69f83dd1732aece0d674"
+  },
+  {
+    "path": ".p6/docs/storage-compression-review.md",
+    "sha256": "002801cbd82c0fe582cfdfa4f7d5b95b1bdd0e22e86276f9ad2af6fa06150a47"
+  },
+  {
+    "path": ".p6/docs/supervised-validation.md",
+    "sha256": "b4b3f10ffd78960851be197a2791ae415cb2206c5c6aa08af69423f3d1d01fa3"
+  },
+  {
+    "path": ".p6/docs/switchless-battery-first-test.md",
+    "sha256": "fea4eb47c2b6e6cecee5050597d220f3f8dbd8cd92cc0dc47156b8574092498e"
+  },
+  {
+    "path": ".p6/docs/uart-investigation.md",
+    "sha256": "66f6568b00afb23de8372fb6b0584916ded443a16f1b2cb7895f452988a42b02"
+  },
+  {
+    "path": ".p6/platformio.ini",
+    "sha256": "d72dca9837bf5a31c3a472555c6d2aa6c40fc656681522a900b05ecd2a5f3efb"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "approval": "User replied yes to one supervised approximately 30-second battery-powered button/LED test",
+  "recording_command_sent": false,
+  "calibration_changed": false,
+  "RECORD STATUS": "RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x49000\r\n",
+  "OBS STATUS": "OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF\nOBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0\nOBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0\nOBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0\nOBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0\nOBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0\nOBS END | first/last observation timestamps available through RAM API; no V2 flash writes\n",
+  "COMP STATUS": "COMP STATUS | capturing=0 fault=0\nCOMP records accepted=0 rejected=0 blocks sealed=0 completed=0\nCOMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0\nCOMP TIMING work_us=39945926 max_block_step_us=0 max_slice_us=141 max_units=1\nCOMP END | RAM only; no flash sink; timing requires hardware validation\n",
+  "TCB STATUS": "TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed\n",
+  "BAT STATUS": "BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4105 filtered_mV=4114 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000\n",
+  "serial_released": true
+}

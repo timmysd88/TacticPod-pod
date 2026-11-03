@@ -1,0 +1,71 @@
+{
+  "seeed_xiao_nrf52840_sense": {
+    "main": {
+      "sections": {
+        ".data": 1380,
+        ".bss": 117612,
+        ".heap": 116528
+      },
+      "static": 118992,
+      "compact": 37966
+    },
+    "pr_before": {
+      "sections": {
+        ".data": 1384,
+        ".bss": 117624,
+        ".heap": 116512
+      },
+      "static": 119008,
+      "compact": 37966
+    },
+    "static_delta": 16,
+    "object_deltas": {
+      "_ZN12_GLOBAL__N_17Profile13auditMismatchE": 1,
+      "_ZN12_GLOBAL__N_17Profile12auditRecoverE": 1,
+      "_ZN12_GLOBAL__N_17Profile13currentDetailE": 4,
+      "_ZN12_GLOBAL__N_17Profile9checkedMsE": 4,
+      "_ZN12_GLOBAL__N_17Profile12currentValidE": 1
+    }
+  },
+  "tacticpod_reusable_usb": {
+    "main": {
+      "sections": {
+        ".data": 2828,
+        ".bss": 118128,
+        ".heap": 114564
+      },
+      "static": 120956,
+      "compact": 37966
+    },
+    "pr_before": {
+      "sections": {
+        ".data": 2892,
+        ".bss": 119204,
+        ".heap": 113424
+      },
+      "static": 122096,
+      "compact": 37966
+    },
+    "static_delta": 1140,
+    "object_deltas": {
+      "_ZN12_GLOBAL__N_118profileRequestedAtE": 4,
+      "_ZN12_GLOBAL__N_19lastRmcMsE": 4,
+      "_ZN12_GLOBAL__N_17Profile13auditMismatchE": 1,
+      "_ZZN10FieldTrace4nameENS_4KindEE5names": 56,
+      "_ZN12_GLOBAL__N_17slowRmcE": 4,
+      "_ZN12_GLOBAL__N_17Profile12auditRecoverE": 1,
+      "_ZZN10FieldTrace6bufferEvE5value": 1040,
+      "_ZN12_GLOBAL__N_17Profile13currentDetailE": 4,
+      "_ZN12_GLOBAL__N_19TcbDetail9gpsWaitAtE": 4,
+      "_ZN12_GLOBAL__N_113profileFailedE": 1,
+      "_ZN12_GLOBAL__N_19TcbDetail10waitingGpsE": 1,
+      "_ZN12_GLOBAL__N_116profileRequestedE": 1,
+      "_ZN12_GLOBAL__N_113lastStopArmedE": 1,
+      "_ZN12_GLOBAL__N_117completionAwaitedE": 1,
+      "_ZN12_GLOBAL__N_117lastButtonPressedE": 1,
+      "_ZN12_GLOBAL__N_17Profile9checkedMsE": 4,
+      "_ZN12_GLOBAL__N_114profileRunningE": 1,
+      "_ZN12_GLOBAL__N_17Profile12currentValidE": 1
+    }
+  }
+}

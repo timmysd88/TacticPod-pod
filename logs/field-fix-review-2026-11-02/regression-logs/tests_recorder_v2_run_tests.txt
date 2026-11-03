@@ -1,0 +1,37 @@
+test_all_independent_golden_outputs (__main__.Conformance.test_all_independent_golden_outputs) ... ok
+test_bad_crc_word_and_commit_marker (__main__.Conformance.test_bad_crc_word_and_commit_marker) ... ok
+test_bad_metadata (__main__.Conformance.test_bad_metadata) ... ok
+test_blank_and_unknown_version_sectors (__main__.Conformance.test_blank_and_unknown_version_sectors) ... ok
+test_cli_json_csv_exit_codes_and_input_preservation (__main__.Conformance.test_cli_json_csv_exit_codes_and_input_preservation) ... ok
+test_crc_standard_vector_and_every_body_byte (__main__.Conformance.test_crc_standard_vector_and_every_body_byte) ... ok
+test_crc_valid_invalid_page_exports_no_partial_records (__main__.Conformance.test_crc_valid_invalid_page_exports_no_partial_records) ... ok
+test_field_masks_ranges_and_dates (__main__.Conformance.test_field_masks_ranges_and_dates) ... ok
+test_fixture_regeneration_is_byte_identical (__main__.Conformance.test_fixture_regeneration_is_byte_identical) ... ok
+test_fixture_sha256 (__main__.Conformance.test_fixture_sha256) ... ok
+test_footer_count_timestamp_and_crc_rejection (__main__.Conformance.test_footer_count_timestamp_and_crc_rejection) ... ok
+test_footer_invalid_fix_counter_is_checked (__main__.Conformance.test_footer_invalid_fix_counter_is_checked) ... ok
+test_full_metadata_fits_exactly_and_unknown_optional_tlv (__main__.Conformance.test_full_metadata_fits_exactly_and_unknown_optional_tlv) ... ok
+test_json_u64_fields_are_lossless_decimal_strings (__main__.Conformance.test_json_u64_fields_are_lossless_decimal_strings) ... ok
+test_later_committed_sector_survives_bad_page (__main__.Conformance.test_later_committed_sector_survives_bad_page) ... ok
+test_lengths_counts_and_padding (__main__.Conformance.test_lengths_counts_and_padding) ... ok
+test_literal_record_and_header_bytes (__main__.Conformance.test_literal_record_and_header_bytes) ... ok
+test_missing_header_never_recovers_unowned_payload (__main__.Conformance.test_missing_header_never_recovers_unowned_payload) ... ok
+test_monotonic_reserved_value_rejected (__main__.Conformance.test_monotonic_reserved_value_rejected) ... ok
+test_nonblank_tail_is_not_silently_ignored (__main__.Conformance.test_nonblank_tail_is_not_silently_ignored) ... ok
+test_partial_dump_and_reserved_sector (__main__.Conformance.test_partial_dump_and_reserved_sector) ... ok
+test_quality_is_not_accuracy (__main__.Conformance.test_quality_is_not_accuracy) ... ok
+test_rmc_mode_n_and_status_a_do_not_create_valid_fix (__main__.Conformance.test_rmc_mode_n_and_status_a_do_not_create_valid_fix) ... ok
+test_sequence_session_and_timestamp_rejection (__main__.Conformance.test_sequence_session_and_timestamp_rejection) ... ok
+test_u64_rollovers_and_large_event_detail (__main__.Conformance.test_u64_rollovers_and_large_event_detail) ... ok
+test_unknown_optional_record_and_schema_skip (__main__.Conformance.test_unknown_optional_record_and_schema_skip) ... ok
+test_unknown_profile_and_missing_identity (__main__.Conformance.test_unknown_profile_and_missing_identity) ... ok
+test_unsupported_continuation_metadata_is_not_merged (__main__.Conformance.test_unsupported_continuation_metadata_is_not_merged) ... ok
+test_v1_csv_preserves_raw_wrap_and_v2_imu_only (__main__.Conformance.test_v1_csv_preserves_raw_wrap_and_v2_imu_only) ... ok
+test_v2_legacy_csv_low32_milliseconds (__main__.Conformance.test_v2_legacy_csv_low32_milliseconds) ... ok
+test_valid_and_void_positions_are_distinct (__main__.Conformance.test_valid_and_void_positions_are_distinct) ... ok
+test_zero_coordinates_and_zero_speed_are_valid (__main__.Conformance.test_zero_coordinates_and_zero_speed_are_valid) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.381s
+
+OK

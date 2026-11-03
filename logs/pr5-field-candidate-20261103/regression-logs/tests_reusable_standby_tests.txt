@@ -1,0 +1,2 @@
+Pinned ARM GCC + Unicorn fallback (host g++ unavailable)
+PASS: System ON standby policy, flash deep power-down, wake/hold timing, boot never records, TCB3 store unchanged

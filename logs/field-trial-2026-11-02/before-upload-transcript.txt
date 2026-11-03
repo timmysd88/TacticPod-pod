@@ -1,0 +1,179 @@
+GPS TRACE TEST t_ms=8062 TX stage=1/4 action=START RAM=1 bytes=57 key_values=9
+GPS TRACE TEST t_ms=8086 ACK stage=1/4 key_or_message=0x0000068A elapsed_ms=24
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions
+  RECORD READ  - export committed recordings as CSV while stopped
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - bounded append-only compact sessions
+  TCB DURATION seconds - stopped only, 1..1800; default 120; drain deadline 60 seconds
+  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference
+  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming
+  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+IMU printing: OFF (default after boot)
+TCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.
+RECORD scan complete. Recording OFF at startup; append position recovered without writes.
+FLASH JEDEC read 1/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 2/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 3/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 4/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 5/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+JEDEC consistency: PASS (5/5 identical)
+JEDEC 0B 40 18: possible XTX XT25F128B/F family; exact model/revision not confirmed by ID alone
+SFDP header: 0x53 0x46 0x44 0x50 0x00 0x01 0x01 0xFF
+SFDP revision 1.0
+SFDP BFPT valid, revision 1.0 | advertised capacity: 134217728 bits / 16777216 bytes / 128.000 Mibit / 16.000 MiB
+SFDP advertised commands (reported only; NOT executed):
+SFDP read 1-1-2: opcode=0x3B mode_clocks=0 wait_clocks=8
+SFDP read 1-2-2: opcode=0xBB mode_clocks=2 wait_clocks=2
+SFDP read 1-1-4: opcode=0x6B mode_clocks=0 wait_clocks=8
+SFDP read 1-4-4: opcode=0xEB mode_clocks=2 wait_clocks=4
+SFDP read 2-2-2: not advertised
+SFDP read 4-4-4: not advertised
+SFDP erase type 1: opcode=0x20 size_bytes=4096 (NOT executed)
+SFDP erase type 2: opcode=0x52 size_bytes=32768 (NOT executed)
+SFDP erase type 3: opcode=0xD8 size_bytes=65536 (NOT executed)
+SFDP erase type 4: not advertised
+SFDP summary covers BFPT read/erase descriptors, not every device command or optional table.
+GPS TRACE TEST t_ms=8286 TX stage=2/4 action=CONTINUE RAM=1 bytes=37 key_values=5
+GPS TRACE TEST t_ms=8303 ACK stage=2/4 key_or_message=0x0000068A elapsed_ms=17
+OBS STATUS | STOP: RAM capture stopped; V1 unchanged | capture=OFF | RAM_fast_imu=OFF
+GPS TRACE TEST t_ms=8503 TX stage=3/4 action=CONTINUE RAM=1 bytes=54 key_values=8
+GPS TRACE TEST t_ms=8520 ACK stage=3/4 key_or_message=0x0000068A elapsed_ms=17
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+GPS TRACE TEST t_ms=8720 TX stage=4/4 action=APPLY_EMPTY RAM=1 bytes=12 key_values=0
+GPS TRACE TEST t_ms=8780 ACK stage=4/4 key_or_message=0x0000068A elapsed_ms=60
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+GPS PROFILE: STARTUP 10HZ VERIFIED (RAM only)
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+Reason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+First mismatch before recovery: NONE
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+TEST transaction stage=1/4 action=START status=ACK bytes=57 key_values=9 reply_ms=24
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+TEST transaction stage=2/4 action=CONTINUE status=ACK bytes=37 key_values=5 reply_ms=17
+TEST transaction stage=3/4 action=CONTINUE status=ACK bytes=54 key_values=8 reply_ms=17
+TEST transaction stage=4/4 action=APPLY_EMPTY status=ACK bytes=12 key_values=0 reply_ms=60
+RESTORE transaction stage=1/4 action=START status=NOT_SENT bytes=0 key_values=0 reply_ms=0
+RESTORE transaction stage=2/4 action=CONTINUE status=NOT_SENT bytes=0 key_values=0 reply_ms=0
+RESTORE transaction stage=3/4 action=CONTINUE status=NOT_SENT bytes=0 key_values=0 reply_ms=0
+RESTORE transaction stage=4/4 action=APPLY_EMPTY status=NOT_SENT bytes=0 key_values=0 reply_ms=0
+GPS_ENA [0x1031001F] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+GPS_L1CA_ENA [0x10310001] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+GAL_ENA [0x10310021] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+GAL_E1_ENA [0x10310007] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+BDS_ENA [0x10310022] saved=1 test_requested=0 test_actual=0 restore_requested=1 restore_actual=NOT_READ
+BDS_B1_ENA [0x1031000D] saved=1 test_requested=0 test_actual=0 restore_requested=1 restore_actual=NOT_READ
+GLO_ENA [0x10310025] saved=0 test_requested=0 test_actual=0 restore_requested=0 restore_actual=NOT_READ
+QZSS_ENA [0x10310024] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+QZSS_L1CA_ENA [0x10310012] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+SBAS_ENA [0x10310020] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+SBAS_L1CA_ENA [0x10310005] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+BDS_B1C_ENA [0x1031000F] saved=0 test_requested=0 test_actual=0 restore_requested=0 restore_actual=NOT_READ
+QZSS_L1S_ENA [0x10310014] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+GLO_L1_ENA [0x10310018] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+RATE_MEAS_ms [0x30210001] saved=1000 test_requested=100 test_actual=100 restore_requested=1000 restore_actual=NOT_READ
+RATE_NAV [0x30210002] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+RMC_UART1 [0x209100AC] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+GGA_UART1 [0x209100BB] saved=1 test_requested=10 test_actual=10 restore_requested=1 restore_actual=NOT_READ
+GSA_UART1 [0x209100C0] saved=1 test_requested=0 test_actual=0 restore_requested=1 restore_actual=NOT_READ
+GSV_UART1 [0x209100C5] saved=1 test_requested=0 test_actual=0 restore_requested=1 restore_actual=NOT_READ
+GLL_UART1 [0x209100CA] saved=1 test_requested=0 test_actual=0 restore_requested=1 restore_actual=NOT_READ
+VTG_UART1 [0x209100B1] saved=1 test_requested=0 test_actual=0 restore_requested=1 restore_actual=NOT_READ
+UART1_BAUDRATE [0x40520001] saved=38400 test_requested=38400 test_actual=38400 restore_requested=38400 restore_actual=NOT_READ
+UART1_ENABLED [0x10520005] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+UART1INPROT_UBX [0x10730001] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+UART1OUTPROT_UBX [0x10740001] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+UART1OUTPROT_NMEA [0x10740002] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+RATE_TIMEREF [0x20210003] saved=1 test_requested=1 test_actual=1 restore_requested=1 restore_actual=NOT_READ
+PM_OPERATEMODE [0x20D00001] saved=0 test_requested=0 test_actual=0 restore_requested=0 restore_actual=NOT_READ
+GPS PROFILE END | UART=38400 | snapshot=retained in XIAO RAM | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x49000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=21554135 max_block_step_us=0 max_slice_us=90 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0
+
+HOST TX BAT STATUS
+BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4123 filtered_mV=4125 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=231083 | checksum_ok=8376 | checksum_fail=0 | last_valid_message_age_ms=9
+GPS configuration: 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400
+GPS fix=NO FIX | lat=N/A | lon=N/A | position=LAST_KNOWN/UNAVAILABLE | satellites=0 | HDOP=99.99
+GPS speed_km/h=N/A | UTC=00:00:00Z | position_age_ms=N/A
+
+HOST TX DIAG ID
+BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2
+FLASH ID JEDEC 01 0B4018
+FLASH ID JEDEC 02 0B4018
+FLASH ID JEDEC 03 0B4018
+FLASH ID JEDEC 04 0B4018
+FLASH ID JEDEC 05 0B4018
+FLASH ID SR1 before=00 after=00 SR2=02
+FLASH ID REMS address=000000 0B17
+FLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+END_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED
+
+HOST RX archive saved; serial closing

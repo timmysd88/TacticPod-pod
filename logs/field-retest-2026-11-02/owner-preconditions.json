@@ -1,0 +1,7 @@
+{
+  "approval": "User requested upload of merged firmware and instructions for one 30-second physical test; no host START planned",
+  "antenna_connected": true,
+  "battery_cool_secure": true,
+  "wiring_polarity_unchanged_from_4_12V_check": true,
+  "button_released": true
+}

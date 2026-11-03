@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\a\TacticPod-pod\TacticPod-pod\tests\compact\test_resources.py", line 17, in <module>
+    assert static<=119000
+           ^^^^^^^^^^^^^^
+AssertionError

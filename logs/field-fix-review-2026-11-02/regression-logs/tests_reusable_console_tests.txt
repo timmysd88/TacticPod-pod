@@ -1,0 +1,18 @@
+c:/users/timot/onedrive/documents/projects/tacticpod_prototype/.pio-core/packages/toolchain-gccarmnoneeabi/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/bin/ld.exe: warning: cannot find entry symbol _start; defaulting to 00010000
+C:\Users\timot\AppData\Local\Temp\ccyOHhqJ.o: In function `Tcb3Session::update(bool)':
+console.cpp:(.text._ZN11Tcb3Session6updateEb+0x1e): undefined reference to `GpsReceiver::recordingReady()'
+console.cpp:(.text._ZN11Tcb3Session6updateEb+0x504): undefined reference to `GpsReceiver::preparationFailed()'
+C:\Users\timot\AppData\Local\Temp\ccyOHhqJ.o: In function `Tcb3Session::handleCommand(char const*)':
+console.cpp:(.text._ZN11Tcb3Session13handleCommandEPKc+0x400): undefined reference to `GpsReceiver::prepareRecording()'
+collect2.exe: error: ld returned 1 exit status
+
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\tests\reusable\console_tests.py", line 5, in <module>
+    elf=compile('tests/reusable/console.cpp','reusable-console-tests',('tests/recording','tests/flash_write'))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\tests\tcb3\native.py", line 19, in compile
+    print(result.stderr.decode('utf-8','replace'));result.check_returncode()
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\timot\.platformio\python3\Lib\subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.pio-core\\packages\\toolchain-gccarmnoneeabi\\bin\\arm-none-eabi-g++.exe', '-std=c++11', '-Ofast', '-DARDUINO=10819', '-mcpu=cortex-m4', '-mthumb', '-fno-exceptions', '-fno-rtti', '-fno-unwind-tables', '-ffunction-sections', '-fdata-sections', '-nostartfiles', '-fstack-usage', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\tests\\recording', '-IC:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\tests\\flash_write', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\tests\\reusable\\console.cpp', '-Wl,-Ttext=0x10000', '-Wl,-Tdata=0x20000000', '-lm', '-o', 'C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.pio\\reusable-console-tests.elf']' returned non-zero exit status 1.

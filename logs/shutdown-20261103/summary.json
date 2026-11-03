@@ -1,0 +1,18 @@
+{
+  "field_files": 288,
+  "field_bytes": 3439366,
+  "experimental_files": 378,
+  "experimental_bytes": 2148579,
+  "excluded_files": 3142,
+  "excluded_bytes": 531733090,
+  "substantive_experimental_files": [
+    "platformio.ini",
+    "src/gps_power.h",
+    "src/gps_receiver.cpp",
+    "tests/flash_write/Arduino.h",
+    "tests/reusable/gps_backup_test.cpp",
+    "tests/reusable/gps_backup_tests.py",
+    "tests/reusable/standby.cpp",
+    "tests/reusable/standby_tests.py"
+  ]
+}

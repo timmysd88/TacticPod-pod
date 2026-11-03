@@ -1,0 +1,7 @@
+PASS: split raw reads, exact bytes/hash, only existing read-only command
+PASS: bad CRC, interruption and unexpected text preserve partial data; no retry
+Traceback (most recent call last):
+  File "C:\Users\timot\OneDrive\Documents\Projects\TacticPod_Prototype\tests\reusable\download_tests.py", line 26, in <module>
+    r=verify(before,raw,10);assert r['counts']==[1001,100,10,0] and r['session_id']==58
+                                                                    ^^^^^^^^^^^^^^^^^^^
+AssertionError

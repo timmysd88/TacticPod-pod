@@ -1,0 +1,234 @@
+GPS PROFILE: CURRENT RAM PROFILE VERIFIED (read-only)
+TacticPod command menu (115200 baud; finish each command with Enter):
+  IMU ON       - print IMU readings at 10 Hz
+  IMU OFF      - stop printing; sampling continues (100 Hz when recording)
+  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions
+  RECORD READ  - export committed recordings as CSV while stopped
+  DIAG         - display JEDEC and SFDP information once (while idle)
+  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)
+  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives
+  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS
+  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400
+  GPS RATE     - measure separate GGA/RMC cadence for 15 seconds, no fix needed
+  GPS CONFIG   - stopped-only, read current receiver settings using UBX polls
+  GPS 10HZ TEST - stopped-only, snapshot then verified RAM-only GPS+Galileo test
+  GPS RESTORE  - stopped-only, restore and verify the saved GPS RAM snapshot
+  OBS START / STOP / CLEAR / STATUS - bounded RAM observations; no flash writes
+  COMP START / STOP / CLEAR / STATUS - opt-in RAM compression; no flash writes
+  TCB START / STOP / STATUS / READ - bounded append-only compact sessions
+  TCB DURATION seconds|UNLIMITED - stopped only, 1..1800 or until stop; default 120; drain deadline 60 seconds
+  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop
+  FIELD EVENTS - drain bounded timestamped RAM events while stopped; overwritten count explicit
+  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake
+  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference
+  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming
+  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds
+  UART LOOPBACK TEST - explicit D6-to-D7 test; disconnect GPS UART first
+IMU printing: OFF (default after boot)
+TCB REUSABLE USB PROTOTYPE: bounded append sessions; battery absent/unarmed; V1 writes and all erases disabled.
+RECORD scan complete. Recording OFF at startup; append position recovered without writes.
+OBS STATUS | STOP: RAM capture stopped; V1 unchanged | capture=OFF | RAM_fast_imu=OFF
+FLASH JEDEC read 1/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 2/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 3/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 4/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+FLASH JEDEC read 5/5 | manufacturer=0x0B memory_type=0x40 capacity_id=0x18
+JEDEC consistency: PASS (5/5 identical)
+JEDEC 0B 40 18: possible XTX XT25F128B/F family; exact model/revision not confirmed by ID alone
+SFDP header: 0x53 0x46 0x44 0x50 0x00 0x01 0x01 0xFF
+SFDP revision 1.0
+SFDP BFPT valid, revision 1.0 | advertised capacity: 134217728 bits / 16777216 bytes / 128.000 Mibit / 16.000 MiB
+SFDP advertised commands (reported only; NOT executed):
+SFDP read 1-1-2: opcode=0x3B mode_clocks=0 wait_clocks=8
+SFDP read 1-2-2: opcode=0xBB mode_clocks=2 wait_clocks=2
+SFDP read 1-1-4: opcode=0x6B mode_clocks=0 wait_clocks=8
+SFDP read 1-4-4: opcode=0xEB mode_clocks=2 wait_clocks=4
+SFDP read 2-2-2: not advertised
+SFDP read 4-4-4: not advertised
+SFDP erase type 1: opcode=0x20 size_bytes=4096 (NOT executed)
+SFDP erase type 2: opcode=0x52 size_bytes=32768 (NOT executed)
+SFDP erase type 3: opcode=0xD8 size_bytes=65536 (NOT executed)
+SFDP erase type 4: not advertised
+SFDP summary covers BFPT read/erase descriptors, not every device command or optional table.
+Reason: explicit command completed | first_failed_key=0x00000000 | restore_mismatches/unavailable=0
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+First mismatch before recovery: NONE
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+GPS PROFILE END | UART=38400 | snapshot=retained in XIAO RAM | trace_dropped=0 ignored_ack_nak=0 | no BBR/flash/OTP writes; recordings unchanged.
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX RECORD STATUS
+RECORD STATUS: STOPPED session=0 committed_samples=0 buffered_samples=0 dropped_samples=0 missed_deadlines=0 next_sector=0x84000
+
+HOST TX OBS STATUS
+OBS STATUS | RAM only | capture=OFF | RAM_fast_imu=OFF
+OBS IMU | seen=0 accepted=0 overflow=0 | queue=0/256 high=0 | spacing_us_min=0 max=0
+OBS RMC | seen=0 accepted=0 overflow=0 | queue=0/32 high=0 | spacing_us_min=0 max=0
+OBS GGA | seen=0 accepted=0 overflow=0 | queue=0/8 high=0 | spacing_us_min=0 max=0
+OBS EVENT | seen=0 accepted=0 overflow=0 | queue=0/16 high=0 | spacing_us_min=0 max=0
+OBS PARSER | checksum_fail=0 malformed_fields=0 overlong=0 partial=0 leap_seconds=0
+OBS END | first/last observation timestamps available through RAM API; no V2 flash writes
+
+HOST TX COMP STATUS
+COMP STATUS | capturing=0 fault=0
+COMP records accepted=0 rejected=0 blocks sealed=0 completed=0
+COMP RAM input=0/2 output=0/2 input_high=0 output_high=0 backpressure_slices=0 raw_fallbacks=0
+COMP TIMING work_us=1300092 max_block_step_us=0 max_slice_us=91 max_units=1
+COMP END | RAM only; no flash sink; timing requires hardware validation
+
+HOST TX TCB STATUS
+TCB STATUS state=1 session=0 blocks=0 committed=0 offered=0 rejected=0 missed=0 full=0 crc=0 incomplete=0 max_service_us=0 error=none programs=0 max_block_ms=0 reusable duration_s=120 drain_s=60 lock=0 mode=timed
+
+HOST TX BAT STATUS
+BAT source=ADC_UNVALIDATED cell=0 calibrated=0 valid=1 trusted=0 nominal_mV=4123 filtered_mV=4124 warning=0 stop=0 hard=0 adc_timeout=0 invalid=0 usb_vbus=1 limits=3600/3500/3300/3700 gain_ppm=1000000
+
+HOST TX GPS STATUS
+GPS STATUS | UART=Serial1 RX:D7 TX:D6 38400 | NMEA=VALID | bytes=53402 | checksum_ok=808 | checksum_fail=1 | last_valid_message_age_ms=50
+GPS configuration: STALE RAM snapshot (last readback matched; current configuration unverified)
+GPS last applied profile (historical): 10HZ VERIFIED RAM MEAS=100 ms NAV=1 GPS=1 GAL=1 BDS=0 RMC=1 GGA=10 GSA/GSV/GLL/VTG=0 UART1=38400
+GPS RAM readback t_ms=22903 (snapshot, not proof of navigation cadence)
+GPS fix=VALID | lat=50.775250 | lon=0.089966 | position=CURRENT | satellites=12 | HDOP=0.84
+GPS speed_km/h=0.407 | UTC=12:56:58Z | position_age_ms=50
+
+HOST TX DIAG ID
+BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2
+FLASH ID JEDEC 01 0B4018
+FLASH ID JEDEC 02 0B4018
+FLASH ID JEDEC 03 0B4018
+FLASH ID JEDEC 04 0B4018
+FLASH ID JEDEC 05 0B4018
+FLASH ID SR1 before=00 after=00 SR2=02
+FLASH ID REMS address=000000 0B17
+FLASH ID SFDP pass=01 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=01 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=01 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=01 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=01 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=01 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=01 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=01 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0000 53464450000101FF00000109300000FF
+FLASH ID SFDP pass=02 address=0010 0B000103600000FFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0020 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0030 E520F1FFFFFFFF0744EB086B083B42BB
+FLASH ID SFDP pass=02 address=0040 EEFFFFFFFFFF00FFFFFF00FF0C200F52
+FLASH ID SFDP pass=02 address=0050 10D800FFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0060 003600279FF97764D9E8FFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=0070 4541303334312D002020200300310031
+FLASH ID SFDP pass=02 address=0080 0202FFFF13061C5513070355FFFFFFFF
+FLASH ID SFDP pass=02 address=0090 FFFFFFFF5F464283833B655D3D754356
+FLASH ID SFDP pass=02 address=00A0 50528678FFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00B0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00C0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00D0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00E0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+FLASH ID SFDP pass=02 address=00F0 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+END_FLASH_ID JEDEC_repeat=PASS SFDP_repeat=PASS qualification=UNRESOLVED
+
+HOST TX GPS CONFIG
+GPS CONFIG RESULT | current RAM settings + read-only OTP clock verification | Serial1 D7 RX / D6 TX, 38400 baud
+MON-VER: SW=ROM SPG 5.10 (7b202e) | HW=000A0000
+MON-VER extension: FWVER=SPG 5.10
+MON-VER extension: PROTVER=34.10
+MON-VER extension: GPS;GLO;GAL;BDS
+MON-VER extension: SBAS;QZSS
+CFG-RATE-MEAS [0x30210001] = 100 | ms measurement interval
+CFG-RATE-NAV [0x30210002] = 1 | measurements/navigation solution
+CFG-RATE-TIMEREF [0x20210003] = 1 | GPS
+CFG-SIGNAL-GPS_ENA [0x1031001F] = 1 | enabled
+CFG-SIGNAL-GAL_ENA [0x10310021] = 1 | enabled
+CFG-SIGNAL-BDS_ENA [0x10310022] = 0 | disabled
+CFG-SIGNAL-GLO_ENA [0x10310025] = 0 | disabled
+CFG-SIGNAL-QZSS_ENA [0x10310024] = 1 | enabled
+CFG-SIGNAL-SBAS_ENA [0x10310020] = 1 | enabled
+CFG-SIGNAL-GPS_L1CA_ENA [0x10310001] = 1 | enabled
+CFG-SIGNAL-GAL_E1_ENA [0x10310007] = 1 | enabled
+CFG-SIGNAL-BDS_B1_ENA [0x1031000D] = 0 | disabled
+CFG-SIGNAL-BDS_B1C_ENA [0x1031000F] = 0 | disabled
+CFG-SIGNAL-GLO_L1_ENA [0x10310018] = 1 | enabled
+CFG-UART1-BAUDRATE [0x40520001] = 38400 | unsigned value
+CFG-UART1-ENABLED [0x10520005] = 1 | enabled
+CFG-UART1INPROT-UBX [0x10730001] = 1 | enabled
+CFG-UART1OUTPROT-UBX [0x10740001] = 1 | enabled
+CFG-UART1OUTPROT-NMEA [0x10740002] = 1 | enabled
+CFG-MSGOUT-NMEA_ID_GGA_UART1 [0x209100BB] = 10 | every 10 navigation epochs; protocol output gate must also be enabled
+CFG-MSGOUT-NMEA_ID_RMC_UART1 [0x209100AC] = 1 | every 1 navigation epochs; protocol output gate must also be enabled
+CFG-MSGOUT-NMEA_ID_GSA_UART1 [0x209100C0] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_GSV_UART1 [0x209100C5] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_GLL_UART1 [0x209100CA] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_VTG_UART1 [0x209100B1] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_ZDA_UART1 [0x209100D9] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_GST_UART1 [0x209100D4] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_GBS_UART1 [0x209100DE] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_GRS_UART1 [0x209100CF] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_DTM_UART1 [0x209100A7] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_RLM_UART1 [0x20910401] = 0 | disabled
+CFG-MSGOUT-NMEA_ID_VLW_UART1 [0x209100E8] = 0 | disabled
+CFG-MSGOUT-UBX_NAV_PVT_UART1 [0x20910007] = 0 | disabled
+CFG-MSGOUT-UBX_NAV_POSLLH_UART1 [0x2091002A] = 0 | disabled
+CFG-MSGOUT-UBX_NAV_STATUS_UART1 [0x2091001B] = 0 | disabled
+CFG-MSGOUT-UBX_NAV_SAT_UART1 [0x20910016] = 0 | disabled
+CFG-PM-OPERATEMODE [0x20D00001] = 0 | FULL (no power save; not proof of high-performance mode)
+CFG-PM-LIMITPEAKCURR [0x10D00010] = 0 | disabled
+CFG-NAVSPG-DYNMODEL [0x20110021] = 0 | portable
+CFG-NAVSPG-FIXMODE [0x20110011] = 3 | auto 2D/3D
+CFG-NAVSPG-INFIL_MAXSVS [0x201100A2] = 32 | unsigned value
+CPU clock verification key 1 [0x40A40001] = UNSUPPORTED/REJECTED (ACK-NAK)
+CPU clock verification key 3 [0x40A40003] = UNSUPPORTED/REJECTED (ACK-NAK)
+CPU clock verification key 5 [0x40A40005] = UNSUPPORTED/REJECTED (ACK-NAK)
+CPU clock verification key 10 [0x40A4000A] = UNSUPPORTED/REJECTED (ACK-NAK)
+Configured navigation rate: 10.000 Hz | >=10Hz REQUESTED; use GPS RATE to measure actual NMEA cadence.
+High-clock OTP profile: UNAVAILABLE. 10Hz support NOT PROVEN: depends on firmware, signals and applied CPU clock; FULL power mode is insufficient.
+UART 38400 8N1 budget=3840 bytes/s. NMEA divisors do not specify bytes/s; measure GPS RATE before increasing output.
+GPS CONFIG END | bad_checksum=0 | malformed=0 | oversized=0 | partial_timeout=0 | GPS/flash settings unchanged; normal reception continues.
+
+HOST TX IMU ON
+IMU printing ON at 10 Hz; recording acquisition stays at 100 Hz.
+t_ms=73000 | accel_g X=-0.1469 Y=-0.0658 Z=-0.9903 | gyro_dps X=1.146 Y=-3.561 Z=0.892
+t_ms=73100 | accel_g X=-0.1473 Y=-0.0655 Z=-0.9898 | gyro_dps X=1.312 Y=-3.517 Z=0.875
+t_ms=73200 | accel_g X=-0.1473 Y=-0.0655 Z=-0.9900 | gyro_dps X=1.251 Y=-3.614 Z=0.849
+t_ms=73300 | accel_g X=-0.1472 Y=-0.0661 Z=-0.9893 | gyro_dps X=1.505 Y=-3.491 Z=0.849
+t_ms=73400 | accel_g X=-0.1478 Y=-0.0660 Z=-0.9900 | gyro_dps X=1.383 Y=-3.596 Z=0.858
+t_ms=73500 | accel_g X=-0.1474 Y=-0.0662 Z=-0.9903 | gyro_dps X=1.391 Y=-3.517 Z=0.884
+t_ms=73600 | accel_g X=-0.1471 Y=-0.0653 Z=-0.9897 | gyro_dps X=1.216 Y=-3.517 Z=0.849
+t_ms=73700 | accel_g X=-0.1476 Y=-0.0655 Z=-0.9908 | gyro_dps X=1.514 Y=-3.596 Z=0.892
+t_ms=73800 | accel_g X=-0.1463 Y=-0.0651 Z=-0.9904 | gyro_dps X=1.452 Y=-3.526 Z=0.858
+t_ms=73900 | accel_g X=-0.1469 Y=-0.0652 Z=-0.9893 | gyro_dps X=1.470 Y=-3.605 Z=0.875
+t_ms=74000 | accel_g X=-0.1473 Y=-0.0662 Z=-0.9887 | gyro_dps X=1.295 Y=-3.526 Z=0.910
+t_ms=74100 | accel_g X=-0.1471 Y=-0.0654 Z=-0.9906 | gyro_dps X=1.207 Y=-3.544 Z=0.875
+t_ms=74200 | accel_g X=-0.1467 Y=-0.0655 Z=-0.9906 | gyro_dps X=1.487 Y=-3.588 Z=0.884
+t_ms=74300 | accel_g X=-0.1470 Y=-0.0652 Z=-0.9900 | gyro_dps X=1.628 Y=-3.579 Z=0.875
+t_ms=74400 | accel_g X=-0.1469 Y=-0.0662 Z=-0.9898 | gyro_dps X=1.391 Y=-3.526 Z=0.858
+t_ms=74500 | accel_g X=-0.1472 Y=-0.0653 Z=-0.9905 | gyro_dps X=1.067 Y=-3.421 Z=0.919
+t_ms=74600 | accel_g X=-0.1469 Y=-0.0656 Z=-0.9895 | gyro_dps X=1.523 Y=-3.640 Z=0.831
+t_ms=74700 | accel_g X=-0.1478 Y=-0.0656 Z=-0.9909 | gyro_dps X=1.549 Y=-3.588 Z=0.901
+t_ms=74800 | accel_g X=-0.1473 Y=-0.0658 Z=-0.9887 | gyro_dps X=1.872 Y=-3.771 Z=0.840
+t_ms=74900 | accel_g X=-0.1466 Y=-0.0651 Z=-0.9902 | gyro_dps X=1.102 Y=-3.307 Z=0.884
+t
+HOST TX IMU OFF
+_ms=75000 | accel_g X=-0.1476 Y=-0.0657 Z=-0.9892 | gyro_dps X=1.365 Y=-3.526 Z=0.814
+IMU printing OFF; sampling continues (100 Hz while recording).
+
+HOST TX GPS RATE
+GPS RATE: observing checksum-valid GGA and RMC for 15000 ms at 38400 baud; no fix required. Receiver settings unchanged.
+GPS RATE RESULT | window_ms=15000 | UART=38400 | bytes=11813 | checksum_valid=164 | checksum_failed=0 | overlong_frames=0
+GPS RATE GGA | sentences=15 | sentence_hz=1.000 | valid_fix=15 | no_fix=0 | unknown_fix=0 | mean_wire_bytes=73.0 | role=SUPPORTING
+GPS RATE GGA | utc_epochs=15 | utc_epoch_hz=1.000 | duplicate_utc=0 | missing_utc=0 | backwards_utc=0 | role=SUPPORTING
+GPS RATE RMC | sentences=149 | sentence_hz=9.933 | valid_fix=149 | no_fix=0 | unknown_fix=0 | mean_wire_bytes=71.4
+GPS RATE RMC | utc_epochs=149 | utc_epoch_hz=9.933 | duplicate_utc=0 | missing_utc=0 | backwards_utc=0
+GPS RATE BANDWIDTH | current_Bps=787.5 | UART_capacity_Bps=3840 | GGA_RMC_only_at10Hz_Bps=1444.4 | all_stream_scaled_to10Hz_Bps=792.8
+GPS RATE OBSERVED | primary=RMC | position_sentence_hz=9.933 | utc_epoch_hz=9.933 | output_cadence_10hz=YES (approximately)
+GPS RATE END | fixes=PRESENT | GGA/RMC epochs are NOT summed; output cadence does not prove valid 10 Hz navigation solutions.
+
+HOST RX archive saved; serial closing

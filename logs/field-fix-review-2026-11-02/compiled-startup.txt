@@ -1,0 +1,4 @@
+PASS: tacticpod_reusable_usb inherited= False core_high= 0 variant_high= 0
+PASS: seeed_xiao_nrf52840_sense inherited= False core_high= 0 variant_high= 11
+PASS: tacticpod_reusable_usb inherited= True core_high= 2 variant_high= 0
+PASS: linked core/variant, charger INPUT/no pulls, original variant negative control

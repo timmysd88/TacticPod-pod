@@ -1,0 +1,85 @@
+{
+  "bytes": 721344,
+  "sha256": "9cdc66e807012d2330439fde8761e3137cc7a3431627269c856fd2974c39bb72",
+  "packets": 2578,
+  "image_sha256": "d1c398b03deee2e8ea88a86779e856154ab0dfbac4a1165df1f62faf678e0379",
+  "image_bytes": 659456,
+  "sessions": [
+    {
+      "id": 1,
+      "status": "complete",
+      "records": 555
+    },
+    {
+      "id": 3,
+      "status": "complete",
+      "records": 3330
+    },
+    {
+      "id": 12,
+      "status": "complete",
+      "records": 13321
+    },
+    {
+      "id": 58,
+      "status": "complete",
+      "records": 1110
+    },
+    {
+      "id": 61,
+      "status": "complete",
+      "records": 4702
+    },
+    {
+      "id": 74,
+      "status": "complete",
+      "records": 8550
+    },
+    {
+      "id": 96,
+      "status": "complete",
+      "records": 1802
+    },
+    {
+      "id": 101,
+      "status": "complete",
+      "records": 7575
+    },
+    {
+      "id": 119,
+      "status": "complete",
+      "records": 1107
+    },
+    {
+      "id": 122,
+      "status": "complete",
+      "records": 4042
+    },
+    {
+      "id": 133,
+      "status": "interrupted",
+      "records": 1105
+    },
+    {
+      "id": 137,
+      "status": "complete",
+      "records": 2247
+    },
+    {
+      "id": 144,
+      "status": "complete",
+      "records": 6498
+    },
+    {
+      "id": 159,
+      "status": "complete",
+      "records": 1110
+    }
+  ],
+  "existing_decode_issues": [
+    {
+      "address": 552960,
+      "error": "interrupted final block"
+    }
+  ]
+}

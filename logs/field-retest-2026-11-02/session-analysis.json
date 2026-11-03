@@ -1,0 +1,132 @@
+{
+  "historical_sessions_preserved": true,
+  "historical_ids": [
+    1,
+    3,
+    12,
+    58,
+    61,
+    74,
+    96,
+    101,
+    119,
+    122
+  ],
+  "new_sessions": [
+    {
+      "session_id": 133,
+      "status": "interrupted",
+      "start_us": 19209630,
+      "capture_s": null,
+      "footer": null,
+      "rates": {
+        "imu": {
+          "count": 995,
+          "observed_hz": 99.45379455747614,
+          "min_gap_us": 8947,
+          "max_gap_us": 11038
+        },
+        "rmc": {
+          "count": 100,
+          "observed_hz": 9.940662279052464,
+          "min_gap_us": 69907,
+          "max_gap_us": 130745,
+          "valid_fixes": 100,
+          "advancing_utc": true
+        },
+        "gga": {
+          "count": 10,
+          "observed_hz": 0.9950557889084227,
+          "min_gap_us": 1000381,
+          "max_gap_us": 1010304,
+          "valid_fixes": 10
+        }
+      },
+      "issues": [
+        {
+          "address": 552960,
+          "error": "interrupted final block"
+        }
+      ],
+      "events": [],
+      "recoverable_imu_span_s": 9.994591
+    },
+    {
+      "session_id": 137,
+      "status": "complete",
+      "start_us": 41279688,
+      "capture_s": 20.352622,
+      "footer": {
+        "reason": 0,
+        "stop_us": 61632310,
+        "offered": [
+          2025,
+          202,
+          20,
+          0
+        ],
+        "committed": [
+          2025,
+          202,
+          20,
+          0
+        ],
+        "lost": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rejected": 0,
+        "crc_failures": 0,
+        "incomplete_writes": 0,
+        "full": 0,
+        "missed": 0
+      },
+      "rates": {
+        "imu": {
+          "count": 2025,
+          "observed_hz": 99.46996368314275,
+          "min_gap_us": 9363,
+          "max_gap_us": 10950
+        },
+        "rmc": {
+          "count": 202,
+          "observed_hz": 9.947447781837921,
+          "min_gap_us": 75401,
+          "max_gap_us": 125806,
+          "valid_fixes": 202,
+          "advancing_utc": true
+        },
+        "gga": {
+          "count": 20,
+          "observed_hz": 0.9946899784304096,
+          "min_gap_us": 1000403,
+          "max_gap_us": 1009597,
+          "valid_fixes": 20
+        }
+      },
+      "issues": [],
+      "events": [],
+      "recoverable_imu_span_s": 20.347851
+    }
+  ],
+  "export_issues": [],
+  "container_issues": [
+    {
+      "address": 552960,
+      "error": "interrupted final block"
+    }
+  ],
+  "sha256": "bf6711fe647f8607e671f5bf4c9905c3ab80b3ba59fc3e9a465db7f13ff4e39e",
+  "confirmation_export_identical": true,
+  "archive_bytes": 640704,
+  "event_overwritten_count": 0,
+  "host_stop_sent": false,
+  "owner_observations": {
+    "no_manual_reset": true,
+    "no_battery_disconnection": true,
+    "first_attempt_estimate_s": 20,
+    "no_red_seen": true
+  }
+}

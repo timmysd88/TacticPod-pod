@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-03",
+  "pr5_merged_on_github": true,
+  "pr5_commit_verified_via_github_api": "3d4693207d459b1565af2e8b3955cd897f5d519c",
+  "remote_main_after_fetch": "3d4693207d459b1565af2e8b3955cd897f5d519c",
+  "local_main_unchanged": "155a999122f0ce85ab6817c6eba690e9501fe4b3",
+  "field_staged_firmware_source_diff": "EMPTY",
+  "field_original_evidence_hashes_verified": 288,
+  "experimental_original_evidence_hashes_verified": 378,
+  "staged_evidence_matches_original_bytes": true,
+  "secret_signature_and_embedded_credential_url_scan": "no matches in curated staged files",
+  "before_export_sessions": 14,
+  "after_export_sessions": 15,
+  "canonical_tpx3_transport_integrity": "PASS",
+  "old_recording_image_prefix_unchanged": true,
+  "known_interrupted_session_133_unchanged": true,
+  "hardware_access_performed": false,
+  "remote_backup_commits_verified": "Recorded separately after pushes; not yet asserted by this pre-commit validation"
+}

@@ -1,0 +1,14 @@
+{
+  "uploaded": false,
+  "bootloader_modified": false,
+  "touch_attempted": true,
+  "ports": [
+    {
+      "port": "COM7",
+      "vid": 10374,
+      "pid": 69,
+      "serial": "0E8A89B7289430BD"
+    }
+  ],
+  "uf2_info": []
+}

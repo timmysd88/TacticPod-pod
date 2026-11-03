@@ -1,0 +1,24 @@
+{
+  "uploaded": true,
+  "application_only": true,
+  "recording_started": false,
+  "calibration_changed": false,
+  "zip_sha256": "c38561e5004ec88bf5d1b6b8b21c4d50a55cbbd19db41a7065c804438a6ae007",
+  "bin_sha256": "40bced328dbcc453eb8326297fabab40c268063140d6c909a4359b4024a9a585",
+  "bootloader_port": "COM7",
+  "command": [
+    "C:\\Users\\timot\\.platformio\\penv\\Scripts\\python.exe",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\.pio-core\\packages\\tool-adafruit-nrfutil\\adafruit-nrfutil.py",
+    "dfu",
+    "serial",
+    "-pkg",
+    "C:\\Users\\timot\\OneDrive\\Documents\\Projects\\TacticPod_Prototype\\logs\\field-retest-2026-11-02\\firmware.zip",
+    "-p",
+    "COM7",
+    "-b",
+    "115200",
+    "--singlebank"
+  ],
+  "exit_code": 0,
+  "application_port": "COM8"
+}

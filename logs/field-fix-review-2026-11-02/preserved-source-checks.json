@@ -1,0 +1,7 @@
+{
+  "src/tcb3_store.cpp": "9f0734c9c0d061b3b1b386b0bcc00d31fba5deab7690fdf8fd1b0c6210ef8ca1",
+  "src/tcb3_store.h": "1cb2cca79067879880c3a3ba120d013095db27ef2246a425aa69116d2ce6fa2f",
+  "src/battery_runtime.cpp": "dedef2f761bdd3b74d6b43944f905590ce2a6079e43d1b7ac274d304dc07b5e4",
+  "variants/tacticpod/Seeed_XIAO_nRF52840/variant.cpp": "349a7851d337ee5f9a102de9a2e0f374992070af9cd96e79745fb8d39e0c42de",
+  "platformio.ini": "5749d2cf7915b17729660a299d8538b9640ab7ceb330103874053fc6d39a48fc"
+}

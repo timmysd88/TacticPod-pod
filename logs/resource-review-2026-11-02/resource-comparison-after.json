@@ -1,0 +1,24 @@
+{
+  "seeed_xiao_nrf52840_sense": {
+    "sections": {
+      ".data": 1380,
+      ".bss": 117612,
+      ".heap": 116528
+    },
+    "static": 118992,
+    "compact": 37966,
+    "event_buffer": 0,
+    "event_names_in_ram": 0
+  },
+  "tacticpod_reusable_usb": {
+    "sections": {
+      ".data": 2836,
+      ".bss": 119204,
+      ".heap": 113480
+    },
+    "static": 122040,
+    "compact": 37966,
+    "event_buffer": 1040,
+    "event_names_in_ram": 0
+  }
+}
