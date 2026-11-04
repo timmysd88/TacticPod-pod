@@ -175,3 +175,40 @@ boot(bytes(bad));assert scan()==8 and sessions()[0]==[]
 bad=bytearray(base);bad[:4096]=b'\xff'*4096
 boot(bytes(bad));assert scan()==8 and sessions()[0]==[]
 print('PASS: revoked or blank sector 0 with older data above fails closed')
+
+# 13. Torn live-sector header: a matching epoch word alone never makes a stale sector live.
+boot(base);assert reset()==2
+boot();assert scan()==1;assert m.call('record',3)==0 and violations()==0
+boot();assert scan()==1;head=struct.unpack('<2I',m.get('info',8))[1];assert 0x1000<head<0x39000
+live=nor();stale=base[head:head+4096];assert stale[:4]==b'TPH3'
+def with_head(sector):
+    img=bytearray(live);img[head:head+4096]=sector;return bytes(img)
+# a. Old header with the epoch bits raised to the current epoch but a bad CRC, old data behind it.
+torn=bytearray(stale);torn[120:124]=struct.pack('<I',1)
+boot(with_head(bytes(torn)));state=scan();ids,issues=sessions()
+assert state==8 and ids==[2] and not issues,(state,ids,issues)
+# b. Every single-bit damage of a sealed old header still fails closed rather than becoming live.
+for bit in (0,7,8,100,123,247):
+    t=bytearray(stale);t[120:124]=struct.pack('<I',1);t[bit//8]^=1<<(bit%8)
+    boot(with_head(bytes(t)));state=scan();ids,_=sessions()
+    assert state in (1,8) and ids in ([2],[]) and not {1,3,12}&set(ids) and violations()==0,(bit,state,ids)
+# c. Unsealed header with blank data behind it is a torn head: reused, never live.
+torn=bytearray(b'\xff'*4096);torn[:248]=stale[:248];torn[120:124]=struct.pack('<I',1)
+boot(with_head(bytes(torn)));assert scan()==1 and struct.unpack('<2I',m.get('info',8))[1]==head
+ids,issues=sessions();assert ids==[2] and not issues,ids
+assert m.call('record',2)==0 and violations()==0 and head in erases()
+ids,issues=sessions();assert len(ids)==2 and ids[0]==2 and not issues,ids
+# d. A sealed header from an older epoch ends the live run cleanly.
+boot(with_head(stale));assert scan()==1 and struct.unpack('<2I',m.get('info',8))[1]==head
+print('PASS: unsealed or CRC-bad headers never become live (fail closed or reused as torn head)')
+
+# 14. Partly written reset marker: blank start with later bytes programmed never reads as fresh or legacy flash.
+for name,data in (('with old data',base),('fresh flash',b'\xff'*SIZE)):
+    for off in (16,64,248,252):
+        part=bytearray(data);part[:4096]=b'\xff'*4096;part[off:256]=bytes(range(off,256)) if off<248 else b'\x00'*(256-off)
+        boot(bytes(part));state=scan();ids,_=sessions()
+        assert state==8 and ids==[] and violations()==0,(name,off,state,ids)
+        boot();assert m.call('init',0)==0
+        boot(bytes(part));assert reset()==2 and marker(nor())>=1 and violations()==0,(name,off)
+        boot();assert scan()==1 and sessions()==([],[]),(name,off)
+print('PASS: partly written marker fails closed in scan and export, and RECORD RESET recovers it')

@@ -77,9 +77,12 @@ blank-checked before writing. Blank sector 0 with data below `0x39000` is treate
 * Marker work is under 0.5 s; the epoch scan reads ~4095 sector headers, simulated at ~4.2 s at 1 ms/tick; real time is expected to be about 1-5 s.
 * Old data stays physically present until reused (not a secure erase).
 * First lap after a reset can stall about 45-400 ms per sector for lazy erases. The erase is polled, not blocking, and the
-  compressor holds two input and two output buffers (about 9 s at the raw worst case of ~3.7 KB/s). Existing simulation
-  uses a fixed 20 ms erase with an unpaced producer, so it does not prove sample-loss safety: real erase latency versus
-  100 Hz IMU / 10 Hz GPS, USB streaming on a real host, and power-cut behaviour must be measured on hardware.
+  compressor holds two input and two output buffers (about 9 s at the raw worst case of ~3.7 KB/s). A paced simulation
+  (below) shows no sample loss with modelled erase times up to 1000 ms. It uses a modelled, fixed erase time, so it does
+  not prove sample-loss safety on silicon: the real erase latency distribution, real IMU/GPS timing, USB on a real
+  host and bit-level power-cut behaviour must be measured on hardware.
+* A latched fault (`locked`) refuses `RECORD RESET` until reboot, even though some store messages say "repeat RECORD RESET".
+  Reboot, then repeat the reset. `DIAG ID` is allowed while latched (it waits for an idle chip).
 * Session numbers are address-derived, so the first session after a reset is session 2.
 * Scans and exports are slightly longer (extra sector-0 classification).
 * Needs hardware validation before use.
@@ -87,4 +90,22 @@ blank-checked before writing. Blank sector 0 with data below `0x39000` is treate
 ## Tests
 
 `tests/reusable/reset_tests.py` (in `run_all_tests.py`): reset, reboot, repeated reset, torn marker/revoke/erase,
-power cut at 151 points, interrupted lazy erase, fresh flash, repeated recording, legacy seed unchanged.
+power cut at 151 points, interrupted lazy erase, fresh flash, repeated recording, legacy seed unchanged, torn live-sector
+headers (epoch word without a valid CRC fails closed; unsealed header with blank data is reused) and partly written
+reset markers (fail closed, `RECORD RESET` recovers).
+
+`tests/reusable/reset_integration_tests.py` (in `run_all_tests.py`) drives the real console, session, compressor and store:
+
+* Paced run after a real reset: 100 Hz IMU (incompressible worst case), 10 Hz GPS for 30 s, erase 20/45/400 ms
+  (required) and 1000/2500 ms (margin probes). Required: zero loss, no rejected samples, input/output queue
+  high-water at most 2, no main-loop pass over 20 ms. Measured: 0 lost samples at 20, 45, 400 (noisy and quiet) and 1000 ms;
+  queue high-water input 2 / output 1; longest loop pass 0.8 ms; 14 lazy erases in the noisy run. At 2500 ms the store
+  latches a fault (1 IMU sample lost) as expected; that is far outside any NOR erase specification.
+  The numbers are written to `.pio/reset-integration.json`.
+* Serial sequence: confirm without arming, arming warning, 30 s timeout, refusal while recording or exporting,
+  reset, hidden `RECORD READ`, empty export, new recording; a latched fault refuses the reset until reboot.
+* Power cut at 19 points of the real reset command, then reboot (old data intact, fail closed, or reset complete),
+  and a repeated reset plus new recording from each.
+* USB: 256 B FIFO, 31 B room, random room with console noise, and a partly sent status line before `TCB READ`
+  give a byte-identical binary export. `DIAG ID` after a latched fault works when idle, waits when the flash is
+  busy, and never splices into a half-sent fault line.

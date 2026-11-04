@@ -202,6 +202,8 @@ bool guardCommand(const char* p){
 #if TACTICPOD_REUSABLE
   if(!strcmp(p,"BAT STATUS"))return false;
 #endif
+  // A latched fault must not hide the flash identity; identityIdle() still waits for the chip to be idle.
+  if(!strcmp(p,"DIAG ID") && locked && !pending && !owned && !dumping)return false;
   if(!strcmp(p,"TCB STOP") || !strcmp(p,"TCB STATUS") || !strcmp(p,"COMP STATUS") ||
      !strcmp(p,"OBS STATUS") || !strcmp(p,"RECORD STATUS") || !strcmp(p,"GPS STATUS") || !strcmp(p,"IMU OFF"))return false;
   storeReport("REFUSED: flash/compressor owned");return true;
