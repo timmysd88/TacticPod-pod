@@ -13,7 +13,26 @@ bool green(){return mockPinLevels[LED_GREEN]==LOW && mockPinLevels[LED_RED]!=LOW
 extern "C" unsigned fieldCase(unsigned c) {
   using namespace TcbDetail;
   if(c==6)mockButtonLow=true;
-  Serial.connected=true;setup();startupPending=false;waitIdle();
+  if(c==9)mockImuBeginStatus=1;
+  Serial.connected=true;setup();startupPending=false;
+  if(c<8)waitIdle(); // Startup LED cases observe the boot window itself.
+  if(c==8 || c==9) {
+    // Startup indication: exactly three 150 ms blue flashes, only after a successful startup; never green/red.
+    unsigned flashes=0;bool was=false,bad=false;uint32_t edgeAt=millis();const uint32_t t0=millis();
+    while(uint32_t(millis()-t0)<2500) {
+      cycle();
+      const bool blue=mockPinLevels[LED_BLUE]==LOW;
+      if(mockPinLevels[LED_GREEN]==LOW || mockPinLevels[LED_RED]==LOW)bad=true;
+      if(blue!=was) {
+        const uint32_t now=millis(),held=now-edgeAt;
+        if(blue){++flashes;if(flashes>1 && (held<148 || held>152))bad=true;}
+        else if(held<148 || held>152)bad=true;
+        edgeAt=now;was=blue;
+      }
+    }
+    if(bad || was)return c==8?90:92;
+    return flashes==(c==8?3u:0u)?0:(c==8?91:93);
+  }
   fieldStep=1;
   // Fixtures preserve the same old physical session prefix used by recorder tests.
   BatteryRuntime::inject(4000,true);mockImuReadCostUs=30;SPI.programDelayMs=10;
@@ -76,6 +95,7 @@ extern "C" unsigned fieldCase(unsigned c) {
   if(!GpsProfile::currentVerified())return 53;
   // Holding the same press past startup never creates a second session.
   runMs(3500);
+  if(!green() || mockPinLevels[LED_BLUE]!=HIGH || mockPinLevels[LED_RED]!=HIGH)return 80; // Solid green while recording.
   fieldStep=3;
   if(eventCount(FieldTrace::Kind::StartAccepted)!=1 || eventCount(FieldTrace::Kind::SessionCreated)!=1)return 6;
   mockButtonLow=false;runMs(80);
@@ -89,7 +109,7 @@ extern "C" unsigned fieldCase(unsigned c) {
   mockButtonLow=true;
   for(unsigned n=0;n<60000 && !eventCount(FieldTrace::Kind::StopAccepted);++n)cycle();
   if(!eventCount(FieldTrace::Kind::StopAccepted) || Tcb3Session::recording() || !finishing)return 9;
-  if(green() || !completionAwaited)return 10; // Still no committed footer/green.
+  if(green())return 10; // Solid green ends the instant recording stops, before the footer commits.
   fieldStep=6;
   if(c==1)SPI.denyWel=true;
   mockButtonLow=false;
@@ -108,10 +128,8 @@ extern "C" unsigned fieldCase(unsigned c) {
   fieldStep=7;
   if(owned || locked || !store.stats.finished || reason!=Tcb3::Reason::Clean)return 13;
   cycle();
-  if(!green() || completionAwaited || eventCount(FieldTrace::Kind::Complete)!=1)return 14;
-  runMs(150);if(green())return 15;
-  runMs(70);if(!green())return 16;
-  runMs(450);if(green() || mockPinLevels[LED_BLUE]!=HIGH)return 17;
+  if(green() || eventCount(FieldTrace::Kind::Complete)!=1)return 14; // Clean finish adds no stop animation.
+  runMs(700);if(green() || mockPinLevels[LED_BLUE]!=HIGH || mockPinLevels[LED_RED]!=HIGH)return 17;
   if(eventCount(FieldTrace::Kind::Complete)!=1 || eventCount(FieldTrace::Kind::SessionCreated)!=1)return 18;
   // Return to standby with USB removed, then wake on USB without any new start.
   Serial.connected=false;runMs(3500);

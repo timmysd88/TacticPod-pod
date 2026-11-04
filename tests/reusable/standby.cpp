@@ -84,11 +84,11 @@ int main() {
     if (!led.eventActive()) return 90;
     bool red = false;
     for (uint32_t t = 0; t < 2000; t += 10) {
-      StatusLed::Color c = led.update(t, false, false, false);
+      StatusLed::Color c = led.update(t, false, false);
       if (c == StatusLed::Color::Red) red = true;
       else if (c != StatusLed::Color::Off) return 91;
     }
-    if (!red || led.update(2500, false, false, false) != StatusLed::Color::Off) return 92;
+    if (!red || led.update(2500, false, false) != StatusLed::Color::Off) return 92;
   }
   return 0;
 }

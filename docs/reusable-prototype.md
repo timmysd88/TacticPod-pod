@@ -199,22 +199,21 @@ unverified. The 60-second finalisation watchdog still applies after a stop.
 
 ## LED summary
 
-Priority, highest first: recorder fault, one-shot events, low battery, ready/recording pulse.
+Priority, highest first: recorder fault, start refused, power-on, recording, idle.
 
 | State | Pattern |
 | --- | --- |
-| Power on | Solid blue 1 s, then the status pattern |
-| Ready | Blue 100 ms every 2 s |
-| Recording started | Solid green 1 s, then the recording pulse |
-| Recording | Green 100 ms every 2 s |
-| Recording stopped (finalised cleanly) | Two green 100 ms flashes, then ready |
-| Low battery (trusted, calibrated) | Two orange 100 ms flashes every 5 s, replacing the ready/recording pulse; recording is unaffected |
+| Power on (successful startup only) | Three blue flashes, 150 ms on / 150 ms off, once |
+| Recording | Solid green |
+| Idle / stopped / standby | All LEDs off (no heartbeat) |
 | Start refused | Three red 100 ms flashes |
 | Recorder fault | Three red flashes repeating every 2 s |
-| Standby | All LEDs off |
 
-Ready and recording pulses are shown while awake (for example USB connected); standby
-turns the LED off. Recording does not depend on GPS fix.
+Blue = P0.06 (pin 12), green = P0.30 (pin 13), red = P0.26 (pin 11), all active LOW
+and independently driven. No power-off pattern exists: the firmware has no controlled
+power-off, and a physical disconnect cannot be signalled. Entering idle simply turns the
+LED off. The former orange low-battery, ready pulse and stop-animation patterns were
+removed; battery state is available only through `BAT STATUS`.
 
 ## Status and supervised hardware checklist
 
@@ -307,7 +306,23 @@ duplicate timestamps, ADC errors and stale readings are not trusted.
 Three fresh valid samples are required after configuration/calibration. Readings
 older than three seconds are unavailable. Source stays `ADC_UNVALIDATED` until
 physical qualification; `trusted=1` means software policy eligibility, not a
-factory accuracy guarantee. There is no inferred battery percentage/fuel gauge.
+factory accuracy guarantee. 
+
+### Charge estimate (`src/battery_gauge.h`)
+
+Each 1 s measurement is a 5-conversion burst, trimmed-mean filtered (bursts whose middle
+readings spread >80 mV are discarded). The estimate maps the filtered voltage through a
+generic typical 1S LiPo curve (3.30 V = 0% to 4.20 V = 100%) with interpolation. This
+curve is NOT measured for this cell. Percent is slew-limited (1 point/3 s), can only fall
+or hold under load, cannot rise until 10 s unloaded, and is capped at 99% with USB
+present. Categories: FULL 80-100, HALF 45-79, LOW 10-44, CRITICAL 0-9, with 2-point
+hysteresis. Untrusted measurements show UNKNOWN. Charging is always UNKNOWN (no
+charge-status signal) and low-voltage protection is ARMED only when the measurement is
+trusted. Thresholds are unchanged.
+
+Calibration (RAM only, repeat after each boot): with the battery connected, measure it
+with a multimeter, then send `BAT MODE CELL` and `BAT CAL <millivolts>`. Accuracy has not
+been verified on hardware.
 
 | Default policy | Value and behaviour |
 | --- | --- |

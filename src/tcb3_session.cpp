@@ -31,6 +31,8 @@ bool testUsed=false;
 #if TACTICPOD_REUSABLE
 uint32_t sessionSeconds=120;
 bool batteryWarningRecorded=false;
+// BAT STATUS is queued as short lines: the USB CDC TX FIFO (256 bytes) cannot take it in one write.
+BatteryRuntime::Report batReport;unsigned batIndex=0;bool batActive=false;
 // Until-stop sessions (TCB DURATION UNLIMITED, or a physical-button start) have no time cap.
 // The store keeps page 15 of every sector for the footer, so a full partition still finalises.
 bool configuredUnlimited=false,buttonRequest=false,sessionUnlimited=false;
@@ -163,7 +165,7 @@ bool handleCommand(const char* p){
     }
     bool ok=!strcmp(p,"BAT STATUS") || BatteryRuntime::command(p);
     if(!ok){storeReport("REFUSED: BAT command/calibration/limits");return true;}
-    lineSize=BatteryRuntime::format(line,sizeof(line));return true;
+    BatteryRuntime::capture(batReport);batIndex=0;batActive=true;return true;
   }
   if(!strncmp(p,"TCB DURATION ",13)){
     if(mutationBlocked()){storeReport("REFUSED: duration while busy");return true;}
@@ -224,7 +226,8 @@ uint32_t freeSectors(){
 }
 void update(bool allow){
 #if TACTICPOD_REUSABLE
-  BatteryRuntime::update(allow);
+  BatteryRuntime::noteLoad(owned || pending);
+  BatteryRuntime::update(allow && !pageOpen); // Never sample the ADC mid flash-page transaction.
   if(waitingGps && !pending)waitingGps=false;
   if(waitingGps) {
     if(GpsReceiver::recordingReady()) {
@@ -320,6 +323,13 @@ void update(bool allow){
       }
     }
   }
+#if TACTICPOD_REUSABLE
+  if(batActive && !lineSize){
+    const unsigned n=batIndex<=8?BatteryRuntime::formatLine(batReport,batIndex,line,sizeof(line))
+      :batIndex==9?BatteryRuntime::format(line,sizeof(line)):0;
+    if(n){lineSize=n;++batIndex;}else batActive=false;
+  }
+#endif
   if(lineSize && Serial && !Recorder::exporting() && Serial.availableForWrite()>=int(lineSize)){
     Serial.write(reinterpret_cast<const uint8_t*>(line),lineSize);lineSize=0;
   }

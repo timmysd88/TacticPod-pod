@@ -65,8 +65,7 @@ extern "C" unsigned reusableCase(unsigned c){
     Tcb3Session::handleCommand("TCB STOP");
     for(unsigned n=0;n<400000 && (owned || finishing);++n)cycle();
     if(owned || locked || !store.stats.finished || reason!=Tcb3::Reason::Clean)return 43;
-    // The production main loop consumes the completion event for its LED.
-    cycle();if(completionAwaited || Tcb3Session::freeSectors()==0)return 44;
+    cycle();if(Tcb3Session::freeSectors()==0)return 44;
     reusableInfo[0]=store.stats.next;
     return SPI.violations?45:0;
   }

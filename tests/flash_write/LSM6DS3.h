@@ -3,6 +3,7 @@
 extern unsigned mockImuAxisReads;
 static uint32_t mockImuReadCostUs = 0;
 static bool mockImuOn = true;
+static int mockImuBeginStatus = 0; // Non-zero simulates an IMU initialisation failure.
 static unsigned mockImuPowerDowns = 0, mockImuBegins = 0, mockImuOffReads = 0;
 inline int16_t simulatedAxis(unsigned axis,int16_t fallback) {
   if (!mockImuOn) ++mockImuOffReads;
@@ -18,7 +19,7 @@ struct LSM6DS3 {
     int accelSampleRate, gyroSampleRate;
   } settings;
   LSM6DS3(int, int) {}
-  int begin() { ++mockImuBegins; mockImuOn = true; return 0; }
+  int begin() { ++mockImuBegins; mockImuOn = true; return mockImuBeginStatus; }
   int writeRegister(uint8_t reg, uint8_t value) {
     if ((reg == 0x10 || reg == 0x11) && value == 0) { mockImuOn = false; ++mockImuPowerDowns; }
     return 0;
