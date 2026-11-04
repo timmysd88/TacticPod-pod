@@ -41,7 +41,7 @@ void printMenu() {
     Serial.println("  BUTTON D0: hold 3s to start; tap, release, then hold 3s within 5s to stop");
     Serial.println("  FIELD EVENTS - drain bounded timestamped RAM events while stopped; overwritten count explicit");
     Serial.println("  Button starts record until stopped. Idle off-USB: System ON standby (GPS UART/IMU/flash/LED off); USB keeps it awake");
-    Serial.println("  BAT STATUS - nominal voltage, trust, warnings, ADC faults; no battery presence inference");
+    Serial.println("  BAT STATUS - raw/filtered voltage, estimated charge + category (UNKNOWN unless trusted), trust, protection; no battery presence inference");
     Serial.println("  BAT CAL measured_mV / BAT MODE USB|CELL - stopped-only RAM calibration/arming");
     Serial.println("  BAT LIMITS warn stop hard recover - stopped-only millivolt thresholds");
   }else Serial.println("  TCB START / STOP / STATUS / READ - separate compact sessions (host simulation gate)");

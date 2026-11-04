@@ -48,13 +48,11 @@ unsigned identityOutput=0;
 static_assert(PIN_A0 == 0, "Record button must use XIAO D0/P0.02");
 PhysicalButton::StateMachine physicalButton;
 StatusLed::Scheduler userLed;
-bool wasTcbRecording = false;
-bool completionAwaited = false;
 bool lastButtonPressed=false, lastStopArmed=false;
 
 void setUserLed(StatusLed::Color color) {
-  const bool red = color == StatusLed::Color::Red || color == StatusLed::Color::Orange;
-  const bool green = color == StatusLed::Color::Green || color == StatusLed::Color::Orange;
+  const bool red = color == StatusLed::Color::Red;
+  const bool green = color == StatusLed::Color::Green;
   const bool blue = color == StatusLed::Color::Blue;
   digitalWrite(LED_RED, red ? LOW : HIGH);
   digitalWrite(LED_GREEN, green ? LOW : HIGH);
@@ -128,17 +126,6 @@ void updateFieldControls() {
   }
 
   const bool recording = Tcb3Session::recording();
-  if (recording && !wasTcbRecording) {
-    completionAwaited=true;
-    userLed.notify(StatusLed::Event::RecordingStarted, now);
-  }
-  const bool cleanCompletion = Tcb3Session::takeCleanCompletion();
-  if (completionAwaited && !recording && cleanCompletion && !Tcb3Session::exclusive()) {
-    userLed.notify(StatusLed::Event::RecordingStopped, now);
-    completionAwaited=false;
-  }
-  if(Tcb3Session::faulted())completionAwaited=false;
-  wasTcbRecording = recording;
   if (startAttempt) {
     if (recording || Tcb3Session::faulted()) {
       startAttempt = false;
@@ -172,9 +159,7 @@ void updateFieldControls() {
     return;
   }
 
-  const auto& battery = BatteryRuntime::monitor();
-  const bool lowBattery = battery.trusted(MonotonicClock::now()) && battery.s.warning;
-  setUserLed(userLed.update(now, lowBattery, Tcb3Session::faulted(), recording));
+  setUserLed(userLed.update(now, Tcb3Session::faulted(), recording));
 }
 
 // Requested explicitly while stopped; one bounded line per foreground slice.
@@ -524,7 +509,6 @@ void setup() {
   pinMode(LED_BLUE, OUTPUT);
 #if TACTICPOD_REUSABLE
   pinMode(PIN_A0, INPUT_PULLUP);
-  userLed.notify(StatusLed::Event::PowerOn, millis());
 #endif
 
   Serial.begin(115200);  // USB CDC serial; do not wait for a host connection.
@@ -550,6 +534,10 @@ void setup() {
   imuReady = (imuStatus == 0);
   Recorder::begin(imuReady);  // Read-only recovery scan; recording stays OFF.
   Tcb3Session::begin(imuReady);
+#if TACTICPOD_REUSABLE
+  // Startup indication only after a successful startup: IMU ready and no recorder fault.
+  if (imuReady && !Tcb3Session::faulted()) userLed.notify(StatusLed::Event::PowerOn, millis());
+#endif
 }
 
 void loop() {
