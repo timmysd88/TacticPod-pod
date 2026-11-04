@@ -58,7 +58,7 @@ extern "C" unsigned adcCase(unsigned c){
     BatteryRuntime::Report r;char l[160];
     BatteryRuntime::capture(r);
     if(!r.estimate || r.percent!=64 || r.category!=Battery::Category::Half || !r.trusted)return 18;
-    const char* want[]={"BAT STATUS","Voltage: 3.90 V","Filtered: 3.90 V","Estimated charge: 64% (voltage-based estimate)",
+    const char* want[]={"Battery status","Voltage: 3.90 V","Filtered: 3.90 V","Estimated charge: 64% (voltage-based estimate)",
       "Category: HALF","ADC: CALIBRATED","Measurement: TRUSTED","Charging: UNKNOWN","Low-voltage protection: ARMED"};
     for(unsigned i=0;i<9;++i){unsigned n=BatteryRuntime::formatLine(r,i,l,sizeof(l));
       if(!n || n>200 || !has(l,want[i]) || l[n-1]!='\n')return 19;}
@@ -69,7 +69,7 @@ extern "C" unsigned adcCase(unsigned c){
     // Untrusted: never a category or percentage, only the plain measurements and honest flags.
     BatteryRuntime::Report r;char l[160];BatteryRuntime::capture(r);
     if(r.estimate || r.trusted || r.category!=Battery::Category::Unknown)return 21;
-    const char* want[]={"BAT STATUS","Voltage: 3.90 V","Filtered: 3.90 V","Estimated charge: UNKNOWN",
+    const char* want[]={"Battery status","Voltage: 3.90 V","Filtered: 3.90 V","Estimated charge: UNKNOWN",
       "Category: UNKNOWN","ADC: UNCALIBRATED","Measurement: UNTRUSTED","Charging: UNKNOWN","Low-voltage protection: NOT ARMED"};
     for(unsigned i=0;i<9;++i){BatteryRuntime::formatLine(r,i,l,sizeof(l));if(!has(l,want[i]))return 22;}
     char output[300];BatteryRuntime::format(output,sizeof(output));

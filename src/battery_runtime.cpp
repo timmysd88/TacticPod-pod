@@ -132,6 +132,8 @@ void capture(Report& r){
   r.category=gauge.category(r.trusted);r.chargeInfluenced=r.estimate && gauge.chargeInfluencedEstimate();
 }
 // Human-readable report, one short line per call (USB CDC TX FIFO is only 256 bytes).
+// No line here may start with "BAT ": TacticPod Lab ends a BAT request at the first such line
+// and parses the last one, which must stay the legacy machine-readable line.
 // Voltages are shown with 10 mV resolution; that is display rounding, not an accuracy claim.
 unsigned formatLine(const Report& r,unsigned index,char* dst,unsigned capacity){
   unsigned used=0;auto text=[&](const char* p){while(*p && used+1<capacity)dst[used++]=*p++;};
@@ -140,7 +142,7 @@ unsigned formatLine(const Report& r,unsigned index,char* dst,unsigned capacity){
     const uint32_t c=(mv+5)/10;char b[8]={char('0'+c/100%10),'.',char('0'+c/10%10),char('0'+c%10),' ','V',0};text(b);
   };
   switch(index){
-    case 0:text("BAT STATUS");break;
+    case 0:text("Battery status");break;
     case 1:text("Voltage: ");volts(r.fresh,r.mv);text(" (raw, calibrated burst reading)");break;
     case 2:text("Filtered: ");volts(r.fresh,r.filteredMv);break;
     case 3:text("Estimated charge: ");
