@@ -19,7 +19,7 @@ bool enabled = false, imuAvailable = false, stopping = false, eraseArmed = false
 bool identified = false;
 bool scanNoticePending = false;
 // Reusable builds only: sector 0 shows a reset marker or an interrupted reset, so V1 sessions must stay hidden.
-bool exportHidden = false, sector0Blank = false, lowData = false;
+bool exportHidden = false, sector0Blank = false, sector0Partial = false, lowData = false;
 uint32_t sector0Magic = 0;
 uint32_t scanAt = 0, nextSector = 0, sector = 0, session = 0, sectorSequence = 0;
 uint32_t startMs = 0, committed = 0, lost = 0, missed = 0, pageSequence = 0;
@@ -147,7 +147,7 @@ void csvSample(const uint8_t* p) {
 namespace Recorder {
 void begin(bool ready) {
   imuAvailable = ready; enabled = false; identified = false;
-  scanNoticePending = false; exportHidden = false; sector0Blank = false; lowData = false; sector0Magic = 0;
+  scanNoticePending = false; exportHidden = false; sector0Blank = false; sector0Partial = false; lowData = false; sector0Magic = 0;
   scanAt = 0; nextSector = 0; stage = Stage::Scan; io = IO::None;
   ioStarted = millis();
 }
@@ -230,15 +230,16 @@ void update() {
     }
     // A nonblank header reserves the entire sector, even if its CRC is torn.
     // Blank headers are not proof of free space: check all 4 KB before writing.
-    read(scanAt, scratch, 16);
-    if (scanAt == 0) { sector0Magic = get32(scratch); sector0Blank = blank(scratch, 16); }
+    // Sector 0 is read whole: a torn reset marker can leave its first bytes blank.
+    read(scanAt, scratch, scanAt == 0 ? 256 : 16);
+    if (scanAt == 0) { sector0Magic = get32(scratch); sector0Blank = blank(scratch, 16); sector0Partial = sector0Blank && !blank(scratch, 256); }
     if (!blank(scratch, 16)) { nextSector = scanAt + kSectorSize; if (scanAt > 0 && scanAt < Tcb3Test::WriteStart) lowData = true; }
     scanAt += kSectorSize;
     if (scanAt >= kEnd) {
       stage = Stage::Idle;
       scanNoticePending = true;
       exportHidden = Tcb3Test::Reusable &&
-        (sector0Magic == 0x33525054UL ||
+        (sector0Magic == 0x33525054UL || sector0Partial ||
          (!sector0Blank && sector0Magic != kHeader && sector0Magic != 0x32485054UL && sector0Magic != 0x33485054UL) ||
          (sector0Blank && lowData));
     }

@@ -196,6 +196,8 @@ void Store::update(uint32_t now){
           epoch=get(page+4);stats.next=Sector;scan=Sector;scanStep=1;
         }else if(!blank(page,16) && m!=Header && m!=0x31485054 && m!=0x32485054){
           fail("sector 0 invalid; repeat RECORD RESET");return;
+        }else if(blank(page,16) && !blank(page,Page)){
+          fail("sector 0 partly programmed; repeat RECORD RESET");return; // Torn marker: never treat as fresh flash.
         }else{sector0Blank=blank(page,16);scanStep=2;}
         return;
       }
@@ -206,11 +208,25 @@ void Store::update(uint32_t now){
           if(get(scratch)!=Header){endEpochScan();return;}
           blankAt=1;return;
         }
-        if(!read(scan+EpochHeaderOffset,scratch,4))return;
-        blankAt=0;
-        if(get(scratch)!=epoch){endEpochScan();return;}
-        stats.next=scan+Sector;scan+=Sector;if(scan>=End)endEpochScan();
-        return;
+        if(blankAt==1){
+          if(!read(scan+EpochHeaderOffset,scratch,4))return;
+          if(get(scratch)!=epoch){blankAt=0;endEpochScan();return;}
+          blankAt=2;return;
+        }
+        if(blankAt<6){
+          // A matching epoch word alone is not trusted: a torn erase can raise old bits. Require a sealed header page.
+          const unsigned part=(blankAt-2)*64;
+          if(!read(scan+part,page+part,64))return;
+          ++blankAt;return;
+        }
+        if(blankAt==6){
+          if(validPage(page)){blankAt=0;stats.next=scan+Sector;scan+=Sector;if(scan>=End)endEpochScan();return;}
+          blankAt=7;return;
+        }
+        // Unsealed header: a torn current-epoch header has no data behind it and is reusable; anything else is corruption.
+        if(!read(scan+Page,scratch,16))return;
+        if(!blank(scratch,16)){fail("live sector header corrupt; repeat RECORD RESET");return;}
+        blankAt=0;endEpochScan();return;
       }
     }
     if(!read(scan,scratch,16))return;
@@ -304,7 +320,10 @@ void Export::update(){
       epoch=get(page+4);at=Sector;phase=2;
     }else if(!blank(page,16) && m!=Header && m!=0x31485054 && m!=0x32485054){
       make(3,0,page,16);fault=ended=true;
-    }else if(blank(page,16)){probeAt=Sector;phase=1;}
+    }else if(blank(page,16)){
+      if(!blank(page,Page)){make(3,0,page,16);fault=ended=true;return;} // Torn marker: export nothing.
+      probeAt=Sector;phase=1;
+    }
     else phase=2;
     return;
   }
@@ -334,6 +353,8 @@ void Export::update(){
   uint32_t address=at+pageIndex*Page;
   if(!port.read(port.context,address+offset,page+offset,64)){make(3,address,nullptr,0);fault=ended=true;return;}
   offset+=64;if(offset<256)return;
+  // Epoch mode: an unsealed header (torn or never completed) marks the end of live data, as in the store scan.
+  if(Tcb3Test::Reusable && epoch && pageIndex==0 && !validPage(page)){make(4,End,nullptr,0);ended=true;return;}
   make(2,address,page,256);offset=0;if(++pageIndex==16){at+=Sector;selected=false;}
 }
 

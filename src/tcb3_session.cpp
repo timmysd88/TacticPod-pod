@@ -51,7 +51,7 @@ uint64_t captureLimit(){return uint64_t(sessionSeconds)*1000000;}
 bool timeLimited(){return !sessionUnlimited;}
 bool capReached(uint64_t now){return timeLimited() && now-testStartedUs>=captureLimit();}
 uint64_t deadline(){return finishing?stopUs+60000000:timeLimited()?testStartedUs+captureLimit()+60000000:~0ULL;}
-bool resetting=false,resetArmed=false;uint32_t resetArmedAt=0;
+bool resetting=false,resetArmed=false,resetFailed=false;uint32_t resetArmedAt=0;
 bool mutationBlocked(){return owned || pending || dumping || locked || resetting || Recorder::exclusive();}
 #endif
 void select(){SPI.beginTransaction(SPISettings(1000000,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
@@ -89,7 +89,10 @@ Tcb3::Reset resetEngine;
 bool writeEnable(){select();SPI.transfer(6);deselect();return status(nullptr)==2;}
 // Lazy reuse of a stale sector: only while a session owns the flash, never sector 0, only with a reset epoch active.
 bool eraseStale(void*,uint32_t a){
-  if(pageOpen || !(owned || pending) || locked || !store.resetEpoch() || (a&4095) || a<Tcb3::Sector || a>=Tcb3Test::WriteEnd)return false;
+  // Only the exact head sector the store is probing or preparing may be erased; live sectors lie strictly below it.
+  const Tcb3::State st=store.state();
+  if(pageOpen || !(owned || pending) || locked || !store.resetEpoch() || (a&4095) || a<Tcb3::Sector || a>=Tcb3Test::WriteEnd ||
+     a!=store.stats.next || (st!=Tcb3::State::Probe && st!=Tcb3::State::Blank))return false;
   if(status(nullptr)!=0 || !writeEnable())return false;
   select();SPI.transfer(0x20);address(a);deselect();return true;
 }
@@ -119,6 +122,7 @@ bool storeIdentity(){
   return true;
 }
 void storeReport(const char* text){
+  if(lineAt)return; // A partly sent line owns the buffer; never splice a new message into it.
   const auto& s=store.stats;uint64_t saved=0,seen=0;for(unsigned i=0;i<4;++i){saved+=s.committed[i];seen+=offered[i];}
   lineSize=0;lineAt=0;
   auto append=[](const char* p){while(*p && lineSize+1<sizeof(line))line[lineSize++]=*p++;};
@@ -169,9 +173,11 @@ bool exclusive(){return pending || owned || dumping || locked
 #endif
   ;}
 bool exporting(){return dumping;}
-// Read-only identity reads only need the flash idle; a latched fault must not block diagnosis.
-bool busy(){return pending || owned || dumping
+// Read-only identity reads need an idle chip. Only after a fault (locked store or failed reset) is the flash
+// polled, so an erase or program still running is never read through; normal idle behaviour is unchanged.
+bool busy(){return pending || owned || dumping || pageOpen || (locked && status(nullptr)!=0)
 #if TACTICPOD_REUSABLE
+  || (resetFailed && status(nullptr)!=0)
   || resetting
 #endif
   ;}
@@ -233,7 +239,7 @@ bool handleCommand(const char* p){
       return true;
     }
     if(!armed){storeReport("REFUSED: send RECORD RESET first, then RECORD RESET CONFIRM within 30 s");return true;}
-    resetting=true;resetEngine.begin(resetPort,millis());
+    resetting=true;resetFailed=false;resetEngine.begin(resetPort,millis());
     storeReport("RESET started; flash busy until complete");return true;
   }
 #endif
@@ -251,7 +257,7 @@ bool handleCommand(const char* p){
   if(!storeIdentity()){storeReport(Tcb3Test::Enabled?"REFUSED: identity/status":"REFUSED: JEDEC");return true;}
   if(!strcmp(p,"TCB READ")){
     if(CompactRecorder::capturing()){storeReport("REFUSED: COMP capture active");return true;}
-    dump.begin(port);exportSent=0;dumping=true;lineSize=lineAt=0;return true;
+        dump.begin(port);exportSent=0;dumping=true;if(!lineAt)lineSize=0;return true; // A partly sent line is finished first.
   }
   auto c=CompactRecorder::stats();
   if((Tcb3Test::Enabled && testUsed) || (Tcb3Test::Guarded && RamObservations::capturing())){
@@ -294,7 +300,7 @@ void update(bool allow){
         resetting=false;storeReport("RESET complete; recordings hidden, storage restarts at sector 1");
         Recorder::begin(storeImuReady); // Refresh the legacy scan so RECORD READ reflects the reset.
       }else if(resetEngine.failed()){
-        resetting=false;storeReport("FAULT: reset incomplete; recordings fail closed, repeat RECORD RESET");
+        resetting=false;resetFailed=true;storeReport("FAULT: reset incomplete; recordings fail closed, repeat RECORD RESET");
       }
     }
     flushLine();
@@ -338,6 +344,7 @@ void update(bool allow){
   }
   if(dumping){
     if(!Serial){dumping=false;exportSent=0;return;}
+    if(lineAt){flushLine();return;} // Binary packets start only after any partly sent text line has its newline.
     // Packet is immutable; USB writes may split it without blocking.
     unsigned n=0;const uint8_t* p=dump.output(n);
     if(p){int room=Serial.availableForWrite();unsigned k=room>0?unsigned(room):0;if(k>n-exportSent)k=n-exportSent;
