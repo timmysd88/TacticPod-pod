@@ -443,7 +443,7 @@ bool identityRead(void*,uint8_t command,uint32_t address,uint8_t* out,unsigned n
   digitalWrite(kFlashCsPin,HIGH);SPI.endTransaction();return true;
 }
 bool identityIdle(){
-  return FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() && !Tcb3Session::exclusive() &&
+  return FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() && !Tcb3Session::busy() &&
     !GpsReceiver::uartScanBusy() && !RamObservations::fastImu() && !CompactRecorder::capturing();
 }
 void updateIdentity(){

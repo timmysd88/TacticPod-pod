@@ -16,7 +16,7 @@ struct MockSPI {
   uint8_t finalSector[4096];
   uint8_t tx[260];
   unsigned position = 0, programs = 0, erases = 0, violations = 0, enables = 0;
-  unsigned programDelayMs = 3;
+  unsigned programDelayMs = 3, eraseDelayMs = 20;
   bool transactionActive=false;
   bool deepPower=false;unsigned sleeps=0,releases=0,asleepAccesses=0;
 #if TACTICPOD_TCB3_TEST_BUILD || TACTICPOD_REUSABLE
@@ -91,7 +91,7 @@ struct MockSPI {
         ++erases;
         if (address() & 4095) ++violations;
         if (!rejectErase) for (unsigned i = 0; i < 4096; ++i) byte(address() + i) = 0xFF;
-        busyUntil = mockTime + 20;
+        busyUntil = mockTime + eraseDelayMs;
       }
     }
   }

@@ -21,11 +21,13 @@ for path in ("src/standby_policy.h", "src/flash_power.h"):
     text = (root / path).read_text()
     assert not re.search(r"0x(06|20|02|C7|60|D8)\b", text), "standby helpers must not use erase/write opcodes"
 
-# The established TCB3 storage format is unchanged.
+# The TCB3 store is pinned: the fast-reset epoch/marker change is the only deliberate revision.
 digests = {
-    "src/tcb3_store.cpp": "9f0734c9c0d061b3b1b386b0bcc00d31fba5deab7690fdf8fd1b0c6210ef8ca1",
-    "src/tcb3_store.h": "1cb2cca79067879880c3a3ba120d013095db27ef2246a425aa69116d2ce6fa2f",
+    "src/tcb3_store.cpp": "80aa47ca79f927914ce747d48d7af367b9d7cfcd0c3721104494846a419216fc",
+    "src/tcb3_store.h": "ec640ca2f6f3b2c6af9dd462323c955a0a9d717532dde5cd49f2ec03d1fd8645",
 }
 for path, expected in digests.items():
-    assert hashlib.sha256((root / path).read_bytes()).hexdigest() == expected, path + " changed"
+    # Line endings are normalised so a CRLF working tree matches the committed LF blob.
+    data = (root / path).read_bytes().replace(b"\r\n", b"\n")
+    assert hashlib.sha256(data).hexdigest() == expected, path + " changed"
 print("PASS: System ON standby policy, flash deep power-down, wake/hold timing, boot never records, TCB3 store unchanged")
