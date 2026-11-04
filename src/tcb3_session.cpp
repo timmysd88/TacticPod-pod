@@ -24,7 +24,15 @@ char line[320]{};
 #else
 char line[256]{};
 #endif
-unsigned lineSize=0;
+unsigned lineSize=0,lineAt=0;
+// Large status lines are sent in whatever USB room exists so they can never wedge the console.
+void flushLine(){
+  if(!lineSize || !Serial)return;
+  int room=Serial.availableForWrite();if(room<=0)return;
+  unsigned n=lineSize-lineAt;if(n>unsigned(room))n=unsigned(room);
+  Serial.write(reinterpret_cast<const uint8_t*>(line+lineAt),n);lineAt+=n;
+  if(lineAt>=lineSize)lineSize=lineAt=0;
+}
 bool pageOpen=false;unsigned pageSent=0;
 uint64_t testStartedUs=0;
 bool testUsed=false;
@@ -43,7 +51,8 @@ uint64_t captureLimit(){return uint64_t(sessionSeconds)*1000000;}
 bool timeLimited(){return !sessionUnlimited;}
 bool capReached(uint64_t now){return timeLimited() && now-testStartedUs>=captureLimit();}
 uint64_t deadline(){return finishing?stopUs+60000000:timeLimited()?testStartedUs+captureLimit()+60000000:~0ULL;}
-bool mutationBlocked(){return owned || pending || dumping || locked || Recorder::exclusive();}
+bool resetting=false,resetArmed=false;uint32_t resetArmedAt=0;
+bool mutationBlocked(){return owned || pending || dumping || locked || resetting || Recorder::exclusive();}
 #endif
 void select(){SPI.beginTransaction(SPISettings(1000000,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
 void deselect(){digitalWrite(2,HIGH);SPI.endTransaction();}
@@ -54,7 +63,7 @@ bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   select();SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
-  if(pageOpen || (a&255) || a<Tcb3Test::WriteStart || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
+  if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
   if(Tcb3Test::Append && !store.stats.programOperations &&
      (a!=Tcb3Test::WriteStart || store.stats.session!=Tcb3Test::ExpectedSession || store.stats.sectorSequence!=0 ||
       store.stats.next!=Tcb3Test::WriteStart+Tcb3::Sector))return false;
@@ -75,7 +84,31 @@ bool pageBytes(void*,const uint8_t* p,unsigned n){
 }
 bool endPage(void*){if(!pageOpen)return false;bool full=pageSent==256;deselect();pageOpen=false;return full;}
 void abortPage(void*){if(pageOpen){deselect();pageOpen=false;}}
+#if TACTICPOD_REUSABLE
+Tcb3::Reset resetEngine;
+bool writeEnable(){select();SPI.transfer(6);deselect();return status(nullptr)==2;}
+// Lazy reuse of a stale sector: only while a session owns the flash, never sector 0, only with a reset epoch active.
+bool eraseStale(void*,uint32_t a){
+  if(pageOpen || !(owned || pending) || locked || !store.resetEpoch() || (a&4095) || a<Tcb3::Sector || a>=Tcb3Test::WriteEnd)return false;
+  if(status(nullptr)!=0 || !writeEnable())return false;
+  select();SPI.transfer(0x20);address(a);deselect();return true;
+}
+// Reset primitives touch address 0 only (the marker sector) and only while RECORD RESET is running.
+bool resetErase(void*,uint32_t a){
+  if(pageOpen || !resetting || a!=0)return false;
+  if(status(nullptr)!=0 || !writeEnable())return false;
+  select();SPI.transfer(0x20);address(0);deselect();return true;
+}
+bool resetProgram(void*,uint32_t a,const uint8_t* p,unsigned n){
+  if(pageOpen || !resetting || a!=0 || !n || n>256)return false;
+  if(status(nullptr)!=0 || !writeEnable())return false;
+  select();SPI.transfer(2);address(0);for(unsigned i=0;i<n;++i)SPI.transfer(p[i]);deselect();return true;
+}
+Tcb3::Port resetPort{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,resetProgram,resetErase};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale};
+#else
 Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status};
+#endif
 bool storeIdentity(){
   for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();if(a!=11 || b!=64 || c!=24)return false;}
   if(Tcb3Test::Guarded){
@@ -87,7 +120,7 @@ bool storeIdentity(){
 }
 void storeReport(const char* text){
   const auto& s=store.stats;uint64_t saved=0,seen=0;for(unsigned i=0;i<4;++i){saved+=s.committed[i];seen+=offered[i];}
-  lineSize=0;
+  lineSize=0;lineAt=0;
   auto append=[](const char* p){while(*p && lineSize+1<sizeof(line))line[lineSize++]=*p++;};
   auto number=[&](uint64_t n){char b[21];unsigned k=20;b[k]=0;do{b[--k]='0'+n%10;n/=10;}while(n);append(b+k);};
   append("TCB ");append(text);append(" state=");number(unsigned(store.state()));append(" session=");number(s.session);
@@ -130,8 +163,18 @@ void begin(bool ready){storeImuReady=ready;
   BatteryRuntime::begin();RamObservations::handleCommand("OBS STOP");
 #endif
 }
-bool exclusive(){return pending || owned || dumping || locked;}
+bool exclusive(){return pending || owned || dumping || locked
+#if TACTICPOD_REUSABLE
+  || resetting
+#endif
+  ;}
 bool exporting(){return dumping;}
+// Read-only identity reads only need the flash idle; a latched fault must not block diagnosis.
+bool busy(){return pending || owned || dumping
+#if TACTICPOD_REUSABLE
+  || resetting
+#endif
+  ;}
 bool recording(){return owned && !finishing;}
 bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault;}
 bool takeCleanCompletion(){bool completed=cleanCompletionPending;cleanCompletionPending=false;return completed;}
@@ -175,6 +218,24 @@ bool handleCommand(const char* p){
     if(!valid || !n || n>1800){storeReport("REFUSED: duration 1..1800 seconds");return true;}
     sessionSeconds=n;configuredUnlimited=false;storeReport("DURATION configured");return true;
   }
+  if(!strcmp(p,"RECORD RESET") || !strcmp(p,"RECORD RESET CONFIRM")){
+    const bool confirm=p[12]!=0;
+    const bool armed=resetArmed && uint32_t(millis()-resetArmedAt)<=30000;
+    resetArmed=false;
+    if(mutationBlocked() || CompactRecorder::capturing() || RamObservations::capturing() || Recorder::exclusive() ||
+       !FlashWriteTest::diagnosticsAllowed() || GpsReceiver::uartScanBusy()){storeReport("REFUSED: reset while busy");return true;}
+    if(!storeIdentity()){storeReport("REFUSED: reset JEDEC/status");return true;}
+    if(!confirm){
+      resetArmed=true;resetArmedAt=millis();
+      Serial.println("WARNING: RECORD RESET hides ALL recordings and restarts storage allocation. Sector 0xFFF000-0xFFFFFF is untouched.");
+      Serial.println("Old sectors are erased only when reused; use RECORD ERASE for a full physical erase. Not undoable through the firmware.");
+      Serial.println("Within 30 seconds send RECORD RESET CONFIRM to authorise; nothing has been changed.");
+      return true;
+    }
+    if(!armed){storeReport("REFUSED: send RECORD RESET first, then RECORD RESET CONFIRM within 30 s");return true;}
+    resetting=true;resetEngine.begin(resetPort,millis());
+    storeReport("RESET started; flash busy until complete");return true;
+  }
 #endif
   if(strncmp(p,"TCB ",4))return false;
   if(!strcmp(p,"TCB STATUS")){storeReport("STATUS");return true;}
@@ -190,7 +251,7 @@ bool handleCommand(const char* p){
   if(!storeIdentity()){storeReport(Tcb3Test::Enabled?"REFUSED: identity/status":"REFUSED: JEDEC");return true;}
   if(!strcmp(p,"TCB READ")){
     if(CompactRecorder::capturing()){storeReport("REFUSED: COMP capture active");return true;}
-    dump.begin(port);exportSent=0;dumping=true;lineSize=0;return true;
+    dump.begin(port);exportSent=0;dumping=true;lineSize=lineAt=0;return true;
   }
   auto c=CompactRecorder::stats();
   if((Tcb3Test::Enabled && testUsed) || (Tcb3Test::Guarded && RamObservations::capturing())){
@@ -222,9 +283,24 @@ bool startFromButton(){
 }
 uint32_t freeSectors(){
   const uint32_t next=store.stats.next;
-  return next>=Tcb3Test::WriteStart && next<=Tcb3Test::WriteEnd?(Tcb3Test::WriteEnd-next)/Tcb3::Sector:0;
+  return next>=store.floor() && next<=Tcb3Test::WriteEnd?(Tcb3Test::WriteEnd-next)/Tcb3::Sector:0;
 }
 void update(bool allow){
+#if TACTICPOD_REUSABLE
+  if(resetting){
+    if(allow){
+      resetEngine.update(millis());
+      if(resetEngine.done()){
+        resetting=false;storeReport("RESET complete; recordings hidden, storage restarts at sector 1");
+        Recorder::begin(storeImuReady); // Refresh the legacy scan so RECORD READ reflects the reset.
+      }else if(resetEngine.failed()){
+        resetting=false;storeReport("FAULT: reset incomplete; recordings fail closed, repeat RECORD RESET");
+      }
+    }
+    flushLine();
+    return;
+  }
+#endif
 #if TACTICPOD_REUSABLE
   BatteryRuntime::noteLoad(owned || pending);
   BatteryRuntime::update(allow && !pageOpen); // Never sample the ADC mid flash-page transaction.
@@ -280,7 +356,7 @@ void update(bool allow){
 #if TACTICPOD_REUSABLE
       // Conservative raw-fallback admission reserves all headers/footer slots.
       uint32_t blocks=(sessionSeconds+1)/2+1,sectors=sessionUnlimited?UnlimitedMinSectors:(blocks*39+13)/14;
-      if(store.stats.next<Tcb3Test::WriteStart || store.stats.next>=Tcb3Test::WriteEnd ||
+      if(store.stats.next<store.floor() || store.stats.next>=Tcb3Test::WriteEnd ||
          sectors>(Tcb3Test::WriteEnd-store.stats.next)/Tcb3::Sector){
         ++store.stats.full;pending=false;storeReport("REFUSED: insufficient session capacity");return;
       }
@@ -330,9 +406,7 @@ void update(bool allow){
     if(n){lineSize=n;++batIndex;}else batActive=false;
   }
 #endif
-  if(lineSize && Serial && !Recorder::exporting() && Serial.availableForWrite()>=int(lineSize)){
-    Serial.write(reinterpret_cast<const uint8_t*>(line),lineSize);lineSize=0;
-  }
+  if(!Recorder::exporting())flushLine();
 }
 }
 #endif

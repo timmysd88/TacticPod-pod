@@ -74,7 +74,8 @@ def decode_image(image):
             require(u(h,84)&~3==0,'unknown metadata availability flags')
             require(u(h,84)&1 or u(h,32,'Q')==0,'unavailable device ID')
             require(u(h,84)&2 or h[88:120]==b'\xff'*32,'unavailable build ID')
-            require(h[120:176]==b'\xff'*56 and u(h,24,'Q')<(1<<64)-1,'header reserved/start timestamp')
+            require(h[124:176]==b'\xff'*52 and u(h,24,'Q')<(1<<64)-1,'header reserved/start timestamp')
+            epoch=u(h,120);require(epoch!=0,'reset epoch zero')
             require(sseq!=0 or (sid==address//4096+1 and sequence==0),'session identity/start')
             metadata=h[16:176];canonical=metadata[:4]+b'\0'*4+metadata[8:]
             if sid in by_id:
@@ -92,6 +93,7 @@ def decode_image(image):
                                   gga_hz=u(h,64),uart_baud=u(h,68),block_us=u(h,72),max_frame=u(h,76),
                                   build_id_hex=h[88:120].hex() if u(h,84)&2 else None),
                    '_metadata':canonical,'_partial':None,'_last_block':-1,'_last_us':-1}
+                if epoch!=0xffffffff:s['metadata']['reset_epoch']=epoch
                 sessions.append(s);by_id[sid]=s
                 if version==0x30200:s['container_version']='3.2.0'
                 if sseq or sequence:issue(address,'missing session prefix',s)

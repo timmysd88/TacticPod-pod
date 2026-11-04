@@ -24,6 +24,7 @@ void printMenu() {
   else Serial.println("  RECORD START / RECORD STOP / RECORD STATUS - append binary IMU at 100 Hz");
   Serial.println("  RECORD READ  - export committed recordings as CSV while stopped");
   if(!Tcb3Test::Reusable)Serial.println("  RECORD ERASE - warn before explicitly confirmed recording-area erase");
+  else Serial.println("  RECORD RESET - fast logical reset (then RECORD RESET CONFIRM); hides all recordings");
   Serial.println("  DIAG         - display JEDEC and SFDP information once (while idle)");
   Serial.println("  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)");
   Serial.println("  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives");

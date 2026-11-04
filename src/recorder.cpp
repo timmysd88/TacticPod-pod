@@ -18,6 +18,9 @@ IO io = IO::None;
 bool enabled = false, imuAvailable = false, stopping = false, eraseArmed = false;
 bool identified = false;
 bool scanNoticePending = false;
+// Reusable builds only: sector 0 shows a reset marker or an interrupted reset, so V1 sessions must stay hidden.
+bool exportHidden = false, sector0Blank = false, lowData = false;
+uint32_t sector0Magic = 0;
 uint32_t scanAt = 0, nextSector = 0, sector = 0, session = 0, sectorSequence = 0;
 uint32_t startMs = 0, committed = 0, lost = 0, missed = 0, pageSequence = 0;
 uint32_t ioAt = 0, ioStarted = 0, lastPoll = 0, eraseArmedAt = 0;
@@ -144,7 +147,7 @@ void csvSample(const uint8_t* p) {
 namespace Recorder {
 void begin(bool ready) {
   imuAvailable = ready; enabled = false; identified = false;
-  scanNoticePending = false;
+  scanNoticePending = false; exportHidden = false; sector0Blank = false; lowData = false; sector0Magic = 0;
   scanAt = 0; nextSector = 0; stage = Stage::Scan; io = IO::None;
   ioStarted = millis();
 }
@@ -193,9 +196,10 @@ bool handleCommand(const char* line) {
   }
   eraseArmed = false;
   if (dump) {
-    exportAt = 0; stage = Stage::ExportHeader;
+    exportAt = 0; stage = exportHidden ? Stage::Idle : Stage::ExportHeader;
     Serial.println("BEGIN_RECORD_CSV");
     Serial.println("session,timestamp_ms,accel_x_g,accel_y_g,accel_z_g,gyro_x_dps,gyro_y_dps,gyro_z_dps");
+    if (exportHidden) Serial.println("END_RECORD_CSV");
     return true;
   }
   if (!imuAvailable) { Serial.println("RECORD START refused: IMU initialisation failed."); return true; }
@@ -227,11 +231,16 @@ void update() {
     // A nonblank header reserves the entire sector, even if its CRC is torn.
     // Blank headers are not proof of free space: check all 4 KB before writing.
     read(scanAt, scratch, 16);
-    if (!blank(scratch, 16)) nextSector = scanAt + kSectorSize;
+    if (scanAt == 0) { sector0Magic = get32(scratch); sector0Blank = blank(scratch, 16); }
+    if (!blank(scratch, 16)) { nextSector = scanAt + kSectorSize; if (scanAt > 0 && scanAt < Tcb3Test::WriteStart) lowData = true; }
     scanAt += kSectorSize;
     if (scanAt >= kEnd) {
       stage = Stage::Idle;
       scanNoticePending = true;
+      exportHidden = Tcb3Test::Reusable &&
+        (sector0Magic == 0x33525054UL ||
+         (!sector0Blank && sector0Magic != kHeader && sector0Magic != 0x32485054UL && sector0Magic != 0x33485054UL) ||
+         (sector0Blank && lowData));
     }
   } else if (stage == Stage::CheckBlank) {
     read(sector + checkOffset, scratch, sizeof(scratch));

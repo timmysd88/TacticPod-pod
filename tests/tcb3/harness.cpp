@@ -46,11 +46,29 @@ bool modelBytes(void*,const uint8_t* p,unsigned n){
 }
 bool modelEnd(void*){if(!stagedOpen || stagedSize!=256){++violations;return false;}stagedOpen=false;return modelProgram(nullptr,stagedAt,staged,256);}
 void modelAbort(void*){if(stagedOpen){stagedOpen=false;if(stagedSize)modelProgram(nullptr,stagedAt,staged,stagedSize);}}
-Tcb3::Port model{nullptr,modelRead,modelBegin,modelBytes,modelEnd,modelAbort,modelStatus};
+uint32_t eraseCalls=0,eraseTearCall=0,eraseTrace[10000],eraseTraceCount=0;
+Tcb3::Reset resetter;
+// Torn erase model: the first tearBytes bytes become blank, the rest is left as partly erased garbage.
+bool modelErase(void*,uint32_t a){
+  if((a&4095) || a>=Tcb3::End || stagedOpen || modelStatus(nullptr)){++violations;return false;}
+  ++eraseCalls;if(eraseTraceCount<10000)eraseTrace[eraseTraceCount++]=a;
+  if(eraseTearCall && eraseCalls==eraseTearCall){
+    for(unsigned i=0;i<4096;++i)nor[a+i]=i<tearBytes?255:(nor[a+i]|0x3c);
+  }else{memset(nor+a,255,4096);memset(pageProgramCounts+a/256,0,16);}
+  busyUntil=nowMs+20;++modelErases;return true;
+}
+Tcb3::Port model{nullptr,modelRead,modelBegin,modelBytes,modelEnd,modelAbort,modelStatus,modelProgram,modelErase};
 extern "C" unsigned init(unsigned erase){
   if(erase){memset(nor,255,sizeof(nor));memset(pageProgramCounts,0,sizeof(pageProgramCounts));}
   nowMs=programs=reads=violations=busyUntil=deny=stuck=corrupt=tearCall=tearBytes=modelErases=corruptCommit=denyRead=partialLimit=0;delayMs=3;
+  eraseCalls=eraseTearCall=eraseTraceCount=0;resetter=Tcb3::Reset{};
   stagedOpen=false;stagedSize=0;engine=Tcb3::Store{};engine.begin(model,nowMs);return 0;
+}
+extern "C" unsigned resetStart(unsigned unused){(void)unused;resetter.begin(model,nowMs);return 0;}
+// 1=running, 2=done, 3=failed.
+extern "C" unsigned resetTick(unsigned n){
+  while(n-- && resetter.active()){++nowMs;resetter.update(nowMs);}
+  return resetter.done()?2:resetter.failed()?3:1;
 }
 extern "C" unsigned tick(unsigned n){
   while(n--){++nowMs;engine.update(nowMs);}
