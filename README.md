@@ -326,7 +326,7 @@ See https://wiki.seeedstudio.com/XIAO-BLE-Sense-IMU-Usage/.
 - Enables accelerometer and gyroscope at 104 Hz sensor sample rate.
 - Reports X/Y/Z acceleration in g and angular velocity in degrees/second
   every 100 ms over USB CDC serial at 115200 baud.
-- Configures +/-2 g acceleration and the library's 245 dps gyroscope range.
+- Configures +/-8 g acceleration and +/-1000 dps gyroscope range.
 - Toggles the red LED every second, retaining the original test's two-second
   full on/off cycle. Green and blue stay off.
 - Repeats a clear error with the initialisation status if IMU startup fails;

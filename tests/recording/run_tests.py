@@ -34,7 +34,8 @@ names = ['startup does not write; confirmation cannot be bypassed',
          'confirmed erase stops before reserved diagnostic sector',
          'payload corruption rejected despite valid marker', 'erase timeout lockout',
          'quiet after one startup report, late USB scan notice, one-shot DIAG',
-         'DIAG refused during recording/export/fault/diagnostic ownership']
+         'DIAG refused during recording/export/fault/diagnostic ownership',
+         'IMU ranges, register readback, ODR and live-unit conversions']
 for index, name in enumerate(names):
     machine = Uc(UC_ARCH_ARM, UC_MODE_THUMB | UC_MODE_MCLASS)
     machine.mem_map(0x10000, 0x100000)

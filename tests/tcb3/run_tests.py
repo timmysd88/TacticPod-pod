@@ -2,7 +2,7 @@
 import sys
 sys.dont_write_bytecode=True
 from native import ROOT,Native,compile
-import struct,json,zlib,unittest,hashlib,os,random
+import struct,json,zlib,unittest,random
 import storage_benchmark as codec
 from tcb3_decode import decode_image,decode_packets
 from compact_decode import decode_frame
@@ -56,28 +56,30 @@ class Persistent(unittest.TestCase):
     def test_roundtrip_continuations_and_export(self):
         m=machine();save(m,self.frames,self.blocks);data=image(m)
         decoded=decode_image(data);self.assertFalse(decoded['issues'])
-        expected_metadata=struct.pack('<IIQQ12I',0x30200,0,1000,0,1000000,100,104,61,8750,10,1,38400,2000000,8228,1,0)+b'\xff'*88
+        expected_metadata=struct.pack('<IIQQ12I',0x30200,0,1000,0,1000000,100,104,244,35000,10,1,38400,2000000,8228,1,0)+b'\xff'*88
         self.assertEqual(data[16:176],expected_metadata)
         self.assertEqual(decoded['sessions'][0]['raw'],self.raw)
         self.assertEqual(decoded['sessions'][0]['status'],'complete')
+        session=decoded['sessions'][0]
+        self.assertEqual(session['metadata']['accel_ug_per_lsb'],244)
+        self.assertEqual(session['metadata']['gyro_udps_per_lsb'],35000)
+        sys.path.insert(0,str(ROOT/'tools'))
+        import tacticpod_decode
+        csv=tacticpod_decode.imu_csv(decoded).splitlines()
+        first=next(r for r in session['records'] if r['type']=='IMU_RAW')
+        self.assertEqual(csv[1].split(',')[2:],
+                         [f'{raw*0.000244:.6f}' for raw in first['axes_raw'][:3]]+
+                         [f'{raw*0.035:.6f}' for raw in first['axes_raw'][3:]])
+        legacy_fixture=decode_image((ROOT/'tests/tcb3/fixtures/v32/example.tpx3').read_bytes())
+        self.assertEqual(legacy_fixture['sessions'][0]['metadata']['accel_ug_per_lsb'],61)
+        self.assertEqual(legacy_fixture['sessions'][0]['metadata']['gyro_udps_per_lsb'],8750)
+        self.assertEqual(legacy_fixture['sessions'][0]['raw'],
+                         (ROOT/'tests/tcb3/fixtures/v32/expected.v2wire').read_bytes())
         packets=bytearray();n=m.call('exporting',1)
         while n:
             self.assertLessEqual(n,280);packets.extend(m.get('exportPacket',n));n=m.call('exporting')
         exported,issues=decode_packets(bytes(packets));self.assertFalse(issues)
         self.assertEqual(decode_image(exported)['sessions'][0]['raw'],self.raw)
-        out=ROOT/'tests/tcb3/fixtures/v32';out.mkdir(exist_ok=True)
-        def fixture(name,value):
-            path=out/name
-            if os.environ.get('TCB3_UPDATE_FIXTURES')=='1':
-                if isinstance(value,str):path.write_text(value)
-                else:path.write_bytes(value)
-            else:self.assertEqual(path.read_text() if isinstance(value,str) else path.read_bytes(),value,name)
-        fixture('example.tpx3',bytes(packets));fixture('expected.v2wire',self.raw)
-        public=decode_image(exported)
-        for s in public['sessions']:del s['raw']
-        from tcb3_decode import json_document
-        fixture('expected.json',json.dumps(json_document(public),indent=2,sort_keys=True)+'\n')
-        fixture('manifest.json',json.dumps(dict(export_sha256=hashlib.sha256(packets).hexdigest(),raw_sha256=hashlib.sha256(self.raw).hexdigest()),indent=2)+'\n')
     def test_json_u64_precision(self):
         from tcb3_decode import json_document
         result=json_document(dict(start_us=1<<63,device_id=(1<<64)-1,offered=[1<<63,0,0,0]))

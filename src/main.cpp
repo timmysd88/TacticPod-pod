@@ -18,6 +18,7 @@
 #include "standby_policy.h"
 #include "flash_power.h"
 #include "field_trace.h"
+#include "imu_config.h"
 
 namespace {
 #if !TACTICPOD_REUSABLE
@@ -44,6 +45,24 @@ bool imuFailureReported = false;
 FlashIdentity::Reader identityReader;
 bool identityRequested=false,identityRunning=false;
 unsigned identityOutput=0;
+int beginImu() {
+  imu.settings.accelEnabled = 1;
+  imu.settings.gyroEnabled = 1;
+  imu.settings.accelRange = ImuConfig::AccelRangeG;
+  imu.settings.gyroRange = ImuConfig::GyroRangeDps;
+  imu.settings.accelSampleRate = ImuConfig::SensorRateHz;
+  imu.settings.gyroSampleRate = ImuConfig::SensorRateHz;
+  const int status = imu.begin();
+  if (status != IMU_SUCCESS) return status;
+
+  uint8_t ctrl1Xl = 0, ctrl2G = 0;
+  if (imu.readRegister(&ctrl1Xl, 0x10) != IMU_SUCCESS ||
+      imu.readRegister(&ctrl2G, 0x11) != IMU_SUCCESS ||
+      !ImuConfig::fullScaleRegistersMatch(ctrl1Xl, ctrl2G)) {
+    return IMU_HW_ERROR;
+  }
+  return IMU_SUCCESS;
+}
 #if TACTICPOD_REUSABLE
 static_assert(PIN_A0 == 0, "Record button must use XIAO D0/P0.02");
 PhysicalButton::StateMachine physicalButton;
@@ -91,7 +110,7 @@ void leaveStandby(uint32_t now) {
   FlashPower::release(flash);
   GpsReceiver::resume();
   const bool wasReady = imuReady;
-  imuStatus = imu.begin();
+  imuStatus = beginImu();
   imuReady = imuStatus == 0;
   if (imuReady != wasReady) {
     Recorder::begin(imuReady);
@@ -524,13 +543,7 @@ void setup() {
   }
 #endif
   // Seeed's library enables IMU power and selects Wire1 via the build flag.
-  imu.settings.accelEnabled = 1;
-  imu.settings.gyroEnabled = 1;
-  imu.settings.accelRange = 2;       // +/-2 g
-  imu.settings.gyroRange = 245;      // Library's setting for +/-245 dps
-  imu.settings.accelSampleRate = 104;
-  imu.settings.gyroSampleRate = 104;
-  imuStatus = imu.begin();
+  imuStatus = beginImu();
   imuReady = (imuStatus == 0);
   Recorder::begin(imuReady);  // Read-only recovery scan; recording stays OFF.
   Tcb3Session::begin(imuReady);
@@ -612,8 +625,9 @@ void loop() {
   const int16_t raw[6] = {imu.readRawAccelX(), imu.readRawAccelY(), imu.readRawAccelZ(),
                           imu.readRawGyroX(), imu.readRawGyroY(), imu.readRawGyroZ()};
   RamObservations::addImu(acquisitionUs, raw);
-  latestImuReading = {now, imu.calcAccel(raw[0]), imu.calcAccel(raw[1]), imu.calcAccel(raw[2]),
-                     imu.calcGyro(raw[3]), imu.calcGyro(raw[4]), imu.calcGyro(raw[5])};
+  latestImuReading = {now, ImuConfig::accelG(raw[0]), ImuConfig::accelG(raw[1]),
+                     ImuConfig::accelG(raw[2]), ImuConfig::gyroDps(raw[3]),
+                     ImuConfig::gyroDps(raw[4]), ImuConfig::gyroDps(raw[5])};
   Recorder::addSample(now, raw);
   CompactRecorder::update(); // Acquisition and the unchanged V1 enqueue ran first.
   Tcb3Session::update();
