@@ -70,7 +70,9 @@ class Persistent(unittest.TestCase):
         self.assertEqual(csv[1].split(',')[2:],
                          [f'{raw*0.000244:.6f}' for raw in first['axes_raw'][:3]]+
                          [f'{raw*0.035:.6f}' for raw in first['axes_raw'][3:]])
-        legacy_fixture=decode_image((ROOT/'tests/tcb3/fixtures/v32/example.tpx3').read_bytes())
+        legacy_packets,legacy_issues=decode_packets((ROOT/'tests/tcb3/fixtures/v32/example.tpx3').read_bytes())
+        self.assertFalse(legacy_issues)
+        legacy_fixture=decode_image(legacy_packets)
         self.assertEqual(legacy_fixture['sessions'][0]['metadata']['accel_ug_per_lsb'],61)
         self.assertEqual(legacy_fixture['sessions'][0]['metadata']['gyro_udps_per_lsb'],8750)
         self.assertEqual(legacy_fixture['sessions'][0]['raw'],

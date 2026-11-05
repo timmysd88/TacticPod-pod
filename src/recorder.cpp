@@ -28,8 +28,8 @@ uint32_t ioAt = 0, ioStarted = 0, lastPoll = 0, eraseArmedAt = 0;
 uint32_t exportAt = 0, exportSession = 0, exportSequence = 0;
 unsigned checkOffset = 0, pageIndex = 1, pageSamples = 0;
 unsigned qHead = 0, qTail = 0, qCount = 0, exportPage = 1, exportSample = 0;
-uint32_t exportAccelUgPerCount = ImuConfig::AccelMicroGPerCount;
-uint32_t exportGyroMicroDpsPerCount = ImuConfig::GyroMicroDpsPerCount;
+uint16_t exportAccelUgPerCount = static_cast<uint16_t>(ImuConfig::AccelMicroGPerCount);
+uint16_t exportGyroMicroDpsPerCount = static_cast<uint16_t>(ImuConfig::GyroMicroDpsPerCount);
 Sample queue[kQueueSize];
 uint8_t buffer[256], scratch[256], exportBuffer[256];
 
@@ -311,8 +311,8 @@ void update() {
         get32(scratch + 20) == 100 && ImuConfig::supportedStoredScales(accelScale, gyroScale)) {
       exportSession = get32(scratch + 4); exportPage = 1; exportSample = 0;
       exportSequence = get32(scratch + 8); stage = Stage::ExportPage;
-      exportAccelUgPerCount = accelScale;
-      exportGyroMicroDpsPerCount = gyroScale;
+      exportAccelUgPerCount = static_cast<uint16_t>(accelScale);
+      exportGyroMicroDpsPerCount = static_cast<uint16_t>(gyroScale);
     } else exportAt += kSectorSize;
   } else if (stage == Stage::ExportPage) {
     if (!Serial) { stage = Stage::Idle; return; }
