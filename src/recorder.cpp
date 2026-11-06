@@ -7,6 +7,7 @@
 #include "flash_write_test.h"
 #include "tcb3_session.h"
 #include "tcb3_test_limits.h"
+#include "imu_config.h"
 
 namespace {
 using namespace RecordFormat;
@@ -27,6 +28,8 @@ uint32_t ioAt = 0, ioStarted = 0, lastPoll = 0, eraseArmedAt = 0;
 uint32_t exportAt = 0, exportSession = 0, exportSequence = 0;
 unsigned checkOffset = 0, pageIndex = 1, pageSamples = 0;
 unsigned qHead = 0, qTail = 0, qCount = 0, exportPage = 1, exportSample = 0;
+uint16_t exportAccelUgPerCount = static_cast<uint16_t>(ImuConfig::AccelMicroGPerCount);
+uint16_t exportGyroMicroDpsPerCount = static_cast<uint16_t>(ImuConfig::GyroMicroDpsPerCount);
 Sample queue[kQueueSize];
 uint8_t buffer[256], scratch[256], exportBuffer[256];
 
@@ -138,7 +141,8 @@ void csvSample(const uint8_t* p) {
   Serial.print(exportSession); Serial.print(','); Serial.print(get32(p));
   for (unsigned i = 0; i < 6; ++i) {
     int16_t value = int16_t(uint16_t(p[4 + i * 2]) | uint16_t(p[5 + i * 2]) << 8);
-    Serial.print(','); Serial.print(float(value) * (i < 3 ? 0.000061f : 0.00875f), 6);
+    const uint32_t scale = i < 3 ? exportAccelUgPerCount : exportGyroMicroDpsPerCount;
+    Serial.print(','); Serial.print(float(value) * (float(scale) / 1000000.0f), 6);
   }
   Serial.println();
 }
@@ -253,7 +257,9 @@ void update() {
       // Advance before any write: a failed/torn header consumes this sector.
       nextSector = sector + kSectorSize;
       page(kHeader, sectorSequence); put32(buffer + 16, 1); put32(buffer + 20, 100);
-      put32(buffer + 24, 61); put32(buffer + 28, 8750); put32(buffer + 32, startMs);
+      put32(buffer + 24, ImuConfig::AccelMicroGPerCount);
+      put32(buffer + 28, ImuConfig::GyroMicroDpsPerCount);
+      put32(buffer + 32, startMs);
       stage = Stage::Header; writePage(sector);
     }
   } else if (stage == Stage::Record) {
@@ -300,10 +306,13 @@ void update() {
     if (!Serial) { stage = Stage::Idle; return; }
     if (exportAt >= nextSector) { stage = Stage::Idle; Serial.println("END_RECORD_CSV"); return; }
     read(exportAt, scratch, sizeof(scratch));
+    const uint32_t accelScale = get32(scratch + 24), gyroScale = get32(scratch + 28);
     if (valid(scratch) && get32(scratch) == kHeader && get32(scratch + 16) == 1 &&
-        get32(scratch + 20) == 100 && get32(scratch + 24) == 61 && get32(scratch + 28) == 8750) {
+        get32(scratch + 20) == 100 && ImuConfig::supportedStoredScales(accelScale, gyroScale)) {
       exportSession = get32(scratch + 4); exportPage = 1; exportSample = 0;
       exportSequence = get32(scratch + 8); stage = Stage::ExportPage;
+      exportAccelUgPerCount = static_cast<uint16_t>(accelScale);
+      exportGyroMicroDpsPerCount = static_cast<uint16_t>(gyroScale);
     } else exportAt += kSectorSize;
   } else if (stage == Stage::ExportPage) {
     if (!Serial) { stage = Stage::Idle; return; }

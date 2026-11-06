@@ -205,6 +205,16 @@ class Conformance(unittest.TestCase):
         self.assertTrue(csv[2].startswith("1,16,"))
         self.assertTrue(csv[3].startswith("2,4294967,"))
 
+    def test_v1_new_scale_metadata_and_csv(self):
+        image = bytearray((golden.HERE / "mixed_v1_v2.bin").read_bytes())
+        struct.pack_into("<II", image, 24, 244, 35000)
+        out = decoder.decode_image(self.repaired(image, 0))
+        session = next(s for s in out["sessions"] if s["version"] == 1)
+        self.assertEqual(session["metadata"]["accel_ug_per_lsb"], 244)
+        self.assertEqual(session["metadata"]["gyro_udps_per_lsb"], 35000)
+        row = decoder.imu_csv(out).splitlines()[1]
+        self.assertEqual(row, "1,4294967280,0.000244,-0.000488,7.995148,-1146.880000,0.000000,3.500000")
+
     def test_v2_legacy_csv_low32_milliseconds(self):
         out = decoder.decode_image((golden.HERE / "timestamp_rollover.bin").read_bytes())
         rows = decoder.imu_csv(out).splitlines()

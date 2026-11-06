@@ -18,6 +18,8 @@ for case,name in enumerate(names):
         assert not decoded['issues'] and not s['issues']
         if case in (0,8):
             assert s['status']=='complete' and s['footer']['lost']==[0]*4
+            assert s['metadata']['accel_ug_per_lsb']==244
+            assert s['metadata']['gyro_udps_per_lsb']==35000
             assert s['raw']==m.get('firstWire',info[6])
             assert s['footer']['committed'][0] in (500,501) and s['footer']['committed'][1:]==[50,5,0],s['footer']
             started=info[12]+(info[13]<<32)

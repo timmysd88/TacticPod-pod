@@ -121,8 +121,8 @@ same metadata except sector sequence; page offset 8 advances normally.
 | 40 | 4 | Clock Hz, 1000000 |
 | 44 | 4 | Target IMU acquisition Hz, 100 |
 | 48 | 4 | Sensor ODR Hz, 104 |
-| 52 | 4 | Acceleration sensitivity micro-g/LSB, 61 |
-| 56 | 4 | Gyro sensitivity micro-degrees/second/LSB, 8750 |
+| 52 | 4 | Acceleration sensitivity micro-g/LSB, 244 |
+| 56 | 4 | Gyro sensitivity micro-degrees/second/LSB, 35000 |
 | 60 | 4 | Target RMC Hz, 10 |
 | 64 | 4 | Target GGA Hz, 1 |
 | 68 | 4 | GPS UART baud, 38400 |

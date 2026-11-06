@@ -56,6 +56,7 @@ extern "C" int runCase(unsigned scenario) {
     Recorder::handleCommand("RECORD START"); feed(205); stop();
     if (committed != 205 || SPI.erases || SPI.violations || Recorder::exclusive()) return 3;
     if (!validAt(0) || !validAt(256) || !validAt(4096) || !validAt(4096 + 15 * 256)) return 4;
+    if (get32(SPI.memory + 24) != 244 || get32(SPI.memory + 28) != 35000) return 47;
     if (get32(SPI.memory + 256 + 12) != 14 || get32(SPI.memory + 4096 + 256 + 12) != 9) return 5;
     if (get32(SPI.memory + 272) != 4100) return 31;
     const int16_t expectedAxes[6] = {1, -2, 16384, -100, 200, -300};
@@ -68,10 +69,17 @@ extern "C" int runCase(unsigned scenario) {
     if (nextSector != 8192 || Recorder::recording() || SPI.erases) return 6;
     Recorder::handleCommand("RECORD START"); feed(3); stop();
     if (memcmp(saved, SPI.memory, 256) || committed != 3 || !validAt(8192)) return 7;
+    RecordFormat::put32(SPI.memory + 24, 61);
+    RecordFormat::put32(SPI.memory + 28, 8750);
+    RecordFormat::put32(SPI.memory + 248, RecordFormat::crc(SPI.memory));
     Serial.used = 0; Serial.output[0] = 0;
     Recorder::handleCommand("RECORD READ"); tick(1000);
     unsigned rows = 0; for (const char* p = Serial.output; *p; ++p) if (*p == '\n') ++rows;
-    return rows == 211 && strstr(Serial.output, "END_RECORD_CSV") && SPI.violations == 0 ? 0 : 8;
+    if (rows != 211 || !strstr(Serial.output, "END_RECORD_CSV") || SPI.violations) return 8;
+    if (!strstr(Serial.output, "1,4100,0.000061,-0.000122,0.999424,-0.875000,1.750000,-2.625000") ||
+        !strstr(Serial.output, "3,") ||
+        !strstr(Serial.output, "0.000244,-0.000488,3.997696,-3.500000,7.000000,-10.500000")) return 48;
+    return 0;
   }
   if (scenario == 2) {
     Recorder::handleCommand("RECORD START"); feed(28); tick(100);
@@ -209,6 +217,19 @@ extern "C" int runCase(unsigned scenario) {
     if (flashReportRequested) return 42;
     stage = Stage::Idle; diagnosticAvailable = false; SerialConsole::handleCommand("DIAG");
     return !flashReportRequested && SPI.enables == 0 ? 0 : 43;
+  }
+  if (scenario == 20) {
+    setup();
+    if (!imuReady || imu.settings.accelRange != 8 || imu.settings.gyroRange != 1000 ||
+        imu.settings.accelSampleRate != 104 || imu.settings.gyroSampleRate != 104 ||
+        !ImuConfig::fullScaleRegistersMatch(mockImuCtrl1Xl, mockImuCtrl2G)) return 44;
+    mockTime += 10;
+    loop();
+    if (latestImuReading.ax != ImuConfig::accelG(100) ||
+        latestImuReading.az != ImuConfig::accelG(16384) ||
+        latestImuReading.gx != ImuConfig::gyroDps(10)) return 45;
+    mockImuBadRegisterRead = true;
+    return beginImu() == IMU_HW_ERROR ? 0 : 46;
   }
   return 24;
 }

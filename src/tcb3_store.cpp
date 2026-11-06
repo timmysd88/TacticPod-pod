@@ -1,5 +1,6 @@
 #include "tcb3_store.h"
 #include <string.h>
+#include "imu_config.h"
 namespace Tcb3 {
 uint32_t get(const uint8_t* p,unsigned n){uint32_t v=0;for(unsigned i=0;i<n;++i)v|=uint32_t(p[i])<<(8*i);return v;}
 void put(uint8_t* p,uint64_t v,unsigned n){for(unsigned i=0;i<n;++i)p[i]=v>>(8*i);}
@@ -12,7 +13,9 @@ bool validPage(const uint8_t* p){return get(p+252)==0xc0dec0deU && get(p+248)==~
 static bool blank(const uint8_t* p,unsigned n){while(n--)if(*p++!=255)return false;return true;}
 void metadata(uint8_t* p,uint64_t us){
   memset(p,255,MetadataBytes);put(p,0x00030200);put(p+4,0);put(p+8,us,8);put(p+16,0,8);
-  const uint32_t values[]={1000000,100,104,61,8750,10,1,38400,2000000,8228,1,0};
+  const uint32_t values[]={1000000,100,ImuConfig::SensorRateHz,
+    ImuConfig::AccelMicroGPerCount,ImuConfig::GyroMicroDpsPerCount,
+    10,1,38400,2000000,8228,1,0};
   for(unsigned i=0;i<12;++i)put(p+24+i*4,values[i]);
 }
 void Store::fail(const char* why,bool incomplete){

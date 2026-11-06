@@ -116,8 +116,8 @@ struct MockSerial {
 #endif
     return length;
   }
-  void print(float, int = 2) { print("float"); }
-  void print(double, int = 2) { print("double"); }
+  void print(float value, int digits = 2) { printFixed(value, digits); }
+  void print(double value, int digits = 2) { printFixed(value, digits); }
   void println(float value, int digits) { print(value, digits); println(); }
   void print(const char* text) { while (*text && used + 1 < sizeof(output)) output[used++] = *text++; output[used] = 0; }
   void print(char* text) { print(static_cast<const char*>(text)); }
@@ -126,6 +126,20 @@ struct MockSerial {
     char text[32]; char* cursor = text + 31; *cursor = 0;
     do { *--cursor = "0123456789ABCDEF"[value % base]; value /= base; } while (value);
     print(cursor);
+  }
+  void printFixed(double value, int digits) {
+    if (value < 0) { print('-'); value = -value; }
+    uint32_t scale = 1;
+    for (int i = 0; i < digits; ++i) scale *= 10;
+    const uint32_t rounded = uint32_t(value * scale + 0.5);
+    print(rounded / scale);
+    if (digits > 0) {
+      print('.');
+      uint32_t remainder = rounded % scale;
+      for (uint32_t place = scale / 10; place; place /= 10) {
+        print((remainder / place) % 10);
+      }
+    }
   }
   void println() { print('\n'); }
   template<typename T> void println(T value) { print(value); println(); }

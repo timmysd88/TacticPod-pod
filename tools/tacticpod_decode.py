@@ -256,9 +256,10 @@ def decode_image(image):
                 integrity(page)
                 sid, sequence, sector_index = unpack("III", page, 4)
                 fmt, rate, accel, gyro, start = unpack("5I", page, 16)
-                require(sid > 0 and (fmt, rate, accel, gyro) == (1, 100, 61, 8750), "unsupported V1 metadata")
+                require(sid > 0 and (fmt, rate) == (1, 100) and
+                        (accel, gyro) in ((61, 8750), (244, 35000)), "unsupported V1 metadata")
                 metadata = dict(format_major=1, format_minor=0, imu_rate_millihz=100000,
-                                accel_ug_per_lsb=61, gyro_udps_per_lsb=8750, session_start_ms=start)
+                                accel_ug_per_lsb=accel, gyro_udps_per_lsb=gyro, session_start_ms=start)
         except FormatError as exc:
             issue(offset, "header_invalid", str(exc))
             current = None

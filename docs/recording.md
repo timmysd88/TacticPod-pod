@@ -62,8 +62,9 @@ confirmed area erase; let an erase complete before starting another command.
 
 Idle acquisition stays at 10 Hz. During recording, the main loop targets one
 sample every 10 ms regardless of USB connection or `IMU ON/OFF`. The sensor's
-accelerometer and gyro remain enabled at their supported 104 Hz ODR, +/-2 g
-and the library's 245 dps range. Six raw axes are read once per sample;
+accelerometer and gyro remain enabled at their supported 104 Hz ODR, +/-8 g
+and +/-1000 dps range. New recordings store 244 micro-g/LSB and 35000
+micro-degrees/second/LSB. Six raw axes are read once per sample;
 live output uses the same values but remains limited to 10 Hz.
 
 A 256-sample ring buffer uses 4096 bytes of RAM. Pages hold 14 samples, and
@@ -108,8 +109,10 @@ All integers are serialized little-endian. Every 256-byte page has:
 | 252 | Commit marker `0xC0DEC0DE`, programmed after the body verifies |
 
 Header payload contains version 1 at offset 16, sample rate 100 at 20,
-acceleration sensitivity 61 micro-g/LSB at 24, gyro sensitivity 8750
-micro-degrees/second/LSB at 28, and session-start milliseconds at 32.
+acceleration sensitivity 244 micro-g/LSB at 24, gyro sensitivity 35000
+micro-degrees/second/LSB at 28, and session-start milliseconds at 32. Older
+sessions retain their original 61 and 8750 sensitivity values; exports scale
+each session using its own header metadata.
 Data payload contains up to 14 samples, each 16 bytes: uint32 milliseconds,
 then int16 accel X/Y/Z and gyro X/Y/Z. Footer payload records overflow/full
 loss count at 16 and missed-deadline count at 20.
