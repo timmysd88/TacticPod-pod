@@ -19,11 +19,7 @@ uint32_t storeMissed=0,maxServiceUs=0;
 unsigned exportSent=0;
 Tcb3::Reason reason=Tcb3::Reason::Clean;
 bool cleanCompletionPending=false;
-#if TACTICPOD_REUSABLE
-char line[320]{};
-#else
-char line[256]{};
-#endif
+char line[768]{};
 unsigned lineSize=0,lineAt=0;
 // Large status lines are sent in whatever USB room exists so they can never wedge the console.
 void flushLine(){
@@ -122,7 +118,7 @@ bool storeIdentity(){
   }
   return true;
 }
-void storeReport(const char* text){
+void storeReport(const char* text,bool includeBusyDetails=false){
   if(lineAt)return; // A partly sent line owns the buffer; never splice a new message into it.
   const auto& s=store.stats;uint64_t saved=0,seen=0;for(unsigned i=0;i<4;++i){saved+=s.committed[i];seen+=offered[i];}
   lineSize=0;lineAt=0;
@@ -134,6 +130,21 @@ void storeReport(const char* text){
   append(" full=");number(s.full);append(" crc=");number(s.crcFailures);append(" incomplete=");number(s.incompleteWrites);
   append(" max_service_us=");number(maxServiceUs);append(" error=");append(store.error?store.error:"none");
   append(" programs=");number(s.programOperations);append(" max_block_ms=");number(s.maxBlockMs);
+  if(includeBusyDetails){
+    auto flag=[&](const char* name,bool value){append(" ");append(name);append(value?"=1":"=0");};
+    flag("tcb_pending",pending);flag("tcb_owned",owned);flag("tcb_dumping",dumping);flag("tcb_locked",locked);
+#if TACTICPOD_REUSABLE
+    flag("tcb_resetting",resetting);
+#else
+    flag("tcb_resetting",false);
+#endif
+    flag("recorder_busy",Recorder::exclusive());append(" recorder_stage=");append(Recorder::diagnosticStage());
+    flag("flash_diagnostic_busy",!FlashWriteTest::diagnosticsAllowed());
+    append(" flash_diagnostic_state=");append(FlashWriteTest::diagnosticState());
+    flag("gps_uart_scan_active",GpsReceiver::uartScanActive());
+    flag("gps_configuration_active",GpsReceiver::configurationActive());
+    flag("gps_profile_audit_active",GpsReceiver::profileAuditActive());
+  }
   if(Tcb3Test::Enabled)append(Tcb3Test::Marker);
   if(Tcb3Test::Append){append(" skip=");number(s.probeSkipped);}
 #if TACTICPOD_REUSABLE
@@ -256,7 +267,7 @@ bool handleCommand(const char* p){
       && strcmp(p,"TCB START")
 #endif
      )){
-    storeReport("REFUSED: busy/fault");return true;}
+    storeReport("REFUSED: busy/fault",true);return true;}
   if(!storeIdentity()){storeReport(Tcb3Test::Enabled?"REFUSED: identity/status":"REFUSED: JEDEC");return true;}
   if(!strcmp(p,"TCB READ")){
     if(CompactRecorder::capturing()){storeReport("REFUSED: COMP capture active");return true;}

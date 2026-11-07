@@ -11,6 +11,9 @@ void suspend();   // Stop UARTE RX/TX and parsing; never changes receiver config
 void resume();    // Restart UART at the normal baud; re-arms start-up only if it never reached the GPS.
 // True while SCAN, CONFIG or profile changes require flash/recording idle.
 bool uartScanBusy();
+bool uartScanActive();
+bool configurationActive();
+bool profileAuditActive();
 // Deferred field start: fresh RAM audit/recovery must finish before capture.
 bool prepareRecording();
 bool recordingReady();

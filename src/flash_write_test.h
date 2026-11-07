@@ -5,4 +5,5 @@ namespace FlashWriteTest {
 void update();
 // Suppress other flash diagnostics while a command is in flight or timed out.
 bool diagnosticsAllowed();
+const char* diagnosticState();
 }
