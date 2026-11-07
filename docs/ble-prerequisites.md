@@ -238,3 +238,99 @@ Additional acceptance criteria: default-env binary hash unchanged; idle standby 
 4. C10: refuse BLE while USB is attached.
 5. Stall limit (60 s), supervision timeout, wake-lock safety cap.
 6. Build-environment access, bench measurements and flashing.
+
+---
+
+# 10. Revision 3 — decisions applied, Seeed core verified, build/test status (investigation only)
+
+## 10.1 Approved decisions (rev 3)
+
+Keep 50 ms standby polling and battery monitoring unchanged until measured; 40 ms debounce for the new idle double-tap only (existing 25 ms recording logic untouched); evaluate PORT/SENSE (not GPIOTE IN); conditional approval of soft reset after BLE; BLE allowed with USB attached (no blanket restriction); 60 s stalled-transfer timeout reset **only** by valid transfer progress; 5 min connected inactivity (not applied to healthy downloads); 180 s advertising; recording and BLE mutually exclusive; LEDs and recording unchanged outside BLE. Supersedes §9.8 and the USB refusal in §9.1 C10/§9.3 guards.
+
+## 10.2 Verified against the real Seeed core (not the Adafruit proxy)
+
+Source: `Seeed-Studio/Adafruit_nRF52_Arduino` from GitHub. The pinned package `framework-arduinoadafruitnrf52-seeed 1.10101.0` is only on `files.seeedstudio.com` (unreachable). The pod's `variants/tacticpod/.../variant.h` is byte-identical to the core at tags v1.1.3 … 1.1.13, so **v1.1.3 was used as the nearest verifiable match [?]**; the exact pinned tarball remains unverified.
+
+| Item | Verified result (core v1.1.3) |
+|---|---|
+| `attachInterrupt` | Uses GPIOTE **IN-event** channels (CONFIG mode Event), NVIC prio 3. **Confirmed not low-power PORT.** The pod itself uses no `attachInterrupt`/GPIOTE, nor do Bluefruit/TinyUSB libs. |
+| `GPIOTE_IRQHandler` (core) | Services only IN channels; it **never clears `EVENTS_PORT`**. Enabling `INTENSET.PORT` while the core handler is linked would cause an interrupt storm. |
+| SENSE support | `pinMode(pin, INPUT_PULLUP_SENSE)` exists (SENSE=Low), so DETECT can be armed with core APIs only. |
+| Sleep path | `wiring.c`/FreeRTOS tickless use `sd_app_evt_wait()` if SD enabled, else `WFE/SEV/WFE`; already SD-aware. RTOS tick (≤50 ms via `delay(50)`) wakes standby regardless of any pin interrupt. |
+| SoftDevice | Board option is **S140 7.3.0** (fwid 0x0123) with `nrf52840_s140_v7.ld`: FLASH origin 0x27000, RAM origin 0x20006000. SD RAM block therefore fixed at 24 KB; SD flash not counted in app flash. |
+| Teardown | No `Bluefruit.end()` and no `sd_softdevice_disable` call anywhere in core/Bluefruit. `begin()` creates BLE/SOC tasks and a timer with no deletion path. **Confirms full teardown is unsupported** → reset-based return (§10.5). |
+| `bond_init()` | Runs `InternalFS.begin()` and `mkdir` of the bond dirs if missing, so the **first ever `Bluefruit.begin()` writes (and possibly formats) internal flash** (CPU stalls tens–hundreds of ms [E]). Safe only because BLE never runs while recording; must be bench-checked, and it writes internal flash only, not the SPI session flash. |
+| Task priorities | loop = 1 (LOW), timer/callback = 2, BLE/SOC = 3 (HIGH). Unchanged from the proxy. |
+
+### GPIO PORT/SENSE conclusion
+- With 50 ms polling retained (approved), a pin interrupt adds **no power benefit** (the tick already wakes every 50 ms) and a PORT interrupt cannot be enabled safely while the core's `GPIOTE_IRQHandler` is linked.
+- **Recommended Phase 1: no interrupt.** Detect the first press with the existing 50 ms standby poll, then run 10 ms polling for the 500 ms gesture window (the existing code already drops to 10 ms while pressed; extend that window in the idle classifier only). 40 ms debounce means taps shorter than 40 ms are rejected anyway; the residual risk is a 40–50 ms first tap falling between polls, to be measured on hardware.
+- **Optional spike (needs flash approval):** `INPUT_PULLUP_SENSE` + GPIOTE PORT with NVIC left disabled and `SEVONPEND`, or a project-owned `GPIOTE_IRQHandler` (legal only if `WInterrupts.o` is never linked — check the link map). Evaluate only if measurements show polling is insufficient. Wake on SENSE must be measured for spurious DETECT events (button bounce, pull-up leakage) over 24 h.
+
+## 10.3 Build environment and regression suite
+
+- **PlatformIO full build: NOT restored.** `files.seeedstudio.com` and the PlatformIO registry (`registry.platformio.org`, `dl.registry.platformio.org`, `api.registry.platformio.org`) are unreachable; only GitHub, PyPI and the OS apt mirrors resolve. The pinned platform (commit a6fd41d) installs from GitHub, but `pio run` still fetches `esp_install` and other packages from Seeed/registry hosts and aborts. The pinned framework tarball is unavailable, so **no firmware ELF, no real size/RAM figures and no SD RAM check were produced.**
+- **Host regression environment restored (outside the repo, in git-ignored `.pio-core/`):** apt `gcc-arm-none-eabi` 13.2.1 (the pinned PlatformIO toolchain is GCC 7.x), wrapper `arm-none-eabi-g++.exe` adding `--specs=nosys.specs`, Seeed core v1.1.3 as the framework package, venv with unicorn 2.1.4 and pyelftools. **No tests or sources were modified.**
+- **Result of `tests/reusable/run_all_tests.py`: 33 of 34 suites PASS.** The one failure, `tests/compact/test_resources.py`, requires `.pio/build/seeed_xiao_nrf52840_sense/firmware.elf` from a real PlatformIO build.
+- Caveats: GCC 13 vs the pinned GCC 7 and core v1.1.3 vs the pinned build mean pass/fail logic is meaningful but any size/stack figures from this environment are **not** authoritative. CI (`firmware-build.yml`, pinned PlatformIO 6.2.0 and platform commit) remains the authoritative run. Passing suites are ARM-code-in-Unicorn simulations; they prove logic, not hardware timing.
+
+## 10.4 Which tests need physical hardware
+
+Host/Unicorn (can run without hardware, already in the suite or addable): button FSM, standby policy, TCB3 store/export, LED scheduler patterns, BLE gesture classifier and `BleMode` interlock (new), timers (60 s stall, 5 min inactivity, 180 s adv) with a fake clock.
+**Hardware required:** firmware size/RAM from the real pinned build (CI or bench), `Bluefruit.begin()` RAM log, IMU/GPS timing with BLE-capable build, loop jitter during BLE (BLE tasks pre-empting loop), standby/advertising/connected/download current, 40–50 ms tap vs 50 ms polling reliability, SENSE spurious-wake rate, reset-path behaviour (all items in §10.5), USB re-enumeration after reset, real throughput/MTU, connection-drop recovery, Web Bluetooth end to end.
+
+## 10.5 Soft reset after BLE: exact behaviour and proof obligations
+
+Reset is `NVIC_SystemReset()` performed only after BLE_STOP; no code path resets during recording.
+
+Boot facts verified in source (`src/main.cpp` `setup()`, `flash_power.h`, `docs/fast-record-reset.md`):
+- Flash is **always released from deep power-down first** at boot (reset during standby is already handled).
+- `Recorder::begin`/`Tcb3Session::begin` is a **read-only recovery scan; recording stays OFF**; nothing starts recording at boot. Button `armed` is false until release, so a held button cannot start a recording.
+- The 3× blue PowerOn cue plays after a successful boot, so a post-BLE reset would show it unless suppressed; suppression needs a retained flag (production change, requires approval).
+- BLE is read-only on the SPI flash (no erase/write opcode), so nothing can be mid-write at reset; any export read is simply abandoned. The pod never writes during BLE, so "pending flash operations" reduces to: ensure the BLE flash-read slice (≤64 B SPI transaction) has completed before reset, and do not enter deep power-down mid-transaction. The pod re-enters standby via the existing path after boot.
+
+State/transition table:
+
+| From | Event | Actions | To |
+|---|---|---|---|
+| STANDBY | double-tap (guards: not recording/exclusive/faulted; USB allowed) | leaveStandby, `BleMode::active=true`, `Bluefruit.begin()` (first time per boot), start adv | ADVERTISING |
+| ADVERTISING | 180 s, no connection | stop adv, drain, `BleMode` BLE_STOP | RESET |
+| ADVERTISING | connect | stop adv timer | CONNECTED |
+| ADVERTISING | 3 s hold | stop adv, BLE_STOP; then see conflict C12 | RESET (+ start per C12) |
+| ADVERTISING | double-tap | ignored | ADVERTISING |
+| CONNECTED | list/read/ACK/keepalive request | refresh 5 min activity timer | CONNECTED |
+| CONNECTED (transferring) | valid progress (window ACK) | reset 60 s stall timer; 5 min timer suspended | CONNECTED |
+| CONNECTED (transferring) | 60 s without valid progress | abort transfer (data untouched), start 5 min timer | CONNECTED |
+| CONNECTED | 5 min since last valid application activity (not transferring) | disconnect | BLE_STOP |
+| CONNECTED | link drop / supervision timeout / app disconnect | abort transfer, BLE_STOP | RESET |
+| CONNECTED | 3 s hold | ignored | CONNECTED |
+| any BLE state | fault | BLE_STOP | RESET |
+| RESET | boot | existing boot path, recording OFF, flash released, standby after settle | STANDBY |
+
+Proof obligations for the conditional approval (all hardware-dependent unless noted):
+1. No recording erased/corrupted: SPI flash image hash (e.g. `TCB READ` export CRC) identical before and after 100 BLE cycles with reset (hardware), plus host proof that BLE code has no write/erase path (code review + host test).
+2. No auto-start after reset: boot test asserts `recording()==false`, no start attempt, across all exit paths including hold-during-advertising (host + hardware).
+3. Returns to the existing standby: measured entry within the existing 2 s settle + 5 s bound; standby current equals baseline (hardware).
+4. Pending flash ops complete: assert no in-flight SPI transaction at reset (host fake + hardware logic trace).
+5. Disconnection, advertising timeout, failed/stalled transfers each end in RESET→STANDBY; fault-injection tests for each (host fake clock + hardware).
+6. Verify the Adafruit bootloader double-reset DFU detection is not triggered by BLE reset followed by an immediate user reset, and that no GPREGRET magic used for DFU is set [?].
+
+### Conflict C12 (needs your decision)
+Approved item 7 says a 3 s hold during advertising cancels BLE and **starts the recording workflow**, while the reset condition says no recording may start automatically after a reset. Options:
+- **A (recommended):** BLE_STOP, reset, then the user holds again (button `armed` rule; one extra hold, LED shows normal boot cue). Fully preserves "reset never starts recording"; deviates from item 7 by requiring a second hold.
+- **B:** BLE_STOP then start recording in the same boot without reset (SD stays enabled for that boot; differs from the tested recording configuration; weakens the benefit of reset).
+- **C:** BLE_STOP, reset carrying a one-shot retained-RAM "user-requested start" flag (set only by the user's physical 3 s hold), consumed once after boot. Meets item 7 but is a start after reset; the retention register must avoid bootloader DFU magic values.
+
+## 10.6 Interactions confirmed with approved decisions
+- **Stalled-transfer timer (60 s):** reset only on valid progress (in-order window ACK with correct CRC/offset); retransmitted/duplicate ACKs, keepalives and non-transfer writes do not reset it. On expiry: abort transfer (session untouched), then the 5 min timer runs.
+- **5 min inactivity:** last *valid application activity* only; suspended while a transfer is healthy.
+- **USB attached:** BLE allowed; no blanket restriction. USB `TCB READ`/serial commands and BLE reads share the single SPI owner, so a pod-side mutex (`exclusive()`) must make a USB export and a BLE transfer mutually exclusive (reject whichever starts second) — new requirement. Reset after BLE with USB attached re-enumerates CDC (development inconvenience only).
+- **Recording interlock, LED patterns (advertising: blue 100 ms flash / 2 s; connected: 2 blue 100 ms flashes / 5 s; idle off):** unchanged from §9.5/§9.6; confirmed feasible with the existing single RGB LED scheduler (one colour at a time, no timing resource conflicts).
+
+## 10.7 Remaining blockers and approvals
+1. **Build environment:** no working PlatformIO build here. Options: (a) run the existing CI workflow on this branch (needs approval to push the branch), (b) provide a mirror/network access for `files.seeedstudio.com` and the PlatformIO registry, (c) a developer machine/bench build. Until one is done, no size/RAM figures and no `test_resources` result.
+2. Exact pinned framework (1.10101.0) unverified; v1.1.3 used as proxy.
+3. Decide C12 (A/B/C).
+4. Approve the post-BLE boot-cue suppression via retained flag (if desired) and the pod-side USB/BLE export mutex.
+5. Hardware measurements/flashing (not approved yet).
+No BLE implementation, flashing or production firmware change has been done.
