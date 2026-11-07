@@ -334,3 +334,118 @@ Approved item 7 says a 3 s hold during advertising cancels BLE and **starts the 
 4. Approve the post-BLE boot-cue suppression via retained flag (if desired) and the pod-side USB/BLE export mutex.
 5. Hardware measurements/flashing (not approved yet).
 No BLE implementation, flashing or production firmware change has been done.
+
+---
+
+# 11. Revision 4 — conditions applied, CI review, internal-flash analysis, bench plan, Phase 1 readiness (investigation only)
+
+No firmware, flash, CI trigger, push or stored-session change was made.
+
+## 11.1 Approved conditions applied (supersede earlier rev where different)
+
+- Button: keep 50 ms standby poll; 10 ms poll during the idle double-tap window; **no GPIOTE/PORT interrupts** (the §10.2 spike option is withdrawn); 40 ms debounce for the idle classifier only; existing recording button logic untouched.
+- **C12 resolved (option A):** 3 s hold during ADVERTISING → cancel advertising → safe reset sequence → idle; **no recording starts**; a separate 3 s hold is then required. Hold while CONNECTED/transferring is ignored.
+- Lifecycle: 180 s advertising; 5 min inactivity (suspended for healthy transfer); 60 s stall (reset only by valid progress); **every BLE exit — advertising timeout, hold-cancel, normal disconnection, link loss, fault — returns to idle through the safe reset sequence.** Recording and BLE remain mutually exclusive.
+
+Updated transition rows (replace those in §10.5): `ADVERTISING --3 s hold--> BLE_STOP --> RESET --> STANDBY (recording OFF; new hold needed)`; `CONNECTED --disconnect/link loss--> BLE_STOP --> RESET --> STANDBY`. The retained-RAM start flag (old option C) and same-boot start (option B) are **not** to be implemented, which also removes the need for a retention register and any DFU-magic concern for GPREGRET.
+
+Safe reset sequence (specification; no implementation): (1) mark `BleMode` stopping, reject all new GATT requests; (2) abort any transfer and wait for the in-flight SPI read slice (≤64 B) to finish, assert no flash command pending; (3) stop advertising / disconnect (bounded wait ≤1 s); (4) LEDs off; (5) `NVIC_SystemReset()`. A watchdog-style bound ensures reset still happens if a step hangs. Boot path is the existing one (flash released, read-only scan, recording OFF, `armed` false until release).
+
+## 11.2 First-tap verification against 50 ms standby polling
+
+Verified in `src/main.cpp` (`loop()`, `updateFieldControls`, `standbyIdle`) and `src/standby_policy.h`:
+- In standby the loop still runs `updateFieldControls()` each pass, then `standbyIdle()` sleeps `delay(50)` (or `delay(10)` while D0 is LOW). A button press does **not** by itself leave standby (exit happens only via `mustStayAwake`; `buttonBusy` only delays *entering* standby). So **both taps occur while in standby**, sampled by the polling loop.
+- Therefore the first tap can be missed. A host model (period 51 ms, 10 ms samples after first detection, press must stay LOW 40 ms after first detection; uniform random phase) gives the probability that a single tap is detected:
+
+| Press length | 40 | 50 | 60 | 70 | 80 | 90 | ≥100 ms |
+|---|---|---|---|---|---|---|---|
+| Detected (debounce 40 ms) | 0 % | 18 % | 38 % | 57 % | 77 % | 96 % | 100 % |
+| Detected (existing 25 ms, for reference) | 18 % | 38 % | 58 % | 77 % | 97 % | 100 % | 100 % |
+
+  Model assumptions (period, loop overhead incl. `BatteryRuntime::update`) are **estimates**; real period must be measured.
+- **Conclusion: with 50 ms standby polling and 40 ms debounce counted from first detection, taps shorter than ~100 ms can be missed; a miss rate of zero cannot be guaranteed by design.** The second tap is safe because the 10 ms window starts at first detection.
+- This conflicts with the demand that the first tap cannot be missed. Options **needing your approval** (none implemented): (a) accept and document "press firmly ≥100 ms", validating on hardware with a human tap-duration test (≥200 taps, several users; target ≥99 % first-tap detection); (b) count the 40 ms debounce **from the second LOW sample at 10 ms** rather than from first detection, i.e. classify a press when two consecutive samples are LOW (min guaranteed press ≈60 ms), reducing the miss region while keeping 40 ms for release/chatter; (c) a 20–25 ms standby poll only (excluded by your current condition). Recommendation: (b)+(a); fall back to (c) only if measurement fails.
+
+## 11.3 CI workflow review (`.github/workflows/firmware-build.yml`) — not triggered
+
+- Triggers: `pull_request` to `main` and `workflow_dispatch`. A plain branch push triggers nothing; CI would start by opening a PR to `main` or `gh workflow run firmware-build.yml --ref feature/ble-prerequisites` (the workflow already exists on `main`).
+- `permissions: contents: read`; no secrets used; no deploy, release, publish or write steps; the only side effect is a workflow run on a Windows runner (≤60 min) and a 30-day artifact `tacticpod-firmware-<sha>` containing `.hex/.zip/.elf`, logs, `size.txt` and SHA256SUMS (visible to anyone with repo read/Actions access).
+- Concurrency group is per ref with cancel-in-progress (cannot cancel runs on other branches).
+- Steps give exactly what is needed: default-env build (creates the `firmware.elf` that `test_resources.py` reads), `tacticpod_reusable_usb` build, full regression, `size.txt`, and `pio pkg list -g` (records resolved package versions).
+- Reproducibility gaps to review: the toolchain is a range (`>=1.60301.0,<1.80000.0`, preferred `~1.70201.0` = GCC 7.2.1) and the framework is an **unversioned tarball URL** (`files.seeedstudio.com/.../framework-arduinoadafruitnrf52.tar.bz2`), so the framework is not content-pinned; earlier repo docs recorded 1.10101.0. After a run, compare `pio pkg list -g` to 1.10101.0 and record the SHA-256 of the build artefacts; if different, record the delta before accepting baselines.
+- A docs-only branch run would build the same firmware as `main` plus docs, giving the golden default-env baseline. Approval needed to push the branch (to `timmysd88/TacticPod-pod`, origin) and to dispatch/open a PR.
+- Without CI: the real PlatformIO build is still impossible here (registry and Seeed hosts unreachable); 33/34 host suites pass; `test_resources` and actual RAM/flash remain **unreported until CI or a bench build runs**. Latest repo-documented figures (not from this session): RAM 122,040 B (51.4 %) and flash 202,320 B (24.9 %).
+
+## 11.4 First-time SoftDevice internal-flash writes (verified in Seeed core v1.1.3)
+
+Facts:
+- `Bluefruit.begin()` always ends with `bond_init()` → `InternalFS.begin()`; if LittleFS fails to mount (blank/unformatted region) it **erases all 7 pages** (28 KB) at **0xED000–0xF4000** and formats; then `mkdir` of the peripheral and central bond directories if missing. Later boots mount and only read.
+- Region map: app flash ends at 0xED000 (linker `FLASH ORIGIN 0x27000, LENGTH 0xED000-0x27000`; SD S140 7.3.0 and MBR below 0x27000); LittleFS 0xED000–0xF4000; bootloader from 0xF4000 (`flash_nrf5x.c` rejects any write at/above `BOOTLOADER_ADDR`). The pod firmware uses no `InternalFS` today (`src/` grep), so the region should be unused by current firmware, bootloader and recordings (external SPI flash holds recordings).
+- Cost: page erase ≈85 ms [E] each, formatting ≈0.6 s of stall plus small writes. With the SoftDevice enabled these go via `sd_flash_*`; they may be delayed while the radio is busy, but at first BLE entry the radio is idle. With the SD disabled they use NVMC directly. IMU/GPS/recording are idle in BLE mode, so no recording timing is at risk **provided BLE entry is guarded** (not recording, not exclusive).
+Implications / risks:
+1. Existing firmware: none while unused; the region becomes non-blank after first BLE entry (state change). Unknown whether any earlier firmware or bootloader version used it — **must be read before the first BLE run** (SWD read, or provision a sacrificial unit first).
+2. Bootloader: unaffected (write guard; separate address); DFU of the application does not touch 0xED000+ [?, bootloader source to confirm]. A bootloader/SD change would need re-validation.
+3. Recording safety: external-flash recordings are untouched; the one-time stall happens only in BLE entry; power loss during format is recoverable (mount fails → reformat next time).
+4. Policy proposal (no bonding): the first BLE entry per pod is a visible side effect of using BLE; to avoid surprises in the field, **provision at the bench** (run a BLE-capable build once on the unit and verify), or accept it at first use with the 0.6 s stall documented. Avoiding InternalFS entirely would require patching the framework (not recommended).
+5. Wear: erase cycles occur once per pod (and again only if the FS is corrupted); negligible vs 10k endurance.
+
+## 11.5 Other core findings relevant to Phase 1 (Seeed core v1.1.3, [?] pinned build)
+- **Bluefruit drives the blue LED itself:** `bluefruit_blinky_cb` toggles `LED_BLUE` (500 ms) while advertising and solid while connected, unless `Bluefruit.autoConnLed(false)` is called. This would **conflict with the approved LED patterns and the pod's LED scheduler**. Required: call `autoConnLed(false)` before advertising starts and drive the LED only via `StatusLed`.
+- LFCLK: `USE_LFXO` (32.768 kHz crystal) in the variant → low-power SD clock; no RC calibration cost.
+- DFU magic constants (`0x4e/0x57/0xA8` in GPREGRET) are only set by core `enterSerialDfu/OTA` helpers; the reset sequence must not use GPREGRET.
+
+## 11.6 Bench measurement and validation plan (approved for preparation only; no flashing yet)
+
+Equipment: sacrificial/bench XIAO nRF52840 Sense pod (never a unit holding irreplaceable recordings until validated), Nordic PPK2 or Otii Arc (source-measure at battery terminals, 3.7 V), SWD probe (J-Link/CMSIS-DAP) if available for internal-flash dump, logic analyser (button, LED, SPI CS), Android Chrome phone + desktop Chrome with Web Bluetooth, nRF Connect app, scripted tap rig or solenoid (optional).
+
+Safety preconditions for every bench session: (1) full external-flash export (`TCB READ`) and SHA-256 recorded before and after; (2) no `RECORD ERASE`/`RECORD RESET` commands issued; (3) internal flash 0xED000–0xF4000 dumped (SWD) before first BLE build, or use a unit proven disposable; (4) known-good default firmware image retained for restore (restore flash only with approval).
+
+| # | Test | Method | Pass criterion |
+|---|---|---|---|
+| B1 | Baseline standby current (default build) | PPK2, 10 min, 50 ms poll | recorded; defines regression limit |
+| B2 | Baseline recording timing | 3×≥15 min sessions with default build | IMU/GPS/counters as 3B.10 baseline; zero missed/rejected/CRC |
+| B3 | Poll period, first-tap detection | logic analyser on D0 + tap rig/human 200+ taps, 40–150 ms | measured period; ≥99 % first-tap detection (or option b/a decision) |
+| B4 | Idle gesture matrix | single tap, double tap, triple, tap+hold, hold; during recording | double-tap → BLE only idle; hold → existing start; recording ignores double-tap; no spurious entry over 24 h |
+| B5 | Standby current BLE-capable build, BLE never entered | PPK2 | ≤ B1 + agreed limit |
+| B6 | First `Bluefruit.begin()` | SWD before/after dump, current trace, serial log | only 0xED000–0xF4000 changes; stall ≤1 s; external flash hash unchanged; RAM requirement log line |
+| B7 | Advertising 180 s current | PPK2 | recorded; ends with reset to standby |
+| B8 | Idle connection / active transfer current | PPK2, nRF Connect then app | recorded |
+| B9 | Reset sequence | 100 cycles each exit path (timeout, hold-cancel, disconnect, link loss, fault inject) | back in standby ≤ agreed bound; recording never auto-starts; flash hash unchanged; heap/tasks clean |
+| B10 | Recording with BLE build after BLE use | 3×15 min | timing no worse than B2 |
+| B11 | Mutual exclusion | start attempts while BLE; double-taps while recording (100 each) | all refused/ignored, LED per spec |
+| B12 | Throughput/MTU/stall/inactivity timers | phone + desktop | MTU, rate, 60 s stall and 5 min timers behave as specified; healthy 90 min-class download not interrupted |
+| B13 | USB attached | BLE with USB serial open; concurrent `TCB READ` vs BLE | mutually exclusive, no corruption |
+| B14 | Power loss | cut power mid-advertising/transfer/format | no external flash change; boots to standby |
+
+Tests runnable without hardware (host/Unicorn): gesture classifier model, timers with fake clock, `BleMode` interlock, LED scheduler patterns, safe-reset sequencing logic, regression suite.
+
+## 11.7 Phase 1 implementation readiness report
+
+Scope of Phase 1 (once approved): BLE-capable env `tacticpod_reusable_ble` (default envs byte-identical): idle double-tap classifier; `BleMode` state machine and interlocks; advertising ≤180 s; identity/battery service; connection/disconnection; 5 min inactivity; reset sequence; BLE LED patterns; `autoConnLed(false)`. No session listing/download yet.
+
+Files expected to change: `platformio.ini` (new env), new `src/ble_mode.h/.cpp`, `src/ble_gesture.h`, `src/ble_service.cpp`, `src/main.cpp` (hooks in `updateFieldControls`, `standbyIdle`, start paths), `src/standby_policy.h` (BLE wake-lock input), `src/status_led.h` (BLE patterns), `src/tcb3_session.cpp` (start guard), new host tests under `tests/reusable/`, docs.
+
+| Gate | Status | Notes |
+|---|---|---|
+| Design decisions (button, lifecycle, timers, C12, USB, reset) | **Ready** | all approved; first-tap policy (11.2) needs a choice |
+| Host regression | **Ready/partial** | 33/34 pass locally with non-pinned toolchain; `test_resources` pending |
+| Real PlatformIO build, firmware ELF, size | **BLOCKED** | needs CI (not yet approved to push/trigger) or networked build |
+| Exact pinned core/toolchain | **Unverified** | floating Seeed tarball and toolchain range (11.3) |
+| SD RAM requirement/`Bluefruit.begin()` | **Unverified** | needs real build + bench B6 |
+| Internal flash 0xED000–0xF4000 state | **Unknown** | read before first BLE run (11.4) |
+| First-tap reliability | **Risk (medium)** | cannot be guaranteed by polling alone (11.2) |
+| Bluefruit blue-LED conflict | **Known, mitigated** | `autoConnLed(false)` (11.5) |
+| Power baselines | **Not measured** | bench B1/B5/B7/B8 |
+| Recording timing with BLE build | **Not measured** | bench B2/B10 |
+| Hardware | **Not approved to flash** | |
+
+**Recommendation: do not start Phase 1 coding until (1) CI build + regression (incl. `test_resources`) pass and the actual RAM/flash numbers and resolved package versions are recorded, (2) first-tap policy chosen, (3) internal-flash state read/provisioning plan agreed. Host-only groundwork (gesture classifier, `BleMode`, timers, LED patterns with tests, not wired to `main.cpp`) can begin after approval since it cannot change firmware behaviour.**
+
+Complexity/risk: Phase 1 medium. Top risks: BLE tasks pre-empting the busy `loop()` (affects only BLE mode, since BLE never runs while recording), reset-sequence hangs, first-tap misses, one-time internal-flash format, Bluefruit LED takeover.
+
+## 11.8 Approvals needed now
+1. Push `feature/ble-prerequisites` to origin and run CI (`workflow_dispatch` or PR) — or an alternative networked build.
+2. First-tap policy: 11.2 (a)/(b)/(c).
+3. Internal-flash provisioning approach (11.4 item 4) and permission for an SWD read-only dump on a bench unit.
+4. Permission to start host-only groundwork code (no firmware wiring).
+5. Hardware flashing remains unapproved.
