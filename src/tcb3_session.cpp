@@ -54,13 +54,14 @@ uint64_t deadline(){return finishing?stopUs+60000000:timeLimited()?testStartedUs
 bool resetting=false,resetArmed=false,resetFailed=false;uint32_t resetArmedAt=0;
 bool mutationBlocked(){return owned || pending || dumping || locked || resetting || Recorder::exclusive();}
 #endif
-void select(){SPI.beginTransaction(SPISettings(1000000,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
+constexpr uint32_t kExportReadHz=4000000; // Only TCB READ page reads; every other flash operation stays at 1 MHz.
+void select(uint32_t hz=1000000){SPI.beginTransaction(SPISettings(hz,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
 void deselect(){digitalWrite(2,HIGH);SPI.endTransaction();}
 void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);}
 int status(void*){if(pageOpen)return -1;select();SPI.transfer(5);int s=SPI.transfer(0);deselect();return s;}
 bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
-  select();SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
+  select(dumping?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;

@@ -66,6 +66,10 @@ Each 4096-byte sector keeps page 0 as header, pages 1..14 as data, page 15 as an
 optional final footer. Writes never cross a 256-byte page boundary. Every read
 or program transport unit is at most 64 bytes. The SPI adapter uses the existing
 D2 CS, D8 SCK, D9 MISO, D10 MOSI, mode 0, 1MHz and unchanged JEDEC whitelist.
+The sole exception is the `0x03` page read issued while `TCB READ` is exporting,
+which uses 4MHz (`kExportReadHz`); the flash's `0x03` read limit is not yet
+verified against a datasheet or hardware, so this is for offline/bench evaluation.
+Status, program, erase and all other reads stay at 1MHz.
 There is no erase callback and no protection-register modification.
 
 ## Page envelope
