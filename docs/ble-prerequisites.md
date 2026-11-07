@@ -449,3 +449,87 @@ Complexity/risk: Phase 1 medium. Top risks: BLE tasks pre-empting the busy `loop
 3. Internal-flash provisioning approach (11.4 item 4) and permission for an SWD read-only dump on a bench unit.
 4. Permission to start host-only groundwork code (no firmware wiring).
 5. Hardware flashing remains unapproved.
+
+# 12. Revision 5 — CI artifact, resource baseline and internal-flash backup plan
+
+This revision supersedes the pending CI, host-groundwork and first-tap items in §11. The successful run and its artifact were inspected; no CI was rerun, no hardware was accessed, and no flash or recording was changed.
+
+## 12.1 Verified CI build and regression
+
+- Draft PR: `timmysd88/TacticPod-pod#11`; CI run `42385281072`, completed **success** on commit `70a5e9014809bb2dac75851cc479da1fdf60de43` (the PR merge-test commit was `094b6c77cf736a41b48910b2174accc58d64bd72`).
+- Both `seeed_xiao_nrf52840_sense` and `tacticpod_reusable_usb` built successfully. All **35/35 regression scripts passed**, including `test_resources` and `ble_groundwork_tests.py`.
+- The resource test reports production static RAM **118,996 B / 119,000 B limit** and compact objects **37,966 B / 38,000 B limit**. These checks are host/build gates, not hardware timing measurements.
+- The downloaded artifact SHA-256 manifest verified. The reusable ELF SHA-256 is `04f017684694b04f7ecf0c456355da59154203ada7affeae5d2520fb0c1a6510`.
+
+### Measured firmware size (PlatformIO `size` output)
+
+The linker-defined capacities are 237,568 B RAM and 811,008 B application flash.
+
+| CI environment | RAM used | RAM headroom* | Flash used | Flash headroom |
+|---|---:|---:|---:|---:|
+| `seeed_xiao_nrf52840_sense` (default) | 118,996 B (50.1%) | 118,572 B | 166,220 B (20.5%) | 644,788 B |
+| `tacticpod_reusable_usb` | 123,092 B (51.8%) | 114,476 B | 217,464 B (26.8%) | 593,544 B |
+
+`*` Arithmetic against the PlatformIO size report, not a promise that all remaining RAM is available to BLE. The reusable ELF reserves a 112,428 B heap region and 2,048 B stack; BLE/SoftDevice configuration can move the required RAM boundary and must be measured in a BLE-enabled build. The default production resource test is only 4 B below its current static-RAM limit, so BLE must stay in a separate environment unless that policy is explicitly revisited.
+
+**Assessment:** application flash has ample headroom for a Phase 1 advertising/identity implementation. RAM appears plausible for the small Phase 1 scope, but BLE fit is **not verified**: the artifact contains no BLE application, and there is no measured `sd_ble_enable` RAM requirement for the proposed service configuration. Session transfer buffers would need a separate budget and build.
+
+## 12.2 Exact build versions and dependency status
+
+- PlatformIO Core **6.2.0**.
+- Seeed platform **1.1.1**, resolved from the workflow-pinned Git commit `a6fd41debbbcda13b5340fff50c9092ed3289194`.
+- Arduino nRF52 framework **1.10101.0** (`1.1.1`), matching the intended framework version.
+- GNU Arm toolchain **1.70201.0 (GCC 7.2.1)**.
+- CMSIS package **2.50700.210515**.
+- CI checks out LSM6DS3 commit `e063c3a544b8bb89238accddf24f0028bcd1ca20` and TinyGPSPlus commit `ca29434514a5c5172bd807af0608df7f296582a2`; build metadata identifies LSM6DS3 2.0.7 and TinyGPSPlus 1.0.3.
+
+The platform and library source commits are pinned by the workflow. The framework resolved to the correct version, but is fetched through an unversioned Seeed tarball URL and is not pinned by content hash. The toolchain range also permits other releases; this run resolved to 1.70201.0. These are reproducibility risks, not failures of this CI build.
+
+## 12.3 ELF and internal-flash map assessment
+
+The artifact contains the `tacticpod_reusable_usb` ELF and HEX, but **no linker map file**. The ELF, HEX, build log and the resolved framework linker/flash-driver sources were inspected:
+
+- The selected `nrf52840_s140_v7.ld` declares application FLASH `[0x27000, 0xED000)` and RAM `[0x20006000, 0x20040000)`. The application ELF sections start at `0x27000`; `.text` ends at `0x5B62C`, initialized data is loaded through `0x5C178`, and the HEX payload ends at `0x5C178`. These application payloads are well below `0xED000`.
+- The framework's `InternalFileSystem.cpp` assigns LittleFS `[0xED000, 0xF4000)` to seven 4 KiB pages (28 KiB). Its nRF52840 flash driver sets `BOOTLOADER_ADDR` to `0xF4000` and rejects writes at or above that address. Thus the **software layout** has no application/LittleFS overlap; the proposed region ends at the framework's bootloader write boundary.
+- Current `src/` does not use `InternalFS`. Recorded sessions are on the separate external SPI flash; the CI ELF contains no proof of the contents of any physical pod's internal flash. The CI artifact does not contain the installed bootloader or its settings-page map. Therefore prior firmware data, a customized bootloader layout, and the actual target's `[0xED000, 0xF4000)` contents remain **unverified**.
+- `Bluefruit.begin()` uses `bond_init()` and `InternalFS.begin()`. If LittleFS cannot mount, it formats the filesystem, which can erase/write those seven pages before creating bond directories. This is LittleFS provisioning, not programming the S140 image. The source-level region assignment makes it an intended filesystem area, but does **not** make a first-use format safe for a particular pod without first reading that pod's contents.
+
+**Safety decision:** do not invoke BLE/`Bluefruit.begin()` on a pod until its internal flash has been read and the dump reviewed. Any later first-time format/provisioning still requires explicit approval. No SWD connection or flash operation was performed for this investigation.
+
+## 12.4 Prepared read-only SWD backup procedure (not executed)
+
+**Hardware/software:** an SWD-accessible XIAO nRF52840 Sense; stable target power and a correctly wired SWDIO, SWDCLK, GND and VTref connection; a SEGGER J-Link-compatible probe; Nordic nRF Command Line Tools (`nrfjprog`) and SEGGER J-Link software. Record the board identity, probe serial, tool versions, power source and operator with the output. Do not connect a probe if debug access is locked or the wiring/power arrangement is uncertain.
+
+On a host with `nrfjprog` and `sha256sum`, first identify the probe, then replace `<SERIAL>` with its listed serial number. These commands only read code flash and UICR:
+
+```sh
+nrfjprog --version
+nrfjprog --ids
+nrfjprog --family NRF52 --snr <SERIAL> --readcode internal-flash-1.hex --readuicr uicr-1.hex
+nrfjprog --family NRF52 --snr <SERIAL> --memrd 0xED000 --n 28672 > internalfs-region-1.txt
+sha256sum internal-flash-1.hex uicr-1.hex internalfs-region-1.txt
+nrfjprog --family NRF52 --snr <SERIAL> --readcode internal-flash-2.hex --readuicr uicr-2.hex
+nrfjprog --family NRF52 --snr <SERIAL> --memrd 0xED000 --n 28672 > internalfs-region-2.txt
+sha256sum internal-flash-2.hex uicr-2.hex internalfs-region-2.txt
+```
+
+Compare each `*-1` and `*-2` SHA-256 value. A mismatch means the dump is not verified; stop and investigate rather than proceeding. Retain both reads, hashes, command output, board/probe identity and a protected copy of the files. Confirm the full-flash HEX includes the address range `0xED000–0xF3FFF`; the `--memrd` capture provides a direct readable snapshot of that region. A readback is not a substitute for an independently known-good firmware/bootloader image, and a full internal-flash backup does not contain external SPI recordings.
+
+Do **not** use `--recover`, `--eraseall`, `--program`, `--chiperase`, `--sectorerase`, or any command that writes UICR/flash. If read access is denied, stop: do not unlock or recover, since recovery can mass-erase internal flash. These commands are documented for preparation only and were not run.
+
+If a later approved BLE trial finds only a corrupt LittleFS volume, the framework may format the reserved FS region on a subsequent mount attempt; this loses any pre-existing contents in those pages. If the application fails but the installed bootloader remains functional, recovery may be possible by the normal application-only update path. If the bootloader, SoftDevice or UICR is damaged, recovery requires a verified, board-appropriate image and authorized SWD programming; restoring a different unit's UICR or blindly restoring a full dump is unsafe. The external recording flash is separate, but should still be independently exported and hash-checked before any approved bench trial.
+
+## 12.5 Updated readiness and remaining gates
+
+| Gate | Status | Result / next evidence |
+|---|---|---|
+| CI build and regression | **PASS** | Both builds; 35/35 scripts; resource test included. |
+| Framework/toolchain version | **Verified for this run** | Framework 1.10101.0; toolchain 1.70201.0 (7.2.1); source pinning caveat above. |
+| Host-only button/BLE groundwork | **PASS** | CI test passed; code remains isolated and unwired to `main.cpp`. The approved second-10 ms-sample approach is implemented in the classifier. |
+| Flash/RAM for BLE | **Plausible, not proven** | Good flash headroom; BLE-enabled target build and SoftDevice RAM negotiation are still required. |
+| Internal-flash software map | **No address overlap found** | ELF/linker plus framework map place LittleFS between the app limit and bootloader write boundary. No map file or physical dump is available. |
+| Per-pod internal-flash contents | **Unknown / blocker before first BLE entry** | Requires an approved read-only SWD backup and review. |
+| Power and real-time recording behavior | **Not measured** | Requires approved bench instrumentation and BLE-enabled hardware tests; host tests do not establish 100 Hz/10 Hz timing or current draw. |
+| Firmware BLE integration / hardware flashing | **Not authorized** | Production integration, provisioning and flashing remain separate approval gates. |
+
+**Phase 1 readiness verdict:** the host/build prerequisites are ready to support a separate BLE build, and the measured flash budget is ample. RAM is encouraging but unverified for BLE. Before beginning production firmware integration, obtain explicit approval to wire the approved Phase 1 state machine/services into the firmware and add a separate BLE build environment. Before any board runs that can call `Bluefruit.begin()`, obtain separate authorization for the read-only SWD backup and review of the target's internal flash. Any flash/provisioning operation, firmware upload, or physical validation still requires its own approval. Preserve PR #11 as draft; do not merge.
