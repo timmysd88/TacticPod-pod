@@ -135,8 +135,6 @@ void storeReport(const char* text,bool includeBusyDetails=false){
     flag("tcb_pending",pending);flag("tcb_owned",owned);flag("tcb_dumping",dumping);flag("tcb_locked",locked);
 #if TACTICPOD_REUSABLE
     flag("tcb_resetting",resetting);
-#else
-    flag("tcb_resetting",false);
 #endif
     flag("recorder_busy",Recorder::exclusive());append(" recorder_stage=");append(Recorder::diagnosticStage());
     flag("flash_diagnostic_busy",!FlashWriteTest::diagnosticsAllowed());

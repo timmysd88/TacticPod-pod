@@ -13,6 +13,13 @@ bool refusalContains(const char* expected){
   return Serial.used && Serial.output[Serial.used-1]=='\n' &&
     strstr(Serial.output,"TCB REFUSED: busy/fault") && strstr(Serial.output,expected);
 }
+bool refusalOmits(const char* unexpected){
+  Serial.used=0;Serial.output[0]=0;TcbDetail::lineSize=0;TcbDetail::lineAt=0;
+  if(!Tcb3Session::handleCommand("TCB READ"))return false;
+  while(TcbDetail::lineSize)TcbDetail::flushLine();
+  return Serial.used && Serial.output[Serial.used-1]=='\n' &&
+    strstr(Serial.output,"TCB REFUSED: busy/fault") && !strstr(Serial.output,unexpected);
+}
 extern "C" unsigned firstConsole(){
   memset(SPI.memory,255,sizeof(SPI.memory));memset(SPI.finalSector,255,sizeof(SPI.finalSector));
   Serial.connected=false;setup();
@@ -27,6 +34,7 @@ extern "C" unsigned firstConsole(){
   if(!Tcb3Session::handleCommand("TCB STATUS"))return 3;
   while(TcbDetail::lineSize)TcbDetail::flushLine();
   if(strstr(Serial.output,"tcb_pending="))return 4;
+#if TACTICPOD_REUSABLE
   TcbDetail::pending=true;
   if(!refusalContains("tcb_pending=1"))return 5;
   TcbDetail::pending=false;TcbDetail::owned=true;
@@ -38,6 +46,11 @@ extern "C" unsigned firstConsole(){
   TcbDetail::locked=false;TcbDetail::resetting=true;
   if(!refusalContains("tcb_resetting=1"))return 9;
   TcbDetail::resetting=false;
+#else
+  TcbDetail::pending=true;
+  if(!refusalOmits("tcb_resetting="))return 5;
+  TcbDetail::pending=false;
+#endif
   Recorder::mockBusy=true;Recorder::mockDiagnosticStage="Record";
   if(!refusalContains("recorder_busy=1 recorder_stage=Record"))return 10;
   Recorder::mockBusy=false;Recorder::mockDiagnosticStage="Idle";
