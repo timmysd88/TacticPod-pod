@@ -7,6 +7,7 @@ paths=['tests/gps/run_tests.py', 'tests/recording/run_tests.py', 'tests/flash_wr
 paths.append('tests/reusable/startup_tests.py')
 paths.extend(['tests/reusable/switchless_tests.py','tests/reusable/download_tests.py','tests/reusable/button_tests.py','tests/reusable/standby_tests.py','tests/reusable/battery_gauge_tests.py'])
 paths.append('tests/reusable/field_tests.py')
+paths.append('tests/reusable/ble_groundwork_tests.py')
 results={}
 for path in paths:
     name=path.replace('/','_').replace('.py','')
