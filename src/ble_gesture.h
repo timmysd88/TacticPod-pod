@@ -1,8 +1,8 @@
 #pragma once
 #include <stdint.h>
 
-// Host-only groundwork: idle double-tap classifier for Bluetooth Mode. Not included by main.cpp,
-// so it cannot affect production firmware. It runs beside PhysicalButton and never replaces it;
+// Idle double-tap classifier, integrated only in the opt-in BLE build.
+// It runs beside PhysicalButton and never replaces it;
 // the existing 3 s hold (Start) and the recording tap + hold (Stop) are untouched.
 //
 // Sampling model (caller): standby polls D0 every 50 ms; once wantsFastPoll() is true the caller

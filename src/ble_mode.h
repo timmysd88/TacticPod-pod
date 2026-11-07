@@ -2,10 +2,9 @@
 #include <stdint.h>
 #include "status_led.h"
 
-// Host-only groundwork: Bluetooth Mode lifecycle, timers and interlocks. Pure logic with no
-// BLE, flash or hardware access; not included by main.cpp. Integration (future, separately
-// approved) maps the Output flags onto the real stack. Bluefruit's built-in connection LED
-// must be disabled there with Bluefruit.autoConnLed(false) (verified in core bluefruit.h) so
+// Bluetooth Mode lifecycle, timers and interlocks. Pure logic with no hardware access;
+// the opt-in BLE runtime maps Output flags onto the stack. Bluefruit's connection LED
+// is disabled there with Bluefruit.autoConnLed(false) so
 // only StatusLed drives the LED.
 //
 //   Off --double-tap (idle, no recording/session/fault)--> Advertising (<= 180 s)
@@ -67,8 +66,6 @@ class Controller {
       case State::Advertising:
         if (in.recording || in.sessionBusy || in.faulted) {
           beginStop(now, in.faulted ? StopReason::Fault : StopReason::Interlock, out);
-        } else if (in.startHold) {
-          beginStop(now, StopReason::HoldCancel, out);
         } else if (in.linkConnected) {
           state = State::Connected;
           enteredAt = now;
@@ -76,6 +73,8 @@ class Controller {
           lastProgressAt = now;
           wasTransferring = false;
           stallAborted = false;
+        } else if (in.startHold) {
+          beginStop(now, StopReason::HoldCancel, out);
         } else if (uint32_t(now - enteredAt) >= kAdvertiseMs) {
           beginStop(now, StopReason::AdvertisingTimeout, out);
         }

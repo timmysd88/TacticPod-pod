@@ -505,10 +505,12 @@ On a host with `nrfjprog` and `sha256sum`, first identify the probe, then replac
 ```sh
 nrfjprog --version
 nrfjprog --ids
-nrfjprog --family NRF52 --snr <SERIAL> --readcode internal-flash-1.hex --readuicr uicr-1.hex
+nrfjprog --family NRF52 --snr <SERIAL> --readcode internal-flash-1.hex
+nrfjprog --family NRF52 --snr <SERIAL> --readuicr uicr-1.hex
 nrfjprog --family NRF52 --snr <SERIAL> --memrd 0xED000 --n 28672 > internalfs-region-1.txt
 sha256sum internal-flash-1.hex uicr-1.hex internalfs-region-1.txt
-nrfjprog --family NRF52 --snr <SERIAL> --readcode internal-flash-2.hex --readuicr uicr-2.hex
+nrfjprog --family NRF52 --snr <SERIAL> --readcode internal-flash-2.hex
+nrfjprog --family NRF52 --snr <SERIAL> --readuicr uicr-2.hex
 nrfjprog --family NRF52 --snr <SERIAL> --memrd 0xED000 --n 28672 > internalfs-region-2.txt
 sha256sum internal-flash-2.hex uicr-2.hex internalfs-region-2.txt
 ```
@@ -533,3 +535,38 @@ If a later approved BLE trial finds only a corrupt LittleFS volume, the framewor
 | Firmware BLE integration / hardware flashing | **Not authorized** | Production integration, provisioning and flashing remain separate approval gates. |
 
 **Phase 1 readiness verdict:** the host/build prerequisites are ready to support a separate BLE build, and the measured flash budget is ample. RAM is encouraging but unverified for BLE. Before beginning production firmware integration, obtain explicit approval to wire the approved Phase 1 state machine/services into the firmware and add a separate BLE build environment. Before any board runs that can call `Bluefruit.begin()`, obtain separate authorization for the read-only SWD backup and review of the target's internal flash. Any flash/provisioning operation, firmware upload, or physical validation still requires its own approval. Preserve PR #11 as draft; do not merge.
+
+# 13. Phase 1 implementation — opt-in firmware, no hardware execution
+
+Firmware implementation was authorized after revision 5. The prerequisite report was committed first as `edb6dfe`. Phase 1 is enabled only by `tacticpod_reusable_ble`; the default and `tacticpod_reusable_usb` builds do not include the BLE hooks. No hardware flashing, `Bluefruit.begin()` on a pod, internal-flash provisioning, external-flash changes, app changes, merge or deployment is authorized or performed.
+
+## 13.1 Implemented lifecycle and isolation
+
+- The existing `PhysicalButton` classifier remains unchanged. The portable idle gesture runs beside it only in the BLE build: ordinary standby remains 50 ms, candidate/gesture polling is 10 ms, and the idle release/chatter debounce is 40 ms. Deliberate ~100 ms taps are supported; very short taps remain lossy.
+- Entry rejects recording, session/USB export/reset work, other capture modes, GPS diagnostics, flash diagnostics, faults and pending button starts. Before lazy initialization, peripherals enter the existing standby power-down path (or remain asleep if already in standby); the external NOR must have WIP/WEL clear. The GPS UART and IMU stay suspended throughout BLE. USB attachment alone is not an entry restriction.
+- `Bluefruit.begin(1, 0)` runs only after an admitted double-tap. There is one peripheral link and no central role or high-throughput configuration. `autoConnLed(false)` leaves LED ownership with the application. Advertising uses the custom service UUID and name, a 100 ms interval, and both stack and portable-controller 180 s deadlines.
+- The dedicated BLE foreground loop skips USB command processing, GPS/IMU capture, recorder updates and SPI operations. `TCB START`, `TCB READ` and the button start helper also explicitly reject active BLE. Existing recording start/stop paths remain available only when BLE is off.
+- Advertising timeout or a three-second advertising hold stops advertising and resets to idle; that hold never forwards a recording-start action. Connected holds are ignored. Disconnection, five-minute inactivity, initialization errors and interlock faults also stop/reset. The shutdown bound is one second after entering Stopping. There are no download requests or buffers in Phase 1.
+- A small `.ble_reset` NOLOAD SRAM marker suppresses the PowerOn LED pattern on the BLE-return boot. It carries no recording-start flag and does not use GPREGRET. The normal boot/button disarm and read-only recovery scans are retained. The application linker and installed bootloader must preserve this marker across a software reset for the LED suppression to work; this requires a hardware check. USB-present boots retain the existing USB-aware standby policy rather than imposing a blanket USB restriction.
+- Advertising LED: one 100 ms blue flash every 2 s. Connected LED: 100 ms blue flashes at 0 and 200 ms of each 5 s period. Stopping/reset/idle: LEDs off. Recording LED scheduling is unchanged outside BLE mode.
+
+## 13.2 Phase 1 GATT contract
+
+| Surface | UUID / content | Access |
+|---|---|---|
+| TacticPod service | `b9730001-7d2a-4f91-a380-8b52c029dc61` | Advertised |
+| Activity | `b9730002-7d2a-4f91-a380-8b52c029dc61`; exactly one byte `0x01` | Write with response; valid writes reset inactivity |
+| Battery snapshot | `b9730003-7d2a-4f91-a380-8b52c029dc61`; 6 bytes | Read |
+| Device Information | Standard DIS; manufacturer/model, FICR DEVICEID as 16 hex digits, firmware revision `ble-phase1-1` | Read |
+
+Battery bytes: version `1`; flags (bit 0 fresh, bit 1 trusted, bit 2 cell, bit 3 USB); estimated percent or `255` when unavailable; millivolts as two little-endian bytes; reserved `0`. Snapshots update while connected without changing the existing battery monitoring/calibration policy. Reading attributes, link-layer traffic and invalid writes do **not** count as valid application activity. A compatible client must send `0x01` before five minutes elapse (recommended every minute); this contract is not yet wired into TacticPod-app.
+
+GATT is open and unauthenticated for the bench prototype. No bonding is requested. An unsolicited pairing request causes disconnect/reset; verify on hardware that the framework's security-event ordering cannot persist a bond before disconnect completes. Bluefruit's mandatory initial LittleFS mount/format remains a first-use internal-flash side effect even without pairing. The runtime checks the expected bond directories and flushes the internal-flash cache before advertising; it does not explicitly format or erase.
+
+## 13.3 Validation plan and hardware limitations
+
+Portable runtime tests cover lazy entry, recording/busy/fault rejection, initialization failure, advertising hold/timeout, connected inactivity/disconnection/hold-ignore, bounded reset, and a fresh button state after reset. Actual `main.cpp` runs in the ARM/Unicorn harness with a mock BLE adapter to verify ordinary recording/stop behavior, entry from 50 ms standby, USB-independent entry, all normal exit paths and the preserved session prefix.
+
+The existing CI now builds default, reusable USB and opt-in BLE firmware, runs the full regression suite, and exports the BLE ELF/map, resource logs and selected resolved framework sources. Markdown-only changes no longer trigger unnecessary builds. Local PlatformIO still cannot resolve the Seeed package host; CI is authoritative for the actual core, toolchain and resources.
+
+Hardware-only gates remain: first-use internal-flash backup/content review and approved provisioning; `Bluefruit.begin()` RAM negotiation and initialization latency; standby/advertising/connection current; GPIO polling/jitter and deliberate tap reliability; asynchronous disconnect, cache/flash completion and reset paths; SRAM marker/bootloader behavior; absence of accidental recording after reset; recording timing before/after BLE use. The one-second stopping bound does not interrupt a stuck synchronous `Bluefruit.begin()` or framework filesystem operation: initialization/flash hangs require bench fault-injection validation and a separately reviewed watchdog policy if encountered. No real radio, power, timing or physical reset result is implied by the simulations.

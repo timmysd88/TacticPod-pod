@@ -10,6 +10,9 @@
 #include "battery_runtime.h"
 #include <SPI.h>
 #include "field_trace.h"
+#if TACTICPOD_BLE
+#include "ble_runtime.h"
+#endif
 namespace {
 namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
@@ -259,6 +262,9 @@ bool handleCommand(const char* p){
   if(!strcmp(p,"TCB STATUS")){storeReport("STATUS");return true;}
   if(!strcmp(p,"TCB STOP")){stop(Tcb3::Reason::Clean);storeReport("STOP requested");return true;}
   if(strcmp(p,"TCB START") && strcmp(p,"TCB READ")){storeReport("commands: START STOP STATUS READ");return true;}
+#if TACTICPOD_BLE
+  if(BleRuntime::active()){storeReport("REFUSED: Bluetooth Mode active",true);return true;}
+#endif
   if(exclusive() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed() ||
      (GpsReceiver::uartScanBusy()
 #if TACTICPOD_REUSABLE
@@ -290,6 +296,9 @@ bool handleCommand(const char* p){
 }
 bool startFromButton(){
 #if TACTICPOD_REUSABLE
+#if TACTICPOD_BLE
+  if(BleRuntime::active())return false;
+#endif
   if(exclusive())return false;
   buttonRequest=true;
   handleCommand("TCB START");

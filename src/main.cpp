@@ -19,6 +19,10 @@
 #include "flash_power.h"
 #include "field_trace.h"
 #include "imu_config.h"
+#if TACTICPOD_BLE
+#include "ble_gesture.h"
+#include "ble_runtime.h"
+#endif
 
 namespace {
 #if !TACTICPOD_REUSABLE
@@ -80,6 +84,9 @@ void setUserLed(StatusLed::Color color) {
 
 Standby::Policy standbyPolicy;
 bool startAttempt = false;
+#if TACTICPOD_BLE
+BleGesture::Classifier bleGesture;
+#endif
 
 struct FlashIo {
   void begin() { SPI.beginTransaction(SPISettings(kFlashClockHz, MSBFIRST, SPI_MODE0)); digitalWrite(kFlashCsPin, LOW); }
@@ -122,14 +129,37 @@ void leaveStandby(uint32_t now) {
 
 void updateFieldControls() {
   const uint32_t now = millis();
+  const bool pressed = digitalRead(PIN_A0) == LOW;
   const PhysicalButton::Action action = physicalButton.update(
-    digitalRead(PIN_A0) == LOW, now, Tcb3Session::recording(), Tcb3Session::exclusive());
+    pressed, now, Tcb3Session::recording(), Tcb3Session::exclusive());
   if(physicalButton.pressed()!=lastButtonPressed) {
     lastButtonPressed=physicalButton.pressed();
     FieldTrace::note(lastButtonPressed?FieldTrace::Kind::Press:FieldTrace::Kind::Release,now);
   }
   if(physicalButton.stopArmed() && !lastStopArmed)FieldTrace::note(FieldTrace::Kind::StopArmed,now);
   lastStopArmed=physicalButton.stopArmed();
+#if TACTICPOD_BLE
+  BleMode::Inputs ble;
+  ble.recording = Tcb3Session::recording() || Recorder::recording();
+  ble.sessionBusy = Tcb3Session::exclusive() || Recorder::exclusive() ||
+    CompactRecorder::capturing() || RamObservations::capturing() || RamObservations::fastImu() ||
+    GpsReceiver::busy() || identityRequested || identityRunning ||
+    !FlashWriteTest::diagnosticsAllowed() || startAttempt;
+  ble.faulted = Tcb3Session::faulted();
+  ble.startHold = action == PhysicalButton::Action::Start;
+  const bool eligible = !ble.recording && !ble.sessionBusy && !ble.faulted && !BleRuntime::active();
+  ble.doubleTap = bleGesture.update(pressed, now, eligible) == BleGesture::Event::DoubleTap;
+  if (ble.doubleTap && !standbyPolicy.inStandby() && !enterStandby()) {
+    ble.doubleTap = false;
+    Serial.println("BLE refused: external flash is not quiescent.");
+    userLed.notify(StatusLed::Event::StartFailed, now);
+  }
+  BleRuntime::update(now, ble);
+  if (BleRuntime::active()) {
+    setUserLed(BleRuntime::ledColor(millis()));
+    return; // In particular, never forward an advertising-cancel hold to recording.
+  }
+#endif
   if (action == PhysicalButton::Action::Start) {
     // Peripherals are awake and the flash is released BEFORE the recorder is asked to start.
     if (standbyPolicy.inStandby()) leaveStandby(now);
@@ -195,7 +225,11 @@ void flushFieldTrace() {
 // Standby pace: no GPS/IMU/flash/LED work. D0 is polled; sleeping is the RTOS tickless idle.
 void standbyIdle() {
   if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);  // Keeps armed-cell trust warm.
+#if TACTICPOD_BLE
+  delay(bleGesture.wantsFastPoll() || digitalRead(PIN_A0) == LOW ? 10 : 50);
+#else
   delay(digitalRead(PIN_A0) == LOW ? 10 : 50);
+#endif
 }
 #endif
 
@@ -549,15 +583,32 @@ void setup() {
   Tcb3Session::begin(imuReady);
 #if TACTICPOD_REUSABLE
   // Startup indication only after a successful startup: IMU ready and no recorder fault.
-  if (imuReady && !Tcb3Session::faulted()) userLed.notify(StatusLed::Event::PowerOn, millis());
+  const bool showPowerOn =
+#if TACTICPOD_BLE
+    !BleRuntime::returnedFromBle();
+#else
+    true;
+#endif
+  if (showPowerOn && imuReady && !Tcb3Session::faulted()) userLed.notify(StatusLed::Event::PowerOn, millis());
 #endif
 }
 
 void loop() {
+#if TACTICPOD_BLE
+  if (BleRuntime::active()) {
+    updateFieldControls();
+    if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);
+    delay(10);
+    return; // No USB commands, IMU/GPS service, recorder updates or flash access in BLE mode.
+  }
+#endif
   (void)MonotonicClock::now(); // Boot clock continues while all recorders are idle.
   GpsReceiver::update();
 #if TACTICPOD_REUSABLE
   updateFieldControls();
+#if TACTICPOD_BLE
+  if (BleRuntime::active()) return;
+#endif
   flushFieldTrace();
   if (standbyPolicy.inStandby()) {
     standbyIdle();
