@@ -570,3 +570,25 @@ Portable runtime tests cover lazy entry, recording/busy/fault rejection, initial
 The existing CI now builds default, reusable USB and opt-in BLE firmware, runs the full regression suite, and exports the BLE ELF/map, resource logs and selected resolved framework sources. Markdown-only changes no longer trigger unnecessary builds. Local PlatformIO still cannot resolve the Seeed package host; CI is authoritative for the actual core, toolchain and resources.
 
 Hardware-only gates remain: first-use internal-flash backup/content review and approved provisioning; `Bluefruit.begin()` RAM negotiation and initialization latency; standby/advertising/connection current; GPIO polling/jitter and deliberate tap reliability; asynchronous disconnect, cache/flash completion and reset paths; SRAM marker/bootloader behavior; absence of accidental recording after reset; recording timing before/after BLE use. The one-second stopping bound does not interrupt a stuck synchronous `Bluefruit.begin()` or framework filesystem operation: initialization/flash hangs require bench fault-injection validation and a separately reviewed watchdog policy if encountered. No real radio, power, timing or physical reset result is implied by the simulations.
+
+## 13.4 Verified implementation build and regression results
+
+CI run [`42413732719`](https://github.com/timmysd88/TacticPod-pod/actions/runs/42413732719) completed successfully for implementation commit `14fe667` (PR merge-test commit `b213d1cddc93b6590d0474895eea37df08faa098`). Default, reusable USB and opt-in BLE builds all passed. All **37/37 regression scripts passed**, including the existing resource/button/recording/standby suites, gesture/lifecycle tests, six real-main/mock-BLE scenarios, and the new actual-ELF isolation test. No hardware was accessed or firmware executed on a pod.
+
+The initial implementation run `42413290832` failed only at BLE linking: a supplemental `-T` flag suppressed PlatformIO's implicit vendor script. The corrected configuration explicitly supplies the supplemental script first and the unchanged `nrf52840_s140_v7.ld` second. Local linker smoke checks and the successful CI ELF confirm the retained marker is outside zeroed BSS, before the heap, and not in the interrupt stack. The source compiled against the actual Seeed framework without BLE API errors.
+
+| Environment | PlatformIO static RAM | Application flash | Change from pre-BLE baseline |
+|---|---:|---:|---|
+| Default | 118,996 B | 166,220 B | Unchanged |
+| Reusable USB | 123,092 B | 217,464 B | Unchanged |
+| Opt-in BLE | 131,096 B (55.2%) | 293,008 B (36.1%) | +8,004 B reported RAM; +75,544 B flash versus USB |
+
+PlatformIO's static-RAM figure excludes the **8-byte NOLOAD reset marker**. Including it, the BLE build reserves **131,104 B** outside heap/stack, an **8,012 B** increase over reusable USB. The remaining linker space is **106,464 B**, divided into a **104,416 B heap** and **2,048 B interrupt stack**. The heap also supplies RTOS task stacks and runtime allocations, so these values are not measured free heap during a real connection. Flash headroom is **518,000 B**. The existing 24 KiB SoftDevice RAM reservation and `[0, 0x27000)` ROM reservation are already excluded from application capacity; do not subtract them twice.
+
+The reusable USB HEX is **byte-identical** to the pre-BLE artifact: SHA-256 `dea61da12a87cfa053e621a594f65aa5bdcf61be836816a27c1d1e435e1099e6`. The BLE ELF SHA-256 is `310a10be52f6fb652b4324eda5f49fe842895506d426499d96cc1ed04e5aeaa1`. All thirteen top-level artifact checksums verified after download.
+
+The actual BLE map declares FLASH `[0x27000, 0xED000)` and RAM `[0x20006000, 0x20040000)`. The initialized flash payload ends at **0x6E890**, safely below LittleFS. BSS ends at **0x20026018**; the retained marker occupies `[0x20026018, 0x20026020)`; the heap starts at **0x20026020** and ends at **0x2003F800**. No application payload overlaps `[0xED000, 0xF4000)`.
+
+CI also exported the **actual downloaded framework sources**, confirming framework **1.10101.0**, toolchain **1.70201.0 / GCC 7.2.1**, platform **1.1.1 at a6fd41d**, the verified Bluefruit APIs, LittleFS's seven-page range, and the `0xF4000` bootloader write boundary. These now corroborate the earlier source investigation rather than relying only on the local v1.1.3 checkout. Framework content pinning and the installed board's bootloader/settings contents remain separate concerns.
+
+**Verdict:** Phase 1 software implementation, pinned-environment builds and host regression are complete. Resources fit at link time; runtime SoftDevice/heap sufficiency and actual radio/reset/recording safety are not yet demonstrated. Before physical testing, obtain authorization for the read-only SWD backup and review the specific pod's bootloader/UICR/LittleFS contents. Firmware flashing and any first `Bluefruit.begin()` that may provision internal flash require separate explicit approval after that review. Physical power, tap, reset/marker, pairing-rejection, flash-preservation and recording-timing tests remain mandatory. PR #11 remains draft; nothing has been merged or deployed.
