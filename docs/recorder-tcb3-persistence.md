@@ -66,7 +66,22 @@ Each 4096-byte sector keeps page 0 as header, pages 1..14 as data, page 15 as an
 optional final footer. Writes never cross a 256-byte page boundary. Every read
 or program transport unit is at most 64 bytes. The SPI adapter uses the existing
 D2 CS, D8 SCK, D9 MISO, D10 MOSI, mode 0, 1MHz and unchanged JEDEC whitelist.
+The sole exception is the `0x03` page read issued while `TCB READ` is exporting,
+which uses 4MHz (`kExportReadHz`). Status, program, erase and all other reads
+stay at 1MHz.
 There is no erase callback and no protection-register modification.
+
+## 4MHz export benchmark
+
+On one TacticPod prototype, three consecutive exports of the same stored session
+averaged 1.714 seconds at 4MHz, compared with a 4.704-second 1MHz baseline
+average (about 63.6% less download time). Each capture was 138,944 bytes and
+byte-identical to the verified baseline; packet CRCs, sequence numbers and
+session completeness all validated, with no failures.
+
+This benchmark covers one prototype only. The exact installed flash variant
+and its rated maximum clock for the `0x03` read command remain unconfirmed, so
+the result does not qualify 4MHz operation across other hardware units.
 
 ## Page envelope
 

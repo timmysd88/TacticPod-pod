@@ -344,4 +344,17 @@ void update() {
 bool diagnosticsAllowed() {
   return state == State::Idle;
 }
+
+const char* diagnosticState() {
+  switch (state) {
+    case State::Idle: return "Idle";
+    case State::Ready: return "Ready";
+    case State::Erasing: return "Erasing";
+    case State::VerifyErase: return "VerifyErase";
+    case State::Programming: return "Programming";
+    case State::Compare: return "Compare";
+    case State::Fault: return "Fault";
+  }
+  return "Unknown";
+}
 }

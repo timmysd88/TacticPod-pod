@@ -19,11 +19,7 @@ uint32_t storeMissed=0,maxServiceUs=0;
 unsigned exportSent=0;
 Tcb3::Reason reason=Tcb3::Reason::Clean;
 bool cleanCompletionPending=false;
-#if TACTICPOD_REUSABLE
-char line[320]{};
-#else
-char line[256]{};
-#endif
+char line[768]{};
 unsigned lineSize=0,lineAt=0;
 // Large status lines are sent in whatever USB room exists so they can never wedge the console.
 void flushLine(){
@@ -54,13 +50,14 @@ uint64_t deadline(){return finishing?stopUs+60000000:timeLimited()?testStartedUs
 bool resetting=false,resetArmed=false,resetFailed=false;uint32_t resetArmedAt=0;
 bool mutationBlocked(){return owned || pending || dumping || locked || resetting || Recorder::exclusive();}
 #endif
-void select(){SPI.beginTransaction(SPISettings(1000000,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
+constexpr uint32_t kExportReadHz=4000000; // Only TCB READ page reads; every other flash operation stays at 1 MHz.
+void select(uint32_t hz=1000000){SPI.beginTransaction(SPISettings(hz,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
 void deselect(){digitalWrite(2,HIGH);SPI.endTransaction();}
 void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);}
 int status(void*){if(pageOpen)return -1;select();SPI.transfer(5);int s=SPI.transfer(0);deselect();return s;}
 bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
-  select();SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
+  select(dumping?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
@@ -121,7 +118,7 @@ bool storeIdentity(){
   }
   return true;
 }
-void storeReport(const char* text){
+void storeReport(const char* text,bool includeBusyDetails=false){
   if(lineAt)return; // A partly sent line owns the buffer; never splice a new message into it.
   const auto& s=store.stats;uint64_t saved=0,seen=0;for(unsigned i=0;i<4;++i){saved+=s.committed[i];seen+=offered[i];}
   lineSize=0;lineAt=0;
@@ -133,6 +130,19 @@ void storeReport(const char* text){
   append(" full=");number(s.full);append(" crc=");number(s.crcFailures);append(" incomplete=");number(s.incompleteWrites);
   append(" max_service_us=");number(maxServiceUs);append(" error=");append(store.error?store.error:"none");
   append(" programs=");number(s.programOperations);append(" max_block_ms=");number(s.maxBlockMs);
+  if(includeBusyDetails){
+    auto flag=[&](const char* name,bool value){append(" ");append(name);append(value?"=1":"=0");};
+    flag("tcb_pending",pending);flag("tcb_owned",owned);flag("tcb_dumping",dumping);flag("tcb_locked",locked);
+#if TACTICPOD_REUSABLE
+    flag("tcb_resetting",resetting);
+#endif
+    flag("recorder_busy",Recorder::exclusive());append(" recorder_stage=");append(Recorder::diagnosticStage());
+    flag("flash_diagnostic_busy",!FlashWriteTest::diagnosticsAllowed());
+    append(" flash_diagnostic_state=");append(FlashWriteTest::diagnosticState());
+    flag("gps_uart_scan_active",GpsReceiver::uartScanActive());
+    flag("gps_configuration_active",GpsReceiver::configurationActive());
+    flag("gps_profile_audit_active",GpsReceiver::profileAuditActive());
+  }
   if(Tcb3Test::Enabled)append(Tcb3Test::Marker);
   if(Tcb3Test::Append){append(" skip=");number(s.probeSkipped);}
 #if TACTICPOD_REUSABLE
@@ -255,7 +265,7 @@ bool handleCommand(const char* p){
       && strcmp(p,"TCB START")
 #endif
      )){
-    storeReport("REFUSED: busy/fault");return true;}
+    storeReport("REFUSED: busy/fault",true);return true;}
   if(!storeIdentity()){storeReport(Tcb3Test::Enabled?"REFUSED: identity/status":"REFUSED: JEDEC");return true;}
   if(!strcmp(p,"TCB READ")){
     if(CompactRecorder::capturing()){storeReport("REFUSED: COMP capture active");return true;}

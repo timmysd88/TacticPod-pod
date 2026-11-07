@@ -18,6 +18,7 @@ MockSPI SPI;
 bool gpsTestDiagnosticAvailable = true;
 namespace FlashWriteTest {
 bool diagnosticsAllowed() { return gpsTestDiagnosticAvailable; }
+const char* diagnosticState() { return gpsTestDiagnosticAvailable ? "Idle" : "Ready"; }
 void update() {}
 }
 #include "../../src/recorder.cpp"

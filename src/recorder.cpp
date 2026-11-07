@@ -158,6 +158,22 @@ void begin(bool ready) {
 bool recording() { return enabled && !stopping; }
 bool exporting() { return stage == Stage::ExportHeader || stage == Stage::ExportPage || Tcb3Session::exporting(); }
 bool exclusive() { return stage != Stage::Idle; }
+const char* diagnosticStage() {
+  switch (stage) {
+    case Stage::Scan: return "Scan";
+    case Stage::Idle: return "Idle";
+    case Stage::CheckBlank: return "CheckBlank";
+    case Stage::Header: return "Header";
+    case Stage::Record: return "Record";
+    case Stage::Footer: return "Footer";
+    case Stage::Erase: return "Erase";
+    case Stage::EraseVerify: return "EraseVerify";
+    case Stage::ExportHeader: return "ExportHeader";
+    case Stage::ExportPage: return "ExportPage";
+    case Stage::Fault: return "Fault";
+  }
+  return "Unknown";
+}
 void noteMissed(uint32_t count) { if (enabled && !stopping) missed += count; }
 void addSample(uint32_t ms, const int16_t axes[6]) {
   if (!recording()) return;

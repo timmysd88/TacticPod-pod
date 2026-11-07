@@ -14,7 +14,7 @@ struct MockSPI {
 #endif
   uint8_t memory[4096] = {};
   uint8_t tx[260] = {};
-  size_t position = 0;
+  size_t position = 0;uint32_t hz = 1000000;
   unsigned eraseCount = 0, programCount = 0, enableCount = 0;
   unsigned violations = 0, jedecCount = 0;
   bool wel = false, wrongId = false, denyWel = false, stuckBusy = false;
@@ -22,12 +22,13 @@ struct MockSPI {
   bool stallErase = false, stallProgram = false;
   uint32_t busyUntil = 0;
   void begin() {}
-  void beginTransaction(SPISettings settings) { if (settings.hz != 1000000) ++violations; position = 0; }
+  void beginTransaction(SPISettings settings) { hz = settings.hz; if (hz != 1000000 && hz != 4000000) ++violations; position = 0; }
   uint32_t address() { return (uint32_t(tx[1]) << 16) | (uint32_t(tx[2]) << 8) | tx[3]; }
   uint8_t transfer(uint8_t value) {
     size_t index = position++;
     if (index < sizeof(tx)) tx[index] = value; else ++violations;
     if (index == 0) {
+      if (hz != 1000000 && value != 0x03) ++violations; // 4 MHz is only for export reads.
       if (value != 0x9F && value != 0x5A && value != 0x05 && value != 0x06 && value != 0x20 && value != 0x02 && value != 0x03
 #ifdef FLASH_ID_TEST
           && value!=0x35 && value!=0x90

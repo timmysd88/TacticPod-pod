@@ -18,9 +18,17 @@ def capture(link,target,timeout=300):
             chunk=link.read(n-len(data))
             if chunk:target.write(chunk);digest.update(chunk);total+=len(chunk);data.extend(chunk)
         return bytes(data)
+    def unexpected(prefix):
+        response=bytearray(prefix)
+        while not response.endswith(b'\n'):
+            response.extend(exact(1))
+        text=bytes(response).decode('utf-8','replace').rstrip('\r\n')
+        raise ValueError(f'Unexpected device response: {text}; complete response retained')
+    prefix=exact(4)
+    if prefix!=b'TPX3':unexpected(prefix)
     while True:
-        h=exact(20)
-        if h[:4]!=b'TPX3' or h[4]!=1:raise ValueError('Expected TPX3; stop and inspect device state')
+        h=prefix+exact(16)
+        if h[4]!=1:raise ValueError('Expected TPX3 version 1; stop and inspect device state')
         n=struct.unpack_from('<H',h,16)[0]
         if n>256:raise ValueError('TPX3 payload exceeds page bound')
         tail=exact(n+4)
@@ -29,6 +37,8 @@ def capture(link,target,timeout=300):
         sequence+=1
         if h[5]==3:raise ValueError('TPX3 ISSUE reported; preserve partial capture and inspect')
         if h[5]==4:break
+        prefix=exact(4)
+        if prefix!=b'TPX3':unexpected(prefix)
     target.flush()
     return dict(bytes=total,sha256=digest.hexdigest(),packets=sequence)
 

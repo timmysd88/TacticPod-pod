@@ -11,10 +11,14 @@ MockSerial Serial;
 MockSPI SPI;
 #include "../../src/gps_receiver.h"
 namespace GpsReceiver {
+bool mockScanActive=false,mockConfigurationActive=false,mockProfileAuditActive=false;
 void begin() {}
 void update() {}
 bool handleCommand(const char*) { return false; }
-bool uartScanBusy() { return false; }
+bool uartScanBusy() { return mockScanActive || mockConfigurationActive || mockProfileAuditActive; }
+bool uartScanActive() { return mockScanActive; }
+bool configurationActive() { return mockConfigurationActive; }
+bool profileAuditActive() { return mockProfileAuditActive; }
 bool hasFreshFix() { return false; }
 bool busy() { return false; }
 void suspend() {}
@@ -24,11 +28,14 @@ void resume() {}
 // Recording itself is exercised by tests/recording against a larger mock flash.
 #include "../../src/recorder.h"
 namespace Recorder {
+bool mockBusy=false;
+const char* mockDiagnosticStage="Idle";
 void begin(bool) {}
 void update() {}
 bool handleCommand(const char*) { return false; }
 bool recording() { return false; }
-bool exclusive() { return false; }
+bool exclusive() { return mockBusy; }
+const char* diagnosticStage() { return mockDiagnosticStage; }
 bool exporting() { return false; }
 void addSample(uint32_t, const int16_t[6]) {}
 void noteMissed(uint32_t) {}

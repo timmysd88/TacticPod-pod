@@ -15,12 +15,15 @@ assert link.sent==b'TCB READ\n' and dest.getvalue()==raw
 assert r['bytes']==len(raw) and r['sha256']==hashlib.sha256(raw).hexdigest()
 print('PASS: split raw reads, exact bytes/hash, only existing read-only command')
 bad=bytearray(raw);bad[25]^=1
-for data,error in ((bad,ValueError),(raw[:10],TimeoutError),(b'FAULT\n'+raw,ValueError)):
+refusal=b'TCB REFUSED: busy/fault state=1 session=0 lock=0 tcb_pending=0 gps_profile_audit_active=1\n'
+for data,error in ((bad,ValueError),(raw[:10],TimeoutError),(b'FAULT\n'+raw,ValueError),(refusal,ValueError)):
     link=Link(data);dest=io.BytesIO()
     try:capture(link,dest,.05)
-    except error:pass
+    except error as exc:
+        if data==refusal:assert refusal.decode().strip() in str(exc)
     else:raise AssertionError('corrupt/interrupted export accepted')
     assert link.sent==b'TCB READ\n' and dest.getvalue()
+if dest.getvalue()!=refusal:raise AssertionError('complete refusal response was not retained')
 print('PASS: bad CRC, interruption and unexpected text preserve partial data; no retry')
 before=(ROOT/'tests/reusable/fixtures/physical-three-sessions.bin').read_bytes()
 r=verify(before,raw,10)

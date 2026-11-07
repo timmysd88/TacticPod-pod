@@ -17,7 +17,7 @@ struct MockSPI {
   uint8_t tx[260];
   unsigned position = 0, programs = 0, erases = 0, violations = 0, enables = 0;
   unsigned programDelayMs = 3, eraseDelayMs = 20;
-  bool transactionActive=false;
+  bool transactionActive=false;uint32_t hz=1000000;
   bool deepPower=false;unsigned sleeps=0,releases=0,asleepAccesses=0;
 #if TACTICPOD_TCB3_TEST_BUILD || TACTICPOD_REUSABLE
   uint8_t testSr2=2;
@@ -34,7 +34,7 @@ struct MockSPI {
     empty = 0xFF; return empty;
   }
   void begin() {}
-  void beginTransaction(SPISettings settings) { if(transactionActive)++violations;transactionActive=true;position = 0; if (settings.hz != 1000000) ++violations; }
+  void beginTransaction(SPISettings settings) { if(transactionActive)++violations;transactionActive=true;position = 0; hz = settings.hz; if (hz != 1000000 && hz != 4000000) ++violations; }
   uint32_t address() const { return uint32_t(tx[1]) << 16 | uint32_t(tx[2]) << 8 | tx[3]; }
   uint8_t transfer(uint8_t value) {
 #ifdef TCB_SIM_SPI_TRANSFER
@@ -43,6 +43,7 @@ struct MockSPI {
     const unsigned i = position++;
     if (i < sizeof(tx)) tx[i] = value; else ++violations;
     if (i == 0) {
+      if (hz != 1000000 && value != 0x03) ++violations; // 4 MHz is only for export reads.
 #if TACTICPOD_REUSABLE
       if (deepPower && value != 0xAB) ++asleepAccesses, ++violations;
       if (value == 0xB9 || value == 0xAB) return 0;

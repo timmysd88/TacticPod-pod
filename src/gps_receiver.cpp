@@ -544,5 +544,8 @@ bool handleCommand(const char* line) {
   return false;
 }
 // A completed UART fault must not lock the independent IMU/flash recorder.
+bool uartScanActive() { return GpsUartScan::active(); }
+bool configurationActive() { return GpsConfig::active(); }
+bool profileAuditActive() { return GpsProfile::active(); }
 bool uartScanBusy() { return GpsUartScan::active() || GpsConfig::active() || GpsProfile::active(); }
 }
