@@ -47,7 +47,7 @@ Expected BLE effect [E]: advertising at 100–250 ms interval ≈ 0.05–0.4 mA 
 
 Physical measurements required (PPK2/Otii, supervised): (1) current standby, default build; (2) standby polling rates 50/25/20 ms and a GPIOTE variant; (3) BLE-capable build in standby with BLE never entered; (4) advertising 180 s at chosen interval; (5) idle connection; (6) active download; (7) SD enabled-idle vs fully torn down; (8) recording with BLE-capable build vs default; (9) double-tap wake cost. GPS and recording power behaviour are not to be modified.
 
-## 4. Button-driven Bluetooth Mode
+## 4. Button-driven Bluetooth Mode (rev 1 — SUPERSEDED by §9 where they differ)
 
 ### Current button facts [M]
 D0/P0.02, active-LOW, `INPUT_PULLUP`, **polled** (no interrupt). `kDebounceMs=25`, `kHoldMs=3000`, `kTapMaxMs=500`, `kSecondPressTimeoutMs=5000` (`src/physical_button.h`). Idle: only a ≥3 s hold (armed, not blocked) → Start; a short tap does nothing. Recording: tap ≤500 ms then 2nd press held ≥3 s within 5 s → Stop. `armed` is false until the button is released after boot.
@@ -137,3 +137,104 @@ With BLE-capable firmware, BLE never entered, vs default build baseline on real 
 4. Connected-inactivity timeout (the requirement says connections persist; propose e.g. 5 min with no GATT activity — needs agreement).
 5. Behaviour for start-hold during BLE; LED patterns; tap/gap timings.
 6. Hardware measurements and flashing (not authorised yet).
+
+---
+
+# 9. Revision 2 — approved design decisions and verification (investigation only)
+
+Approved: GPIO-interrupt idle double-tap; 500 ms window; 30–50 ms debounce; 180 s advertising; 5 min connected-inactivity (not interrupting healthy downloads); 3 s hold while advertising cancels BLE and starts recording; 3 s hold while connected ignored; LEDs: advertising = blue flash/2 s, connected = 2 blue flashes/5 s, otherwise off; recording and BLE mutually exclusive; sessions never erased. No firmware change, flash or implementation has been done. Evidence labels as above; upstream Adafruit core is used as a proxy for the Seeed fork **[?] until verified on the real framework**.
+
+## 9.1 Verified facts and technical conflicts (report before proceeding)
+
+| # | Finding | Impact |
+|---|---|---|
+| C1 | Core `attachInterrupt()` (upstream `WInterrupts.c`) uses **GPIOTE IN-event channels** (NVIC prio 3), not the low-power PORT/SENSE event. Pin is already `INPUT_PULLUP`. | IN-event channels may add standby current [?]. Use a pod-owned SENSE/PORT configuration (`nrf_gpio_cfg_sense_input` + GPIOTE PORT event) instead; verify on bench. GPIOTE prio 3 is allowed with SoftDevice (reserved: 0,1,4). |
+| C2 | Standby currently wakes every 50 ms via `delay(50)` (tickless RTOS) and `standbyIdle()` also runs `BatteryRuntime::update(true)` at that cadence. | An interrupt only lowers idle power if the poll interval is **lengthened**. That depends on battery-monitor cadence requirements (not yet reviewed) → needs approval and measurement. If not lengthened, the interrupt gives accuracy (no missed taps), not power savings. |
+| C3 | Debounce is 25 ms today (`kDebounceMs`), approved range is 30–50 ms. | Changing it globally alters existing tested start/stop behaviour (hold/tap tests assume 25 ms). Proposal: keep 25 ms for existing paths, use **40 ms only for the new idle-tap classifier**. Needs approval; otherwise change the constant and re-run button tests. |
+| C4 | Pod never calls `Bluefruit.begin()` (grep: no Bluefruit/SoftDevice/InternalFS use in `src/`). SoftDevice is only enabled by `Bluefruit.begin()` (`sd_softdevice_enable`). | Default builds run with SD **disabled** — no SD cost today. BLE is a pure addition if begin() is only called on entering BLE Mode. |
+| C5 | Bluefruit has **no `end()`**. `begin()` creates BLE and SOC RTOS tasks, semaphores and a timer with no deletion path; calling `begin()` twice would leak/duplicate them. `sd_softdevice_disable()` exists in the SD API but Bluefruit state and tasks would be left dangling. | Full SD teardown inside the running firmware is **not safely supported** without patching the framework. See 9.2. |
+| C6 | `begin()` calls `bond_init()` (InternalFS). | Must confirm on bench that nothing is written to internal flash with no bonding (CPU stall ~85 ms [E] if it does). |
+| C7 | Three-second hold while connected must be swallowed; `PhysicalButton` returns `Action::Start` once at 3 s. | BLE controller must intercept the Start action while CONNECTED and ignore it. Verify one-shot semantics so release does not retrigger. |
+| C8 | Single LED, one colour at a time (`Color{Off,Blue,Green,Red}`); existing 3×blue 150/150 ms power-on cue. | Both blue patterns are **possible with existing hardware and scheduler** (periodic pattern like the existing `repeatingRed`). Must be distinct from power-on (3×150 ms contiguous): use 100 ms flashes. Needs a new scheduler input (`bleState`) with priority fault > one-shot > BLE > recording > off; production-file change, deferred to implementation. |
+| C9 | Wake path: BLE flash reads need `leaveStandby()` first (clock, flash release, GPS resume, IMU init). | BLE Mode entry must call it; GPS resumes during BLE (power cost) — consider a BLE-only wake that skips GPS/IMU re-init. **Do not change GPS behaviour without approval.** |
+| C10 | USB present keeps pod awake today. | Decision needed: allow BLE with USB attached (proposal: refuse; USB `TCB READ` already exists). |
+| C11 | Build cannot be reproduced here (`files.seeedstudio.com` unreachable); 28/34 host suites need the ARM toolchain. | **Blocks all RAM/flash/SD-config verification and any implementation.** |
+
+No blocker conflicts with the approved decisions, but C2, C3, C5 and C11 need your decision/action.
+
+## 9.2 SoftDevice lifecycle: is full teardown needed?
+
+Options:
+- **A. Lazy `Bluefruit.begin()` on first BLE entry; after BLE, stop advertising/disconnect and leave SD enabled until next reset.** Simple, but afterwards the firmware records with SD enabled (SD-reserved peripherals/priorities, SD-managed sleep/clock). Not the tested recording configuration. Risk: recording behaviour differs after a BLE session.
+- **B. Patch/teardown (`sd_softdevice_disable` + task deletion + re-begin).** Requires modifying the Seeed framework fork; fragile; rejected for v1.
+- **C. (Recommended, pending bench) Soft reset after BLE ends (`NVIC_SystemReset`)**: BLE Mode runs, then reset returns the pod to exactly the existing boot→standby state with SD disabled. No leaks, no residual SD state, recording always runs in the tested configuration; stored sessions are untouched (reset epoch handling already exists). Costs: a reboot (~seconds), USB re-enumeration, boot LED cue must be suppressed (retained-RAM flag or `RESETREAS`) so the power-on 3× blue does not appear after BLE, and a Start-hold during advertising can start recording without reset (SD only entered once advertising began, so reset first, then start — see 9.5). Needs approval and verification of the boot path.
+
+Benefit of teardown: avoids SD overhead (RTC/clock, event wakeups) during recording and idle; C achieves this fully. Recommendation: **C**, with A as fallback if the reset-based path is rejected.
+
+## 9.3 Button state machine (idle only)
+
+Input: GPIO sense interrupt records timestamped edges (ISR does no logic: store `micros`/level in a small ring + wake flag); classification runs in loop/standbyIdle.
+Parameters: debounce 40 ms (idle classifier), tap ≤ 500 ms press length, **second press must begin ≤ 500 ms after first release**, hold 3 s unchanged.
+
+```
+IDLE --press stable 40ms--> PRESS1
+PRESS1 --release <=500ms--> GAP     (held >=3 s -> existing Start, unchanged)
+GAP --press within 500ms--> PRESS2
+GAP --500ms timeout--> IDLE         (single tap ignored, as today)
+PRESS2 --release <=500ms--> BLE_REQUEST
+PRESS2 --held >=3 s--> existing Start behaviour (no BLE)
+BLE_REQUEST: guards ok --> BLE_MODE; guards fail (recording/exclusive/faulted/USB) --> ignore, no LED change
+```
+Disabled entirely while recording, so the existing tap + 3 s hold stop gesture is unaffected. In standby the first edge wakes the loop; existing code already polls at 10 ms while pressed. Spurious wake mitigation: SENSE latch only, discard events not confirmed after the 40 ms debounce, no state change on noise, count of unconfirmed wakes exposed in `FieldTrace` for the power test.
+
+## 9.4 BLE lifecycle and timers
+
+```
+STANDBY --double-tap--> WAKE --> ADVERTISING (<=180 s)
+ADVERTISING --180 s, no connection--> BLE_STOP --> existing standby
+ADVERTISING --3 s hold--> BLE_STOP (clean) --> existing recording start workflow
+ADVERTISING --connect--> CONNECTED (no 180 s limit)
+CONNECTED --3 s hold--> ignored
+CONNECTED --disconnect--> BLE_STOP --> existing standby
+CONNECTED --inactivity 5 min--> disconnect --> BLE_STOP --> existing standby
+ANY --fault--> BLE_STOP
+```
+Return-to-standby uses the existing standby policy (2 s settle) with a `bleActive` wake-lock that is released only after BLE_STOP completes; a watchdog cap (e.g. wake-lock auto-release after 10 min of no state change) is recommended so a bug cannot hold the pod awake.
+
+**5-minute timer.** Counted from the last *valid application activity* = a well-formed, in-protocol request from the app (identify, list, transfer request, ACK/window ACK, keep-alive). Link-level traffic, bare connection events or malformed writes do not reset it. The timer is **suspended while a transfer is in the TRANSFERRING state and progress is being made** (window ACK received within a stall limit, proposed 60 s). If a transfer stalls past that limit it is aborted (data untouched) and the 5-minute timer starts from that point. Connection loss is detected by the supervision timeout (4–6 s proposed), independent of this timer. All timers use `millis()` deltas, not wall time.
+
+## 9.5 Recording/BLE mutual exclusion
+
+- `BleMode::active()` (true from BLE_WAKE until BLE_STOP completes) is checked in **every** start path: button Start, `Tcb3Session::startFromButton()`, `TCB START`, `RECORD START`, COMP/OBS paths; and BLE entry requires `!recording && !exclusive() && !faulted`. It is also a standby wake-lock input.
+- Hold during ADVERTISING: BLE_STOP completes (adv stop, no flash access in flight, `active()` false; with option C also a reset) **then** the existing `startFromButton()` runs; the LED shows the existing recording/refused pattern. If the BLE stop fails or exceeds a short bound (e.g. 500 ms), refuse start with 3× red rather than start while BLE is up.
+- Hold during CONNECTED: ignored.
+- BLE flash reads are read-only; no erase/write opcode exists; no erase after download.
+
+## 9.6 LED proposal (confirmed possible with existing hardware)
+
+| State | Pattern |
+|---|---|
+| Advertising | blue 100 ms flash every 2 s |
+| Connected | two blue 100 ms flashes (100 ms gap) every 5 s |
+| BLE inactive / standby | off |
+| Power-on, recording, refused, fault | unchanged |
+Duty < 10 % (advertising 5 %, connected ~6 %); estimated LED power cost is small but included in the advertising/connected current measurements.
+
+## 9.7 Revised implementation sequence (nothing started)
+
+0. **Gate (blocks everything):** working build environment (Seeed host access or CI), golden default-env size/hash, bench measurements per §3, decisions C2/C3/C10 and 9.2 option.
+1. Host-only prerequisites (can be developed and tested without hardware, tests in the existing harness, no firmware behaviour change): extract idle-gesture classifier and `BleMode` interlock as pure headers with host tests (`tests/reusable/ble_gesture_tests.py`), plus LED scheduler pattern tests. Not wired into `main.cpp`.
+2. Bench-only spike on a sacrificial pod (needs separate flash approval): GPIO SENSE wake current vs poll, SD begin RAM, option C reset path, loop jitter with BLE tasks idle.
+3. Phase 1 (separate env `tacticpod_reusable_ble`, default envs byte-identical): gesture wiring, BleMode, advertising/timeouts, identity/battery, LEDs.
+4. Phases 2–5 as in the round-1 plan (session list, binary transfer, app, validation) with the timers in 9.4.
+
+Additional acceptance criteria: default-env binary hash unchanged; idle standby current with the interrupt ≤ baseline (limit set after measurement) and zero unconfirmed wakes over 24 h; 500 double-tap/hold/single-tap/triple-tap trials classified correctly with no accidental start; no BLE entry during recording across 100 attempts; no recording start while BLE active across 100 attempts; hold-in-advertising starts recording within an agreed bound; hold-in-connection never interrupts a transfer; healthy 90-minute-class download is never cut by the 5-min timer; disconnect returns to standby within 5 s; flash image hash of sessions unchanged after every scenario.
+
+## 9.8 Needs your approval before proceeding
+
+1. C2: lengthening the standby poll interval (battery-monitor cadence) to realise interrupt power savings, or accept interrupt for accuracy only.
+2. C3: 40 ms debounce for the new idle classifier only (vs global change).
+3. 9.2: option C (reset after BLE) vs A.
+4. C10: refuse BLE while USB is attached.
+5. Stall limit (60 s), supervision timeout, wake-lock safety cap.
+6. Build-environment access, bench measurements and flashing.
