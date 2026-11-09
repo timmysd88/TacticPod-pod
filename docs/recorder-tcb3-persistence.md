@@ -66,10 +66,56 @@ Each 4096-byte sector keeps page 0 as header, pages 1..14 as data, page 15 as an
 optional final footer. Writes never cross a 256-byte page boundary. Every read
 or program transport unit is at most 64 bytes. The SPI adapter uses the existing
 D2 CS, D8 SCK, D9 MISO, D10 MOSI, mode 0, 1MHz and unchanged JEDEC whitelist.
-The sole exception is the `0x03` page read issued while `TCB READ` is exporting,
-which uses 4MHz (`kExportReadHz`). Status, program, erase and all other reads
-stay at 1MHz.
+The `0x03` reads issued while `TCB READ` is exporting use 4MHz
+(`kExportReadHz`). By default these remain bounded 64-byte transfers across
+cooperative export updates. Status, program, erase and all other reads stay at
+1MHz.
 There is no erase callback and no protection-register modification.
+
+## Experimental bulk export status
+
+The export engine has an optional `Port::readPage` provider callback for one
+aligned 256-byte page. It is independent of the USB packet framing/output and
+does not add a BLE download transport. When no provider is supplied, the engine
+retains the existing 64-byte read path. USB backpressure is unchanged: packets
+remain immutable until fully accepted by the USB writer, and export work is
+serviced only when no packet is pending and foreground slack permits.
+
+The nRF52 bulk SPI implementation is experimental and disabled by default
+(`TACTICPOD_EXPORT_BULK=0`). Enabling it in a build is not a production
+recommendation. The installed Seeed/Adafruit nRF52 SPI wrapper exposes
+`transfer(tx, rx, count)` but returns `void`; its implementation calls
+`nrfx_spim_xfer()` and discards the result. The installed nrfx SPIM implementation
+requires EasyDMA buffers in Data RAM, returns errors for invalid addresses or a
+busy instance, and performs a blocking event spin when initialized without an
+event handler. Consequently this callback cannot report transfer failures,
+uses a synchronous read that temporarily stops cooperative foreground work, and
+its SRAM-address precheck does not provide equivalent nrfx error handling.
+The baseline remains the default until a supported, error-reporting and
+cooperatively serviced implementation is established.
+
+Local PlatformIO build comparison against baseline commit `de278d5` (same
+installed platform/toolchain; figures are linked ELF RAM and flash usage):
+
+| Environment | Baseline RAM / flash | Candidate RAM / flash | Difference |
+|---|---:|---:|---:|
+| Default | 118,996 / 166,220 bytes | 118,996 / 166,220 bytes | 0 / 0 bytes |
+| Reusable, bulk disabled (default) | 123,092 / 217,464 bytes | 123,108 / 217,480 bytes | +16 / +16 bytes |
+| Reusable, bulk explicitly enabled | 123,092 / 217,464 bytes | 123,112 / 217,816 bytes | +20 / +352 bytes |
+
+The explicit bulk environment uses `TACTICPOD_EXPORT_BULK=1`; it is not the
+default. It was uploaded only for the approved read-only hardware benchmark.
+These build sizes do not validate runtime safety. Relative to the candidate
+reusable 64-byte fallback build, enabling bulk adds 4 bytes RAM and 336 bytes
+flash. The bulk path must not support a production or BLE-compatibility claim.
+
+Host validation: `python tests/reusable/run_all_tests.py` passed all 34/34
+scripts on Windows, including the TCB3 suite's 38/38 tests, byte-identical
+packet output between the sliced and page-provider models, corruption
+detection, and no export writes. The V1/V2 fixture checks normalize JSON
+line endings so generated LF content compares consistently with Windows CRLF
+checkouts. The resource test passed after building the default ELF and measured
+118,996 static RAM bytes.
 
 ## 4MHz export benchmark
 
@@ -82,6 +128,47 @@ session completeness all validated, with no failures.
 This benchmark covers one prototype only. The exact installed flash variant
 and its rated maximum clock for the `0x03` read command remain unconfirmed, so
 the result does not qualify 4MHz operation across other hardware units.
+
+On 2026-11-09, the connected prototype's unchanged TCB3 session 2 was read
+using baseline commit `de278d5` (the 4MHz/64-byte path). A verification export
+and three timed exports each decoded as one complete 3.1 session: 11 sectors,
+144 nonblank data pages, 3,542 records and 91,884 decoded raw bytes. Packet,
+page, data-block and footer CRC/consistency checks passed; the footer reported
+offered=committed `[3192,319,31,0]`, zero lost, rejected, CRC failures,
+incomplete writes, full events or missed samples. Each timed capture was
+49,344 bytes / 178 packets with the same SHA-256
+`00a197013c16ab89252eb707fda56f67f753d59628c4c40822a4b2eb891c0d3a` and the
+same decoded image and session-content hashes. Elapsed times were 0.6135,
+0.6083 and 0.6079 seconds (mean 0.6099 seconds). Raw captures and the detailed
+results are preserved under
+`../logs/flash-export-benchmark-2026-11-09/`. This is a baseline-only result;
+the separate bulk comparison below measures the effect of 256-byte reads at
+the same 4MHz clock.
+
+## 4MHz bulk export comparison
+
+The opt-in bulk firmware was tested against the three preserved baseline
+exports above, on the same connected prototype and unchanged session 2. Both
+firmware variants used 4MHz export reads; the only export-path difference was
+64-byte cooperative reads versus the experimental 256-byte synchronous read.
+The three bulk exports took 0.2820, 0.2650 and 0.2810 seconds (mean 0.2760 s),
+versus the baseline mean of 0.6099 s: 54.7% less elapsed time (2.21x).
+
+Each bulk capture was 49,344 bytes / 178 packets with SHA-256
+`00a197013c16ab89252eb707fda56f67f753d59628c4c40822a4b2eb891c0d3a`.
+All three decoded flash images were byte-identical to the baseline image
+(SHA-256 `5805beb439ba4051da027f2d785169f13710ab7bc5dd88b266786c121cbfaa56`).
+Packet sequence/CRC and page/session decoding checks reported no issues. Each
+contained the same complete session 2: 11 sectors, 144 nonblank data pages,
+3,542 records and 91,884 raw bytes (raw SHA-256
+`d2b898a7dabaa0b79d0b1cd6c56926322c584a1ce7b68ee569bdbfb7aa42a7ef`). The
+captures and machine-readable measurements are preserved under
+`../logs/flash-export-benchmark-2026-11-09/bulk-4mhz-candidate/`.
+
+This is a three-export result on one unit and does not resolve the exact flash
+part's 4MHz rating or the SPI wrapper's discarded-error/blocking limitations.
+It demonstrates the measured bulk-transfer effect only for this device and
+recording, not production safety or future BLE servicing compatibility.
 
 ## Page envelope
 

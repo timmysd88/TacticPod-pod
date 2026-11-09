@@ -22,6 +22,11 @@ class Conformance(unittest.TestCase):
         self.base = bytearray((golden.HERE / "missing_gps.bin").read_bytes())
 
     @staticmethod
+    def fixture_bytes(path):
+        content = path.read_bytes()
+        return content.replace(b"\r\n", b"\n") if path.suffix == ".json" else content
+
+    @staticmethod
     def repaired(image, page_at=256):
         image = bytearray(image)
         struct.pack_into("<I", image, page_at + 248, zlib.crc32(image[page_at:page_at + 248]))
@@ -41,12 +46,12 @@ class Conformance(unittest.TestCase):
     def test_fixture_regeneration_is_byte_identical(self):
         for name, content in golden.generate().items():
             with self.subTest(file=name):
-                self.assertEqual((golden.HERE / name).read_bytes(), content)
+                self.assertEqual(self.fixture_bytes(golden.HERE / name), content)
 
     def test_fixture_sha256(self):
         manifest = json.loads((golden.HERE / "sha256.json").read_text())
         for name, sha in manifest.items():
-            self.assertEqual(hashlib.sha256((golden.HERE / name).read_bytes()).hexdigest(), sha)
+            self.assertEqual(hashlib.sha256(self.fixture_bytes(golden.HERE / name)).hexdigest(), sha)
 
     def test_literal_record_and_header_bytes(self):
         image = (golden.HERE / "mixed_v1_v2.bin").read_bytes()

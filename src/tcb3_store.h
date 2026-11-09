@@ -26,9 +26,8 @@ struct Port {
   // erase: start one WREN+4 KB sector erase; completion is observed through status().
   bool (*program)(void*,uint32_t,const uint8_t*,unsigned);
   bool (*erase)(void*,uint32_t);
-  // Optional, export-only: read one whole aligned 256-byte page into dst in a single bounded
-  // transaction. Used solely by Export; program/verify/scan/reset stay on <=64-byte read().
-  // Null selects the portable 64-byte read() path. Transport-neutral (USB today, BLE later).
+  // Optional export-page provider, independent of packet/output transport. Called only by Export
+  // for one aligned 256-byte page; all other operations use read(). Null keeps the 64-byte path.
   bool (*readPage)(void*,uint32_t,uint8_t*);
 };
 enum class State : uint8_t { Scan, Idle, Blank, Header, Ready, Validate, Data, Footer, Fault, Probe };

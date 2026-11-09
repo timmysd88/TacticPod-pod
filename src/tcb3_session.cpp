@@ -10,9 +10,9 @@
 #include "battery_runtime.h"
 #include <SPI.h>
 #include "field_trace.h"
-// 1 = bulk 256-byte DMA page reads for TCB READ; 0 = tagged baseline (byte-by-byte 64-byte slices).
+// Experimental only: the SPI wrapper blocks and does not expose nrfx transfer errors.
 #ifndef TACTICPOD_EXPORT_BULK
-#define TACTICPOD_EXPORT_BULK 1
+#define TACTICPOD_EXPORT_BULK 0
 #endif
 #if TACTICPOD_EXPORT_BULK
 #define EXPORT_PAGE readPage
@@ -69,7 +69,7 @@ bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   select(dumping?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
 #if TACTICPOD_EXPORT_BULK
-// Export-only bulk page read: one command transfer plus one 256-byte DMA read, both bounded (~0.6 ms at 4 MHz).
+// Export-only bulk page read: two synchronous transfers under one CS assertion (~0.52 ms wire time at 4 MHz).
 // SPI.transfer() ignores nrfx errors, so non-SRAM buffers are refused up front rather than left unread.
 bool readPage(void*,uint32_t a,uint8_t* p){
   static uint8_t cmd[4];
