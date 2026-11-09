@@ -54,6 +54,14 @@ struct MockSPI {
     }
     return 0;
   }
+  // Mirrors Adafruit nRF52 SPIClass::transfer(tx,rx,count): null tx clocks zeros, null rx discards.
+  // Each byte still goes through the byte-level protocol checks above.
+  unsigned bulkTransfers = 0;
+  void transfer(const void* txBuffer, void* rxBuffer, size_t count) {
+    ++bulkTransfers;
+    const uint8_t* t = static_cast<const uint8_t*>(txBuffer);uint8_t* r = static_cast<uint8_t*>(rxBuffer);
+    for (size_t i = 0; i < count; ++i) { const uint8_t v = transfer(t ? t[i] : uint8_t(0)); if (r) r[i] = v; }
+  }
   void endTransaction() {
 #ifdef FLASH_ID_TEST
     if(traceCount<80){traceSize[traceCount]=position;memcpy(trace[traceCount++],tx,position<24?position:24);}else ++violations;

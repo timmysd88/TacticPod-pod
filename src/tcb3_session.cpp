@@ -10,6 +10,15 @@
 #include "battery_runtime.h"
 #include <SPI.h>
 #include "field_trace.h"
+// 1 = bulk 256-byte DMA page reads for TCB READ; 0 = tagged baseline (byte-by-byte 64-byte slices).
+#ifndef TACTICPOD_EXPORT_BULK
+#define TACTICPOD_EXPORT_BULK 1
+#endif
+#if TACTICPOD_EXPORT_BULK
+#define EXPORT_PAGE readPage
+#else
+#define EXPORT_PAGE nullptr
+#endif
 namespace {
 namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
@@ -59,6 +68,17 @@ bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
   select(dumping?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
+#if TACTICPOD_EXPORT_BULK
+// Export-only bulk page read: one command transfer plus one 256-byte DMA read, both bounded (~0.6 ms at 4 MHz).
+// SPI.transfer() ignores nrfx errors, so non-SRAM buffers are refused up front rather than left unread.
+bool readPage(void*,uint32_t a,uint8_t* p){
+  static uint8_t cmd[4];
+  if(pageOpen || !dumping || (a&255) || a>=Tcb3::End || 256>Tcb3::End-a)return false;
+  if(uint32_t(p)<0x20000000UL || uint32_t(p)>0x2003FF00UL)return false;
+  cmd[0]=3;cmd[1]=a>>16;cmd[2]=a>>8;cmd[3]=a;
+  select(kExportReadHz);SPI.transfer(cmd,nullptr,4);SPI.transfer(nullptr,p,256);deselect();return true;
+}
+#endif
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
   if(Tcb3Test::Append && !store.stats.programOperations &&
@@ -105,9 +125,9 @@ bool resetProgram(void*,uint32_t a,const uint8_t* p,unsigned n){
   select();SPI.transfer(2);address(0);for(unsigned i=0;i<n;++i)SPI.transfer(p[i]);deselect();return true;
 }
 Tcb3::Port resetPort{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,resetProgram,resetErase};
-Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale,EXPORT_PAGE};
 #else
-Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,nullptr,EXPORT_PAGE};
 #endif
 bool storeIdentity(){
   for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();if(a!=11 || b!=64 || c!=24)return false;}

@@ -19,6 +19,13 @@ bool modelRead(void*,uint32_t a,uint8_t* p,unsigned n){
   ++reads;if(!n || n>64 || a>=Tcb3::End || n>Tcb3::End-a){++violations;return false;}
   memcpy(p,nor+a,n);return true;
 }
+uint32_t pageReads=0,denyPage=0,corruptPage=0;
+// Export-only bulk read: exactly one aligned 256-byte page, never during a staged program.
+bool modelReadPage(void*,uint32_t a,uint8_t* p){
+  if(stagedOpen || (a&255) || a>=Tcb3::End || 256>Tcb3::End-a){++violations;return false;}
+  if(denyPage && pageReads+1==denyPage){++pageReads;return false;}
+  ++pageReads;memcpy(p,nor+a,256);if(corruptPage && pageReads==corruptPage)p[100]^=1;return true;
+}
 int modelStatus(void*){if(stagedOpen){++violations;return -1;}return (stuck || int32_t(nowMs-busyUntil)<0)?1:0;}
 bool modelProgram(void*,uint32_t a,const uint8_t* p,unsigned n){
   if(deny)return false;
@@ -57,10 +64,11 @@ bool modelErase(void*,uint32_t a){
   }else{memset(nor+a,255,4096);memset(pageProgramCounts+a/256,0,16);}
   busyUntil=nowMs+20;++modelErases;return true;
 }
-Tcb3::Port model{nullptr,modelRead,modelBegin,modelBytes,modelEnd,modelAbort,modelStatus,modelProgram,modelErase};
+Tcb3::Port model{nullptr,modelRead,modelBegin,modelBytes,modelEnd,modelAbort,modelStatus,modelProgram,modelErase,modelReadPage};
+Tcb3::Port modelLegacy=[]{Tcb3::Port p=model;p.readPage=nullptr;return p;}();
 extern "C" unsigned init(unsigned erase){
   if(erase){memset(nor,255,sizeof(nor));memset(pageProgramCounts,0,sizeof(pageProgramCounts));}
-  nowMs=programs=reads=violations=busyUntil=deny=stuck=corrupt=tearCall=tearBytes=modelErases=corruptCommit=denyRead=partialLimit=0;delayMs=3;
+  nowMs=programs=reads=violations=busyUntil=deny=stuck=corrupt=tearCall=tearBytes=modelErases=corruptCommit=denyRead=partialLimit=0;pageReads=denyPage=corruptPage=0;delayMs=3;
   eraseCalls=eraseTearCall=eraseTraceCount=0;resetter=Tcb3::Reset{};
   stagedOpen=false;stagedSize=0;engine=Tcb3::Store{};engine.begin(model,nowMs);return 0;
 }
@@ -90,7 +98,7 @@ extern "C" unsigned offer(unsigned n){return engine.offer(input,n);}
 uint64_t offeredCounts[4]{};
 extern "C" unsigned stop(unsigned reason){engine.finish(uint64_t(nowMs)*1000,offeredCounts,Tcb3::Reason(reason),0,0);return 0;}
 extern "C" unsigned exporting(unsigned begin){
-  if(begin)exporter.begin(model);
+  if(begin)exporter.begin(begin==2?model:modelLegacy);
   if(exporter.done())return 0;
   for(unsigned i=0;i<5000;++i){
     exporter.update();unsigned n=0;const uint8_t* p=exporter.output(n);

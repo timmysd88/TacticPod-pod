@@ -23,8 +23,8 @@ for path in ("src/standby_policy.h", "src/flash_power.h"):
 
 # Pin the TCB3 store while allowing the intentional sensitivity metadata update.
 digests = {
-    "src/tcb3_store.cpp": "548bb6e65b0d4caa97d1a120d3e90b7b3f7d80c92dbfd541db7da099c04c1182",
-    "src/tcb3_store.h": "ec640ca2f6f3b2c6af9dd462323c955a0a9d717532dde5cd49f2ec03d1fd8645",
+    "src/tcb3_store.cpp": "d60f7410d1afc2d9d2e0e3656d601460d543183cf1b8e9e74b8abdff4082e38e",
+    "src/tcb3_store.h": "2b3aacaa110e65fdc8571b9f2f214f195d8a412e29adefaa029e459d1b83c6e5",
 }
 for path, expected in digests.items():
     # Line endings are normalised so a CRLF working tree matches the committed LF blob.

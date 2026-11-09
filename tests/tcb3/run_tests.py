@@ -229,6 +229,34 @@ class Persistent(unittest.TestCase):
         while n:packets.extend(m.get('exportPacket',n));n=m.call('exporting')
         with self.assertRaises(ValueError):decode_packets(packets)
         m.call('init',0);m.word('denyRead',1);m.call('tick',1);self.assertEqual(info(m)[0],8)
+    @staticmethod
+    def export_bytes(m,mode):
+        packets=bytearray();n=m.call('exporting',mode)
+        while n:packets.extend(m.get('exportPacket',n));n=m.call('exporting')
+        return bytes(packets)
+    def test_bulk_export_is_byte_identical_to_64_byte_baseline(self):
+        m=machine();save(m,self.frames,self.blocks)
+        self.assertEqual(m.word('pageReads'),0) # Store, scan, verify and program never use the export-only read.
+        baseline=self.export_bytes(m,1);self.assertEqual(m.word('pageReads'),0)
+        bulk=self.export_bytes(m,2)
+        self.assertEqual(bulk,baseline);self.assertGreater(m.word('pageReads'),0)
+        exported,issues=decode_packets(bulk);self.assertFalse(issues)
+        self.assertEqual(decode_image(exported)['sessions'][0]['raw'],self.raw)
+        self.assertEqual(m.word('violations'),0)
+    def test_bulk_export_reads_one_page_per_page_and_never_programs(self):
+        m=machine();save(m,self.frames,self.blocks);programs=m.word('programs')
+        before=m.word('reads');self.export_bytes(m,1);legacy=m.word('reads')-before
+        before=m.word('reads');self.export_bytes(m,2);bulk=m.word('reads')-before
+        pages=m.word('pageReads');self.assertGreater(pages,0)
+        self.assertEqual(legacy-bulk,4*pages) # Each page replaces exactly four 64-byte reads; sector probes unchanged.
+        self.assertEqual(m.word('programs'),programs);self.assertEqual(m.word('violations'),0)
+    def test_bulk_page_failure_is_reported_as_issue(self):
+        m=machine();save(m,self.frames,self.blocks);m.word('denyPage',2)
+        with self.assertRaises(ValueError):decode_packets(self.export_bytes(m,2))
+    def test_bulk_export_corruption_is_caught_by_packet_and_page_crc(self):
+        m=machine();save(m,self.frames,self.blocks);m.word('corruptPage',2)
+        exported,issues=decode_packets(self.export_bytes(m,2))
+        self.assertTrue(issues or decode_image(exported)['issues'])
     def test_power_cut_each_program_byte(self):
         m=machine();save(m,self.frames[:1],self.blocks[:1]);count=m.word('programs')
         addresses=struct.unpack('<'+'I'*count,m.get('traceAddress',4*count))

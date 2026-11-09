@@ -354,8 +354,12 @@ void Export::update(){
     at+=Sector;return;
   }
   uint32_t address=at+pageIndex*Page;
-  if(!port.read(port.context,address+offset,page+offset,64)){make(3,address,nullptr,0);fault=ended=true;return;}
-  offset+=64;if(offset<256)return;
+  if(port.readPage){
+    if(!port.readPage(port.context,address,page)){make(3,address,nullptr,0);fault=ended=true;return;}
+  }else{
+    if(!port.read(port.context,address+offset,page+offset,64)){make(3,address,nullptr,0);fault=ended=true;return;}
+    offset+=64;if(offset<256)return;
+  }
   // Epoch mode: an unsealed header (torn or never completed) marks the end of live data, as in the store scan.
   if(Tcb3Test::Reusable && epoch && pageIndex==0 && !validPage(page)){make(4,End,nullptr,0);ended=true;return;}
   make(2,address,page,256);offset=0;if(++pageIndex==16){at+=Sector;selected=false;}
