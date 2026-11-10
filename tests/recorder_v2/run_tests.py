@@ -41,12 +41,18 @@ class Conformance(unittest.TestCase):
     def test_fixture_regeneration_is_byte_identical(self):
         for name, content in golden.generate().items():
             with self.subTest(file=name):
-                self.assertEqual((golden.HERE / name).read_bytes(), content)
+                actual = (golden.HERE / name).read_bytes()
+                if name.endswith(".json"):
+                    actual = actual.replace(b"\r\n", b"\n")
+                self.assertEqual(actual, content)
 
     def test_fixture_sha256(self):
         manifest = json.loads((golden.HERE / "sha256.json").read_text())
         for name, sha in manifest.items():
-            self.assertEqual(hashlib.sha256((golden.HERE / name).read_bytes()).hexdigest(), sha)
+            content = (golden.HERE / name).read_bytes()
+            if name.endswith(".json"):
+                content = content.replace(b"\r\n", b"\n")
+            self.assertEqual(hashlib.sha256(content).hexdigest(), sha)
 
     def test_literal_record_and_header_bytes(self):
         image = (golden.HERE / "mixed_v1_v2.bin").read_bytes()

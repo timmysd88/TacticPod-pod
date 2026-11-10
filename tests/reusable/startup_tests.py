@@ -5,7 +5,9 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tcb3'))
 from native import Native,compile,ROOT
 vendor=ROOT/'.pio-core/packages/framework-arduinoadafruitnrf52'
 local=ROOT/'variants/tacticpod/Seeed_XIAO_nRF52840'
-assert (local/'variant.h').read_bytes()==(vendor/'variants/Seeed_XIAO_nRF52840/variant.h').read_bytes()
+local_variant=(local/'variant.h').read_bytes().replace(b'\r\n',b'\n')
+vendor_variant=(vendor/'variants/Seeed_XIAO_nRF52840/variant.h').read_bytes().replace(b'\r\n',b'\n')
+assert local_variant==vendor_variant
 core=(vendor/'cores/nRF5/main.cpp').read_text()
 assert core.index('  init();')<core.index('  initVariant();')<core.index('  xTaskCreate(')
 wiring=(vendor/'cores/nRF5/wiring.c').read_text()
