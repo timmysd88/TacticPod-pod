@@ -8,8 +8,12 @@ class Runtime {
  public:
   void update(uint32_t now, BleMode::Inputs in, Adapter& adapter) {
     if (controller.active()) {
+      if (controller.current() != BleMode::State::Stopping &&
+          controller.current() != BleMode::State::Reset) adapter.service(now);
       in.linkConnected = adapter.connected();
       in.validActivity = adapter.takeActivity();
+      in.transferActive = adapter.transferActive();
+      in.transferProgress = adapter.takeProgress();
       in.faulted = in.faulted || adapter.failed();
       in.quiescent = adapter.quiescent();
     }
@@ -18,6 +22,7 @@ class Runtime {
       in.faulted = true;
       out = controller.update(now, in);
     }
+    if (out.abortTransfer) adapter.abortTransfer();
     if (out.stopAdvertising) adapter.stop();
     if (out.resetNow) adapter.reset();
   }

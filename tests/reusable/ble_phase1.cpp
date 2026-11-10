@@ -4,10 +4,16 @@
 
 struct Adapter {
   unsigned begins = 0, stops = 0, resets = 0;
+  unsigned services = 0, aborts = 0;
   bool link = false, activity = false, fault = false, quiet = false, beginOk = true;
+  bool transferring = false, progress = false;
   bool begin() { ++begins; return beginOk; }
+  void service(uint32_t) { ++services; }
   bool connected() { return link; }
   bool takeActivity() { bool a = activity; activity = false; return a; }
+  bool transferActive() { return transferring; }
+  bool takeProgress() { bool p = progress; progress = false; return p; }
+  void abortTransfer() { ++aborts; transferring = false; }
   bool failed() { return fault; }
   void stop() { ++stops; }
   bool quiescent() { return quiet; }
@@ -60,6 +66,15 @@ int main() {
     // Unresponsive disconnect is bounded to one second.
     r.update(600998, in, a); CHECK(a.resets == 0);
     r.update(600999, in, a); CHECK(a.resets == 1);
+  }
+  {
+    Runtime r; Adapter a; BleMode::Inputs in; in.doubleTap = true;
+    r.update(0, in, a); in.doubleTap = false; a.link = true; r.update(100, in, a);
+    a.transferring = true; r.update(50000, in, a); CHECK(a.aborts == 0);
+    a.progress = true; r.update(100000, in, a); CHECK(a.aborts == 0);
+    r.update(159999, in, a); CHECK(a.aborts == 0);
+    r.update(160000, in, a);
+    CHECK(a.aborts == 1 && a.stops == 0 && r.state() == BleMode::State::Connected);
   }
   // A reset creates a fresh button classifier: the cancellation hold cannot start recording.
   PhysicalButton::StateMachine button;

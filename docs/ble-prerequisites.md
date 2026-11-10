@@ -1,6 +1,6 @@
-# BLE prerequisites assessment (investigation only)
+# BLE prerequisites assessment and implementation record
 
-Status: investigation. No firmware, flash, session or app changes were made. Labels: **[M]** measured in repo evidence, **[E]** estimate, **[?]** needs bench verification.
+The early sections are the historical prerequisites investigation; Phase 1 and Phase 2 implementation status is recorded in §§13–14. Labels: **[M]** measured in repo evidence, **[E]** estimate, **[?]** needs bench verification.
 This supersedes the round-1 BLE trigger proposals (auto-advertise at power-on / after stop / long-press) in the app repo's `docs/BLE_AUTO_DOWNLOAD_INVESTIGATION.md`, which is left unchanged. Button-driven Bluetooth Mode below replaces them.
 
 ## 1. SoftDevice / RAM / flash
@@ -592,3 +592,19 @@ The actual BLE map declares FLASH `[0x27000, 0xED000)` and RAM `[0x20006000, 0x2
 CI also exported the **actual downloaded framework sources**, confirming framework **1.10101.0**, toolchain **1.70201.0 / GCC 7.2.1**, platform **1.1.1 at a6fd41d**, the verified Bluefruit APIs, LittleFS's seven-page range, and the `0xF4000` bootloader write boundary. These now corroborate the earlier source investigation rather than relying only on the local v1.1.3 checkout. Framework content pinning and the installed board's bootloader/settings contents remain separate concerns.
 
 **Verdict:** Phase 1 software implementation, pinned-environment builds and host regression are complete. Resources fit at link time; runtime SoftDevice/heap sufficiency and actual radio/reset/recording safety are not yet demonstrated. Before physical testing, obtain authorization for the read-only SWD backup and review the specific pod's bootloader/UICR/LittleFS contents. Firmware flashing and any first `Bluefruit.begin()` that may provision internal flash require separate explicit approval after that review. Physical power, tap, reset/marker, pairing-rejection, flash-preservation and recording-timing tests remain mandatory. PR #11 remains draft; nothing has been merged or deployed.
+
+# 14. Phase 2 session discovery and download protocol
+
+Phase 2 adds the read-only manifest scanner, targeted TPX3 export and versioned GATT transfer to the separate `feature/ble-session-download` branch. The detailed UUIDs, packet layouts, checksums, retry rules, error codes, session identity and app integration sequence are in [`ble-session-download-protocol.md`](ble-session-download-protocol.md). The TacticPod-app repository, default/USB firmware environments, recordings, physical pod, production deployment and main branch were not changed.
+
+The scanner validates stored headers, TCB3 block and page checksums, footers, counters and reset epochs without programming or erasing. `GET` uses the existing TPX3 transport packet format and only returns sessions reported as sealed and validated by `LIST`. BLE requests are serviced from the BLE foreground loop while the normal capture/USB/IMU/GPS paths remain suspended. The firmware does not invent a separate recording format, resume offset, aggregate SHA-256, or automatic website import.
+
+Local validation:
+
+- `py -3.13 tests\reusable\manifest_tests.py` — PASS for the physical three-session fixture, corrupt/missing data, reset/stale epochs, targeted export, restart, and flash immutability.
+- `py -3.13 tests\reusable\ble_protocol_tests.py` — PASS for CRC vectors and MTU-23/247 fragmentation.
+- `py -3.13 tests\reusable\ble_phase1_tests.py` — PASS for BLE lifecycle and main-loop isolation, including disconnect and transfer-progress timeout behavior.
+- `py -3.13 -m platformio run -e tacticpod_reusable_ble` — PASS; 140,992 / 237,568 B RAM (59.3%) and 316,612 / 811,008 B application flash (39.0%).
+- Full firmware regression was run. On Windows, the recorder-v2 fixture-regeneration and fixture-hash tests compare tracked LF JSON fixtures with generated LF bytes while the checkout exposes tracked files as CRLF; these newline-sensitive checks fail independently of the BLE implementation.
+
+No browser, radio, negotiated MTU, RF reliability, transfer throughput, battery current, physical reset, or target flash behavior has been tested. The firmware may remain connected after transfer completion; the app must validate and import each TPX3 stream, deduplicate using device serial + reset epoch + session ID, and explicitly disconnect after all transfers. Physical validation and any flash provisioning remain separate approval gates.

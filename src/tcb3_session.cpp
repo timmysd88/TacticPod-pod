@@ -16,6 +16,10 @@
 namespace {
 namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+Tcb3::Manifest bleManifest;Tcb3::Export bleDump;
+bool bleReading=false,bleListing=false,bleDownloading=false;
+#endif
 bool storeImuReady=false,pending=false,owned=false,dumping=false,locked=false,finishing=false;
 uint64_t offered[4]{};uint64_t stopUs=0;
 uint32_t storeMissed=0,maxServiceUs=0;
@@ -60,7 +64,11 @@ void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);
 int status(void*){if(pageOpen)return -1;select();SPI.transfer(5);int s=SPI.transfer(0);deselect();return s;}
 bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
-  select(dumping?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
+  bool fast=dumping;
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  fast=fast||bleReading;
+#endif
+  select(fast?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
@@ -195,7 +203,11 @@ bool busy(){return pending || owned || dumping || pageOpen || (locked && status(
 #endif
   ;}
 bool recording(){return owned && !finishing;}
-bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault;}
+bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault
+#if TACTICPOD_REUSABLE
+  || resetFailed
+#endif
+  ;}
 bool takeCleanCompletion(){bool completed=cleanCompletionPending;cleanCompletionPending=false;return completed;}
 void observation(unsigned kind){
   if(Tcb3Test::Enabled && owned && !finishing && MonotonicClock::now()-testStartedUs>=Tcb3Test::CaptureUs)stop(Tcb3::Reason::Clean);
@@ -312,6 +324,61 @@ uint32_t freeSectors(){
   const uint32_t next=store.stats.next;
   return next>=store.floor() && next<=Tcb3Test::WriteEnd?(Tcb3Test::WriteEnd-next)/Tcb3::Sector:0;
 }
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+bool bleBeginList(){
+  if(!BleRuntime::active() || exclusive() || faulted() || bleDownloading || !storeIdentity())return false;
+  bleManifest.begin(port,0,Tcb3Test::WriteEnd);
+  if(bleManifest.failed())return false;
+  bleListing=true;bleDownloading=false;bleReading=true;
+  return true;
+}
+bool bleService(unsigned steps){
+  bool progressed=false;
+  while(steps--){
+    if(bleListing && !bleManifest.done()){
+      bleManifest.update();progressed=true;
+      continue;
+    }
+    if(bleDownloading && !bleDump.done() && !bleDump.failed()){
+      unsigned length=0;
+      if(bleDump.output(length))break;
+      bleDump.update();progressed=true;
+      continue;
+    }
+    break;
+  }
+  return progressed;
+}
+bool bleListDone(){return bleListing && bleManifest.done();}
+bool bleListFailed(){return bleListing && bleManifest.failed();}
+bool bleListOverflow(){return bleListing && bleManifest.overflow();}
+uint32_t bleIncompleteCount(){return bleListing?bleManifest.incompleteCountValue():0;}
+unsigned bleSessionCount(){return bleListing?bleManifest.count():0;}
+const Tcb3::ManifestEntry* bleSession(unsigned index){
+  return bleListing && bleManifest.done() && !bleManifest.failed()?bleManifest.entry(index):nullptr;
+}
+bool bleBeginSession(uint32_t id,uint32_t epoch){
+  if(!BleRuntime::active() || !bleListing || !bleManifest.done() || bleManifest.failed() ||
+     bleDownloading || bleReading==false || exclusive() || faulted())return false;
+  const Tcb3::ManifestEntry* selected=nullptr;
+  for(unsigned i=0;i<bleManifest.count();++i){
+    const Tcb3::ManifestEntry* candidate=bleManifest.entry(i);
+    if(candidate && candidate->sessionId==id && candidate->resetEpoch==epoch){selected=candidate;break;}
+  }
+  if(!selected || (selected->flags&3U)!=3U || !selected->sectorCount ||
+     uint64_t(selected->firstAddress)+uint64_t(selected->sectorCount)*Tcb3::Sector>Tcb3Test::WriteEnd)
+    return false;
+  const uint32_t end=selected->firstAddress+selected->sectorCount*Tcb3::Sector;
+  if(!bleDump.beginSession(port,id,selected->firstAddress,end))return false;
+  bleDownloading=true;return true;
+}
+const uint8_t* blePacket(unsigned& length){return bleDownloading?bleDump.output(length):nullptr;}
+void bleReleasePacket(){if(bleDownloading)bleDump.release();}
+bool bleTransferDone(){return bleDownloading && bleDump.done();}
+bool bleTransferFailed(){return bleDownloading && bleDump.failed();}
+void bleFinishSession(){bleDownloading=false;}
+void bleCancel(){bleListing=bleDownloading=bleReading=false;}
+#endif
 void update(bool allow){
 #if TACTICPOD_REUSABLE
   if(resetting){

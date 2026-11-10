@@ -10,6 +10,7 @@ constexpr uint32_t End=0xFFF000, Sector=4096, Page=256;
 constexpr uint32_t Header=0x33485054, Data=0x33445054, Footer=0x33455054;
 constexpr uint32_t ResetMagic=0x33525054; // "TPR3": reset marker page at address 0.
 constexpr unsigned Fragment=216, MetadataBytes=160;
+constexpr unsigned MaxManifestSessions=64;
 // Reserved header word (page offset 120, metadata offset 104) carrying the reset epoch.
 constexpr unsigned EpochMetadataOffset=104, EpochHeaderOffset=16+EpochMetadataOffset;
 struct Port {
@@ -88,6 +89,7 @@ private:
 class Export {
 public:
   void begin(Port);
+  bool beginSession(Port,uint32_t session,uint32_t firstAddress,uint32_t endAddress);
   void update();
   const uint8_t* output(unsigned& n) const {n=ready?packetSize:0;return ready?packet:nullptr;}
   void release(){ready=false;}
@@ -95,9 +97,50 @@ public:
   bool failed() const {return fault;}
 private:
   Port port{};uint8_t packet[280]{},page[256]{};
-  uint32_t at=0,sequence=0,epoch=0,probeAt=0;unsigned pageIndex=0,offset=0,packetSize=0,phase=0;
-  bool ready=false,opening=true,ended=false,selected=false,fault=false;
+  uint32_t at=0,sequence=0,epoch=0,probeAt=0,sessionId=0,sessionEnd=End;
+  unsigned pageIndex=0,offset=0,packetSize=0,phase=0;
+  bool ready=false,opening=true,ended=false,selected=false,fault=false,sessionOnly=false;
   void make(unsigned kind,uint32_t address,const uint8_t*,unsigned length);
+};
+
+struct ManifestEntry {
+  uint32_t sessionId=0,resetEpoch=0,firstAddress=0,sectorCount=0,formatVersion=0,footerReason=0;
+  uint32_t flags=0; // bit 0: footer sealed; bit 1: stored pages/blocks validated; bit 2: clean completion.
+  uint64_t startUs=0,stopUs=0,deviceId=0;
+  uint64_t committed[4]{},lost[4]{};
+};
+
+class Manifest {
+public:
+  void begin(Port,uint32_t firstAddress,uint32_t endAddress);
+  void update();
+  bool done() const {return phase==Phase::Done || phase==Phase::Fault;}
+  bool failed() const {return phase==Phase::Fault;}
+  bool overflow() const {return tooMany;}
+  bool incomplete() const {return incompleteCount!=0;}
+  uint32_t incompleteCountValue() const {return incompleteCount;}
+  unsigned count() const {return entryCount;}
+  const ManifestEntry* entry(unsigned index) const {return index<entryCount?entries+index:nullptr;}
+  const char* errorMessage() const {return error;}
+private:
+  enum class Phase:uint8_t {Marker,MarkerTail,CleanPrefix,EpochProbe,Probe,Header,Data,Footer,Done,Fault};
+  Port port{};
+  ManifestEntry entries[MaxManifestSessions]{},current{};
+  uint8_t page[Page]{},metadata[MetadataBytes]{},blockHeader[24]{},blockTail[4]{};
+  uint32_t address=0,limit=0,resetEpoch=0,sectorSequence=0,nextPage=0,expectedBlock=0,blockSequence=0;
+  uint32_t blockLength=0,blockCrcExpected=0,blockCrc=0xffffffffU,blockReceived=0,blockCount=0;
+  uint64_t observed[4]{};
+  uint32_t incompleteCount=0;
+  unsigned entryCount=0,offset=0,pageIndex=0;
+  Phase phase=Phase::Done;
+  bool sessionOpen=false,blockOpen=false,tooMany=false;
+  const char* error=nullptr;
+  bool readPageSlice();
+  void fail(const char*);
+  void processHeader();
+  void processDataPage();
+  void processFooter();
+  void advanceSector();
 };
 
 // Fast logical reset: erase sector 0, then program a CRC-sealed marker carrying a new epoch.

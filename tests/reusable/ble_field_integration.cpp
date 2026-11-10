@@ -4,6 +4,7 @@
 
 struct FieldBleAdapter {
   unsigned begins = 0, stops = 0, resets = 0;
+  unsigned aborts = 0;
   bool link = false, activity = false, fault = false, entrySafe = false;
   bool begin() {
     ++begins;
@@ -11,8 +12,12 @@ struct FieldBleAdapter {
       !Tcb3Session::exclusive() && !Recorder::exclusive() && !CompactRecorder::capturing();
     return entrySafe;
   }
+  void service(uint32_t) {}
   bool connected() { return link; }
   bool takeActivity() { bool v = activity; activity = false; return v; }
+  bool transferActive() { return false; }
+  bool takeProgress() { return false; }
+  void abortTransfer() { ++aborts; }
   bool failed() { return fault; }
   void stop() { ++stops; link = false; }
   bool quiescent() { return !link; }
