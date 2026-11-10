@@ -3,6 +3,7 @@ name: Firmware build and tests
 on:
   pull_request:
     branches: [main]
+    paths-ignore: ['**/*.md']
   workflow_dispatch:
 
 permissions:
@@ -60,6 +61,10 @@ jobs:
         run: |
           pio run -e tacticpod_reusable_usb -v 2>&1 | Tee-Object -FilePath build.log
           if ($LASTEXITCODE -ne 0) { throw "Firmware build failed" }
+      - name: Build opt-in tacticpod_reusable_ble (no upload)
+        run: |
+          pio run -e tacticpod_reusable_ble -v 2>&1 | Tee-Object -FilePath ble-build.log
+          if ($LASTEXITCODE -ne 0) { throw "BLE firmware build failed" }
       - name: Regression tests
         id: tests
         continue-on-error: true
@@ -71,9 +76,19 @@ jobs:
           New-Item -ItemType Directory -Force dist | Out-Null
           $build = '.pio/build/tacticpod_reusable_usb'
           foreach ($f in 'firmware.zip','firmware.hex','firmware.elf') { if (Test-Path "$build/$f") { Copy-Item "$build/$f" "dist/tacticpod_reusable_usb-$f" } }
+          $ble = '.pio/build/tacticpod_reusable_ble'
+          foreach ($f in 'firmware.zip','firmware.hex','firmware.elf','firmware.map') { if (Test-Path "$ble/$f") { Copy-Item "$ble/$f" "dist/tacticpod_reusable_ble-$f" } }
+          if (Test-Path ble-build.log) { Copy-Item ble-build.log dist/ }
+          $core = '.pio-core/packages/framework-arduinoadafruitnrf52'
+          New-Item -ItemType Directory -Force dist/framework-evidence | Out-Null
+          foreach ($f in @('package.json','cores/nRF5/linker/nrf52840_s140_v7.ld','cores/nRF5/linker/nrf52_common.ld','libraries/InternalFileSytem/src/InternalFileSystem.cpp','libraries/InternalFileSytem/src/flash/flash_nrf5x.c','libraries/Bluefruit52Lib/src/bluefruit.h','libraries/Bluefruit52Lib/src/bluefruit.cpp','libraries/Bluefruit52Lib/src/BLESecurity.cpp','libraries/Bluefruit52Lib/src/utility/bonding.cpp')) {
+            Copy-Item "$core/$f" dist/framework-evidence/
+          }
+          pio pkg list -g 2>&1 | Tee-Object -FilePath dist/packages.txt
           Copy-Item build.log, tests.log dist/
           Copy-Item .pio/reusable-regression-logs dist/regression-logs -Recurse
           pio run -e tacticpod_reusable_usb -t size 2>&1 | Tee-Object -FilePath dist/size.txt
+          pio run -e tacticpod_reusable_ble -t size 2>&1 | Tee-Object -FilePath dist/ble-size.txt
           $lines = Get-ChildItem dist -File | Where-Object { $_.Name -ne 'SHA256SUMS.txt' } | ForEach-Object {
             "$((Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant())  $($_.Name)" }
           Set-Content -LiteralPath dist/SHA256SUMS.txt -Value $lines
