@@ -16,6 +16,39 @@ The device advertises as `TacticPod` for 180 seconds after the existing double-t
 
 Standard Device Information Service exposes manufacturer `TacticPod`, model `XIAO nRF52840 Sense`, the FICR-derived serial number, and firmware revision `ble-download-2`. GATT is open and unbonded. Existing pairing rejection, battery and activity behavior remain in place.
 
+The notify-only Data characteristic must use Bluefruit
+`setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS)`: Bluefruit copies the read
+security mode to the CCCD's write permission. This permits notification
+subscription without adding the Read or Write characteristic properties.
+The original Phase 2 configuration used `SECMODE_NO_ACCESS` for the first
+argument, creating a non-writable CCCD that violates the SoftDevice's
+characteristic-add constraints. The hardware reported the aggregate
+`BLE ERROR: GATT characteristic initialization`; the host regression reproduces
+the Data failure with `NRF_ERROR_INVALID_PARAM` (7) using linked Bluefruit code
+and a model of that documented constraint, not the proprietary SoftDevice.
+Initialization now reports the characteristic name and returned error code
+before the existing aggregate error/reset path. UUIDs and protocol bytes are
+unchanged. The fix has not yet been uploaded or physically verified.
+
+| Characteristic | Properties | Bluefruit read/write security | Length |
+|---|---|---|---|
+| Activity | Write | No access / Open | Variable, maximum 20 |
+| Battery | Read | Open / No access | Fixed 6 |
+| Control | Write | No access / Open | Variable, maximum 16 |
+| Data | Notify | Open / No access | Variable, maximum 244; writable CCCD |
+| Protocol version | Read | Open / No access | Fixed 2 |
+
+Initialization order is Device Information Service, custom service, then
+Activity, Battery, Control, Data and Protocol version. Phase 1 had only Activity
+and Battery under the same custom service. All six custom UUIDs share one
+vendor-specific base (only the SoftDevice's 16-bit field varies); the installed
+Bluefruit default provides ten base slots. The nRF52840 attribute-table default
+is 4096 bytes. No UUID-slot or attribute-table increase is needed to correct
+the invalid CCCD. `configPrphConn()` controls connection MTU/event/queue
+resources, not attribute permissions. The successful stack/service setup on
+hardware does not validate every later allocation; the host model does not
+measure SoftDevice RAM or attribute-table consumption.
+
 The The peripheral permits ATT MTU up to 247 while retaining the minimum connection-event length and one-entry notification/write-command queues. Actual MTU is negotiated by the browser/OS and can remain 23; every notification is sized to the negotiated MTU. The opt-in target build used 140,992 / 237,568 B RAM (59.3%) and 316,612 / 811,008 B application flash (39.0%). This is a link-time measurement only; runtime heap, radio throughput and physical power/timing have not been measured.
 
 ## Framing and checksums
