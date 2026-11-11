@@ -1,6 +1,6 @@
 # BLE session download protocol
 
-Status: implemented in the opt-in `tacticpod_reusable_ble` build; target build and host tests pass. No device was flashed or physically tested. The default and reusable USB environments, TacticPod-app, production data and recordings are unchanged.
+Status: implemented in the opt-in `tacticpod_reusable_ble` build. On 2026-11-11 the corrected diagnostic firmware (`37d4510`) was physically confirmed to boot, reach healthy recorder/TCB idle status, activate Bluetooth by double-tap, and connect through nRF Connect. This validates startup/connection, not an end-to-end session download. The GATT correction is also included in this non-diagnostic Phase 2 build; temporary boot checkpoints are not. The default and reusable USB environments, TacticPod-app, production data and recordings are unchanged.
 
 ## GATT
 
@@ -16,7 +16,45 @@ The device advertises as `TacticPod` for 180 seconds after the existing double-t
 
 Standard Device Information Service exposes manufacturer `TacticPod`, model `XIAO nRF52840 Sense`, the FICR-derived serial number, and firmware revision `ble-download-2`. GATT is open and unbonded. Existing pairing rejection, battery and activity behavior remain in place.
 
-The The peripheral permits ATT MTU up to 247 while retaining the minimum connection-event length and one-entry notification/write-command queues. Actual MTU is negotiated by the browser/OS and can remain 23; every notification is sized to the negotiated MTU. The opt-in target build used 140,992 / 237,568 B RAM (59.3%) and 316,612 / 811,008 B application flash (39.0%). This is a link-time measurement only; runtime heap, radio throughput and physical power/timing have not been measured.
+The notify-only Data characteristic uses Bluefruit
+`setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS)`. Bluefruit copies read security
+to the CCCD's write permission; the original Phase 2 `NO_ACCESS` setting
+therefore created an invalid non-writable CCCD. This correction permits
+notification subscription without adding Read or Write characteristic
+properties. Initialization failures now report the individual characteristic
+name and numeric error before the existing aggregate error/reset path.
+
+The linked Bluefruit regression rejects the original Data metadata with error
+7 (`NRF_ERROR_INVALID_PARAM`) using a model of the documented writable-CCCD
+constraint, then accepts all five corrected characteristics. It checks UUIDs,
+properties, security and lengths; it does not emulate proprietary SoftDevice
+resource allocation or radio operation. The physical diagnostic test confirmed
+that initialization now reaches advertising and connection.
+
+| Characteristic | Properties | Bluefruit read/write security | Length |
+|---|---|---|---|
+| Activity | Write | No access / Open | Variable, maximum 20 |
+| Battery | Read | Open / No access | Fixed 6 |
+| Control | Write | No access / Open | Variable, maximum 16 |
+| Data | Notify | Open / No access | Variable, maximum 244; writable CCCD |
+| Protocol version | Read | Open / No access | Fixed 2 |
+
+Initialization order remains Device Information Service, custom service, then
+Activity, Battery, Control, Data and Protocol version. All six custom UUIDs
+share one vendor-specific base. UUIDs, packet formats, connection configuration,
+button timing and recording behavior are unchanged. The production branch does
+not include the diagnostic environment, retained boot structure or `BOOT STATUS`;
+named GATT errors are retained because they are bounded failure-path reporting.
+
+Merge-preparation validation passed on the non-diagnostic branch: all six
+firmware environments, all 40 regression scripts, and the separate linked
+core/variant startup test. ELF checks reject a boot-diagnostic section and
+preserve the existing eight-byte BLE reset marker. Application-only DFU ZIP
+contents, ELF payload and CRC16 were verified without flashing. Build/test
+paths honor `PLATFORMIO_BUILD_DIR` so existing firmware packages are not rebuilt
+or overwritten during isolated validation.
+
+The peripheral permits ATT MTU up to 247 while retaining the minimum connection-event length and one-entry notification/write-command queues. Actual MTU is negotiated by the browser/OS and can remain 23; every notification is sized to the negotiated MTU. The corrected non-diagnostic target build uses 140,992 / 237,568 B RAM (59.3%) and 316,892 / 811,008 B application flash (39.1%). This is a link-time measurement only; runtime heap, radio throughput and physical power/timing have not been measured.
 
 ## Framing and checksums
 

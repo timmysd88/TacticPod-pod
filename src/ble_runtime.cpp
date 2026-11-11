@@ -128,16 +128,17 @@ struct Adapter {
     control.setMaxLen(sizeof(controlQueue));
     control.setWriteCallback(onControlWrite,false);
     data.setProperties(CHR_PROPS_NOTIFY);
-    data.setPermission(SECMODE_NO_ACCESS, SECMODE_OPEN);
+    // Bluefruit derives CCCD write permission from the notification read permission.
+    data.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
     data.setMaxLen(kMaxFrameSize);
     protocolVersion.setProperties(CHR_PROPS_READ);
     protocolVersion.setPermission(SECMODE_OPEN,SECMODE_NO_ACCESS);
     protocolVersion.setFixedLen(2);
     const uint8_t version[]={kProtocolVersion,0};
-    if (activity.begin() != ERROR_NONE || battery.begin() != ERROR_NONE ||
-        control.begin() != ERROR_NONE || data.begin() != ERROR_NONE ||
-        protocolVersion.begin() != ERROR_NONE)
-      return fail("GATT characteristic initialization");
+    if (!beginCharacteristic(activity, "activity") || !beginCharacteristic(battery, "battery") ||
+        !beginCharacteristic(control, "control") || !beginCharacteristic(data, "data") ||
+        !beginCharacteristic(protocolVersion, "protocol"))
+      return false;
     if(protocolVersion.write(version,sizeof(version))!=sizeof(version))
       return fail("protocol version characteristic");
     if (!updateBattery()) return false;
@@ -148,6 +149,13 @@ struct Adapter {
     if (!Bluefruit.Advertising.start(180)) return fail("advertising start");
     Serial.println("BLE advertising; session listing/download protocol v2 ready.");
     return true;
+  }
+  bool beginCharacteristic(BLECharacteristic& characteristic, const char* name) {
+    const err_t error = characteristic.begin();
+    if (error == ERROR_NONE) return true;
+    Serial.print("BLE GATT characteristic="); Serial.print(name);
+    Serial.print(" error="); Serial.println(static_cast<unsigned long>(error));
+    return fail("GATT characteristic initialization");
   }
   bool fail(const char* reason) {
     ::failed = true;

@@ -1,15 +1,17 @@
 """Validate the real opt-in ELF layout; never execute firmware or access hardware."""
 from pathlib import Path
+import os
 from elftools.elf.elffile import ELFFile
 
 root = Path(__file__).resolve().parents[2]
 for name in ('seeed_xiao_nrf52840_sense', 'tacticpod_reusable_usb', 'tacticpod_reusable_ble'):
-    path = root / '.pio/build' / name / 'firmware.elf'
+    path = Path(os.environ.get('PLATFORMIO_BUILD_DIR', root / '.pio/build')) / name / 'firmware.elf'
     with path.open('rb') as stream:
         elf = ELFFile(stream)
         text = elf.get_section_by_name('.text')
         assert text['sh_addr'] == 0x27000, (name, 'application/SoftDevice boundary')
         marker = elf.get_section_by_name('.ble_reset')
+        assert elf.get_section_by_name('.boot_diagnostics') is None, (name, 'unexpected boot diagnostics')
         if name != 'tacticpod_reusable_ble':
             assert marker is None, (name, 'unexpected BLE reset marker')
             continue
