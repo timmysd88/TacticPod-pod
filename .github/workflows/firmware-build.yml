@@ -65,6 +65,10 @@ jobs:
         run: |
           pio run -e tacticpod_reusable_ble -v 2>&1 | Tee-Object -FilePath ble-build.log
           if ($LASTEXITCODE -ne 0) { throw "BLE firmware build failed" }
+      - name: Build opt-in BLE boot diagnostics (no upload)
+        run: |
+          pio run -e tacticpod_reusable_ble_boot_diagnostics
+          if ($LASTEXITCODE -ne 0) { throw "BLE boot diagnostics build failed" }
       - name: Regression tests
         id: tests
         continue-on-error: true
@@ -78,6 +82,8 @@ jobs:
           foreach ($f in 'firmware.zip','firmware.hex','firmware.elf') { if (Test-Path "$build/$f") { Copy-Item "$build/$f" "dist/tacticpod_reusable_usb-$f" } }
           $ble = '.pio/build/tacticpod_reusable_ble'
           foreach ($f in 'firmware.zip','firmware.hex','firmware.elf','firmware.map') { if (Test-Path "$ble/$f") { Copy-Item "$ble/$f" "dist/tacticpod_reusable_ble-$f" } }
+          $diagnostic = '.pio/build/tacticpod_reusable_ble_boot_diagnostics'
+          foreach ($f in 'firmware.zip','firmware.hex','firmware.elf') { if (Test-Path "$diagnostic/$f") { Copy-Item "$diagnostic/$f" "dist/tacticpod_reusable_ble_boot_diagnostics-$f" } }
           if (Test-Path ble-build.log) { Copy-Item ble-build.log dist/ }
           $core = '.pio-core/packages/framework-arduinoadafruitnrf52'
           New-Item -ItemType Directory -Force dist/framework-evidence | Out-Null

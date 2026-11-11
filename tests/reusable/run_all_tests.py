@@ -9,7 +9,11 @@ paths.extend(['tests/reusable/switchless_tests.py','tests/reusable/download_test
 paths.append('tests/reusable/field_tests.py')
 paths.append('tests/reusable/ble_groundwork_tests.py')
 paths.append('tests/reusable/ble_phase1_tests.py')
+paths.append('tests/reusable/boot_diagnostics_tests.py')
 paths.append('tests/reusable/ble_elf_tests.py')
+paths.append('tests/reusable/boot_dfu_tests.py')
+paths.append('tests/reusable/boot_linked_tests.py')
+paths.append('tests/reusable/boot_serial_tests.py')
 results={}
 for path in paths:
     name=path.replace('/','_').replace('.py','')

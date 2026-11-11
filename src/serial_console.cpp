@@ -10,6 +10,9 @@
 #include "tcb3_session.h"
 #include "tcb3_test_limits.h"
 #include "field_trace.h"
+#if TACTICPOD_BOOT_DIAGNOSTICS
+#include "boot_diagnostics.h"
+#endif
 
 namespace {
 bool printImu = false;
@@ -27,6 +30,9 @@ void printMenu() {
   else Serial.println("  RECORD RESET - fast logical reset (then RECORD RESET CONFIRM); hides all recordings");
   Serial.println("  DIAG         - display JEDEC and SFDP information once (while idle)");
   Serial.println("  DIAG ID      - read-only raw flash identity/SFDP evidence (OBS/COMP stopped)");
+#if TACTICPOD_BOOT_DIAGNOSTICS
+  Serial.println("  BOOT STATUS  - report retained startup checkpoints");
+#endif
   Serial.println("  GPS ON / GPS OFF / GPS STATUS - GPS output (OFF at boot); UART always receives");
   Serial.println("  GPS RAW      - capture 10 seconds of UART bytes without configuring GPS");
   Serial.println("  GPS SCAN     - stopped-only, receive-only six-baud scan; restores 38400");
@@ -54,6 +60,9 @@ void printMenu() {
 
 bool handleCommand(const char* line) {
   if (Tcb3Session::guardCommand(line)) return true;
+#if TACTICPOD_BOOT_DIAGNOSTICS
+  if (!strcmp(line, "BOOT STATUS")) { BootDiagnostics::requestReport(); return true; }
+#endif
 #if TACTICPOD_REUSABLE
   if(!strcmp(line,"FIELD EVENTS")) {FieldTrace::buffer().remaining=FieldTrace::buffer().count;return true;}
 #endif

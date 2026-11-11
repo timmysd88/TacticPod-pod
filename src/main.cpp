@@ -19,6 +19,12 @@
 #include "flash_power.h"
 #include "field_trace.h"
 #include "imu_config.h"
+#if TACTICPOD_BOOT_DIAGNOSTICS
+#include "boot_diagnostics.h"
+#define BOOT_CHECKPOINT(stage) BootDiagnostics::checkpoint(BootDiagnostics::Stage::stage)
+#else
+#define BOOT_CHECKPOINT(stage) do {} while (0)
+#endif
 #if TACTICPOD_BLE
 #include "ble_gesture.h"
 #include "ble_runtime.h"
@@ -549,7 +555,10 @@ void requestIdentity(){
 }
 
 void setup() {
+  BOOT_CHECKPOINT(Setup);
+  BOOT_CHECKPOINT(Battery);
   BatteryRuntime::begin(); // Separate reusable build only; no battery presumed.
+  BOOT_CHECKPOINT(Clock);
   MonotonicClock::begin();
   RamObservations::begin();
   // The XIAO's common-anode RGB LED is active LOW.
@@ -564,8 +573,11 @@ void setup() {
   pinMode(PIN_A0, INPUT_PULLUP);
 #endif
 
+  BOOT_CHECKPOINT(Serial);
   Serial.begin(115200);  // USB CDC serial; do not wait for a host connection.
+  BOOT_CHECKPOINT(Gps);
   GpsReceiver::begin();
+  BOOT_CHECKPOINT(Flash);
   digitalWrite(kFlashCsPin, HIGH);
   pinMode(kFlashCsPin, OUTPUT);
   SPI.begin();  // Board variant maps SCK=D8, MISO=D9, MOSI=D10.
@@ -577,9 +589,12 @@ void setup() {
   }
 #endif
   // Seeed's library enables IMU power and selects Wire1 via the build flag.
+  BOOT_CHECKPOINT(Imu);
   imuStatus = beginImu();
   imuReady = (imuStatus == 0);
+  BOOT_CHECKPOINT(Recorder);
   Recorder::begin(imuReady);  // Read-only recovery scan; recording stays OFF.
+  BOOT_CHECKPOINT(Tcb);
   Tcb3Session::begin(imuReady);
 #if TACTICPOD_REUSABLE
   // Startup indication only after a successful startup: IMU ready and no recorder fault.
@@ -591,6 +606,7 @@ void setup() {
 #endif
   if (showPowerOn && imuReady && !Tcb3Session::faulted()) userLed.notify(StatusLed::Event::PowerOn, millis());
 #endif
+  BOOT_CHECKPOINT(Ready);
 }
 
 void loop() {
@@ -603,6 +619,12 @@ void loop() {
   }
 #endif
   (void)MonotonicClock::now(); // Boot clock continues while all recorders are idle.
+#if TACTICPOD_BOOT_DIAGNOSTICS
+  if (FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() &&
+      !Tcb3Session::exclusive() && !GpsReceiver::busy() &&
+      !CompactRecorder::capturing() && !RamObservations::capturing() && !identityRunning)
+    BootDiagnostics::serviceReport();
+#endif
   GpsReceiver::update();
 #if TACTICPOD_REUSABLE
   updateFieldControls();
