@@ -177,15 +177,14 @@ struct Adapter {
   void service(uint32_t now) {
     if(!connected())return;
     processControl();
+    if(Tcb3Session::bleService(16))progressPending=true;
     if(transfer==TransferState::Scanning){
-      if(Tcb3Session::bleService(16))progressPending=true;
       if(Tcb3Session::bleListDone()){
         transfer=TransferState::Listing;listStage=0;listIndex=0;messageSequence=0;
         listCount=Tcb3Session::bleListFailed()?0:Tcb3Session::bleSessionCount();
       }
     }else if(transfer==TransferState::Downloading){
       if(Tcb3Session::bleTransferFailed()){queueError(kExportFailure);return;}
-      if(Tcb3Session::bleService(16))progressPending=true;
     }
     prepareMessage();
     transmit(now);
@@ -283,7 +282,7 @@ struct Adapter {
   }
   bool cancel(uint16_t id) {
     if(id!=transferId || transfer==TransferState::Idle)return false;
-    if(transfer==TransferState::Scanning)Tcb3Session::bleCancel();
+    if(transfer==TransferState::Scanning || transfer==TransferState::Listing)Tcb3Session::bleCancel();
     else if(transfer==TransferState::Downloading || transfer==TransferState::SendingEnd)
       Tcb3Session::bleFinishSession();
     messageReady=frameReady=awaitingAck=false;transfer=TransferState::SendingCancel;
@@ -356,7 +355,7 @@ struct Adapter {
     if(transfer==TransferState::Listing){
       if(listStage==0)listStage=1;
       else if(listStage==1){++listIndex;if(listIndex>=listCount)listStage=2;}
-      else{transfer=TransferState::Idle;return;}
+      else{Tcb3Session::bleFinishList();transfer=TransferState::Idle;return;}
     }else if(transfer==TransferState::Downloading && lastMessageWasExportEnd){
       if(!Tcb3Session::bleTransferDone()){queueError(kExportFailure);return;}
       transfer=TransferState::SendingEnd;uint8_t payload[12];

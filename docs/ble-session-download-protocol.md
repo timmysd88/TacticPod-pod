@@ -105,6 +105,56 @@ Error codes: `1` bad protocol version/CRC, `2` malformed or unsupported command,
 
 `LIST` performs a foreground, bounded, read-only scan of the TCB3 recording partition. It validates reset markers/epochs, header and continuation identity, each page CRC, block CRC/envelope/counts, and session footer/counts. It never calls flash program or erase operations. A reset marker causes stale pre-reset sessions to be hidden while current-epoch sessions at the reusable write boundary remain discoverable.
 
+### BLE flash power lifecycle correction
+
+The reported `LIST (0x01)` failure with `ERROR (0xff), code 4` exposed a
+firmware power-state gap. `main.cpp` enters standby before advertising (or is
+already in standby), issuing external flash deep-power-down `0xB9`. The BLE
+loop bypasses normal standby exit. Previously `bleBeginList()` then called
+JEDEC identity verification without releasing deep-power-down; an asleep
+chip cannot return the required `0B 40 18` identity.
+The host regression reproduces this failure through the production main
+entry and session code before the correction. The physical response confirms
+the pod-origin error, but its exact JEDEC/status values have not been measured.
+
+LIST and GET now check recorder/flash admission first, issue release `0xAB`,
+wait the existing conservative 100 microseconds, require status zero
+(valid idle chip, WIP/WEL clear), and verify JEDEC identity five times before
+starting reads. GPS, IMU and the recording clocks remain suspended; this
+wakes only external NOR, not the full recording path.
+
+Flash remains awake through scan/export and the final acknowledgement.
+After LIST_END or TRANSFER_END is acknowledged, flash returns to
+deep-power-down with the existing 5 microsecond entry delay. LIST keeps its
+validated manifest in RAM, so GET on the same connection can re-wake and
+re-verify flash without re-scanning. Cancellation, transfer errors, disconnect
+and BLE-mode shutdown also release the read ownership and attempt safe
+power-down. A failed idle-status check never forces sleep onto a busy chip.
+The boot path still releases deep-power-down after the existing BLE-mode
+reset. No write-enable, program, erase or recording-reset command is added.
+
+Bounded, nonblocking serial diagnostics distinguish:
+
+- `wake/status failed`: the post-release status check failed.
+- `JEDEC identity failed`: includes the observed six-digit JEDEC value.
+- `ownership/admission conflict` or LIST/GET ownership conflict: no wake or
+  flash read is attempted when another owner holds the chip.
+- Manifest errors: the scanner's existing reason, such as invalid marker,
+  header/page/block CRC, continuation identity, or footer/count validation.
+- `sleep refused`: cleanup found a non-idle/invalid flash status and did
+  not issue deep-power-down.
+
+Diagnostics use a fixed 256-byte queue, drain only available USB TX space,
+and report suppression if that queue fills. They do not print per page/frame
+or wait for a serial host. Wake failure means an invalid post-release status;
+SPI cannot independently acknowledge receipt of opcode `0xAB`.
+
+Protocol error codes are unchanged. Code 4 can also mean admission
+refusal/range initialization failure, or a missing manifest entry during
+serialization. A scan that starts but later fails returns LIST_BEGIN status 2,
+not immediate ERROR 4. ACK timeout remains code 5; unavailable GET remains
+code 3. Firmware version/UUIDs, framing, checksums and ACK behavior are unchanged.
+
 `GET` uses the existing `Tcb3::Export::beginSession()` path. The TPX3 stream consists of the existing BEGIN packet, address-tagged flash-page packets, and END packet; no download-only recording format is introduced. Every TPX3 packet has its existing CRC32. Reconstructed TCB3 pages, blocks, metadata and footer are validated by the existing decoder. There is no aggregate transfer SHA-256 in protocol v2; clients must verify each BLE frame CRC, TPX3 packet CRC, and reconstructed TCB3 contents before importing.
 
 There is no resume offset. After a disconnect, restart with `LIST` and request the session again from its BEGIN packet. This is safe because the flash is read-only and transfer identity is `(device serial, resetEpoch, sessionId)`. After all requested sessions are validated/imported, the app should disconnect explicitly; firmware does not disconnect automatically on `TRANSFER_END`. A healthy transfer refreshes the BLE-mode progress timer through ACKs. A stalled transfer is aborted after 60 seconds without acknowledged progress, while the five-minute connection inactivity timer remains suspended only during active transfer.
@@ -115,10 +165,52 @@ The app should connect to the advertised service, read protocol version, subscri
 
 Host regression: `py -3.13 tests\reusable\manifest_tests.py` tests the known physical three-session fixture, flash immutability, corruption rejection, incomplete-footer reporting, reset epochs, targeted TPX3 export, missing/corrupt transport packets and deterministic restart. `py -3.13 tests\reusable\ble_protocol_tests.py` tests CRC and framing at MTU 23 and 247. `py -3.13 tests\reusable\ble_phase1_tests.py` covers lifecycle, progress timeout and main-loop isolation. `py -3.13 -m platformio run -e tacticpod_reusable_ble` builds the opt-in target. None of these tests establish real browser interoperability, negotiated MTU, RF reliability, transfer throughput or hardware timing; those require an approved physical test.
 
+The flash-power regressions in `ble_phase1_tests.py` additionally execute the
+real LIST/GET session functions after physical-button BLE entry with a mock
+adapter and NOR model. They cover sleeping flash, the full release delay,
+identity/status rejection, manifest failure diagnostics, LIST/GET ownership
+conflicts, repeated exports, cancellation and disconnect cleanup. All 16 MiB
+of modeled NOR are compared before/after each new case (including the deliberate
+malformed-input fixture); no enable/program/erase operation is accepted.
+These are not radio or chip electrical tests.
+
+Local correction validation: all six firmware environments built, all 40
+regression scripts passed, and the separate linked core/variant startup check
+passed. The full runner initially completed 39 scripts successfully; the GATT
+script could not import Unicorn from the system Python. Re-running that script
+with the already installed `.pio-core/test-python` on `PYTHONPATH` passed its
+original-invalid-CCCD negative control and all five corrected characteristics.
+No dependency installation or firmware upload was needed. For this local
+toolchain, set `$env:PYTHONPATH=(Join-Path (Get-Location) '.pio-core\test-python')`
+before invoking the full runner.
+
+### Proposed application-only upload (not performed)
+
+1. Obtain separate authorization for the exact pod and application image.
+   Keep the pod idle, disconnect the browser/nRF Connect, close serial clients,
+   and use stable USB power. Do not start/stop a recording, erase/reset recordings,
+   or change the bootloader/SoftDevice.
+2. Build the reviewed commit using
+   `py -3.13 -m platformio run -e tacticpod_reusable_ble` (no upload target).
+   Inspect `.pio/build/tacticpod_reusable_ble/firmware.zip`: its manifest must
+   contain only an application image plus DFU format metadata, with no
+   bootloader/SoftDevice payload. Verify package CRC and that the binary matches
+   the ELF application region starting at `0x27000`, below `0xED000`.
+   Record the ZIP's SHA-256; a rebuild can change the archive hash.
+3. Only after approval, enter the existing board bootloader with its established
+   double-reset procedure, positively identify its USB/COM port, and use the
+   existing Adafruit application-only serial DFU path to install that verified
+   ZIP. No SWD mass erase, combined image, recovery/provisioning or full-chip
+   flashing is part of this procedure. Stop on any mismatch or DFU failure.
+4. Confirm normal idle startup without starting a recording. Then perform only
+   an explicitly authorized BLE connection and one LIST, capturing any bounded
+   serial diagnostic. Stop after listing; a physical GET/download needs its own
+   authorization.
+
 ## Risks before physical testing
 
-- The current TacticPod-app Phase 1 client is connect-only (`sessionDownload: false`); it cannot perform this protocol. Use a separate protocol-v2 BLE test client for the first physical download. TPX3 compatibility was checked by decoding firmware-exported bytes with the app's existing TPX3 decoder, but this does not verify its BLE integration.
-- No on-device BLE transfer has been exercised. Verify service discovery, notification subscription, command writes, ACK/retry behavior at the negotiated MTU (including MTU 23), transfer completion, disconnect, and reconnect on the intended browser/OS.
+- The updated TacticPod-app physically connects, detects protocol 2.0 and sends LIST; the reported pod ERROR 4 motivated the correction above. No physical recording download has been performed. TPX3 compatibility was checked by decoding firmware-exported bytes with the app's existing TPX3 decoder, but this does not verify a complete physical BLE import.
+- No on-device recording transfer has been exercised. Re-verify LIST after a separately authorized application update, then seek separate authorization for a small completed recording download. Validate ACK/retry behavior at the negotiated MTU (including MTU 23), transfer completion, disconnect, and reconnect on the intended browser/OS.
 - The client must reject incomplete transfers and validate every frame CRC, TPX3 packet CRC, and reconstructed TCB3 contents before import. Protocol v2 has neither an aggregate SHA-256 nor resume; after connection loss, restart with LIST and download the session again.
 - The manifest scanner and transfer exporter are read-only by construction; host tests compare flash bytes before and after scanning/export. Physical flash behavior and preservation under reset, disconnect, and power loss remain unverified. Do not include reset/erase operations in a download test.
-- Link-time use is 140,992 / 237,568 B RAM (59.3%) and 316,612 / 811,008 B application flash (39.0%). This leaves 96,576 B within the reported RAM region, but runtime heap/stack high-water, BLE-stack allocation, RF throughput, and power/timing margins have not been measured on hardware.
+- With the flash-power correction, link-time use is 141,272 / 237,568 B RAM (59.5%) and 319,516 / 811,008 B application flash (39.4%). This leaves 96,296 B within the reported RAM region, but runtime heap/stack high-water, BLE-stack allocation, RF throughput, and power/timing margins have not been measured on hardware.

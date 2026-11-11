@@ -39,6 +39,7 @@ const uint8_t* blePacket(unsigned& length);
 void bleReleasePacket();
 bool bleTransferDone();
 bool bleTransferFailed();
+void bleFinishList();
 void bleFinishSession();
 void bleCancel();
 #endif
