@@ -1,18 +1,23 @@
 #include "../../src/tcb3_store.cpp"
 #include <string.h>
 
-uint8_t nor[Tcb3::End];
+uint8_t nor[0x1000000];
 uint8_t exportPacket[280];
 uint32_t entryData[21];
 Tcb3::Manifest manifest;
 Tcb3::Export exporter;
+uint32_t manifestLastReadAddress=0;
+int manifestTestStatus=0;
+bool manifestTestReadFailure=false;
 
 bool readFlash(void*,uint32_t address,uint8_t* output,unsigned length){
+  manifestLastReadAddress=address;
+  if(manifestTestReadFailure)return false;
   if(!length || length>64 || address>=Tcb3::End || length>Tcb3::End-address)return false;
   memcpy(output,nor+address,length);
   return true;
 }
-int flashStatus(void*){return 0;}
+int flashStatus(void*){return manifestTestStatus;}
 Tcb3::Port flash{nullptr,readFlash,nullptr,nullptr,nullptr,nullptr,flashStatus,nullptr,nullptr};
 
 extern "C" unsigned manifestBegin(uint32_t end){
@@ -48,6 +53,10 @@ extern "C" unsigned manifestEntry(unsigned index){
 extern "C" unsigned exportBegin(uint32_t id){
   if(id!=3)return 0;
   return exporter.beginSession(flash,id,2*Tcb3::Sector,11*Tcb3::Sector);
+}
+extern "C" unsigned exportAllBegin(){
+  exporter.begin(flash);
+  return 0;
 }
 extern "C" unsigned exportStep(){
   exporter.update();

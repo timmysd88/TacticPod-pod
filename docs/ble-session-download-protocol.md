@@ -184,6 +184,33 @@ No dependency installation or firmware upload was needed. For this local
 toolchain, set `$env:PYTHONPATH=(Join-Path (Get-Location) '.pio-core\test-python')`
 before invoking the full runner.
 
+### Reset-epoch manifest scan correction
+
+After a valid reset marker, the manifest now starts at sector one (`0x1000`),
+matching recorder recovery and USB export. Previously it started at the
+pre-reset reusable write boundary (`0x39000`), skipping completed recordings
+or entering a continuation sector and failing with `TCB3 session prefix missing`
+(LIST_BEGIN status 2). Only that marker branch changes; blank-sector-zero
+checks, allocation/write addresses, protocol, CRCs and ACKs are unchanged.
+
+`tests/reusable/manifest_status2_tests.py` preserves the investigation cases as
+regressions for corrected discovery below/across `0x39000`, multiple sessions,
+incomplete final sessions, legacy layouts, read/status failures and overflow.
+It compares all 16 MiB of modeled flash before/after scanning and USB export,
+including the reserved final sector. Optional TPX3 paths exercise archived
+exports with a modeled reset marker: USB exports omit the actual marker, so
+these are not raw captures of current flash. The full regression runner includes
+the self-contained cases. An incomplete session immediately followed by another
+session still fails closed with a continuation mismatch; this separate existing
+limitation is not changed by the scan-start correction.
+
+Correction validation: all six firmware environments built. The complete
+41-script runner passed 40 scripts; the standby source-hash guard detected the
+intentional store change. After updating only that reviewed source digest, the
+standby script passed on rerun. Separate linked startup checks and both archived
+export cases passed. BLE protocol and lifecycle tests passed without protocol
+changes. No hardware commands or uploads were performed for this correction.
+
 ### Proposed application-only upload (not performed)
 
 1. Obtain separate authorization for the exact pod and application image.

@@ -21,9 +21,9 @@ for path in ("src/standby_policy.h", "src/flash_power.h"):
     text = (root / path).read_text()
     assert not re.search(r"0x(06|20|02|C7|60|D8)\b", text), "standby helpers must not use erase/write opcodes"
 
-# Pin the TCB3 store while allowing the intentional sensitivity metadata update.
+# Pin the reviewed TCB3 store, including metadata and reset-epoch scan-start updates.
 digests = {
-    "src/tcb3_store.cpp": "ce5d835a032a98228fcb54fc51584952cc859ea1696bb2ea7b55854e5c66eb3a",
+    "src/tcb3_store.cpp": "9acc4b8187ef49df6f7c9e845ffbddf540e0fa3302118d871366857ff64f5d17",
     "src/tcb3_store.h": "730644ecb6bca73943057d34b3c3f86f143fdeddc9f6c7a4c4ae8322d522e63b",
 }
 for path, expected in digests.items():

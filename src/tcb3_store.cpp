@@ -585,7 +585,7 @@ void Manifest::update(){
            !allFF(page+8,240)){
           fail("invalid TCB3 reset marker");return;
         }
-        resetEpoch=get(page+4);address=Tcb3Test::WriteStart;offset=0;
+        resetEpoch=get(page+4);address=Sector;offset=0;
         phase=address<limit?Phase::EpochProbe:Phase::Done;
       }else if(blank(page,Page)){
         address=Sector;offset=0;phase=Phase::CleanPrefix;

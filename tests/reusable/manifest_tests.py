@@ -71,10 +71,10 @@ machine=scan(reset)
 assert not machine.call('manifestFailed') and machine.call('manifestCount')==0
 print('PASS: reset epoch marker hides stale pre-reset sessions')
 
-writeStart=0x39000
-resetged=bytearray(b'\xff'*(writeStart+2*SECTOR))
+writeStart=SECTOR
+resetged=bytearray(b'\xff'*(12*SECTOR))
 resetged[:256]=marker
-resetged[2*SECTOR:11*SECTOR]=FIXTURE[2*SECTOR:11*SECTOR]
+resetged[3*SECTOR:12*SECTOR]=FIXTURE[2*SECTOR:11*SECTOR]
 current=bytearray(FIXTURE[:2*SECTOR])
 for offset in range(0,len(current),256):
     page=bytearray(current[offset:offset+256])
@@ -88,8 +88,8 @@ machine=scan(resetged,True)
 assert not machine.call('manifestFailed') and machine.call('manifestCount')==1,(
     machine.call('manifestFailed'),machine.call('manifestCount'),machine.call('manifestIncomplete'))
 row=entry(machine,0)
-assert row[0]==58 and row[1]==7 and row[2]==writeStart and row[3]==2
-print('PASS: post-reset epoch sessions are discovered beyond stale pre-reset storage')
+assert row[0]==2 and row[1]==7 and row[2]==writeStart and row[3]==2
+print('PASS: post-reset sessions start at sector one and stale pre-reset storage is excluded')
 
 def export_session():
     machine=Native(ELF)

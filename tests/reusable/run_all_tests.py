@@ -11,6 +11,7 @@ paths.append('tests/reusable/ble_groundwork_tests.py')
 paths.append('tests/reusable/ble_phase1_tests.py')
 paths.append('tests/reusable/ble_gatt_tests.py')
 paths.append('tests/reusable/ble_elf_tests.py')
+paths.append('tests/reusable/manifest_status2_tests.py')
 results={}
 for path in paths:
     name=path.replace('/','_').replace('.py','')
