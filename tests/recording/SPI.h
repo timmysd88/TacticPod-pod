@@ -16,6 +16,7 @@ struct MockSPI {
   uint8_t finalSector[4096];
   uint8_t tx[260];
   unsigned position = 0, programs = 0, erases = 0, violations = 0, enables = 0;
+  unsigned bulkReads = 0;
   unsigned programDelayMs = 3, eraseDelayMs = 20;
   bool transactionActive=false;uint32_t hz=1000000;
   bool deepPower=false;unsigned sleeps=0,releases=0,asleepAccesses=0;
@@ -72,6 +73,16 @@ struct MockSPI {
 #endif
     if (tx[0] == 0x03 && i >= 4) return byte(address() + i - 4);
     return 0;
+  }
+  void transfer(const void* txBuffer, void* rxBuffer, size_t count) {
+    const uint8_t* txBytes=static_cast<const uint8_t*>(txBuffer);
+    uint8_t* rxBytes=static_cast<uint8_t*>(rxBuffer);
+    if(!transactionActive || position!=4 || tx[0]!=3 || !count || count>64)++violations;
+    ++bulkReads;
+    for(size_t i=0;i<count;++i){
+      if(txBytes[i])++violations;
+      rxBytes[i]=transfer(txBytes[i]);
+    }
   }
   void endTransaction() {
     if(!transactionActive)++violations;transactionActive=false;

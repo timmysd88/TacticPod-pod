@@ -87,8 +87,10 @@ extern "C" unsigned bleFieldCase(unsigned c) {
     }
     if(c==6)Serial.connected=false;
     if(c==10)Serial.freeSpace=0;
+    const unsigned listReads=SPI.bulkReads;
     for(unsigned n=0;n<10000 && !Tcb3Session::bleListDone();++n)Tcb3Session::bleService(16);
     if(!Tcb3Session::bleListDone())return 31;
+    if(SPI.bulkReads==listReads || SPI.hz!=4000000 || SPI.transactionActive)return 49;
     if(c==10){
       if(!Tcb3Session::bleListFailed())return 32;
       if(Serial.overfilledWrites || bleDiagnosticSize==0)return 48;
@@ -111,6 +113,7 @@ extern "C" unsigned bleFieldCase(unsigned c) {
       return 0;
     }
     for(unsigned run=0;run<(c==18?2u:1u);++run){
+      usbSize=0;
       const unsigned before=SPI.releases;
       if(!Tcb3Session::bleBeginSession(id,epoch) || SPI.deepPower || SPI.releases!=before+1)return 39;
       if(c==16){
@@ -123,10 +126,14 @@ extern "C" unsigned bleFieldCase(unsigned c) {
       }
       unsigned packets=0;
       for(unsigned n=0;n<10000 && !Tcb3Session::bleTransferDone();++n){
+        const unsigned reads=SPI.bulkReads;
         Tcb3Session::bleService(16);
+        if(SPI.bulkReads!=reads && (SPI.hz!=4000000 || SPI.transactionActive))return 50;
         unsigned length=0;const uint8_t* packet=Tcb3Session::blePacket(length);
         if(packet){
           if(length<24 || memcmp(packet,"TPX3",4))return 42;
+          if(usbSize+length>sizeof(usbBytes))return 51;
+          memcpy(usbBytes+usbSize,packet,length);usbSize+=length;
           ++packets;Tcb3Session::bleReleasePacket();
         }
         if(SPI.deepPower || Tcb3Session::bleTransferFailed())return 43;

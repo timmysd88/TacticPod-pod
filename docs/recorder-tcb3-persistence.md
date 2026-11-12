@@ -69,6 +69,11 @@ D2 CS, D8 SCK, D9 MISO, D10 MOSI, mode 0, 1MHz and unchanged JEDEC whitelist.
 The sole exception is the `0x03` page read issued while `TCB READ` is exporting,
 which uses 4MHz (`kExportReadHz`). Status, program, erase and all other reads
 stay at 1MHz.
+Each bounded read transfers its payload in one bulk SPI call using a zero-filled,
+RAM-resident 64-byte TX buffer for Nordic EasyDMA. Opcode, address and CS handling
+are unchanged; the benchmark below predates this bulk-transfer optimisation.
+BLE LIST/GET uses this same bounded read adapter at its existing 4MHz setting;
+BLE ownership, service budgets, GATT framing and CRC validation are unchanged.
 There is no erase callback and no protection-register modification.
 
 ## 4MHz export benchmark
