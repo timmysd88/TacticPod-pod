@@ -6,6 +6,9 @@
 #ifndef TACTICPOD_TCB3_FLASH_ENABLED
 #define TACTICPOD_TCB3_FLASH_ENABLED 0
 #endif
+#if TACTICPOD_TCB3_FLASH_ENABLED
+#include "tcb3_store.h"
+#endif
 namespace Tcb3Session {
 #if TACTICPOD_TCB3_FLASH_ENABLED
 void begin(bool imuReady);
@@ -22,6 +25,24 @@ uint32_t freeSectors();
 bool guardCommand(const char*);
 void observation(unsigned kind);
 void noteMissed(uint32_t);
+#if TACTICPOD_BLE
+bool bleBeginList();
+bool bleService(unsigned steps);
+bool bleListDone();
+bool bleListFailed();
+bool bleListOverflow();
+uint32_t bleIncompleteCount();
+unsigned bleSessionCount();
+const Tcb3::ManifestEntry* bleSession(unsigned index);
+bool bleBeginSession(uint32_t sessionId,uint32_t resetEpoch);
+const uint8_t* blePacket(unsigned& length);
+void bleReleasePacket();
+bool bleTransferDone();
+bool bleTransferFailed();
+void bleFinishList();
+void bleFinishSession();
+void bleCancel();
+#endif
 #else
 inline void begin(bool){}
 inline void update(bool=true){}

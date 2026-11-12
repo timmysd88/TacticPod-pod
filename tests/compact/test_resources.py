@@ -1,11 +1,13 @@
 """Link-map RAM and measured ARM stack usage; never opens physical devices."""
 import json
+import os
+from pathlib import Path
 import sys
 sys.dont_write_bytecode=True
 import run_tests as native
 from unicorn import UC_HOOK_MEM_WRITE
 
-firmware=native.ROOT/'.pio/build/seeed_xiao_nrf52840_sense/firmware.elf'
+firmware=Path(os.environ.get('PLATFORMIO_BUILD_DIR', native.ROOT/'.pio/build'))/'seeed_xiao_nrf52840_sense/firmware.elf'
 with firmware.open('rb') as stream:
     elf=native.ELFFile(stream)
     static=sum(elf.get_section_by_name(k)['sh_size'] for k in ('.data','.bss'))

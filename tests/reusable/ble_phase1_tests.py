@@ -1,4 +1,4 @@
-"""Portable Phase 1 adapter/reset integration; no radio or flash operations."""
+"""BLE lifecycle/session integration with modeled NOR; no radio or hardware access."""
 from host_checks import run_cpp
 from pathlib import Path
 import sys
@@ -14,7 +14,14 @@ elf = compile('tests/reusable/ble_field_integration.cpp', 'ble-field-integration
 seed = (ROOT / 'tests/reusable/fixtures/physical-three-sessions.bin').read_bytes()
 for case, name in enumerate(('unchanged recording hold/start/stop', 'advertising timeout',
                              'advertising hold cancellation', 'connected hold and inactivity',
-                             'connected disconnection', 'double-tap from low-power standby')):
+                             'connected disconnection', 'double-tap from low-power standby',
+                             'LIST wakes sleeping flash and GET exports read-only',
+                             'failed flash wake refuses LIST', 'wrong JEDEC refuses LIST',
+                             'busy flash after wake refuses LIST', 'manifest scan failure diagnostic',
+                             'recorder ownership blocks LIST', 'pending recorder blocks LIST',
+                             'open page blocks LIST without touching SPI', 'recorder ownership blocks GET',
+                             'LIST cancellation sleeps flash', 'GET disconnection sleeps flash',
+                             'GET cancellation sleeps flash', 'repeated GET wakes and sleeps flash')):
     machine = Native(elf)
     machine.call('reusableInit')
     machine.m.mem_write(machine.s['SPI'], seed)
@@ -22,5 +29,12 @@ for case, name in enumerate(('unchanged recording hold/start/stop', 'advertising
     if result:
         print(machine.get('Serial', 30000)[8:].split(b'\0', 1)[0].decode('utf-8', 'replace'))
     assert result == 0, (name, result)
-    assert bytes(machine.m.mem_read(machine.s['SPI'], len(seed))) == seed
+    expected = bytearray(seed)
+    if case == 10:
+        expected[0] = ord('?')  # Deliberately injected malformed manifest input.
+    assert bytes(machine.m.mem_read(machine.s['SPI'], len(seed))) == expected
+    if case >= 6:
+        expected.extend(b'\xff' * (0xfff000 - len(expected)))
+        expected.extend(b'\xa5' * 4096)
+        assert bytes(machine.m.mem_read(machine.s['SPI'], len(expected))) == expected
     print('PASS: real main loop with mock BLE adapter:', name, flush=True)

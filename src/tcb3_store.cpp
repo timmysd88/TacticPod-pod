@@ -300,7 +300,16 @@ void Store::update(uint32_t now){
   }
 }
 
-void Export::begin(Port p){port=p;at=sequence=pageIndex=offset=phase=0;epoch=probeAt=0;ready=ended=selected=fault=false;opening=true;}
+void Export::begin(Port p){
+  port=p;at=sequence=pageIndex=offset=phase=0;epoch=probeAt=sessionId=0;sessionEnd=End;
+  ready=ended=selected=fault=false;opening=true;sessionOnly=false;
+}
+bool Export::beginSession(Port p,uint32_t id,uint32_t first,uint32_t end){
+  begin(p);
+  if(!id || first>=end || end>End || first%Sector || end%Sector){fault=ended=true;return false;}
+  sessionOnly=true;sessionId=id;at=first;sessionEnd=end;phase=3;
+  return true;
+}
 void Export::make(unsigned kind,uint32_t address,const uint8_t* data,unsigned n){
   memset(packet,0,20);memcpy(packet,"TPX3",4);packet[4]=1;packet[5]=kind;put(packet+8,sequence++);
   put(packet+12,address);put(packet+16,n,2);if(n)memcpy(packet+20,data,n);
@@ -313,6 +322,20 @@ void Export::update(){
     make(3,at<End?at:End-Page,nullptr,0);fault=ended=true;return;
   }
   if(opening){uint8_t p[16]{};put(p,End);put(p+4,Page);put(p+8,Sector);put(p+12,0x00030200);make(1,0,p,16);opening=false;return;}
+  if(sessionOnly){
+    if(at>=sessionEnd){make(4,End,nullptr,0);ended=true;return;}
+    if(!selected){
+      if(!port.read(port.context,at,page,16)){make(3,at,nullptr,0);fault=ended=true;return;}
+      if(get(page)!=Header || get(page+4)!=sessionId){make(3,at,page,16);fault=ended=true;return;}
+      selected=true;pageIndex=offset=0;return;
+    }
+    const uint32_t address=at+pageIndex*Page;
+    if(!port.read(port.context,address+offset,page+offset,64)){make(3,address,nullptr,0);fault=ended=true;return;}
+    offset+=64;if(offset<Page)return;
+    make(2,address,page,Page);offset=0;
+    if(++pageIndex==16){at+=Sector;selected=false;}
+    return;
+  }
   if(Tcb3Test::Reusable && phase==0){
     // Classify sector 0 first: a reset marker hides every older session; an interrupted reset exports nothing.
     if(!port.read(port.context,offset,page+offset,64)){make(3,0,nullptr,0);fault=ended=true;return;}
@@ -359,6 +382,257 @@ void Export::update(){
   // Epoch mode: an unsealed header (torn or never completed) marks the end of live data, as in the store scan.
   if(Tcb3Test::Reusable && epoch && pageIndex==0 && !validPage(page)){make(4,End,nullptr,0);ended=true;return;}
   make(2,address,page,256);offset=0;if(++pageIndex==16){at+=Sector;selected=false;}
+}
+
+namespace {
+uint64_t get64(const uint8_t* p){return uint64_t(get(p,4))|(uint64_t(get(p+4,4))<<32);}
+bool pageEnvelope(const uint8_t* p,uint32_t magic,unsigned used){
+  if(used>232 || !validPage(p) || get(p)!=magic || get(p+12,2)!=used || get(p+14,2)!=0)return false;
+  for(unsigned i=16+used;i<248;++i)if(p[i]!=0xff)return false;
+  return true;
+}
+bool allFF(const uint8_t* p,unsigned n){while(n--)if(*p++!=0xff)return false;return true;}
+}
+
+void Manifest::begin(Port p,uint32_t firstAddress,uint32_t end){
+  port=p;memset(entries,0,sizeof(entries));memset(&current,0,sizeof(current));
+  memset(page,0,sizeof(page));memset(metadata,0,sizeof(metadata));
+  memset(blockHeader,0,sizeof(blockHeader));memset(blockTail,0,sizeof(blockTail));
+  memset(observed,0,sizeof(observed));
+  address=firstAddress;offset=pageIndex=resetEpoch=sectorSequence=nextPage=expectedBlock=blockSequence=0;
+  blockLength=blockCrcExpected=blockReceived=blockCount=incompleteCount=0;
+  blockCrc=0xffffffffU;entryCount=0;limit=end;
+  phase=firstAddress==0?Phase::Marker:Phase::Probe;
+  sessionOpen=blockOpen=tooMany=false;error=nullptr;
+  if(!port.read || !port.status || firstAddress>=end || end>End ||
+     firstAddress%Sector || end%Sector){fail("manifest range");return;}
+}
+void Manifest::fail(const char* why){error=why;phase=Phase::Fault;}
+bool Manifest::readPageSlice(){
+  const unsigned n=offset+64<=Page?64:Page-offset;
+  const int s=port.status(port.context);
+  if(s<0 || s==255 || (s&3)){fail("flash busy or invalid during read-only manifest scan");return false;}
+  const uint32_t pageAddress=address+((phase==Phase::Data || phase==Phase::Footer)?pageIndex*Page:0);
+  if(!n || !port.read(port.context,pageAddress+offset,page+offset,n)){
+    fail("flash read failed during read-only manifest scan");return false;
+  }
+  offset+=n;return true;
+}
+void Manifest::advanceSector(){
+  address+=Sector;offset=0;pageIndex=0;
+  if(address>=limit){
+    if(sessionOpen){++incompleteCount;sessionOpen=blockOpen=false;}
+    phase=Phase::Done;
+  }else if(resetEpoch)phase=Phase::EpochProbe;
+  else phase=Phase::Probe;
+}
+void Manifest::processHeader(){
+  if(allFF(page,Page)){
+    if(sessionOpen){++incompleteCount;sessionOpen=blockOpen=false;}
+    if(resetEpoch){phase=Phase::Done;return;}
+    advanceSector();return;
+  }
+  if(!pageEnvelope(page,Header,MetadataBytes)){
+    fail("invalid TCB3 header page");return;
+  }
+  const uint32_t id=get(page+4),pageSequence=get(page+8),version=get(page+16);
+  const uint32_t sequence=get(page+20),epoch=get(page+120),flags=get(page+84);
+  if(!id || (version!=0x00030100 && version!=0x00030200) || get(page+80)!=1 ||
+     (flags&~3U) || (!(flags&1U) && get64(page+32)) ||
+     (!(flags&2U) && !allFF(page+88,32)) || !epoch || get64(page+24)==~uint64_t(0) ||
+     !allFF(page+124,52)){
+    fail("invalid TCB3 header metadata");return;
+  }
+  if(resetEpoch && epoch!=resetEpoch){phase=Phase::Done;return;}
+  if(!sessionOpen){
+    if(sequence || pageSequence || id!=address/Sector+1){
+      fail("TCB3 session prefix missing");return;
+    }
+    memset(&current,0,sizeof(current));memset(observed,0,sizeof(observed));
+    current.sessionId=id;current.resetEpoch=epoch;current.firstAddress=address;
+    current.formatVersion=version;current.startUs=get64(page+24);
+    current.deviceId=(flags&1U)?get64(page+32):0;
+    current.sectorCount=1;sectorSequence=0;nextPage=0;expectedBlock=0;blockCount=0;
+    memcpy(metadata,page+16,MetadataBytes);memset(metadata+4,0,4);
+    sessionOpen=true;
+  }else{
+    bool sameMetadata=true;
+    for(unsigned i=0;i<MetadataBytes;++i){
+      const uint8_t value=(i>=4 && i<8)?0:page[16+i];
+      if(value!=metadata[i])sameMetadata=false;
+    }
+    if(id!=current.sessionId || sequence!=sectorSequence+1 || pageSequence!=nextPage || !sameMetadata){
+      fail("TCB3 continuation identity or sequence mismatch");return;
+    }
+    ++current.sectorCount;sectorSequence=sequence;
+  }
+  pageIndex=1;offset=0;phase=Phase::Data;
+}
+void Manifest::processDataPage(){
+  if(allFF(page,Page))return;
+  const unsigned used=get(page+12,2);
+  if(!pageEnvelope(page,Data,used) || used<17 || get(page+4)!=current.sessionId ||
+     get(page+8)!=nextPage || memcmp(page,"TPD3",4)){
+    fail("invalid TCB3 data page");return;
+  }
+  const uint32_t sequence=get(page+16),length=get(page+22,2),expectedCrc=get(page+28);
+  const unsigned fragmentOffset=get(page+20,2),count=get(page+24,2),flags=get(page+26,2);
+  const uint32_t expectedFlags=(fragmentOffset==0?1U:0U)|
+      (fragmentOffset+count==length?2U:0U);
+  if(length<36 || length>8228 || !count || count>Fragment ||
+     used!=16+count || fragmentOffset+count>length || flags!=expectedFlags){
+    fail("invalid TCB3 fragment bounds");return;
+  }
+  if(flags&1U){
+    if(blockOpen || fragmentOffset || sequence!=expectedBlock){
+      fail("invalid TCB3 block start");return;
+    }
+    blockOpen=true;blockSequence=sequence;blockLength=length;
+    blockCrcExpected=expectedCrc;blockCrc=0xffffffffU;blockReceived=0;
+    memset(blockHeader,0,sizeof(blockHeader));memset(blockTail,0,sizeof(blockTail));
+  }
+  if(!blockOpen || sequence!=blockSequence || length!=blockLength ||
+     expectedCrc!=blockCrcExpected || fragmentOffset!=blockReceived){
+    fail("TCB3 block fragment sequence mismatch");return;
+  }
+  const unsigned crcLength=fragmentOffset<length-4
+      ? ((count<length-4-fragmentOffset)?count:length-4-fragmentOffset):0;
+  blockCrc=crc32(page+32,crcLength,blockCrc);
+  for(unsigned i=0;i<count;++i){
+    const unsigned at=fragmentOffset+i;
+    if(at<sizeof(blockHeader))blockHeader[at]=page[32+i];
+    if(at>=length-4)blockTail[at-(length-4)]=page[32+i];
+  }
+  blockReceived+=count;++nextPage;
+  if(flags&2U){
+    if(blockReceived!=blockLength || ~blockCrc!=blockCrcExpected ||
+       get(blockTail)!=blockCrcExpected || memcmp(blockHeader,"TCB3",4) ||
+       blockHeader[4] || (blockHeader[5]!=0 && blockHeader[5]!=8) ||
+       blockHeader[6] || blockHeader[7] ||
+       get(blockHeader+14,2)+36!=blockLength){
+      fail("TCB3 block CRC or envelope mismatch");return;
+    }
+    uint32_t total=0,raw=0;const uint16_t sizes[]={24,44,40,32};
+    for(unsigned i=0;i<4;++i){
+      const uint32_t n=get(blockHeader+16+2*i,2);
+      total+=n;raw+=n*sizes[i];observed[i]+=n;
+    }
+    if(!total || total>256 || raw>8192 || raw!=get(blockHeader+12,2) ||
+       get(blockHeader+14,2)>raw){
+      fail("invalid TCB3 block record counts");return;
+    }
+    blockOpen=false;++expectedBlock;++blockCount;
+  }else if(blockReceived>=blockLength){
+    fail("unterminated TCB3 block");return;
+  }
+}
+void Manifest::processFooter(){
+  if(allFF(page,Page)){advanceSector();return;}
+  if(!sessionOpen || blockOpen || !pageEnvelope(page,Footer,160) ||
+     get(page+4)!=current.sessionId || memcmp(page,"TPE3",4) ||
+     get(page+8)!=nextPage || get(page+20)!=1 || get(page+148)!=blockCount ||
+     get(page+152)!=nextPage || get(page+156)!=0 ||
+     !allFF(page+160,16) || get(page+16)>3){
+    fail("invalid TCB3 session footer");return;
+  }
+  const uint64_t stop=get64(page+24);
+  if(stop<current.startUs || stop==~uint64_t(0)){
+    fail("invalid TCB3 session end time");return;
+  }
+  bool clean=get(page+16)==0;
+  for(unsigned i=0;i<4;++i){
+    const uint64_t offered=get64(page+32+8*i);
+    const uint64_t committed=get64(page+64+8*i);
+    const uint64_t lost=get64(page+96+8*i);
+    if(offered<committed || offered-committed!=lost || observed[i]!=committed){
+      fail("TCB3 footer record counts do not match stored blocks");return;
+    }
+    current.committed[i]=committed;current.lost[i]=lost;
+    clean=clean && !lost;
+  }
+  for(unsigned i=128;i<148;i+=4)clean=clean && get(page+i)==0;
+  current.stopUs=stop;current.footerReason=get(page+16);
+  current.flags=3U|(clean?4U:0U);
+  if(entryCount<MaxManifestSessions)entries[entryCount++]=current;
+  else tooMany=true;
+  sessionOpen=blockOpen=false;
+  advanceSector();
+}
+void Manifest::update(){
+  if(done())return;
+  if(phase==Phase::Marker){
+    if(offset<16){
+      const int s=port.status(port.context);
+      if(s<0 || s==255 || (s&3) || !port.read(port.context,0+offset,page+offset,16-offset)){
+        fail("flash status/read failed during manifest marker check");return;
+      }
+      offset=16;
+      const uint32_t magic=get(page);
+      if(magic==ResetMagic){offset=16;phase=Phase::MarkerTail;}
+      else if(blank(page,16)){offset=16;phase=Phase::MarkerTail;}
+      else if(magic==Header || magic==0x31485054 || magic==0x32485054){
+        address=0;
+        if(magic==Header)phase=Phase::Header;
+        else{phase=Phase::Probe;offset=0;}
+      }else fail("unrecognised sector-zero state");
+      return;
+    }
+  }
+  if(phase==Phase::MarkerTail){
+    if(offset<Page){if(readPageSlice() && offset==Page){
+      if(get(page)==ResetMagic){
+        if(!validPage(page) || !get(page+4) || get(page+4)==0xffffffffU ||
+           !allFF(page+8,240)){
+          fail("invalid TCB3 reset marker");return;
+        }
+        resetEpoch=get(page+4);address=Sector;offset=0;
+        phase=address<limit?Phase::EpochProbe:Phase::Done;
+      }else if(blank(page,Page)){
+        address=Sector;offset=0;phase=Phase::CleanPrefix;
+      }else fail("partially programmed sector-zero marker");
+    }return;}
+  }
+  if(phase==Phase::CleanPrefix){
+    if(address>=limit){phase=Phase::Done;return;}
+    if(address>=Tcb3Test::WriteStart){address=Tcb3Test::WriteStart;offset=0;phase=Phase::Probe;return;}
+    uint8_t prefix[16];
+    const int s=port.status(port.context);
+    if(s<0 || s==255 || (s&3) || !port.read(port.context,address,prefix,sizeof(prefix))){
+      fail("flash read failed during clean-prefix check");return;
+    }
+    if(!allFF(prefix,sizeof(prefix))){fail("data exists below the reusable write boundary");return;}
+    address+=Sector;return;
+  }
+  if(phase==Phase::Probe || phase==Phase::EpochProbe){
+    uint8_t prefix[16];
+    const int s=port.status(port.context);
+    if(s<0 || s==255 || (s&3) || !port.read(port.context,address,prefix,sizeof(prefix))){
+      fail("flash status/read failed during session scan");return;
+    }
+    if(get(prefix)!=Header){
+      if(sessionOpen){++incompleteCount;sessionOpen=blockOpen=false;}
+      if(phase==Phase::EpochProbe)phase=Phase::Done;
+      else if(allFF(prefix,sizeof(prefix)) || get(prefix)==0x31485054 || get(prefix)==0x32485054)
+        advanceSector();
+      else fail("unrecognised occupied sector in session scan");
+      return;
+    }
+    memset(page,0xff,sizeof(page));memcpy(page,prefix,sizeof(prefix));
+    offset=16;phase=Phase::Header;return;
+  }
+  if(phase==Phase::Header || phase==Phase::Data || phase==Phase::Footer){
+    if(offset<Page){if(!readPageSlice() || offset<Page)return;}
+    if(phase==Phase::Header)processHeader();
+    else if(phase==Phase::Data){
+      if(pageIndex<15){
+        processDataPage();
+        if(phase!=Phase::Fault){
+          ++pageIndex;offset=0;
+          if(pageIndex==15)phase=Phase::Footer;
+        }
+      }else{processFooter();}
+    }else processFooter();
+  }
 }
 
 void Reset::fail(const char* why){error=why;phase=Phase::Fault;}

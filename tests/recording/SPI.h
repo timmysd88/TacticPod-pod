@@ -19,6 +19,9 @@ struct MockSPI {
   unsigned programDelayMs = 3, eraseDelayMs = 20;
   bool transactionActive=false;uint32_t hz=1000000;
   bool deepPower=false;unsigned sleeps=0,releases=0,asleepAccesses=0;
+  bool failRelease=false,wakePending=false;
+  uint32_t wakeReadyUs=0;
+  unsigned wakeDelayViolations=0,jedecReads=0;
 #if TACTICPOD_TCB3_TEST_BUILD || TACTICPOD_REUSABLE
   uint8_t testSr2=2;
   uint32_t highestProgramEnd=0;
@@ -45,6 +48,10 @@ struct MockSPI {
     if (i == 0) {
       if (hz != 1000000 && value != 0x03) ++violations; // 4 MHz is only for export reads.
 #if TACTICPOD_REUSABLE
+      if(wakePending && value!=0xAB){
+        if(int32_t(mockTime*1000+mockSubUs-wakeReadyUs)<0)++wakeDelayViolations;
+        else wakePending=false;
+      }
       if (deepPower && value != 0xAB) ++asleepAccesses, ++violations;
       if (value == 0xB9 || value == 0xAB) return 0;
 #endif
@@ -58,7 +65,7 @@ struct MockSPI {
 #if TACTICPOD_REUSABLE
     if (deepPower) return 0xFF;
 #endif
-    if (tx[0] == 0x9F) return i == 1 ? (wrongId ? 0 : 0x0B) : i == 2 ? 0x40 : 0x18;
+    if (tx[0] == 0x9F) { if(i==1)++jedecReads;return i == 1 ? (wrongId ? 0 : 0x0B) : i == 2 ? 0x40 : 0x18; }
     if (tx[0] == 0x05) return ((stuckBusy || int32_t(mockTime - busyUntil) < 0) ? 1 : 0) | (wel ? 2 : 0);
 #if TACTICPOD_TCB3_TEST_BUILD || TACTICPOD_REUSABLE
     if(tx[0]==0x35)return testSr2;
@@ -73,7 +80,10 @@ struct MockSPI {
       if (wel || stuckBusy || int32_t(mockTime - busyUntil) < 0) ++violations;
       deepPower = true; ++sleeps; return;
     }
-    if (position == 1 && tx[0] == 0xAB) { deepPower = false; ++releases; return; }
+    if (position == 1 && tx[0] == 0xAB) {
+      if(!failRelease){deepPower=false;wakePending=true;wakeReadyUs=mockTime*1000+mockSubUs+100;}
+      ++releases;return;
+    }
 #endif
     if (tx[0] == 0x06) { ++enables; wel = !denyWel; }
     if (tx[0] == 0x02 || tx[0] == 0x20) {

@@ -1,15 +1,16 @@
 """Execute linked core init/variant functions, not replacements; GPIO model only."""
 from pathlib import Path
-import sys,json,hashlib,struct
+import sys,json,hashlib,struct,os
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'.pio-core/test-python'))
 from elftools.elf.elffile import ELFFile
 from unicorn import Uc,UC_ARCH_ARM,UC_MODE_THUMB,UC_MODE_MCLASS,UC_HOOK_MEM_WRITE
 from unicorn.arm_const import UC_ARM_REG_SP,UC_ARM_REG_LR,UC_ARM_REG_PC
-out=ROOT/'logs/stock-battery-review';out.mkdir(exist_ok=True)
+out=Path(os.environ.get('TACTICPOD_TEST_OUTPUT_DIR', ROOT/'logs/stock-battery-review'))
+out.mkdir(parents=True,exist_ok=True)
 
 def run(profile,inherited=False):
-    path=ROOT/'.pio/build'/profile/'firmware.elf'
+    path=Path(os.environ.get('PLATFORMIO_BUILD_DIR', ROOT/'.pio/build'))/profile/'firmware.elf'
     with path.open('rb') as f:
         elf=ELFFile(f)
         symbols={s.name:s['st_value'] for s in elf.get_section_by_name('.symtab').iter_symbols()}

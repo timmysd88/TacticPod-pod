@@ -12,10 +12,17 @@
 #include "field_trace.h"
 #if TACTICPOD_BLE
 #include "ble_runtime.h"
+#include "flash_power.h"
 #endif
 namespace {
 namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+Tcb3::Manifest bleManifest;Tcb3::Export bleDump;
+bool bleReading=false,bleListing=false,bleDownloading=false;
+char bleDiagnostic[256]{};
+unsigned bleDiagnosticSize=0,bleDiagnosticAt=0,bleDiagnosticDropped=0;
+#endif
 bool storeImuReady=false,pending=false,owned=false,dumping=false,locked=false,finishing=false;
 uint64_t offered[4]{};uint64_t stopUs=0;
 uint32_t storeMissed=0,maxServiceUs=0;
@@ -60,7 +67,11 @@ void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);
 int status(void*){if(pageOpen)return -1;select();SPI.transfer(5);int s=SPI.transfer(0);deselect();return s;}
 bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
-  select(dumping?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
+  bool fast=dumping;
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  fast=fast||bleReading;
+#endif
+  select(fast?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
@@ -112,8 +123,10 @@ Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullpt
 #else
 Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status};
 #endif
-bool storeIdentity(){
-  for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();if(a!=11 || b!=64 || c!=24)return false;}
+bool storeIdentity(uint32_t* observedId=nullptr){
+  for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();
+    if(observedId)*observedId=(a<<16)|(b<<8)|c;
+    if(a!=11 || b!=64 || c!=24)return false;}
   if(Tcb3Test::Guarded){
     if(status(nullptr)!=0)return false;
     select();SPI.transfer(0x35);uint8_t sr2=SPI.transfer(0);deselect();
@@ -121,6 +134,70 @@ bool storeIdentity(){
   }
   return true;
 }
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+void bleReport(const char* reason,int flashStatus=-1,uint32_t jedec=0){
+  char text[144];unsigned length=0;
+  auto append=[&](const char* p){while(*p && length<sizeof(text))text[length++]=*p++;};
+  append("BLE flash: ");append(reason);append(" status=");
+  if(flashStatus<0)append("-1");
+  else{
+    char digits[11];unsigned at=10;digits[at]=0;unsigned value=unsigned(flashStatus);
+    do{digits[--at]=char('0'+value%10);value/=10;}while(value);
+    append(digits+at);
+  }
+  append(" jedec=");
+  for(int shift=20;shift>=0;shift-=4){
+    const char digit[]={"0123456789abcdef"[(jedec>>shift)&15],0};append(digit);
+  }
+  append("\n");
+  if(length==sizeof(text) || length>sizeof(bleDiagnostic)-bleDiagnosticSize){++bleDiagnosticDropped;return;}
+  memcpy(bleDiagnostic+bleDiagnosticSize,text,length);bleDiagnosticSize+=length;
+}
+void bleFlushDiagnostic(){
+  if(!Serial)return;
+  const int room=Serial.availableForWrite();
+  if(room<=0)return;
+  const unsigned remaining=bleDiagnosticSize-bleDiagnosticAt;
+  const unsigned n=remaining<unsigned(room)?remaining:unsigned(room);
+  if(n){Serial.write(reinterpret_cast<const uint8_t*>(bleDiagnostic+bleDiagnosticAt),n);bleDiagnosticAt+=n;}
+  if(bleDiagnosticAt==bleDiagnosticSize){
+    bleDiagnosticAt=bleDiagnosticSize=0;
+    if(bleDiagnosticDropped){
+      const unsigned dropped=bleDiagnosticDropped;
+      bleDiagnosticDropped=0;
+      bleReport("diagnostics suppressed",int(dropped));
+    }
+  }
+}
+struct BleFlashIo {
+  uint8_t status(){return uint8_t(TcbDetail::status(nullptr));}
+  void command(uint8_t opcode){select();SPI.transfer(opcode);deselect();}
+  void waitUs(unsigned us){delayMicroseconds(us);}
+};
+void bleSleepFlash(){
+  if(!bleReading)return;
+  BleFlashIo flash;
+  if(!FlashPower::deepPowerDown(flash))bleReport("sleep refused",status(nullptr));
+  bleReading=false;
+}
+bool bleReadAllowed(){
+  if(!BleRuntime::active() || Tcb3Session::exclusive() || Tcb3Session::faulted() || pageOpen ||
+     Recorder::exclusive() || CompactRecorder::capturing() || !FlashWriteTest::diagnosticsAllowed()){
+    bleReport("ownership/admission conflict");return false;
+  }
+  return true;
+}
+bool bleWakeFlash(){
+  BleFlashIo flash;
+  FlashPower::release(flash);
+  bleReading=true;
+  const int s=status(nullptr);
+  if(s!=0){bleReport("wake/status failed",s);bleSleepFlash();return false;}
+  uint32_t id=0;
+  if(!storeIdentity(&id)){bleReport("JEDEC identity failed",s,id);bleSleepFlash();return false;}
+  return true;
+}
+#endif
 void storeReport(const char* text,bool includeBusyDetails=false){
   if(lineAt)return; // A partly sent line owns the buffer; never splice a new message into it.
   const auto& s=store.stats;uint64_t saved=0,seen=0;for(unsigned i=0;i<4;++i){saved+=s.committed[i];seen+=offered[i];}
@@ -195,7 +272,11 @@ bool busy(){return pending || owned || dumping || pageOpen || (locked && status(
 #endif
   ;}
 bool recording(){return owned && !finishing;}
-bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault;}
+bool faulted(){return locked || store.state()==Tcb3::State::Fault || CompactRecorder::stats().fault
+#if TACTICPOD_REUSABLE
+  || resetFailed
+#endif
+  ;}
 bool takeCleanCompletion(){bool completed=cleanCompletionPending;cleanCompletionPending=false;return completed;}
 void observation(unsigned kind){
   if(Tcb3Test::Enabled && owned && !finishing && MonotonicClock::now()-testStartedUs>=Tcb3Test::CaptureUs)stop(Tcb3::Reason::Clean);
@@ -312,6 +393,76 @@ uint32_t freeSectors(){
   const uint32_t next=store.stats.next;
   return next>=store.floor() && next<=Tcb3Test::WriteEnd?(Tcb3Test::WriteEnd-next)/Tcb3::Sector:0;
 }
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+bool bleBeginList(){
+  if(!bleReadAllowed())return false;
+  if(bleDownloading || (bleListing && !bleManifest.done())){
+    bleReport("LIST ownership conflict");return false;
+  }
+  bleListing=false;
+  if(!bleWakeFlash())return false;
+  bleManifest.begin(port,0,Tcb3Test::WriteEnd);
+  if(bleManifest.failed()){bleReport(bleManifest.errorMessage());bleSleepFlash();return false;}
+  bleListing=true;bleDownloading=false;bleReading=true;
+  return true;
+}
+bool bleService(unsigned steps){
+  bleFlushDiagnostic();
+  bool progressed=false;
+  while(steps--){
+    if(bleListing && !bleManifest.done()){
+      bleManifest.update();progressed=true;
+      if(bleManifest.failed())bleReport(bleManifest.errorMessage());
+      continue;
+    }
+    if(bleDownloading && !bleDump.done() && !bleDump.failed()){
+      unsigned length=0;
+      if(bleDump.output(length))break;
+      bleDump.update();progressed=true;
+      continue;
+    }
+    break;
+  }
+  return progressed;
+}
+bool bleListDone(){return bleListing && bleManifest.done();}
+bool bleListFailed(){return bleListing && bleManifest.failed();}
+bool bleListOverflow(){return bleListing && bleManifest.overflow();}
+uint32_t bleIncompleteCount(){return bleListing?bleManifest.incompleteCountValue():0;}
+unsigned bleSessionCount(){return bleListing?bleManifest.count():0;}
+const Tcb3::ManifestEntry* bleSession(unsigned index){
+  const Tcb3::ManifestEntry* entry=bleListing && bleManifest.done() && !bleManifest.failed()?bleManifest.entry(index):nullptr;
+  if(!entry)bleReport("manifest entry unavailable");
+  return entry;
+}
+bool bleBeginSession(uint32_t id,uint32_t epoch){
+  if(!bleReadAllowed())return false;
+  if(!bleListing || !bleManifest.done() || bleManifest.failed() || bleDownloading){
+    bleReport("GET manifest/ownership conflict");return false;
+  }
+  const Tcb3::ManifestEntry* selected=nullptr;
+  for(unsigned i=0;i<bleManifest.count();++i){
+    const Tcb3::ManifestEntry* candidate=bleManifest.entry(i);
+    if(candidate && candidate->sessionId==id && candidate->resetEpoch==epoch){selected=candidate;break;}
+  }
+  if(!selected || (selected->flags&3U)!=3U || !selected->sectorCount ||
+     uint64_t(selected->firstAddress)+uint64_t(selected->sectorCount)*Tcb3::Sector>Tcb3Test::WriteEnd)
+    return false;
+  const uint32_t end=selected->firstAddress+selected->sectorCount*Tcb3::Sector;
+  if(!bleWakeFlash())return false;
+  if(!bleDump.beginSession(port,id,selected->firstAddress,end)){
+    bleReport("export initialization failed");bleSleepFlash();return false;
+  }
+  bleDownloading=true;return true;
+}
+const uint8_t* blePacket(unsigned& length){return bleDownloading?bleDump.output(length):nullptr;}
+void bleReleasePacket(){if(bleDownloading)bleDump.release();}
+bool bleTransferDone(){return bleDownloading && bleDump.done();}
+bool bleTransferFailed(){return bleDownloading && bleDump.failed();}
+void bleFinishList(){bleSleepFlash();}
+void bleFinishSession(){bleDownloading=false;bleSleepFlash();}
+void bleCancel(){bleListing=bleDownloading=false;bleSleepFlash();}
+#endif
 void update(bool allow){
 #if TACTICPOD_REUSABLE
   if(resetting){
