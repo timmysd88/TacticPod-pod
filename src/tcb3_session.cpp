@@ -60,7 +60,7 @@ uint64_t deadline(){return finishing?stopUs+60000000:timeLimited()?testStartedUs
 bool resetting=false,resetArmed=false,resetFailed=false;uint32_t resetArmedAt=0;
 bool mutationBlocked(){return owned || pending || dumping || locked || resetting || Recorder::exclusive();}
 #endif
-constexpr uint32_t kExportReadHz=4000000; // Only TCB READ page reads; every other flash operation stays at 1 MHz.
+constexpr uint32_t kUsbExportReadHz=16000000; // Experimental; restore 4000000 for the verified USB baseline.
 void select(uint32_t hz=1000000){SPI.beginTransaction(SPISettings(hz,MSBFIRST,SPI_MODE0));digitalWrite(2,LOW);}
 void deselect(){digitalWrite(2,HIGH);SPI.endTransaction();}
 void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);}
@@ -72,10 +72,16 @@ bool exportReadActive(){
 #endif
   return fast;
 }
+uint32_t readClockHz(){
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  if(bleReading)return 4000000;
+#endif
+  return dumping?kUsbExportReadHz:1000000;
+}
 bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
   static uint8_t txBuffer[64]{}; // EasyDMA requires RAM, not a const buffer in flash.
-  select(exportReadActive()?kExportReadHz:1000000);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,n);deselect();return true;
+  select(readClockHz());SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,n);deselect();return true;
 }
 bool readPage(void*,uint32_t a,uint8_t* p){
   if(pageOpen || !exportReadActive() || owned || pending || locked || !p ||
@@ -84,7 +90,7 @@ bool readPage(void*,uint32_t a,uint8_t* p){
   if(resetting)return false;
 #endif
   static uint8_t txBuffer[Tcb3::Page]{}; // Mutable RAM: one zero-filled EasyDMA payload.
-  select(kExportReadHz);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,Tcb3::Page);deselect();return true;
+  select(readClockHz());SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,Tcb3::Page);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;

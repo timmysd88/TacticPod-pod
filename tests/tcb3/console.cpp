@@ -14,7 +14,7 @@ extern "C" unsigned bulkReadCase(unsigned fast){
     const unsigned before=SPI.bulkReads;
     if(!read(nullptr,0x1234,data+1,n))return 1;
     if(SPI.bulkReads!=before+1 || SPI.position!=n+4 || SPI.address()!=0x1234 ||
-       SPI.hz!=(fast?4000000U:1000000U) || SPI.transactionActive || SPI.violations)return 2;
+       SPI.hz!=(fast?16000000U:1000000U) || SPI.transactionActive || SPI.violations)return 2;
     if(data[0]!=0xa5 || data[n+1]!=0xa5 || memcmp(data+1,SPI.memory+0x1234,n))return 3;
   }
   const unsigned before=SPI.bulkReads;
@@ -23,7 +23,11 @@ extern "C" unsigned bulkReadCase(unsigned fast){
   pageOpen=true;
   if(read(nullptr,0,data,1))return 5;
   pageOpen=false;
-  return SPI.bulkReads!=before?6:0;
+  if(SPI.bulkReads!=before)return 6;
+  if(status(nullptr)!=0 || SPI.hz!=1000000 || SPI.violations)return 7;
+  dumping=false;
+  if(!read(nullptr,0x1234,data,64) || SPI.hz!=1000000 || SPI.violations)return 8;
+  return 0;
 }
 extern "C" unsigned consoleCase(unsigned unused){
   (void)unused;
