@@ -138,9 +138,11 @@ extern "C" unsigned integration(unsigned scenario){
   if(scenario==3){
     Tcb3Session::handleCommand("TCB READ");
     if(!Tcb3Session::guardCommand("RECORD START") || !Recorder::exporting())return 7;
-    Serial.connected=true;Serial.freeSpace=31;
+    // The pump may now write twice per update, so model USB space being consumed: 31 bytes stay the cap.
+    Serial.connected=true;Serial.freeSpace=31;Serial.consumeWriteSpace=true;
     Tcb3Session::update();Tcb3Session::update();
-    if(TcbDetail::exportSent!=31)return 18;
+    Serial.consumeWriteSpace=false;
+    if(TcbDetail::exportSent!=31 || Serial.overfilledWrites)return 18;
     Serial.connected=false;Tcb3Session::update();if(Tcb3Session::exporting())return 8;
     Tcb3Session::handleCommand("TCB READ");Serial.connected=true;Serial.freeSpace=0;captureUsb=true;
     unsigned writesBefore=SPI.programs;

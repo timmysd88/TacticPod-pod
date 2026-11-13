@@ -21,10 +21,10 @@ for path in ("src/standby_policy.h", "src/flash_power.h"):
     text = (root / path).read_text()
     assert not re.search(r"0x(06|20|02|C7|60|D8)\b", text), "standby helpers must not use erase/write opcodes"
 
-# Pin the reviewed TCB3 store, including metadata and reset-epoch scan-start updates.
+# Pin the reviewed TCB3 store, including metadata, reset-epoch scan-start updates and the aligned readPage export path.
 digests = {
-    "src/tcb3_store.cpp": "9acc4b8187ef49df6f7c9e845ffbddf540e0fa3302118d871366857ff64f5d17",
-    "src/tcb3_store.h": "730644ecb6bca73943057d34b3c3f86f143fdeddc9f6c7a4c4ae8322d522e63b",
+    "src/tcb3_store.cpp": "950d55e3e5c661bb06acd74942f61af0236563fa5e778297462a406bd0d8ab8a",
+    "src/tcb3_store.h": "814715b9b4ab5bd352f6d129baee8206b2330debfed0f66bac98ac8e39418f06",
 }
 for path, expected in digests.items():
     # Line endings are normalised so a CRLF working tree matches the committed LF blob.
