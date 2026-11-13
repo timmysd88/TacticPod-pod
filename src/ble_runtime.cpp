@@ -44,7 +44,7 @@ enum MessageType : uint8_t {
 };
 enum ErrorCode : uint16_t {
   kBadProtocol = 1, kBadCommand = 2, kNoSession = 3,
-  kManifestFailure = 4, kAckTimeout = 5, kExportFailure = 6
+  kManifestFailure = 4, kAckTimeout = 5, kExportFailure = 6, kManifestNotReady = 7
 };
 uint8_t controlQueue[16];
 uint8_t controlLength = 0;
@@ -228,7 +228,10 @@ struct Adapter {
   }
   bool startList(uint16_t id) {
     if(transfer!=TransferState::Idle)return false;
-    if(!Tcb3Session::bleBeginList()){transferId=id;queueError(kManifestFailure);return false;}
+    bool notReady=false;
+    if(!Tcb3Session::bleBeginList(&notReady)){
+      transferId=id;queueError(notReady?kManifestNotReady:kManifestFailure);return false;
+    }
     transferId=id;transfer=TransferState::Scanning;listCount=listIndex=0;listStage=0;
     messageSequence=0;totalBytes=0;haveLastAck=false;return true;
   }
@@ -375,7 +378,7 @@ struct Adapter {
       awaitingAck=false;
     }
     if(!frameReady)buildFrame();
-    if(uint32_t(now-lastAttemptAt)<100)return;
+    if(queueFailures && uint32_t(now-lastAttemptAt)<100)return;
     lastAttemptAt=now;
     if(data.notify(frame,frameLength)){
       awaitingAck=true;lastSentAt=now;++frameAttempts;queueFailures=0;

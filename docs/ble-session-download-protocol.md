@@ -85,6 +85,8 @@ Each Data notification is one fragment of a logical message:
 
 The frame is at most `min(244, negotiated MTU - 3)` bytes. A message may span multiple notifications. There is one outstanding notification fragment; the client ACKs each fragment using its transfer ID, message sequence, offset and notification CRC. Duplicate ACKs for the last accepted fragment are ignored safely. Notifications are retried up to five times, with a one-second ACK timeout. A stalled or unacknowledged transfer is abandoned rather than reported complete; the connection can remain open.
 
+After a valid ACK, the next fragment is eligible on the next foreground service call, without a fixed inter-fragment delay. Each call attempts at most one notification; only a successful BLE stack submission starts the ACK timeout. A rejected submission retains the identical frame and waits 100 ms before retrying, with at most five consecutive submission failures.
+
 Message types:
 
 | Type | Payload |
@@ -97,13 +99,21 @@ Message types:
 | `0x86 CANCELLED` | `status:u16`, currently zero. |
 | `0xff ERROR` | `errorCode:u16`. |
 
-Error codes: `1` bad protocol version/CRC, `2` malformed or unsupported command, `3` session not found/unavailable, `4` manifest failure, `5` notification/ACK timeout, `6` export failure. Invalid or out-of-order ACKs are ignored and do not reset connection activity. A second LIST/GET while another transfer is active is ignored.
+Error codes: `1` bad protocol version/CRC, `2` malformed or unsupported command, `3` session not found/unavailable, `4` manifest validation failure or admission refusal, `5` notification/ACK timeout, `6` export failure, `7` manifest cache validation pending. Invalid or out-of-order ACKs are ignored and do not reset connection activity. A second LIST/GET while another transfer is active is ignored.
 
 `SESSION_ENTRY` fields are: `sessionId:u32`, `resetEpoch:u32`, `firstAddress:u32`, `sectorCount:u32`, `formatVersion:u32`, `flags:u32`, `footerReason:u32`, `startUs:u64`, `stopUs:u64`, `deviceId:u64`, `committed[4]:u64`, `lost[4]:u64`. Flag bit 0 means the footer is sealed, bit 1 means stored pages/blocks and footer counts passed validation, and bit 2 means clean completion with no loss. The scanner reports at most 64 entries; overflow is explicit. Incomplete sessions are counted but not offered for download.
 
 ## Storage and reconstruction
 
-`LIST` performs a foreground, bounded, read-only scan of the TCB3 recording partition. It validates reset markers/epochs, header and continuation identity, each page CRC, block CRC/envelope/counts, and session footer/counts. It never calls flash program or erase operations. A reset marker causes stale pre-reset sessions to be hidden while current-epoch sessions at the reusable write boundary remain discoverable.
+`LIST` uses the existing 64-entry RAM manifest without rescanning flash. After boot recovery, the unchanged validator populates that same allocation incrementally: reset markers/epochs, header and continuation identity, each page CRC, block CRC/envelope/counts, and session footer/counts are all checked before the cache becomes ready. There is no second session table, persistent index or additional flash write.
+
+An awake idle loop performs at most one validator step when acquisition slack permits. Recording/admission/finalisation, recovery, USB export, diagnostics, identity queries and GPS/capture work have priority. No cache work runs in standby. While BLE is connected and no LIST/GET owns the manifest, up to 16 steps run per service call, waking and sleeping only external flash for that batch. Unchanged flash ownership guards apply to every batch; no transaction is held between steps.
+
+Before readiness, an otherwise admissible `LIST` immediately returns `ERROR 7` (payload `07 00`), never a successful empty inventory or a partial manifest. This previously unused code means only cold/in-progress cache validation. Background warm-up continues while awake or BLE-connected and idle. Actual validation failures, admission/ownership conflicts and serialization failures retain `ERROR 4`; validation failures remain latched until invalidation. Error framing remains the existing two-byte little-endian payload with unchanged version, UUIDs, CRCs and ACKs. Existing LIST_BEGIN status 2 remains reserved for compatibility; the cached path rejects a failed scan before LIST_BEGIN. Overflow still produces status 1 with at most 64 validated entries; incomplete sessions are counted but not offered.
+
+Accepted TCB recording and confirmed reset invalidate the cache before mutation. Legacy recording/erase admission also invalidates if enabled; reusable builds retain their existing refusal of those legacy mutations. Completion does not synthesize entries: after recovery becomes idle, the full validator rebuilds in place. Thus interrupted sessions, changed epochs and corrupt data retain the existing fail-closed rules. Cancellation discards LIST selection but preserves a ready cache while the connection remains open. BLE-mode exit/disconnect still uses the existing MCU reset, which loses the RAM cache. GET requires a fresh LIST selection on that connection and exports the indexed sector range without copying recording data.
+
+Warm LIST_BEGIN is eligible on the next BLE service call, with no flash reads. This is not a universal three-second guarantee: cold boot, a new recording/reset, validation failure and standby pauses can delay readiness substantially, and complete LIST/GET latency still depends on MTU, ACK latency and session count. The updated app ACKs ERROR 7, displays `Preparing saved recordings...`, waits two seconds and sends a fresh LIST request ID over the same connection. It retries only this validated response before LIST_BEGIN, for at most five minutes. ERROR 4 (including older firmware's ambiguous warming response), other errors, cancellation and disconnect stop preparation. Cancellation during a retry gap needs no CANCEL for the finished ERROR response; an overall deadline during an active LIST closes that connection safely. Normal session selection, GET and download validation remain unchanged. Older apps treat ERROR 7 as terminal, so automatic preparation requires both updates. Cache validity describes the last completed validation; it cannot detect subsequent spontaneous flash corruption without reading it. Clients must still validate downloaded page/block/footer CRCs.
 
 ### BLE flash power lifecycle correction
 
@@ -117,17 +127,17 @@ The host regression reproduces this failure through the production main
 entry and session code before the correction. The physical response confirms
 the pod-origin error, but its exact JEDEC/status values have not been measured.
 
-LIST and GET now check recorder/flash admission first, issue release `0xAB`,
+GET and BLE-mode background cache batches check recorder/flash admission first, issue release `0xAB`,
 wait the existing conservative 100 microseconds, require status zero
 (valid idle chip, WIP/WEL clear), and verify JEDEC identity five times before
 starting reads. GPS, IMU and the recording clocks remain suspended; this
 wakes only external NOR, not the full recording path.
 
-Flash remains awake through scan/export and the final acknowledgement.
-After LIST_END or TRANSFER_END is acknowledged, flash returns to
-deep-power-down with the existing 5 microsecond entry delay. LIST keeps its
-validated manifest in RAM, so GET on the same connection can re-wake and
-re-verify flash without re-scanning. Cancellation, transfer errors, disconnect
+Cached LIST leaves flash asleep and never issues SPI commands. BLE background
+validation returns flash to sleep after each bounded batch. During GET,
+flash remains awake through export and the final acknowledgement, then returns
+to deep-power-down with the existing 5 microsecond entry delay. GET on the same
+connection can re-wake and re-verify flash without re-scanning. Cancellation, transfer errors, disconnect
 and BLE-mode shutdown also release the read ownership and attempt safe
 power-down. A failed idle-status check never forces sleep onto a busy chip.
 The boot path still releases deep-power-down after the existing BLE-mode
@@ -149,10 +159,10 @@ and report suppression if that queue fills. They do not print per page/frame
 or wait for a serial host. Wake failure means an invalid post-release status;
 SPI cannot independently acknowledge receipt of opcode `0xAB`.
 
-Protocol error codes are unchanged. Code 4 can also mean admission
-refusal/range initialization failure, or a missing manifest entry during
-serialization. A scan that starts but later fails returns LIST_BEGIN status 2,
-not immediate ERROR 4. ACK timeout remains code 5; unavailable GET remains
+Code 7 now identifies only pending cache validation. Code 4 retains validation
+failure, admission refusal or a missing manifest entry during serialization.
+A failed background scan never produces a successful LIST.
+ACK timeout remains code 5; unavailable GET remains
 code 3. Firmware version/UUIDs, framing, checksums and ACK behavior are unchanged.
 
 `GET` uses the existing `Tcb3::Export::beginSession()` path. The TPX3 stream consists of the existing BEGIN packet, address-tagged flash-page packets, and END packet; no download-only recording format is introduced. Every TPX3 packet has its existing CRC32. Reconstructed TCB3 pages, blocks, metadata and footer are validated by the existing decoder. There is no aggregate transfer SHA-256 in protocol v2; clients must verify each BLE frame CRC, TPX3 packet CRC, and reconstructed TCB3 contents before importing.
@@ -164,6 +174,8 @@ There is no resume offset. After a disconnect, restart with `LIST` and request t
 The app should connect to the advertised service, read protocol version, subscribe to `0005`, send `LIST`, assemble/ACK every notification fragment in order, and validate the returned manifest. For each eligible session, send `GET`, concatenate the raw TPX3 packet payloads in sequence, verify the existing TPX3 decoder result, deduplicate using device serial + reset epoch + session ID, and then import through the existing TPX3 path. Send `CANCEL` to stop an active transfer. Phase 2 firmware support does not itself implement the website workflow or automatic import.
 
 Host regression: `py -3.13 tests\reusable\manifest_tests.py` tests the known physical three-session fixture, flash immutability, corruption rejection, incomplete-footer reporting, reset epochs, targeted TPX3 export, missing/corrupt transport packets and deterministic restart. `py -3.13 tests\reusable\ble_protocol_tests.py` tests CRC and framing at MTU 23 and 247. `py -3.13 tests\reusable\ble_phase1_tests.py` covers lifecycle, progress timeout and main-loop isolation. `py -3.13 -m platformio run -e tacticpod_reusable_ble` builds the opt-in target. None of these tests establish real browser interoperability, negotiated MTU, RF reliability, transfer throughput or hardware timing; those require an approved physical test.
+
+`tests\reusable\ble_cache_tests.py` exercises production session/main/manifest code for cold/ready LIST, repeated RAM-only discovery, bounded idle work, USB/recording/diagnostic contention, standby pause/resume, completed append, confirmed reset, erase refusal/invalidation, corrupted pages, interrupted sessions and overflow. It distinguishes pending validation from failures and ownership conflicts. `ble_transport_tests.py` also checks the actual adapter's ERROR-7 pending versus ERROR-4 failure framing, ACK completion and a successful subsequent LIST retry. These use modeled NOR and do not access hardware.
 
 The flash-power regressions in `ble_phase1_tests.py` additionally execute the
 real LIST/GET session functions after physical-button BLE entry with a mock

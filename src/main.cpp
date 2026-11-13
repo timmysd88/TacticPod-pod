@@ -647,6 +647,10 @@ void loop() {
     lastReadingMs = now - sampleIntervalMs;
     wasRecording = highRate;
   }
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  if(!identityRunning && !identityRequested && now-lastReadingMs<sampleIntervalMs &&
+     sampleIntervalMs-(now-lastReadingMs)>2)Tcb3Session::bleIdleService();
+#endif
   if (now - lastReadingMs < sampleIntervalMs) {
     // Compression only uses foreground slack; leave >=1ms for acquisition.
     CompactRecorder::update(sampleIntervalMs - (now - lastReadingMs) > 1);
