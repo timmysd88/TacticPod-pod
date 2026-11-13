@@ -23,12 +23,12 @@ print('PASS: USB/BLE 256-byte DMA transaction, RAM zeros, CS, alignment/end boun
 for case, name in enumerate(('unchanged recording hold/start/stop', 'advertising timeout',
                              'advertising hold cancellation', 'connected hold and inactivity',
                              'connected disconnection', 'double-tap from low-power standby',
-                             'LIST wakes sleeping flash and GET exports read-only',
-                             'failed flash wake refuses LIST', 'wrong JEDEC refuses LIST',
-                             'busy flash after wake refuses LIST', 'manifest scan failure diagnostic',
+                             'cached LIST leaves flash asleep and GET exports read-only',
+                             'failed flash wake refuses GET', 'wrong JEDEC refuses GET',
+                             'busy flash after wake refuses GET', 'cache scan failure diagnostic',
                              'recorder ownership blocks LIST', 'pending recorder blocks LIST',
                              'open page blocks LIST without touching SPI', 'recorder ownership blocks GET',
-                             'LIST cancellation sleeps flash', 'GET disconnection sleeps flash',
+                             'LIST cancellation preserves sleeping flash', 'GET disconnection sleeps flash',
                              'GET cancellation sleeps flash', 'repeated GET wakes and sleeps flash')):
     machine = Native(elf)
     machine.call('reusableInit')
