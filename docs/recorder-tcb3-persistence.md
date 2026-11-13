@@ -66,9 +66,12 @@ Each 4096-byte sector keeps page 0 as header, pages 1..14 as data, page 15 as an
 optional final footer. Writes never cross a 256-byte page boundary. Program
 transport units and ordinary reads are at most 64 bytes. The SPI adapter uses the existing
 D2 CS, D8 SCK, D9 MISO, D10 MOSI, mode 0, 1MHz and unchanged JEDEC whitelist.
-The sole exception is the `0x03` page read issued while `TCB READ` is exporting,
-which uses 4MHz (`kExportReadHz`). Status, program, erase and all other reads
-stay at 1MHz.
+The exceptions are `0x03` reads during USB `TCB READ`, which experimentally use
+16MHz (`kUsbExportReadHz`), and BLE LIST/GET reads, which retain 4MHz. This
+selection covers both 64-byte metadata reads and 256-byte data-page reads.
+Status, program, erase and all non-export reads stay at 1MHz. Each transaction
+selects its own clock; finishing or cancelling USB export cannot leave normal
+operations at the faster clock.
 Each bounded read transfers its payload in one bulk SPI call using a zero-filled,
 RAM-resident TX buffer for Nordic EasyDMA. Exports optionally read each complete,
 aligned data slot (pages 1..14) in one 256-byte bulk transfer, with opcode `0x03`,
@@ -77,13 +80,40 @@ scans, recording verification and reset/recovery retain the 64-byte path.
 Existing ports without the trailing `readPage` callback use four 64-byte reads;
 a failed callback aborts export without retry or a successful end packet.
 Status is still checked before each export update; at most one page is read per
-update (520 us of command/address/data wire time at 4MHz, excluding software and
-interrupt overhead). No frequency, ownership or write-exclusion rules change.
+update (130 us of command/address/data wire time at 16MHz, or 520 us at 4MHz,
+excluding software and interrupt overhead). Ownership and write-exclusion
+rules are unchanged.
 The benchmark below predates both bulk-transfer optimisations and is not a
 Phase 2 throughput measurement; USB and BLE transport may still be bottlenecks.
 BLE LIST/GET uses this same bounded read adapter at its existing 4MHz setting;
 BLE ownership, service budgets, GATT framing and CRC validation are unchanged.
 There is no erase callback and no protection-register modification.
+
+### Controlled 16MHz USB experiment
+
+The installed Adafruit nRF52 SPI library maps `SPI` to nRF52840 SPIM3 and
+selects `NRF_SPIM_FREQ_16M` for a 16MHz transaction. This is not a hardware
+qualification: saved JEDEC `0B4018`, legacy ID `0B17` and SFDP evidence support
+a B-compatible XTX fingerprint, not an authenticated exact part/revision;
+the reported W25Q128 marking remains inconsistent.
+
+Candidate manufacturer-authored datasheets specify `03h` maximum clocks of
+60MHz ([XT25F128B Rev 1.2, section 7.8, including rising-edge sampling](https://datasheet.lcsc.com/datasheet/pdf/8d867a672fb33d557ab1ba9942d04fab.pdf?productCode=C558846))
+and 80MHz ([XT25F128F Rev 1.2, section 6.6, falling-edge characterization](https://cdn.semikey.com/upload/pdfs/7f/97/7f97109b0187d7aa9ee7c57f038dfe1c.pdf)).
+These limits assume 2.7..3.6V and a 30pF load, with grade-specific temperature
+limits. Both require 5ns CS setup/hold, 20ns CS-high time and 2ns input
+setup/hold; maximum clock-low-to-output-valid is 6.5ns (B) or 7.5ns (F).
+At 16MHz the nominal half-period is 31.25ns, but actual duty cycle, MCU input
+timing, wiring delay/loading, supply and signal integrity remain unmeasured.
+Candidate ratings do not certify the installed chip or permit an upload.
+
+Preserve the verified Phase 3 USB ELF/HEX/ZIP outside the build directory before
+rebuilding. There is no automatic clock fallback or retry: for a later,
+separately authorised rollback, use that preserved 4MHz firmware, or restore
+`kUsbExportReadHz` to `4000000` and rebuild. Neither requires changing stored
+recordings. Until a separately authorised hardware benchmark passes byte,
+CRC, footer and flash-health checks, no 16MHz throughput or reliability claim
+is established.
 
 USB export pumps at most one existing export-engine update and two room-limited
 CDC writes per session update. A packet tail can be followed by the next packet

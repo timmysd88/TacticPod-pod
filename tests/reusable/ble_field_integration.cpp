@@ -50,7 +50,14 @@ extern "C" unsigned bulkReadCase(unsigned c){
   if(SPI.pageReads!=(expected?1u:0u) || SPI.bulkReads!=SPI.pageReads)return 3;
   if(expected && memcmp(output,SPI.memory+at,Tcb3::Page))return 4;
   if(SPI.transactionActive || SPI.violations || SPI.programs || SPI.enables || SPI.erases)return 5;
-  if(expected && (SPI.position!=260 || SPI.hz!=4000000 || mockPinLevels[2]!=HIGH))return 6;
+  if(expected){
+    const uint32_t clock=c==0?16000000:4000000;
+    if(SPI.position!=260 || SPI.hz!=clock || mockPinLevels[2]!=HIGH)return 6;
+    if(!read(nullptr,at,output,64) || SPI.hz!=clock || SPI.violations)return 7;
+    dumping=bleReading=false;
+    if(!read(nullptr,at,output,64) || SPI.hz!=1000000 || status(nullptr)!=0 ||
+       SPI.hz!=1000000 || SPI.violations)return 8;
+  }
   return 0;
 }
 
