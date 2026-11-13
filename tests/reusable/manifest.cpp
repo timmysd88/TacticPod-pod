@@ -9,17 +9,37 @@ Tcb3::Export exporter;
 uint32_t manifestLastReadAddress=0;
 int manifestTestStatus=0;
 bool manifestTestReadFailure=false;
+uint32_t exportSliceReads=0,exportPageReads=0,exportReadViolations=0,exportStatusPolls=0;
+bool exportPageFailure=false;
 
 bool readFlash(void*,uint32_t address,uint8_t* output,unsigned length){
+  ++exportSliceReads;
   manifestLastReadAddress=address;
   if(manifestTestReadFailure)return false;
   if(!length || length>64 || address>=Tcb3::End || length>Tcb3::End-address)return false;
   memcpy(output,nor+address,length);
   return true;
 }
-int flashStatus(void*){return manifestTestStatus;}
+bool readFlashPage(void*,uint32_t address,uint8_t* output){
+  ++exportPageReads;
+  const unsigned slot=(address%Tcb3::Sector)/Tcb3::Page;
+  if(address%Tcb3::Page || address>=Tcb3::End || Tcb3::Page>Tcb3::End-address || !slot || slot==15){
+    ++exportReadViolations;return false;
+  }
+  if(exportPageFailure)return false;
+  memcpy(output,nor+address,Tcb3::Page);return true;
+}
+int flashStatus(void*){++exportStatusPolls;return manifestTestStatus;}
 Tcb3::Port flash{nullptr,readFlash,nullptr,nullptr,nullptr,nullptr,flashStatus,nullptr,nullptr};
 
+extern "C" unsigned exportUsePages(unsigned enabled){
+  flash.readPage=enabled?readFlashPage:nullptr;
+  exportSliceReads=exportPageReads=exportReadViolations=exportStatusPolls=0;
+  return 0;
+}
+extern "C" unsigned exportLastSector(){
+  return exporter.beginSession(flash,Tcb3::End/Tcb3::Sector,Tcb3::End-Tcb3::Sector,Tcb3::End);
+}
 extern "C" unsigned manifestBegin(uint32_t end){
   manifest.begin(flash,0,end);
   return manifest.failed();

@@ -50,6 +50,8 @@ extern "C" unsigned switchlessCase(unsigned scenario){
   for(unsigned n=0;n<300000 && Tcb3Session::exporting();++n)cycle();
   if(Tcb3Session::exporting() || !usbSize || Serial.overfilledWrites)return 13;
   switchlessInfo[7]=usbSize; // Host compares another export via helper below.
+  switchlessInfo[8]=SPI.pageReads;
+  if(!SPI.pageReads)return 16;
   if(memcmp(protectedPrefix,SPI.memory,sizeof(protectedPrefix)) || SPI.erases || SPI.violations)return 14;
   for(unsigned a=0xfff000;a<0x1000000;++a)if(SPI.memory[a]!=0xa5)return 15;
   return 0;

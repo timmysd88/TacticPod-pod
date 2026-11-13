@@ -91,9 +91,10 @@ row=entry(machine,0)
 assert row[0]==2 and row[1]==7 and row[2]==writeStart and row[3]==2
 print('PASS: post-reset sessions start at sector one and stale pre-reset storage is excluded')
 
-def export_session():
+def export_session(pages=False):
     machine=Native(ELF)
     machine.put('nor',FIXTURE)
+    machine.call('exportUsePages',pages)
     assert machine.call('exportBegin',3)==1
     packets=bytearray()
     for _ in range(20000):
@@ -104,11 +105,15 @@ def export_session():
         if machine.call('exportDone'):break
     else:raise AssertionError('session export did not finish')
     assert not machine.call('exportFailed')
+    assert machine.word('exportPageReads')==(9*14 if pages else 0)
+    assert machine.word('exportSliceReads')==(9*(1+8) if pages else 9*(1+64))
+    assert not machine.word('exportReadViolations')
     assert machine.get('nor',len(FIXTURE))==FIXTURE,'session export modified flash bytes'
     return bytes(packets)
 
 packetStream=export_session()
 assert export_session()==packetStream,'restarted session export changed the stream'
+assert export_session(True)==packetStream,'bulk page reads changed TPX3 bytes or CRC'
 decoded,issues=decode_packets(packetStream)
 assert not issues
 image=decode_image(decoded)
@@ -129,3 +134,83 @@ try:decode_packets(bytes(damaged))
 except ValueError:pass
 else:raise AssertionError('export decoder accepted a corrupted transport packet')
 print('PASS: missing/corrupt packets are rejected; disconnect-style restart is deterministic and read-only')
+
+# Exercise the physical upper boundary without scanning every preceding sector.
+def last_sector(pages):
+    machine=Native(ELF)
+    end=0xfff000
+    data=bytearray((i*37+11)&255 for i in range(SECTOR))
+    struct.pack_into('<II',data,0,0x33485054,end//SECTOR)
+    machine.m.mem_write(machine.s['nor']+end-SECTOR,bytes(data))
+    machine.m.mem_write(machine.s['nor']+end,b'\xa5'*SECTOR)
+    machine.call('exportUsePages',pages)
+    assert machine.call('exportLastSector')
+    return machine
+
+def collect(machine):
+    packets=bytearray()
+    for _ in range(100):
+        before=machine.word('exportPageReads')
+        length=machine.call('exportStep')
+        assert machine.word('exportPageReads')-before<=1
+        if length:
+            packets.extend(machine.get('exportPacket',length))
+            machine.call('exportRelease')
+        if machine.call('exportDone'):break
+    else:raise AssertionError('bounded sector export did not finish')
+    return bytes(packets)
+
+slow=last_sector(False)
+fast=last_sector(True)
+assert collect(fast)==collect(slow)
+assert fast.word('exportPageReads')==14 and fast.word('exportSliceReads')==9
+assert slow.word('exportPageReads')==0 and slow.word('exportSliceReads')==65
+assert not fast.word('exportReadViolations')
+assert bytes(fast.m.mem_read(fast.s['nor']+0xfff000,SECTOR))==b'\xa5'*SECTOR
+print('PASS: last recording sector, first/last data pages, blank/arbitrary data, header/footer fallback and one page per update')
+
+for status in (1,2,255,0xffffffff):
+    machine=last_sector(True)
+    # Opening, selection and four header slices precede the first data page.
+    for _ in range(6):
+        machine.call('exportStep');machine.call('exportRelease')
+    assert machine.word('exportPageReads')==0
+    reads=machine.word('exportSliceReads')
+    machine.word('manifestTestStatus',status)
+    assert machine.call('exportStep')==24 and machine.call('exportFailed')
+    assert machine.get('exportPacket',6)[5]==3
+    assert machine.word('exportPageReads')==0 and machine.word('exportSliceReads')==reads
+print('PASS: busy, WEL and invalid status abort before bulk data reads')
+
+machine=last_sector(True)
+machine.word('exportPageFailure',1)
+packets=collect(machine)
+assert machine.call('exportFailed') and machine.word('exportPageReads')==1
+assert machine.word('exportSliceReads')==5,'failed page read retried through fallback'
+assert packets[-19]==3  # Final 24-byte TPX3 packet is ISSUE, never END.
+assert machine.word('exportStatusPolls')==7
+print('PASS: bulk callback failure emits ISSUE without retry, partial page or successful END')
+
+def export_epoch(pages,torn=False):
+    machine=Native(ELF)
+    machine.put('nor',resetged)
+    if torn:
+        # Matching epoch but an unsealed first header must terminate before data.
+        machine.m.mem_write(machine.s['nor']+SECTOR+248,b'\0'*4)
+    machine.call('exportUsePages',pages)
+    machine.call('exportAllBegin')
+    packets=bytearray()
+    for _ in range(200):
+        length=machine.call('exportStep')
+        if length:
+            packets.extend(machine.get('exportPacket',length))
+            machine.call('exportRelease')
+        if machine.call('exportDone'):break
+    else:raise AssertionError('epoch export did not finish')
+    assert not machine.call('exportFailed') and not machine.word('exportReadViolations')
+    assert machine.word('exportPageReads')==(28 if pages and not torn else 0)
+    return bytes(packets)
+
+assert export_epoch(True)==export_epoch(False)
+assert export_epoch(True,True)==export_epoch(False,True)
+print('PASS: whole-device exporter bulk/fallback streams match; reset epoch, stale tail and torn header behavior preserved')

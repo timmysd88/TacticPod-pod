@@ -14,6 +14,12 @@ elf = compile('tests/reusable/ble_field_integration.cpp', 'ble-field-integration
               (ROOT / 'lib/TinyGPSPlus/src/TinyGPS++.cpp',))
 seed = (ROOT / 'tests/reusable/fixtures/physical-three-sessions.bin').read_bytes()
 recorded = decode_image(seed)['sessions'][0]
+for case in range(13):
+    machine = Native(elf)
+    machine.call('reusableInit')
+    machine.m.mem_write(machine.s['SPI'], seed)
+    assert machine.call('bulkReadCase', case) == 0, ('bulk read adapter', case)
+print('PASS: USB/BLE 256-byte DMA transaction, RAM zeros, CS, alignment/end bounds and ownership guards')
 for case, name in enumerate(('unchanged recording hold/start/stop', 'advertising timeout',
                              'advertising hold cancellation', 'connected hold and inactivity',
                              'connected disconnection', 'double-tap from low-power standby',

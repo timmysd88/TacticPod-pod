@@ -32,6 +32,28 @@ StatusLed::Color ledColor(uint32_t now) { return fieldBleRuntime.ledColor(now); 
 bool returnedFromBle() { return false; }
 }
 
+extern "C" unsigned bulkReadCase(unsigned c){
+  using namespace TcbDetail;
+  static uint8_t output[Tcb3::Page];
+  uint32_t at=Tcb3::Page;
+  dumping=c==0;
+  bleReading=c!=0 && c!=11;
+  if(c==2)at=Tcb3::End-Tcb3::Page;
+  if(c==3)++at;
+  if(c==4)at=Tcb3::End;
+  if(c==5)at=0xffffff00U;
+  pageOpen=c==6;owned=c==7;pending=c==8;locked=c==9;resetting=c==10;
+  const bool expected=c<3;
+  if(!port.readPage || resetPort.readPage)return 1;
+  const bool ok=port.readPage(nullptr,at,c==12?nullptr:output);
+  if(ok!=expected)return 2;
+  if(SPI.pageReads!=(expected?1u:0u) || SPI.bulkReads!=SPI.pageReads)return 3;
+  if(expected && memcmp(output,SPI.memory+at,Tcb3::Page))return 4;
+  if(SPI.transactionActive || SPI.violations || SPI.programs || SPI.enables || SPI.erases)return 5;
+  if(expected && (SPI.position!=260 || SPI.hz!=4000000 || mockPinLevels[2]!=HIGH))return 6;
+  return 0;
+}
+
 extern "C" unsigned bleFieldCase(unsigned c) {
   // Run the existing real-main recording/stop path with the opt-in hooks enabled.
   if (c == 0) {
@@ -90,7 +112,7 @@ extern "C" unsigned bleFieldCase(unsigned c) {
     const unsigned listReads=SPI.bulkReads;
     for(unsigned n=0;n<10000 && !Tcb3Session::bleListDone();++n)Tcb3Session::bleService(16);
     if(!Tcb3Session::bleListDone())return 31;
-    if(SPI.bulkReads==listReads || SPI.hz!=4000000 || SPI.transactionActive)return 49;
+    if(SPI.bulkReads==listReads || SPI.hz!=4000000 || SPI.transactionActive || SPI.pageReads)return 49;
     if(c==10){
       if(!Tcb3Session::bleListFailed())return 32;
       if(Serial.overfilledWrites || bleDiagnosticSize==0)return 48;
@@ -115,6 +137,7 @@ extern "C" unsigned bleFieldCase(unsigned c) {
     for(unsigned run=0;run<(c==18?2u:1u);++run){
       usbSize=0;
       const unsigned before=SPI.releases;
+      const unsigned beforePages=SPI.pageReads;
       if(!Tcb3Session::bleBeginSession(id,epoch) || SPI.deepPower || SPI.releases!=before+1)return 39;
       if(c==16){
         fieldBle.link=false;runMs(30);
@@ -138,7 +161,7 @@ extern "C" unsigned bleFieldCase(unsigned c) {
         }
         if(SPI.deepPower || Tcb3Session::bleTransferFailed())return 43;
       }
-      if(!packets || !Tcb3Session::bleTransferDone())return 44;
+      if(!packets || !Tcb3Session::bleTransferDone() || SPI.pageReads-beforePages!=entry->sectorCount*14)return 44;
       Tcb3Session::bleFinishSession();
       if(!SPI.deepPower || bleReading || bleDownloading || !bleListing)return 45;
     }

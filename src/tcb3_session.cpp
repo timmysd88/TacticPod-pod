@@ -65,14 +65,26 @@ void select(uint32_t hz=1000000){SPI.beginTransaction(SPISettings(hz,MSBFIRST,SP
 void deselect(){digitalWrite(2,HIGH);SPI.endTransaction();}
 void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);}
 int status(void*){if(pageOpen)return -1;select();SPI.transfer(5);int s=SPI.transfer(0);deselect();return s;}
-bool read(void*,uint32_t a,uint8_t* p,unsigned n){
-  if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
-  static uint8_t txBuffer[64]{}; // EasyDMA requires RAM, not a const buffer in flash.
+bool exportReadActive(){
   bool fast=dumping;
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
   fast=fast||bleReading;
 #endif
-  select(fast?kExportReadHz:1000000);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,n);deselect();return true;
+  return fast;
+}
+bool read(void*,uint32_t a,uint8_t* p,unsigned n){
+  if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
+  static uint8_t txBuffer[64]{}; // EasyDMA requires RAM, not a const buffer in flash.
+  select(exportReadActive()?kExportReadHz:1000000);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,n);deselect();return true;
+}
+bool readPage(void*,uint32_t a,uint8_t* p){
+  if(pageOpen || !exportReadActive() || owned || pending || locked || !p ||
+     (a&(Tcb3::Page-1)) || a>=Tcb3::End || Tcb3::Page>Tcb3::End-a)return false;
+#if TACTICPOD_REUSABLE
+  if(resetting)return false;
+#endif
+  static uint8_t txBuffer[Tcb3::Page]{}; // Mutable RAM: one zero-filled EasyDMA payload.
+  select(kExportReadHz);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,Tcb3::Page);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
@@ -120,9 +132,9 @@ bool resetProgram(void*,uint32_t a,const uint8_t* p,unsigned n){
   select();SPI.transfer(2);address(0);for(unsigned i=0;i<n;++i)SPI.transfer(p[i]);deselect();return true;
 }
 Tcb3::Port resetPort{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,resetProgram,resetErase};
-Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale,readPage};
 #else
-Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,nullptr,readPage};
 #endif
 bool storeIdentity(uint32_t* observedId=nullptr){
   for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();
