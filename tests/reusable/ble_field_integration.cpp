@@ -32,6 +32,13 @@ StatusLed::Color ledColor(uint32_t now) { return fieldBleRuntime.ledColor(now); 
 bool returnedFromBle() { return false; }
 }
 
+bool warmBleCache(){
+  using namespace TcbDetail;
+  for(unsigned n=0;n<200000 &&
+      (manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning);++n)cycle();
+  return manifestCache==ManifestCache::Ready;
+}
+
 extern "C" unsigned bulkReadCase(unsigned c){
   using namespace TcbDetail;
   static uint8_t output[Tcb3::Page];
@@ -70,6 +77,7 @@ extern "C" unsigned bleFieldCase(unsigned c) {
   Serial.connected = c != 5;
   setup(); startupPending = false; waitIdle(); runMs(3500);
   if (c == 5 && !standbyPolicy.inStandby()) return 1;
+  if(c>=6 && !warmBleCache())return 52;
   // Deliberate taps exercise the actual 50/10 ms polling and release debounce.
   mockButtonLow = true; runMs(120);
   mockButtonLow = false; runMs(150);
@@ -89,18 +97,18 @@ extern "C" unsigned bleFieldCase(unsigned c) {
     if(c==7)SPI.failRelease=true;
     if(c==8)SPI.wrongId=true;
     if(c==9)SPI.stuckBusy=true;
-    if(c==10)SPI.memory[0]='?';
+    if(c==10){
+      SPI.memory[0]='?';Tcb3Session::invalidateBleManifest();Serial.freeSpace=0;
+      Tcb3Session::bleService(16);
+      if(Tcb3Session::bleBeginList() || manifestCache!=ManifestCache::Failed || bleReading || bleListing)return 32;
+      if(Serial.overfilledWrites || bleDiagnosticSize==0)return 48;
+      Serial.freeSpace=7;
+      for(unsigned i=0;i<80;++i)Tcb3Session::bleService(0);
+      return strstr(Serial.output,"unrecognised sector-zero state") && SPI.deepPower?0:33;
+    }
     if(c==11)owned=true;
     if(c==12)pending=true;
     if(c==13)pageOpen=true;
-    if(c>=7 && c<=9){
-      if(Tcb3Session::bleBeginList() || bleReading || bleListing)return 23;
-      for(unsigned i=0;i<20;++i)Tcb3Session::bleService(0);
-      if(!strstr(Serial.output,c==8?"JEDEC identity failed":"wake/status failed"))return 24;
-      if(c==8 && !SPI.deepPower)return 25;
-      if(SPI.releases!=releases+1 || (c!=8 && SPI.jedecReads!=identities))return 47;
-      return SPI.programs || SPI.enables || SPI.erases || SPI.wakeDelayViolations?26:0;
-    }
     if(c>=11 && c<=13){
       if(Tcb3Session::bleBeginList() || SPI.releases!=releases || SPI.jedecReads!=identities)return 27;
       owned=pending=pageOpen=false;
@@ -108,33 +116,31 @@ extern "C" unsigned bleFieldCase(unsigned c) {
       return strstr(Serial.output,"ownership/admission conflict")?0:28;
     }
     if (!Tcb3Session::bleBeginList()) return 21;
-    if (SPI.deepPower || SPI.asleepAccesses) return 22;
-    if(SPI.releases!=releases+1 || SPI.jedecReads!=identities+5 || SPI.wakeDelayViolations)return 29;
+    if (!SPI.deepPower || SPI.asleepAccesses) return 22;
+    if(SPI.releases!=releases || SPI.jedecReads!=identities || SPI.wakeDelayViolations)return 29;
     if(c==15){
       Tcb3Session::bleCancel();
       return !SPI.deepPower || bleReading || bleListing?30:0;
     }
     if(c==6)Serial.connected=false;
-    if(c==10)Serial.freeSpace=0;
     const unsigned listReads=SPI.bulkReads;
     for(unsigned n=0;n<10000 && !Tcb3Session::bleListDone();++n)Tcb3Session::bleService(16);
     if(!Tcb3Session::bleListDone())return 31;
-    if(SPI.bulkReads==listReads || SPI.hz!=4000000 || SPI.transactionActive || SPI.pageReads)return 49;
-    if(c==10){
-      if(!Tcb3Session::bleListFailed())return 32;
-      if(Serial.overfilledWrites || bleDiagnosticSize==0)return 48;
-      Serial.freeSpace=7;
-      for(unsigned i=0;i<50;++i)Tcb3Session::bleService(0);
-      if(!strstr(Serial.output,"unrecognised sector-zero state"))return 33;
-      Tcb3Session::bleFinishList();
-      return SPI.deepPower && !bleReading?0:34;
-    }
+    if(SPI.bulkReads!=listReads || SPI.transactionActive || SPI.pageReads)return 49;
     if(Tcb3Session::bleListFailed() || Tcb3Session::bleSessionCount()!=3)return 35;
     Tcb3Session::bleFinishList();
     if(!SPI.deepPower || bleReading || !bleListing)return 36;
     const Tcb3::ManifestEntry* entry=Tcb3Session::bleSession(0);
     if(!entry)return 37;
     const uint32_t id=entry->sessionId,epoch=entry->resetEpoch;
+    if(c>=7 && c<=9){
+      if(Tcb3Session::bleBeginSession(id,epoch) || bleReading || bleDownloading)return 23;
+      for(unsigned i=0;i<20;++i)Tcb3Session::bleService(0);
+      if(!strstr(Serial.output,c==8?"JEDEC identity failed":"wake/status failed"))return 24;
+      if(c==8 && !SPI.deepPower)return 25;
+      if(SPI.releases!=releases+1 || (c!=8 && SPI.jedecReads!=identities))return 47;
+      return SPI.programs || SPI.enables || SPI.erases || SPI.wakeDelayViolations?26:0;
+    }
     if(c==14){
       owned=true;
       if(Tcb3Session::bleBeginSession(id,epoch) || !SPI.deepPower)return 38;

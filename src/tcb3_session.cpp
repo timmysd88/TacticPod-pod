@@ -19,6 +19,8 @@ namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
 Tcb3::Manifest bleManifest;Tcb3::Export bleDump;
+enum class ManifestCache:uint8_t {Cold,Scanning,Ready,Failed};
+ManifestCache manifestCache=ManifestCache::Cold;
 bool bleReading=false,bleListing=false,bleDownloading=false;
 char bleDiagnostic[256]{};
 unsigned bleDiagnosticSize=0,bleDiagnosticAt=0,bleDiagnosticDropped=0;
@@ -216,6 +218,30 @@ bool bleWakeFlash(){
   if(!storeIdentity(&id)){bleReport("JEDEC identity failed",s,id);bleSleepFlash();return false;}
   return true;
 }
+bool cacheIdle(){
+  return !Tcb3Session::exclusive() && !Tcb3Session::faulted() && !pageOpen &&
+    !Recorder::exclusive() && !CompactRecorder::capturing() &&
+    !RamObservations::capturing() && !RamObservations::fastImu() &&
+    !GpsReceiver::busy() && FlashWriteTest::diagnosticsAllowed();
+}
+void updateManifestCache(unsigned steps,bool sleepAfter){
+  if(!steps || manifestCache==ManifestCache::Ready || manifestCache==ManifestCache::Failed ||
+     bleListing || bleDownloading || !cacheIdle())return;
+  if(sleepAfter){
+    if(!bleWakeFlash()){manifestCache=ManifestCache::Failed;return;}
+  }else if(manifestCache==ManifestCache::Cold && !storeIdentity()){
+    bleReport("cache identity/status failed");manifestCache=ManifestCache::Failed;return;
+  }
+  if(manifestCache==ManifestCache::Cold){
+    bleManifest.begin(port,0,Tcb3Test::WriteEnd);manifestCache=ManifestCache::Scanning;
+  }
+  while(steps-- && !bleManifest.done())bleManifest.update();
+  if(bleManifest.done()){
+    manifestCache=bleManifest.failed()?ManifestCache::Failed:ManifestCache::Ready;
+    if(bleManifest.failed())bleReport(bleManifest.errorMessage());
+  }
+  if(sleepAfter)bleSleepFlash();
+}
 #endif
 void storeReport(const char* text,bool includeBusyDetails=false){
   if(lineAt)return; // A partly sent line owns the buffer; never splice a new message into it.
@@ -272,6 +298,9 @@ void batteryEvent(unsigned action){
 namespace Tcb3Session {
 using namespace TcbDetail;
 void begin(bool ready){storeImuReady=ready;
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  invalidateBleManifest();
+#endif
 #if TACTICPOD_REUSABLE
   BatteryRuntime::begin();RamObservations::handleCommand("OBS STOP");
 #endif
@@ -354,6 +383,9 @@ bool handleCommand(const char* p){
       return true;
     }
     if(!armed){storeReport("REFUSED: send RECORD RESET first, then RECORD RESET CONFIRM within 30 s");return true;}
+#if TACTICPOD_BLE
+    invalidateBleManifest();
+#endif
     resetting=true;resetFailed=false;resetEngine.begin(resetPort,millis());
     storeReport("RESET started; flash busy until complete");return true;
   }
@@ -388,6 +420,9 @@ bool handleCommand(const char* p){
 #if TACTICPOD_REUSABLE
   sessionUnlimited=configuredUnlimited || buttonRequest;buttonRequest=false;
   if(!GpsReceiver::prepareRecording()){storeReport("REFUSED: GPS diagnostics busy");return true;}
+#if TACTICPOD_BLE
+  invalidateBleManifest();
+#endif
   waitingGps=true;gpsWaitAt=millis();pending=true;
   storeReport("START waiting for fresh GPS RAM readback; no capture/writes");return true;
 #else
@@ -413,27 +448,32 @@ uint32_t freeSectors(){
   return next>=store.floor() && next<=Tcb3Test::WriteEnd?(Tcb3Test::WriteEnd-next)/Tcb3::Sector:0;
 }
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
-bool bleBeginList(){
+void invalidateBleManifest(){
+  manifestCache=ManifestCache::Cold;bleListing=false;
+}
+void bleIdleService(){
+  if(!BleRuntime::active())updateManifestCache(1,false);
+}
+bool bleBeginList(bool* notReady){
+  if(notReady)*notReady=false;
   if(!bleReadAllowed())return false;
-  if(bleDownloading || (bleListing && !bleManifest.done())){
+  if(bleDownloading){
     bleReport("LIST ownership conflict");return false;
   }
-  bleListing=false;
-  if(!bleWakeFlash())return false;
-  bleManifest.begin(port,0,Tcb3Test::WriteEnd);
-  if(bleManifest.failed()){bleReport(bleManifest.errorMessage());bleSleepFlash();return false;}
-  bleListing=true;bleDownloading=false;bleReading=true;
+  if(manifestCache!=ManifestCache::Ready){
+    if(notReady)*notReady=manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning;
+    bleReport(manifestCache==ManifestCache::Failed?"cache validation failed":"cache not ready; retry LIST");
+    return false;
+  }
+  bleListing=true;bleDownloading=false;
   return true;
 }
 bool bleService(unsigned steps){
   bleFlushDiagnostic();
+  if(!BleRuntime::active())return false;
+  if(!bleListing && !bleDownloading){updateManifestCache(steps,true);return false;}
   bool progressed=false;
   while(steps--){
-    if(bleListing && !bleManifest.done()){
-      bleManifest.update();progressed=true;
-      if(bleManifest.failed())bleReport(bleManifest.errorMessage());
-      continue;
-    }
     if(bleDownloading && !bleDump.done() && !bleDump.failed()){
       unsigned length=0;
       if(bleDump.output(length))break;
@@ -444,19 +484,19 @@ bool bleService(unsigned steps){
   }
   return progressed;
 }
-bool bleListDone(){return bleListing && bleManifest.done();}
-bool bleListFailed(){return bleListing && bleManifest.failed();}
-bool bleListOverflow(){return bleListing && bleManifest.overflow();}
-uint32_t bleIncompleteCount(){return bleListing?bleManifest.incompleteCountValue():0;}
-unsigned bleSessionCount(){return bleListing?bleManifest.count():0;}
+bool bleListDone(){return bleListing && manifestCache==ManifestCache::Ready;}
+bool bleListFailed(){return manifestCache==ManifestCache::Failed;}
+bool bleListOverflow(){return bleListDone() && bleManifest.overflow();}
+uint32_t bleIncompleteCount(){return bleListDone()?bleManifest.incompleteCountValue():0;}
+unsigned bleSessionCount(){return bleListDone()?bleManifest.count():0;}
 const Tcb3::ManifestEntry* bleSession(unsigned index){
-  const Tcb3::ManifestEntry* entry=bleListing && bleManifest.done() && !bleManifest.failed()?bleManifest.entry(index):nullptr;
+  const Tcb3::ManifestEntry* entry=bleListDone()?bleManifest.entry(index):nullptr;
   if(!entry)bleReport("manifest entry unavailable");
   return entry;
 }
 bool bleBeginSession(uint32_t id,uint32_t epoch){
   if(!bleReadAllowed())return false;
-  if(!bleListing || !bleManifest.done() || bleManifest.failed() || bleDownloading){
+  if(!bleListDone() || bleDownloading){
     bleReport("GET manifest/ownership conflict");return false;
   }
   const Tcb3::ManifestEntry* selected=nullptr;

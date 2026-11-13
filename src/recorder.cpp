@@ -212,6 +212,9 @@ bool handleCommand(const char* line) {
     eraseArmed = false;
     if (!authorised) { Serial.println("Erase refused: first send RECORD ERASE and read its warning."); return true; }
     if (!identity()) { fault("JEDEC changed before confirmed erase"); return true; }
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+    Tcb3Session::invalidateBleManifest();
+#endif
     sector = 0; stage = Stage::Erase; Serial.println("Confirmed recording-area sector erase started."); return true;
   }
   eraseArmed = false;
@@ -225,6 +228,9 @@ bool handleCommand(const char* line) {
   if (!imuAvailable) { Serial.println("RECORD START refused: IMU initialisation failed."); return true; }
   if (nextSector >= kEnd) { Serial.println("Recording area full. Export first; overwrite requires RECORD ERASE then RECORD ERASE CONFIRM."); return true; }
   if (!identity()) { fault("JEDEC changed before recording"); return true; }
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  Tcb3Session::invalidateBleManifest();
+#endif
   sector = nextSector; session = sector / kSectorSize + 1; sectorSequence = 0;
   startMs = millis(); committed = lost = missed = pageSequence = 0;
   qHead = qTail = qCount = pageSamples = 0; checkOffset = 0;

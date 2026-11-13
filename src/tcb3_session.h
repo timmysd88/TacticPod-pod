@@ -26,7 +26,9 @@ bool guardCommand(const char*);
 void observation(unsigned kind);
 void noteMissed(uint32_t);
 #if TACTICPOD_BLE
-bool bleBeginList();
+void bleIdleService();
+void invalidateBleManifest();
+bool bleBeginList(bool* notReady=nullptr);
 bool bleService(unsigned steps);
 bool bleListDone();
 bool bleListFailed();
