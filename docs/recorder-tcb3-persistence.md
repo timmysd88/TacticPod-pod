@@ -85,6 +85,15 @@ BLE LIST/GET uses this same bounded read adapter at its existing 4MHz setting;
 BLE ownership, service budgets, GATT framing and CRC validation are unchanged.
 There is no erase callback and no protection-register modification.
 
+USB export pumps at most one existing export-engine update and two room-limited
+CDC writes per session update. A packet tail can be followed by the next packet
+head in the same pass; the immutable export packet remains the only buffer.
+Short/zero writes and a full FIFO return control without waiting. Reads still
+require foreground slack; disconnect cancels the stream and a new READ restarts
+at BEGIN. This adds no static RAM and does not change BLE scheduling, SPI clocks
+or TPX3 framing. FIFO-model tests measure scheduling-pass reduction only; a new
+hardware benchmark is required to establish actual USB throughput.
+
 ## 4MHz export benchmark
 
 On one TacticPod prototype, three consecutive exports of the same stored session

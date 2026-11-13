@@ -530,12 +530,23 @@ void update(bool allow){
   if(dumping){
     if(!Serial){dumping=false;exportSent=0;return;}
     if(lineAt){flushLine();return;} // Binary packets start only after any partly sent text line has its newline.
-    // Packet is immutable; USB writes may split it without blocking.
-    unsigned n=0;const uint8_t* p=dump.output(n);
-    if(p){int room=Serial.availableForWrite();unsigned k=room>0?unsigned(room):0;if(k>n-exportSent)k=n-exportSent;
-      if(k)exportSent+=Serial.write(p+exportSent,k);
-      if(exportSent==n){dump.release();exportSent=0;}}
-    else if(allow)dump.update();
+    // One bounded read/update and at most two writes: a packet tail can share
+    // this pass with the next packet's head, without another packet buffer.
+    bool prepared=false;
+    for(unsigned writes=0;writes<2;++writes){
+      if(!Serial){dumping=false;exportSent=0;return;}
+      unsigned n=0;const uint8_t* p=dump.output(n);
+      if(!p){
+        if(!allow || prepared || dump.done())break;
+        dump.update();prepared=true;p=dump.output(n);
+        if(!p)break;
+      }
+      const int room=Serial.availableForWrite();if(room<=0)break;
+      unsigned k=unsigned(room);if(k>n-exportSent)k=n-exportSent;
+      exportSent+=Serial.write(p+exportSent,k);
+      if(exportSent<n)break;
+      dump.release();exportSent=0;
+    }
     if(dump.done()){dumping=false;exportSent=0;}return;
   }
   if(allow && !locked && (pending || owned)){

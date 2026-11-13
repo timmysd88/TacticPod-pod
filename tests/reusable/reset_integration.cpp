@@ -218,6 +218,71 @@ extern "C" unsigned usbCase(unsigned mode){
   resetInfo[22]=usbSize;
   return done && !Serial.overfilledWrites?0:1;
 }
+// Phase 2 schedule for an A/B comparison using the same FIFO and SPI model.
+static void phase2UsbUpdate(){
+  unsigned n=0;const uint8_t* p=dump.output(n);
+  if(p){
+    const int room=Serial.availableForWrite();
+    unsigned k=room>0?unsigned(room):0;if(k>n-exportSent)k=n-exportSent;
+    if(k)exportSent+=Serial.write(p+exportSent,k);
+    if(exportSent==n){dump.release();exportSent=0;}
+  }else dump.update();
+  if(dump.done()){dumping=false;exportSent=0;}
+}
+uint32_t usbPumpInfo[8]{};
+// 0/1: Phase 2/pump draining 64 B/pass; 6/7: draining 256 B/pass.
+// 2: short/zero writes and stalled FIFO; 3/4: disconnect; 5: no read permission.
+extern "C" unsigned usbPumpCase(unsigned mode){
+  bootDevice();captureUsb=true;
+  Serial.consumeWriteSpace=true;
+  SerialConsole::handleCommand("TCB READ");
+  if(!dumping)return 1;
+  unsigned passes=0,maxReads=0,maxWrites=0,stalls=0,full=0;
+  for(;passes<100000 && dumping;++passes){
+    if(mode==2){
+      Serial.writeLimit=passes%11?7:0;
+      // Model a host that stops draining for 64 passes out of every 96.
+      if(passes%96<32){if(Serial.freeSpace<192)Serial.freeSpace+=64;else Serial.freeSpace=256;}
+      else ++stalls;
+    }else{
+      if(mode>=6)Serial.freeSpace=256;
+      else if(Serial.freeSpace<192)Serial.freeSpace+=64;else Serial.freeSpace=256;
+    }
+    if(!Serial.freeSpace)++full;
+    const unsigned reads=SPI.bulkReads,writes=Serial.writeCalls;
+    if(mode==0 || mode==6)phase2UsbUpdate();else Tcb3Session::update();
+    const unsigned rd=SPI.bulkReads-reads,wr=Serial.writeCalls-writes;
+    if(rd>maxReads)maxReads=rd;if(wr>maxWrites)maxWrites=wr;
+    if(mode>=3 && mode<=5 && usbSize>40 && exportSent){
+      Serial.freeSpace=256;
+      if(mode==3)Serial.connected=false;
+      if(mode==4){Serial.disconnectOnWrite=true;Serial.writeLimit=7;}
+      if(mode==5){
+        Serial.freeSpace=256;
+        const unsigned readBefore=SPI.bulkReads;
+        Tcb3Session::update(false);
+        if(SPI.bulkReads!=readBefore)return 2;
+        unsigned length=0;dump.output(length);
+        if(!dumping || exportSent || length)return 3; // Sent tail, but did not prepare a new packet.
+        return 0;
+      }
+      Tcb3Session::update();
+      const unsigned readBefore=SPI.bulkReads,bytesBefore=usbSize;
+      Tcb3Session::update(); // Mid-write disconnection must cancel by the next call.
+      if(dumping || exportSent || SPI.bulkReads!=readBefore || usbSize!=bytesBefore)return 4;
+      Serial.connected=true;Serial.disconnectOnWrite=false;Serial.writeLimit=~size_t(0);
+      Serial.freeSpace=256;clearOutput();
+      SerialConsole::handleCommand("TCB READ");
+      if(!dumping)return 5;
+      // Restart is a new TPX3 stream, never the unsent tail of the cancelled one.
+      mode=1;passes=0;maxReads=maxWrites=0;
+    }
+  }
+  captureUsb=false;
+  usbPumpInfo[0]=passes;usbPumpInfo[1]=usbSize;usbPumpInfo[2]=maxReads;usbPumpInfo[3]=maxWrites;usbPumpInfo[4]=stalls;usbPumpInfo[5]=full;
+  if(dumping || Serial.overfilledWrites || SPI.violations || SPI.programs || SPI.enables || SPI.erases)return 6;
+  return maxReads>1 || maxWrites>2?7:0;
+}
 // DIAG ID after a latched fault. 0: flash idle. 1: flash still busy, then idle. 2: fault line partly sent when DIAG ID arrives.
 extern "C" unsigned diagAfterFault(unsigned mode){
   bootDevice();noiseEnabled=0;duration(3);
