@@ -38,7 +38,7 @@ struct MockSPI {
     empty = 0xFF; return empty;
   }
   void begin() {}
-  void beginTransaction(SPISettings settings) { if(transactionActive)++violations;transactionActive=true;position = 0; hz = settings.hz; if (hz != 1000000 && hz != 4000000) ++violations; }
+  void beginTransaction(SPISettings settings) { if(transactionActive)++violations;transactionActive=true;position = 0; hz = settings.hz; if (hz != 1000000 && hz != 4000000 && hz != 16000000) ++violations; }
   uint32_t address() const { return uint32_t(tx[1]) << 16 | uint32_t(tx[2]) << 8 | tx[3]; }
   uint8_t transfer(uint8_t value) {
 #ifdef TCB_SIM_SPI_TRANSFER
@@ -47,7 +47,7 @@ struct MockSPI {
     const unsigned i = position++;
     if (i < sizeof(tx)) tx[i] = value; else ++violations;
     if (i == 0) {
-      if (hz != 1000000 && value != 0x03) ++violations; // 4 MHz is only for export reads.
+      if (hz != 1000000 && value != 0x03) ++violations; // Faster clocks are only for export reads.
 #if TACTICPOD_REUSABLE
       if(wakePending && value!=0xAB){
         if(int32_t(mockTime*1000+mockSubUs-wakeReadyUs)<0)++wakeDelayViolations;
@@ -82,7 +82,7 @@ struct MockSPI {
       ++pageReads;
       const uintptr_t dmaTx=reinterpret_cast<uintptr_t>(txBuffer);
       // Native maps 64 MiB of RAM to hold the modeled 16 MiB NOR, not just device SRAM.
-      if(hz!=4000000 || (address()&255) || address()>=0xfff000 ||
+      if((hz!=4000000 && hz!=16000000) || (address()&255) || address()>=0xfff000 ||
          dmaTx<0x20000000 || dmaTx+count>0x24000000 || mockPinLevels[2]!=LOW)++violations;
     }
     ++bulkReads;
