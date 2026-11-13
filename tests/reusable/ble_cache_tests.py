@@ -24,7 +24,7 @@ def run(name, data=seed, expected=(0, 3, 0, 0)):
     print('PASS:', name, expected, flush=True)
 
 for case in ('cacheReadyCase', 'cacheContentionCase', 'cacheStandbyCase',
-             'cacheAppendCase', 'cacheResetCase', 'cacheEraseGuardCase'):
+             'cacheAppendCase', 'cacheResetCase', 'cacheEraseGuardCase', 'cachePerformanceCase'):
     run(case)
 
 damaged = bytearray(seed)

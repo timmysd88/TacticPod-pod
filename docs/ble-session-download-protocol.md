@@ -1,6 +1,6 @@
 # BLE session download protocol
 
-Status: implemented in the opt-in `tacticpod_reusable_ble` build. On 2026-11-11 the corrected diagnostic firmware (`37d4510`) was physically confirmed to boot, reach healthy recorder/TCB idle status, activate Bluetooth by double-tap, and connect through nRF Connect. This validates startup/connection, not an end-to-end session download. The GATT correction is also included in this non-diagnostic Phase 2 build; temporary boot checkpoints are not. The default and reusable USB environments, TacticPod-app, production data and recordings are unchanged.
+Status: implemented in the opt-in `tacticpod_reusable_ble` build. On 2026-11-11 the corrected diagnostic firmware (`37d4510`) was physically confirmed to boot, reach healthy recorder/TCB idle status, activate Bluetooth by double-tap, and connect through nRF Connect. This validates startup/connection, not the performance instrumentation described below. The GATT correction is also included in this Phase 2 build; temporary boot checkpoints are not. The default and reusable USB environments, production data and recordings are unchanged.
 
 ## GATT
 
@@ -13,6 +13,7 @@ The device advertises as `TacticPod` for 180 seconds after the existing double-t
 | `0004` | Control | Write with response; versioned command packets below. |
 | `0005` | Data | Subscribe to notifications before sending a list/download command. |
 | `0006` | Protocol version | Read two bytes: `[2, 0]`. |
+| `0007` | Optional performance snapshot | Read-only, 176 bytes; independent version 1 layout below. |
 
 Standard Device Information Service exposes manufacturer `TacticPod`, model `XIAO nRF52840 Sense`, the FICR-derived serial number, and firmware revision `ble-download-2`. GATT is open and unbonded. Existing pairing rejection, battery and activity behavior remain in place.
 
@@ -26,7 +27,8 @@ name and numeric error before the existing aggregate error/reset path.
 
 The linked Bluefruit regression rejects the original Data metadata with error
 7 (`NRF_ERROR_INVALID_PARAM`) using a model of the documented writable-CCCD
-constraint, then accepts all five corrected characteristics. It checks UUIDs,
+constraint, then accepts the five corrected transfer characteristics and optional
+performance characteristic. It checks UUIDs,
 properties, security and lengths; it does not emulate proprietary SoftDevice
 resource allocation or radio operation. The physical diagnostic test confirmed
 that initialization now reaches advertising and connection.
@@ -38,11 +40,14 @@ that initialization now reaches advertising and connection.
 | Control | Write | No access / Open | Variable, maximum 16 |
 | Data | Notify | Open / No access | Variable, maximum 244; writable CCCD |
 | Protocol version | Read | Open / No access | Fixed 2 |
+| Performance snapshot | Read, authorized in foreground | Open / No access | Fixed 176 |
 
 Initialization order remains Device Information Service, custom service, then
-Activity, Battery, Control, Data and Protocol version. All six custom UUIDs
-share one vendor-specific base. UUIDs, packet formats, connection configuration,
-button timing and recording behavior are unchanged. The production branch does
+Activity, Battery, Control, Data and Protocol version, followed by the optional
+Performance snapshot. All seven custom UUIDs share one vendor-specific base.
+Existing UUIDs, packet formats, connection configuration, button timing and
+recording behavior are unchanged. Failure to add the optional characteristic is
+reported on serial and does not fail the existing transfer service. The production branch does
 not include the diagnostic environment, retained boot structure or `BOOT STATUS`;
 named GATT errors are retained because they are bounded failure-path reporting.
 
@@ -55,6 +60,124 @@ paths honor `PLATFORMIO_BUILD_DIR` so existing firmware packages are not rebuilt
 or overwritten during isolated validation.
 
 The peripheral permits ATT MTU up to 247 while retaining the minimum connection-event length and one-entry notification/write-command queues. Actual MTU is negotiated by the browser/OS and can remain 23; every notification is sized to the negotiated MTU. The corrected non-diagnostic target build uses 140,992 / 237,568 B RAM (59.3%) and 316,892 / 811,008 B application flash (39.1%). This is a link-time measurement only; runtime heap, radio throughput and physical power/timing have not been measured.
+
+## Optional performance diagnostics
+
+These are measurements, not throughput optimizations. Protocol 2, CRC checking,
+ACK/retry decisions, cache validation, recording, flash writes/erases and the USB
+16 MHz read/pump paths are unchanged. No per-fragment serial output, persistent
+telemetry, reset command or extra flash reads are added.
+
+The optional `0007` characteristic returns a coherent snapshot on demand.
+Read authorization is queued to foreground service; offset zero captures the
+176-byte value and subsequent ATT long-read offsets reuse that frozen value,
+including at MTU 23. A new offset-zero read refreshes it. Read only while the
+client is idle, after LIST/GET/ACK operations have finished; there is no periodic
+publication delay or diagnostic notification stream.
+
+Counters occupy fixed RAM and are per boot. BLE exit/disconnect resets the MCU,
+so capture them **before disconnecting**. Cache-specific fields reset when the
+existing manifest is invalidated. Additive counters saturate instead of wrapping;
+offset 172 reports saturation. Short duration measurements use unsigned clock
+differences, including across a clock rollover.
+
+All fields are little-endian; `u64` counters should remain BigInt in JavaScript.
+
+| Offset | Type | Meaning |
+|---:|---|---|
+| 0 | 4 bytes | ASCII `TPD1` |
+| 4, 6 | u16 each | Snapshot version 1, total size 176 |
+| 8 | u32 | Flags: connected 1, scanning 2, ready 4, failed 8, any LIST_BEGIN 16 |
+| 12 | u16 | Actual connection ATT MTU; 0 means unobserved |
+| 14, 16 | u16 each | Notification value capacity `min(244, MTU-3)`, fragment payload capacity minus 15-byte overhead |
+| 18 | u16 | Last successfully submitted fragment payload bytes |
+| 20 | u32 | Elapsed ms since first foreground observation of this connection |
+| 24 | u32 | Current/latest cache wall time ms, including scheduling/standby pauses |
+| 28, 32 | u32 each | Validator steps; cache state: cold 0, scanning 1, ready 2, failed 3 |
+| 36 | u32 | Accepted LIST command count, including ERROR-7 retries |
+| 40 | u32 | Latest LIST receipt to first LIST_BEGIN notification submission, us |
+| 44 | u32 | First LIST since previous LIST_BEGIN to LIST_BEGIN, ms, including ERROR-7 retries |
+| 48, 52 | u32 each | Accepted notification fragments; matching ACKs |
+| 56, 60 | u32 each | Accepted retransmissions; rejected notification submissions |
+| 64, 68 | u32 each | ACK timeouts; valid duplicate ACKs |
+| 72, 76 | u32 each | Unambiguous ACK RTT samples; ACKs after retransmission |
+| 80 | u64 | ACK RTT total us, excluding ACKs after retransmission |
+| 88, 92 | u32 each | ACK RTT minimum/maximum us |
+| 96, 104 | u64, u32 | Notification-call total/maximum us, including queue blocking and failed calls |
+| 108, 112 | u32, u64 | Flash data-read calls and bytes |
+| 120, 128 | u64, u32 | Flash data-read total/maximum us |
+| 132 | u64 | Unique acknowledged message-payload bytes, excluding BLE headers |
+| 140 | u64 | Accepted notification-value bytes, including headers and retransmissions |
+| 148 | u32 | Connection observation to first LIST_BEGIN submission, ms |
+| 152 | u64 | Validator-step service total us, including data I/O |
+| 160 | u64 | Cache flash data-read us; subset of offset 152 |
+| 168, 172 | u32 each | Snapshot uptime ms; saturation indicator |
+
+LIST receipt is timestamped in the control callback, before foreground parsing;
+LIST_BEGIN ends at successful stack submission, not over-air delivery. A
+LIST_BEGIN retry does not overwrite that measurement. Fields 40/44/148 are valid
+after flag 16 is set. Connection observation is not the exact radio connect
+event. MTU/capacities are taken from the actual connection; received frame size
+alone never establishes negotiated MTU.
+
+ACK RTT starts when the accepted notification call returns and ends when its
+matching ACK is processed in foreground. It includes radio/browser/ACK-write
+and foreground scheduling delay; it is not pure radio airtime. Retransmitted
+frames cannot identify which send produced an ACK, so those ACKs are counted
+separately and excluded from RTT. Accepted fragments include retransmissions,
+while acknowledged payload bytes count each accepted matching ACK once.
+
+Cache wall time starts with the first validator batch after identity admission,
+and freezes on completion/failure. Flash timing encloses existing data-read
+transactions, including command/address/CS overhead, during cache steps or BLE
+export only. USB exports and ordinary recording are excluded. Status/JEDEC/power
+commands are not classified as data reads. Validator-step time includes its
+data I/O but excludes between-step scheduling and batch wake/sleep; subtracting
+cache read time leaves non-data-read work, not an isolated CRC benchmark.
+
+### Measuring on the physical pod
+
+No physical measurements or upload are part of this instrumentation change.
+After separate authorization to install the application-only diagnostic image
+and run the matching app locally (no production deployment):
+
+1. Recheck device identity, stopped/healthy recorders, verified recording backups
+   and a known-working rollback image. Never erase/reset recording storage.
+2. Double-tap, connect, and retain browser console output for the initial LIST.
+   Record whether it actually encountered a cold cache; idle warm-up may already
+   have validated it. Do not start a recording/reset merely to force a cold run.
+3. While idle, capture the browser report and firmware snapshot. Refresh LIST
+   on the **same connection**, capture another pair, then capture a pre-download
+   snapshot and download one small known session.
+4. After the app finishes validation/import and is idle, capture again:
+
+   ```javascript
+   const client = window.tacticPodBluetooth.client;
+   console.log(client.performanceDiagnostics);
+   console.log(await client.readPerformanceDiagnostics());
+   ```
+
+5. Save each report immediately: browser list/download reports describe the
+   latest operation, while firmware counters accumulate. Use pre/post-download
+   deltas for flash read, notification-call, ACK, retry and byte counts. Divide
+   payload-byte delta by elapsed snapshot uptime for a cross-check of useful
+   bytes/s; do not confuse this with notification bytes or flash bytes.
+6. Compare cold versus warm LIST, confirmed MTU, ACK delays/failures and flash
+   versus notification-call time. Browser download elapsed/speed includes its
+   client-side work; notification-to-ACK-write timing includes queued browser
+   handling and the write-with-response completion. These measurements do not
+   directly isolate RF airtime.
+7. Verify the known recording still decodes with existing CRC checks, save the
+   reports **before normal disconnect**, and verify stored sessions remain
+   accessible. No settings, recording or flash mutation is needed.
+
+Focused regressions are `ble_transport_tests.py` (MTU 23/247, timing, retries,
+duplicates, coherent long reads, invalid reads, rollover and saturation),
+`ble_cache_tests.py` (production validation timing, warm reuse, invalidation and
+USB exclusion), and `ble_gatt_tests.py` (linked permissions/lengths). The existing
+`usb_pump_tests.py` and `ble_phase1_tests.py` check unchanged byte-identical USB
+exports, bounded scheduling, lifecycle/ownership and modeled flash immutability.
+These are simulated timing/stack checks, not physical throughput measurements.
 
 ## Framing and checksums
 

@@ -9,6 +9,7 @@
 #include "ble_runtime.h"
 #include "tcb3_session.h"
 #include "ble_download_protocol.h"
+#include "ble_performance.h"
 
 #if !TACTICPOD_TCB3_FLASH_ENABLED || !TACTICPOD_REUSABLE
 #error TACTICPOD_BLE requires the reusable TCB3 flash profile
@@ -24,12 +25,14 @@ constexpr const char* kBatteryUuid = "b9730003-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kControlUuid = "b9730004-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kDataUuid = "b9730005-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kProtocolUuid = "b9730006-7d2a-4f91-a380-8b52c029dc61";
+constexpr const char* kPerformanceUuid = "b9730007-7d2a-4f91-a380-8b52c029dc61";
 BLEService gattService(kServiceUuid);
 BLECharacteristic activity(kActivityUuid);
 BLECharacteristic battery(kBatteryUuid);
 BLECharacteristic control(kControlUuid);
 BLECharacteristic data(kDataUuid);
 BLECharacteristic protocolVersion(kProtocolUuid);
+BLECharacteristic performance(kPerformanceUuid);
 BLEDis deviceInfo;
 std::atomic<uint32_t> events{0};
 constexpr uint32_t kActivity = 1, kDisconnected = 2, kInvalid = 4, kPairing = 8;
@@ -48,7 +51,10 @@ enum ErrorCode : uint16_t {
 };
 uint8_t controlQueue[16];
 uint8_t controlLength = 0;
+uint32_t controlReceivedUs=0,controlReceivedMs=0;
 std::atomic<bool> controlReady{false};
+std::atomic<bool> performanceReadReady{false};
+uint16_t performanceReadConnection=0,performanceReadOffset=0;
 
 using BleDownloadProtocol::crc16;
 using BleDownloadProtocol::read16;
@@ -66,7 +72,20 @@ void onControlWrite(uint16_t,BLECharacteristic*,uint8_t* bytes,uint16_t length) 
     events.fetch_or(kInvalid);return;
   }
   memcpy(controlQueue,bytes,length);controlLength=uint8_t(length);
+  controlReceivedUs=micros();controlReceivedMs=millis();
   controlReady.store(true,std::memory_order_release);
+}
+void onPerformanceRead(uint16_t connection,BLECharacteristic*,ble_gatts_evt_read_t* request){
+  if(performanceReadReady.load(std::memory_order_acquire)){
+    ble_gatts_rw_authorize_reply_params_t reply{};
+    reply.type=BLE_GATTS_AUTHORIZE_TYPE_READ;
+    reply.params.read.gatt_status=BLE_GATT_STATUS_ATTERR_UNLIKELY_ERROR;
+    if(sd_ble_gatts_rw_authorize_reply(connection,&reply)!=NRF_SUCCESS)
+      Serial.println("BLE performance read reply failed.");
+    return;
+  }
+  performanceReadConnection=connection;performanceReadOffset=request->offset;
+  performanceReadReady.store(true,std::memory_order_release);
 }
 void onEvent(ble_evt_t* event) {
   if (event->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
@@ -93,6 +112,29 @@ struct Adapter {
   uint8_t listStage=0;
   bool messageReady=false,frameReady=false,awaitingAck=false,haveLastAck=false;
   bool lastMessageWasExportEnd=false,progressPending=false;
+  bool performanceAvailable=false,performanceSnapshotValid=false;
+  uint32_t lastNotifyUs=0;
+  uint8_t performanceSnapshot[BlePerformance::SnapshotSize]{};
+
+  void servicePerformanceRead(){
+    if(!performanceAvailable || !performanceReadReady.load(std::memory_order_acquire))return;
+    const uint16_t connection=performanceReadConnection,offset=performanceReadOffset;
+    performanceReadReady.store(false,std::memory_order_release);
+    ble_gatts_rw_authorize_reply_params_t reply{};
+    reply.type=BLE_GATTS_AUTHORIZE_TYPE_READ;
+    if(offset>sizeof(performanceSnapshot) || (offset && !performanceSnapshotValid)){
+      reply.params.read.gatt_status=BLE_GATT_STATUS_ATTERR_INVALID_OFFSET;
+    }else{
+      // Freeze one foreground snapshot across all fragments of an ATT long read.
+      if(!offset){BlePerformance::snapshot(performanceSnapshot);performanceSnapshotValid=true;}
+      reply.params.read.gatt_status=BLE_GATT_STATUS_SUCCESS;
+      reply.params.read.update=1;reply.params.read.offset=offset;
+      reply.params.read.len=sizeof(performanceSnapshot)-offset;
+      reply.params.read.p_data=performanceSnapshot+offset;
+    }
+    if(sd_ble_gatts_rw_authorize_reply(connection,&reply)!=NRF_SUCCESS)
+      Serial.println("BLE performance read reply failed.");
+  }
 
   bool begin() {
     Bluefruit.autoConnLed(false);
@@ -141,6 +183,16 @@ struct Adapter {
       return false;
     if(protocolVersion.write(version,sizeof(version))!=sizeof(version))
       return fail("protocol version characteristic");
+    performance.setProperties(CHR_PROPS_READ);
+    performance.setPermission(SECMODE_OPEN,SECMODE_NO_ACCESS);
+    performance.setFixedLen(BlePerformance::SnapshotSize);
+    performance.setReadAuthorizeCallback(onPerformanceRead,false);
+    const err_t performanceError=performance.begin();
+    performanceAvailable=performanceError==ERROR_NONE;
+    if(!performanceAvailable){
+      Serial.print("BLE performance diagnostics unavailable: GATT error=");
+      Serial.println(static_cast<unsigned long>(performanceError));
+    }
     if (!updateBattery()) return false;
     if (!Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE) ||
         !Bluefruit.Advertising.addService(gattService) || !Bluefruit.ScanResponse.addName())
@@ -176,6 +228,8 @@ struct Adapter {
   bool failed() { return ::failed; }
   void service(uint32_t now) {
     if(!connected())return;
+    BLEConnection* connection=Bluefruit.Connection(Bluefruit.connHandle());
+    if(connection)BlePerformance::observeConnection(connection->getMtu());
     processControl();
     if(Tcb3Session::bleService(16))progressPending=true;
     if(transfer==TransferState::Scanning){
@@ -188,6 +242,7 @@ struct Adapter {
     }
     prepareMessage();
     transmit(now);
+    servicePerformanceRead();
   }
   bool transferActive() const { return transfer!=TransferState::Idle; }
   bool takeProgress() { bool value=progressPending;progressPending=false;return value; }
@@ -245,6 +300,7 @@ struct Adapter {
   void processControl() {
     if(!controlReady.load(std::memory_order_acquire))return;
     uint8_t bytes[sizeof(controlQueue)];const uint8_t length=controlLength;
+    const uint32_t receivedUs=controlReceivedUs,receivedMs=controlReceivedMs;
     memcpy(bytes,controlQueue,length);controlReady.store(false,std::memory_order_release);
     if(length<6){
       events.fetch_or(kInvalid);return;
@@ -257,6 +313,7 @@ struct Adapter {
     }
     if(opcode==0x01 && length==6){
       if(transfer!=TransferState::Idle){events.fetch_or(kInvalid);return;}
+      BlePerformance::listRequested(receivedUs,receivedMs);
       startList(id);events.fetch_or(kActivity);return;
     }
     if(opcode==0x02 && length==14){
@@ -273,6 +330,7 @@ struct Adapter {
   }
   void acceptAck(uint16_t id,uint32_t sequence,uint16_t offset,uint16_t checksum) {
     if(id==transferId && awaitingAck && sequence==messageSequence && offset==frameOffset && checksum==frameCrc){
+      BlePerformance::acknowledged(framePayloadLength,frameAttempts>1,uint32_t(micros()-lastNotifyUs));
       lastAckSequence=sequence;lastAckOffset=offset;lastAckCrc=checksum;haveLastAck=true;
       awaitingAck=false;frameReady=false;messageOffset+=framePayloadLength;
       progressPending=true;events.fetch_or(kActivity);
@@ -280,7 +338,9 @@ struct Adapter {
       return;
     }
     if(haveLastAck && id==transferId && sequence==lastAckSequence &&
-       offset==lastAckOffset && checksum==lastAckCrc)return;
+       offset==lastAckOffset && checksum==lastAckCrc){
+      BlePerformance::add(BlePerformance::counters().duplicateAcks,1);return;
+    }
     events.fetch_or(kInvalid);
   }
   bool cancel(uint16_t id) {
@@ -374,13 +434,23 @@ struct Adapter {
     if(!messageReady || !data.notifyEnabled())return;
     if(awaitingAck){
       if(uint32_t(now-lastSentAt)<1000)return;
+      BlePerformance::add(BlePerformance::counters().ackTimeouts,1);
       if(frameAttempts>=5){transmissionFailed();return;}
       awaitingAck=false;
     }
     if(!frameReady)buildFrame();
     if(queueFailures && uint32_t(now-lastAttemptAt)<100)return;
     lastAttemptAt=now;
-    if(data.notify(frame,frameLength)){
+    const uint32_t notifyStartedUs=micros();
+    const bool accepted=data.notify(frame,frameLength);
+    const uint32_t notifyFinishedUs=micros();
+    BlePerformance::notification(accepted,frameAttempts>0,frameLength,framePayloadLength,
+                                uint32_t(notifyFinishedUs-notifyStartedUs));
+    if(accepted){
+      if(messageType==kListBegin && frameOffset==0 && !frameAttempts){
+        BlePerformance::listBegin();
+      }
+      lastNotifyUs=notifyFinishedUs;
       awaitingAck=true;lastSentAt=now;++frameAttempts;queueFailures=0;
     }else if(++queueFailures>=5)transmissionFailed();
   }

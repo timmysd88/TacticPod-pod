@@ -170,3 +170,34 @@ extern "C" unsigned cacheValidationCase(unsigned){
   }
   return SPI.programs || SPI.enables || SPI.erases || SPI.violations;
 }
+
+extern "C" unsigned cachePerformanceCase(unsigned){
+  CACHE_CHECK(cacheBoot() && cacheConnect());
+  BlePerformance::counters()=BlePerformance::Counters{};
+  const unsigned before=SPI.bulkReads;
+  Tcb3Session::bleService(16);
+  auto& s=BlePerformance::counters();
+  CACHE_CHECK(s.cacheState==1 && s.cacheSteps==16);
+  CACHE_CHECK(s.readCalls==SPI.bulkReads-before);
+  CACHE_CHECK(s.readTotalUs==(s.readBytes+uint64_t(s.readCalls)*4)*8);
+  CACHE_CHECK(s.cacheServiceUs>=s.cacheReadUs && s.cacheReadUs==s.readTotalUs);
+  mockTime+=50;
+  for(unsigned n=0;n<20000 && manifestCache!=ManifestCache::Ready;++n){
+    ++mockTime;Tcb3Session::bleService(16);
+  }
+  CACHE_CHECK(manifestCache==ManifestCache::Ready && s.cacheState==2 && s.cacheSteps>16);
+  CACHE_CHECK(s.cacheElapsedMs>=50 && uint32_t(millis()-s.cacheStartedAt)-s.cacheElapsedMs<=1);
+  const uint32_t steps=s.cacheSteps,reads=s.readCalls;
+  CACHE_CHECK(Tcb3Session::bleBeginList());Tcb3Session::bleFinishList();Tcb3Session::bleCancel();
+  CACHE_CHECK(s.cacheSteps==steps && s.readCalls==reads);
+  // USB exports keep their fast path and do not enter BLE read-time totals.
+  BleFlashIo flash;FlashPower::release(flash);
+  uint8_t bytes[64];dumping=true;
+  CACHE_CHECK(read(nullptr,Tcb3::Sector,bytes,sizeof(bytes)) && SPI.hz==16000000);
+  dumping=false;
+  CACHE_CHECK(s.readCalls==reads);
+  Tcb3Session::invalidateBleManifest();
+  CACHE_CHECK(!s.cacheState && !s.cacheSteps && !s.cacheElapsedMs && !s.cacheServiceUs && !s.cacheReadUs);
+  CACHE_CHECK(s.readCalls==reads);
+  return SPI.programs || SPI.enables || SPI.erases || SPI.violations || SPI.wakeDelayViolations;
+}

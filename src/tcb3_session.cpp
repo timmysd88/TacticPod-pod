@@ -13,6 +13,7 @@
 #if TACTICPOD_BLE
 #include "ble_runtime.h"
 #include "flash_power.h"
+#include "ble_performance.h"
 #endif
 namespace {
 namespace TcbDetail {
@@ -82,6 +83,9 @@ uint32_t readClockHz(){
 }
 bool read(void*,uint32_t a,uint8_t* p,unsigned n){
   if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  BlePerformance::FlashRead timing(bleReading || BlePerformance::counters().cacheStepActive,n);
+#endif
   static uint8_t txBuffer[64]{}; // EasyDMA requires RAM, not a const buffer in flash.
   select(readClockHz());SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,n);deselect();return true;
 }
@@ -90,6 +94,9 @@ bool readPage(void*,uint32_t a,uint8_t* p){
      (a&(Tcb3::Page-1)) || a>=Tcb3::End || Tcb3::Page>Tcb3::End-a)return false;
 #if TACTICPOD_REUSABLE
   if(resetting)return false;
+#endif
+#if TACTICPOD_BLE && TACTICPOD_REUSABLE
+  BlePerformance::FlashRead timing(bleReading,Tcb3::Page);
 #endif
   static uint8_t txBuffer[Tcb3::Page]{}; // Mutable RAM: one zero-filled EasyDMA payload.
   select(readClockHz());SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,Tcb3::Page);deselect();return true;
@@ -228,16 +235,22 @@ void updateManifestCache(unsigned steps,bool sleepAfter){
   if(!steps || manifestCache==ManifestCache::Ready || manifestCache==ManifestCache::Failed ||
      bleListing || bleDownloading || !cacheIdle())return;
   if(sleepAfter){
-    if(!bleWakeFlash()){manifestCache=ManifestCache::Failed;return;}
+    if(!bleWakeFlash()){manifestCache=ManifestCache::Failed;BlePerformance::finishCache(true);return;}
   }else if(manifestCache==ManifestCache::Cold && !storeIdentity()){
-    bleReport("cache identity/status failed");manifestCache=ManifestCache::Failed;return;
+    bleReport("cache identity/status failed");manifestCache=ManifestCache::Failed;
+    BlePerformance::finishCache(true);return;
   }
   if(manifestCache==ManifestCache::Cold){
+    BlePerformance::startCache();
     bleManifest.begin(port,0,Tcb3Test::WriteEnd);manifestCache=ManifestCache::Scanning;
   }
-  while(steps-- && !bleManifest.done())bleManifest.update();
+  while(steps-- && !bleManifest.done()){
+    BlePerformance::CacheStep timing;
+    bleManifest.update();
+  }
   if(bleManifest.done()){
     manifestCache=bleManifest.failed()?ManifestCache::Failed:ManifestCache::Ready;
+    BlePerformance::finishCache(bleManifest.failed());
     if(bleManifest.failed())bleReport(bleManifest.errorMessage());
   }
   if(sleepAfter)bleSleepFlash();
@@ -450,6 +463,7 @@ uint32_t freeSectors(){
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
 void invalidateBleManifest(){
   manifestCache=ManifestCache::Cold;bleListing=false;
+  BlePerformance::invalidateCache();
 }
 void bleIdleService(){
   if(!BleRuntime::active())updateManifestCache(1,false);
