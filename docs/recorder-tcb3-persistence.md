@@ -63,13 +63,36 @@ The chip is 128 Mbit = 16 MiB, not 128 MB. Addressing remains three-byte.
 | Diagnostic sector | 0xFFF000..0xFFFFFF | None: no reads, program or erase from TCB |
 
 Each 4096-byte sector keeps page 0 as header, pages 1..14 as data, page 15 as an
-optional final footer. Writes never cross a 256-byte page boundary. Every read
-or program transport unit is at most 64 bytes. The SPI adapter uses the existing
+optional final footer. Writes never cross a 256-byte page boundary. Program
+transport units and ordinary reads are at most 64 bytes. The SPI adapter uses the existing
 D2 CS, D8 SCK, D9 MISO, D10 MOSI, mode 0, 1MHz and unchanged JEDEC whitelist.
 The sole exception is the `0x03` page read issued while `TCB READ` is exporting,
 which uses 4MHz (`kExportReadHz`). Status, program, erase and all other reads
 stay at 1MHz.
+Each bounded read transfers its payload in one bulk SPI call using a zero-filled,
+RAM-resident TX buffer for Nordic EasyDMA. Exports optionally read each complete,
+aligned data slot (pages 1..14) in one 256-byte bulk transfer, with opcode `0x03`,
+address and payload under one CS-low transaction. Headers, footers, metadata
+scans, recording verification and reset/recovery retain the 64-byte path.
+Existing ports without the trailing `readPage` callback use four 64-byte reads;
+a failed callback aborts export without retry or a successful end packet.
+Status is still checked before each export update; at most one page is read per
+update (520 us of command/address/data wire time at 4MHz, excluding software and
+interrupt overhead). No frequency, ownership or write-exclusion rules change.
+The benchmark below predates both bulk-transfer optimisations and is not a
+Phase 2 throughput measurement; USB and BLE transport may still be bottlenecks.
+BLE LIST/GET uses this same bounded read adapter at its existing 4MHz setting;
+BLE ownership, service budgets, GATT framing and CRC validation are unchanged.
 There is no erase callback and no protection-register modification.
+
+USB export pumps at most one existing export-engine update and two room-limited
+CDC writes per session update. A packet tail can be followed by the next packet
+head in the same pass; the immutable export packet remains the only buffer.
+Short/zero writes and a full FIFO return control without waiting. Reads still
+require foreground slack; disconnect cancels the stream and a new READ restarts
+at BEGIN. This adds no static RAM and does not change BLE scheduling, SPI clocks
+or TPX3 framing. FIFO-model tests measure scheduling-pass reduction only; a new
+hardware benchmark is required to establish actual USB throughput.
 
 ## 4MHz export benchmark
 

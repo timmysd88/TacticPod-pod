@@ -102,18 +102,25 @@ struct MockSerial {
   size_t used = 0;
   int freeSpace = 256;
   unsigned overfilledWrites = 0;
+  bool consumeWriteSpace=false,disconnectOnWrite=false;
+  size_t writeLimit=~size_t(0);
+  unsigned writeCalls=0;
   explicit operator bool() const { return connected; }
   int available() { return *rx != 0; }
   int read() { return *rx ? *rx++ : -1; }
   void begin(unsigned long) {}
   int availableForWrite() { return freeSpace; }
   size_t write(const uint8_t* data, size_t length) {
+    ++writeCalls;
     if (length > size_t(freeSpace)) { ++overfilledWrites; return 0; }
+    if(length>writeLimit)length=writeLimit;
+    if(consumeWriteSpace)freeSpace-=int(length);
     for (size_t i = 0; i < length && used + 1 < sizeof(output); ++i) output[used++] = char(data[i]);
     output[used] = 0;
 #ifdef TCB_SIM_USB_WRITE
     TCB_SIM_USB_WRITE(data,length);
 #endif
+    if(disconnectOnWrite)connected=false;
     return length;
   }
   void print(float value, int digits = 2) { printFixed(value, digits); }

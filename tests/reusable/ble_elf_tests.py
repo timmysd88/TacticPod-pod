@@ -12,6 +12,16 @@ for name in ('seeed_xiao_nrf52840_sense', 'tacticpod_reusable_usb', 'tacticpod_r
         assert text['sh_addr'] == 0x27000, (name, 'application/SoftDevice boundary')
         marker = elf.get_section_by_name('.ble_reset')
         assert elf.get_section_by_name('.boot_diagnostics') is None, (name, 'unexpected boot diagnostics')
+        if name in ('tacticpod_reusable_usb', 'tacticpod_reusable_ble'):
+            buffers = [s for s in elf.get_section_by_name('.symtab').iter_symbols()
+                       if 'readPage' in s.name and 'txBuffer' in s.name]
+            assert len(buffers) == 1, (name, 'page DMA TX buffer missing')
+            buffer = buffers[0]
+            section = elf.get_section(buffer['st_shndx'])
+            assert buffer['st_size'] == 256 and section['sh_type'] == 'SHT_NOBITS'
+            assert section['sh_flags'] & 1  # Writable BSS is zero-filled RAM, not flash.
+            assert 0x20000000 <= buffer['st_value'] <= 0x20040000 - 256
+            print('PASS:', name, '256-byte page DMA TX buffer in zero-filled writable device SRAM')
         if name != 'tacticpod_reusable_ble':
             assert marker is None, (name, 'unexpected BLE reset marker')
             continue

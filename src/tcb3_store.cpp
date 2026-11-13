@@ -315,6 +315,15 @@ void Export::make(unsigned kind,uint32_t address,const uint8_t* data,unsigned n)
   put(packet+12,address);put(packet+16,n,2);if(n)memcpy(packet+20,data,n);
   put(packet+20+n,~crc32(packet,20+n));packetSize=n+24;ready=true;
 }
+bool Export::readPageSlice(uint32_t address){
+  if(port.readPage && !offset && pageIndex>0 && pageIndex<15 &&
+     address%Page==0 && address<sessionEnd && Page<=sessionEnd-address){
+    if(!port.readPage(port.context,address,page))return false;
+    offset=Page;return true;
+  }
+  if(!port.read(port.context,address+offset,page+offset,64))return false;
+  offset+=64;return true;
+}
 void Export::update(){
   if(ready || ended)return;
   int status=port.status(port.context);
@@ -330,8 +339,8 @@ void Export::update(){
       selected=true;pageIndex=offset=0;return;
     }
     const uint32_t address=at+pageIndex*Page;
-    if(!port.read(port.context,address+offset,page+offset,64)){make(3,address,nullptr,0);fault=ended=true;return;}
-    offset+=64;if(offset<Page)return;
+    if(!readPageSlice(address)){make(3,address,nullptr,0);fault=ended=true;return;}
+    if(offset<Page)return;
     make(2,address,page,Page);offset=0;
     if(++pageIndex==16){at+=Sector;selected=false;}
     return;
@@ -377,8 +386,8 @@ void Export::update(){
     at+=Sector;return;
   }
   uint32_t address=at+pageIndex*Page;
-  if(!port.read(port.context,address+offset,page+offset,64)){make(3,address,nullptr,0);fault=ended=true;return;}
-  offset+=64;if(offset<256)return;
+  if(!readPageSlice(address)){make(3,address,nullptr,0);fault=ended=true;return;}
+  if(offset<Page)return;
   // Epoch mode: an unsealed header (torn or never completed) marks the end of live data, as in the store scan.
   if(Tcb3Test::Reusable && epoch && pageIndex==0 && !validPage(page)){make(4,End,nullptr,0);ended=true;return;}
   make(2,address,page,256);offset=0;if(++pageIndex==16){at+=Sector;selected=false;}

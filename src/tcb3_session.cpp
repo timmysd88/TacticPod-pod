@@ -65,13 +65,26 @@ void select(uint32_t hz=1000000){SPI.beginTransaction(SPISettings(hz,MSBFIRST,SP
 void deselect(){digitalWrite(2,HIGH);SPI.endTransaction();}
 void address(uint32_t a){SPI.transfer(a>>16);SPI.transfer(a>>8);SPI.transfer(a);}
 int status(void*){if(pageOpen)return -1;select();SPI.transfer(5);int s=SPI.transfer(0);deselect();return s;}
-bool read(void*,uint32_t a,uint8_t* p,unsigned n){
-  if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
+bool exportReadActive(){
   bool fast=dumping;
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
   fast=fast||bleReading;
 #endif
-  select(fast?kExportReadHz:1000000);SPI.transfer(3);address(a);for(unsigned i=0;i<n;++i)p[i]=SPI.transfer(0);deselect();return true;
+  return fast;
+}
+bool read(void*,uint32_t a,uint8_t* p,unsigned n){
+  if(pageOpen || !n || n>64 || a>=Tcb3::End || n>Tcb3::End-a)return false;
+  static uint8_t txBuffer[64]{}; // EasyDMA requires RAM, not a const buffer in flash.
+  select(exportReadActive()?kExportReadHz:1000000);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,n);deselect();return true;
+}
+bool readPage(void*,uint32_t a,uint8_t* p){
+  if(pageOpen || !exportReadActive() || owned || pending || locked || !p ||
+     (a&(Tcb3::Page-1)) || a>=Tcb3::End || Tcb3::Page>Tcb3::End-a)return false;
+#if TACTICPOD_REUSABLE
+  if(resetting)return false;
+#endif
+  static uint8_t txBuffer[Tcb3::Page]{}; // Mutable RAM: one zero-filled EasyDMA payload.
+  select(kExportReadHz);SPI.transfer(3);address(a);SPI.transfer(txBuffer,p,Tcb3::Page);deselect();return true;
 }
 bool beginPage(void*,uint32_t a){
   if(pageOpen || (a&255) || a<store.floor() || a>=Tcb3Test::WriteEnd || 256>Tcb3Test::WriteEnd-a)return false;
@@ -119,9 +132,9 @@ bool resetProgram(void*,uint32_t a,const uint8_t* p,unsigned n){
   select();SPI.transfer(2);address(0);for(unsigned i=0;i<n;++i)SPI.transfer(p[i]);deselect();return true;
 }
 Tcb3::Port resetPort{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,resetProgram,resetErase};
-Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,eraseStale,readPage};
 #else
-Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status};
+Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,nullptr,readPage};
 #endif
 bool storeIdentity(uint32_t* observedId=nullptr){
   for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();
@@ -517,12 +530,23 @@ void update(bool allow){
   if(dumping){
     if(!Serial){dumping=false;exportSent=0;return;}
     if(lineAt){flushLine();return;} // Binary packets start only after any partly sent text line has its newline.
-    // Packet is immutable; USB writes may split it without blocking.
-    unsigned n=0;const uint8_t* p=dump.output(n);
-    if(p){int room=Serial.availableForWrite();unsigned k=room>0?unsigned(room):0;if(k>n-exportSent)k=n-exportSent;
-      if(k)exportSent+=Serial.write(p+exportSent,k);
-      if(exportSent==n){dump.release();exportSent=0;}}
-    else if(allow)dump.update();
+    // One bounded read/update and at most two writes: a packet tail can share
+    // this pass with the next packet's head, without another packet buffer.
+    bool prepared=false;
+    for(unsigned writes=0;writes<2;++writes){
+      if(!Serial){dumping=false;exportSent=0;return;}
+      unsigned n=0;const uint8_t* p=dump.output(n);
+      if(!p){
+        if(!allow || prepared || dump.done())break;
+        dump.update();prepared=true;p=dump.output(n);
+        if(!p)break;
+      }
+      const int room=Serial.availableForWrite();if(room<=0)break;
+      unsigned k=unsigned(room);if(k>n-exportSent)k=n-exportSent;
+      exportSent+=Serial.write(p+exportSent,k);
+      if(exportSent<n)break;
+      dump.release();exportSent=0;
+    }
     if(dump.done()){dumping=false;exportSent=0;}return;
   }
   if(allow && !locked && (pending || owned)){

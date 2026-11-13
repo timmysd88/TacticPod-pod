@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include "tcb3_test_limits.h"
 
-// Portable foreground-only engine; wire slices <=64 bytes. Sector erase exists
+// Portable foreground-only engine; write slices <=64 bytes. Sector erase exists
 // only for the reusable RECORD RESET epoch mechanism (see docs/fast-record-reset.md).
 namespace Tcb3 {
 constexpr uint32_t End=0xFFF000, Sector=4096, Page=256;
@@ -27,6 +27,9 @@ struct Port {
   // erase: start one WREN+4 KB sector erase; completion is observed through status().
   bool (*program)(void*,uint32_t,const uint8_t*,unsigned);
   bool (*erase)(void*,uint32_t);
+  // Optional aligned 256-byte export data read; false is fatal, not a retry request.
+  // Trailing member preserves existing aggregate initializers (omitted means null).
+  bool (*readPage)(void*,uint32_t,uint8_t*);
 };
 enum class State : uint8_t { Scan, Idle, Blank, Header, Ready, Validate, Data, Footer, Fault, Probe };
 enum class Reason : uint32_t { Clean=0, Full=1, Overflow=2, Deadline=3 };
@@ -101,6 +104,7 @@ private:
   unsigned pageIndex=0,offset=0,packetSize=0,phase=0;
   bool ready=false,opening=true,ended=false,selected=false,fault=false,sessionOnly=false;
   void make(unsigned kind,uint32_t address,const uint8_t*,unsigned length);
+  bool readPageSlice(uint32_t address);
 };
 
 struct ManifestEntry {

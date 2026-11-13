@@ -16,6 +16,7 @@ struct MockSPI {
   uint8_t finalSector[4096];
   uint8_t tx[260];
   unsigned position = 0, programs = 0, erases = 0, violations = 0, enables = 0;
+  unsigned bulkReads = 0, pageReads = 0;
   unsigned programDelayMs = 3, eraseDelayMs = 20;
   bool transactionActive=false;uint32_t hz=1000000;
   bool deepPower=false;unsigned sleeps=0,releases=0,asleepAccesses=0;
@@ -73,8 +74,27 @@ struct MockSPI {
     if (tx[0] == 0x03 && i >= 4) return byte(address() + i - 4);
     return 0;
   }
+  void transfer(const void* txBuffer, void* rxBuffer, size_t count) {
+    const uint8_t* txBytes=static_cast<const uint8_t*>(txBuffer);
+    uint8_t* rxBytes=static_cast<uint8_t*>(rxBuffer);
+    if(!transactionActive || position!=4 || tx[0]!=3 || !count || (count>64 && count!=256))++violations;
+    if(count==256){
+      ++pageReads;
+      const uintptr_t dmaTx=reinterpret_cast<uintptr_t>(txBuffer);
+      // Native maps 64 MiB of RAM to hold the modeled 16 MiB NOR, not just device SRAM.
+      if(hz!=4000000 || (address()&255) || address()>=0xfff000 ||
+         dmaTx<0x20000000 || dmaTx+count>0x24000000 || mockPinLevels[2]!=LOW)++violations;
+    }
+    ++bulkReads;
+    for(size_t i=0;i<count;++i){
+      if(count==256 && mockPinLevels[2]!=LOW)++violations;
+      if(txBytes[i])++violations;
+      rxBytes[i]=transfer(txBytes[i]);
+    }
+  }
   void endTransaction() {
     if(!transactionActive)++violations;transactionActive=false;
+    if(tx[0]==3 && position==260 && mockPinLevels[2]!=HIGH)++violations;
 #if TACTICPOD_REUSABLE
     if (position == 1 && tx[0] == 0xB9) {
       if (wel || stuckBusy || int32_t(mockTime - busyUntil) < 0) ++violations;
