@@ -5,6 +5,9 @@
 namespace BlePerformance {
 constexpr unsigned SnapshotSize=176;
 constexpr uint16_t SnapshotVersion=1;
+constexpr unsigned LinkSnapshotSize=16;
+constexpr uint16_t LinkSnapshotVersion=1;
+constexpr uint8_t NotificationQueueCapacity=1;
 
 struct Counters {
   uint16_t mtu=0,lastPayload=0;
@@ -126,5 +129,12 @@ inline void snapshot(uint8_t* bytes){
   write32(bytes+148,s.connectionToListMs);write64(bytes+152,s.cacheServiceUs);
   write64(bytes+160,s.cacheReadUs);write32(bytes+168,now);
   write32(bytes+172,s.saturated?1U:0U);
+}
+inline void linkSnapshot(uint8_t* bytes,uint8_t txPhy,uint16_t txDataLength,uint16_t interval){
+  using namespace BleDownloadProtocol;
+  memset(bytes,0,LinkSnapshotSize);memcpy(bytes,"TPL1",4);
+  write16(bytes+4,LinkSnapshotVersion);write16(bytes+6,LinkSnapshotSize);
+  bytes[8]=txPhy;bytes[9]=NotificationQueueCapacity;
+  write16(bytes+10,txDataLength);write16(bytes+12,interval);
 }
 }

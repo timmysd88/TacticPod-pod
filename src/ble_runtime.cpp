@@ -26,6 +26,7 @@ constexpr const char* kControlUuid = "b9730004-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kDataUuid = "b9730005-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kProtocolUuid = "b9730006-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kPerformanceUuid = "b9730007-7d2a-4f91-a380-8b52c029dc61";
+constexpr const char* kLinkPerformanceUuid = "b9730008-7d2a-4f91-a380-8b52c029dc61";
 BLEService gattService(kServiceUuid);
 BLECharacteristic activity(kActivityUuid);
 BLECharacteristic battery(kBatteryUuid);
@@ -33,6 +34,7 @@ BLECharacteristic control(kControlUuid);
 BLECharacteristic data(kDataUuid);
 BLECharacteristic protocolVersion(kProtocolUuid);
 BLECharacteristic performance(kPerformanceUuid);
+BLECharacteristic linkPerformance(kLinkPerformanceUuid);
 BLEDis deviceInfo;
 std::atomic<uint32_t> events{0};
 constexpr uint32_t kActivity = 1, kDisconnected = 2, kInvalid = 4, kPairing = 8;
@@ -55,6 +57,8 @@ uint32_t controlReceivedUs=0,controlReceivedMs=0;
 std::atomic<bool> controlReady{false};
 std::atomic<bool> performanceReadReady{false};
 uint16_t performanceReadConnection=0,performanceReadOffset=0;
+std::atomic<bool> linkReadReady{false};
+uint16_t linkReadConnection=0,linkReadOffset=0;
 
 using BleDownloadProtocol::crc16;
 using BleDownloadProtocol::read16;
@@ -87,6 +91,18 @@ void onPerformanceRead(uint16_t connection,BLECharacteristic*,ble_gatts_evt_read
   performanceReadConnection=connection;performanceReadOffset=request->offset;
   performanceReadReady.store(true,std::memory_order_release);
 }
+void onLinkRead(uint16_t connection,BLECharacteristic*,ble_gatts_evt_read_t* request){
+  if(linkReadReady.load(std::memory_order_acquire)){
+    ble_gatts_rw_authorize_reply_params_t reply{};
+    reply.type=BLE_GATTS_AUTHORIZE_TYPE_READ;
+    reply.params.read.gatt_status=BLE_GATT_STATUS_ATTERR_UNLIKELY_ERROR;
+    if(sd_ble_gatts_rw_authorize_reply(connection,&reply)!=NRF_SUCCESS)
+      Serial.println("BLE link diagnostics read reply failed.");
+    return;
+  }
+  linkReadConnection=connection;linkReadOffset=request->offset;
+  linkReadReady.store(true,std::memory_order_release);
+}
 void onEvent(ble_evt_t* event) {
   if (event->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
     // Phase 1 uses open GATT only; terminate unsolicited pairing before it can save bonds.
@@ -113,8 +129,10 @@ struct Adapter {
   bool messageReady=false,frameReady=false,awaitingAck=false,haveLastAck=false;
   bool lastMessageWasExportEnd=false,progressPending=false;
   bool performanceAvailable=false,performanceSnapshotValid=false;
+  bool linkPerformanceAvailable=false,linkSnapshotValid=false;
   uint32_t lastNotifyUs=0;
   uint8_t performanceSnapshot[BlePerformance::SnapshotSize]{};
+  uint8_t linkSnapshot[BlePerformance::LinkSnapshotSize]{};
 
   void servicePerformanceRead(){
     if(!performanceAvailable || !performanceReadReady.load(std::memory_order_acquire))return;
@@ -135,12 +153,35 @@ struct Adapter {
     if(sd_ble_gatts_rw_authorize_reply(connection,&reply)!=NRF_SUCCESS)
       Serial.println("BLE performance read reply failed.");
   }
+  void serviceLinkRead(){
+    if(!linkPerformanceAvailable || !linkReadReady.load(std::memory_order_acquire))return;
+    const uint16_t handle=linkReadConnection,offset=linkReadOffset;
+    linkReadReady.store(false,std::memory_order_release);
+    ble_gatts_rw_authorize_reply_params_t reply{};
+    reply.type=BLE_GATTS_AUTHORIZE_TYPE_READ;
+    if(offset>sizeof(linkSnapshot) || (offset && !linkSnapshotValid)){
+      reply.params.read.gatt_status=BLE_GATT_STATUS_ATTERR_INVALID_OFFSET;
+    }else{
+      if(!offset){
+        BLEConnection* connection=Bluefruit.Connection(handle);
+        BlePerformance::linkSnapshot(linkSnapshot,connection?connection->getPHY():0,
+          connection?connection->getDataLength():0,connection?connection->getConnectionInterval():0);
+        linkSnapshotValid=true;
+      }
+      reply.params.read.gatt_status=BLE_GATT_STATUS_SUCCESS;
+      reply.params.read.update=1;reply.params.read.offset=offset;
+      reply.params.read.len=sizeof(linkSnapshot)-offset;reply.params.read.p_data=linkSnapshot+offset;
+    }
+    if(sd_ble_gatts_rw_authorize_reply(handle,&reply)!=NRF_SUCCESS)
+      Serial.println("BLE link diagnostics read reply failed.");
+  }
 
   bool begin() {
     Bluefruit.autoConnLed(false);
     // Keep the connection event and notification queues at their conservative defaults.
     started = true; // A partially initialized stack still needs a reset on failure.
-    Bluefruit.configPrphConn(BLE_GATT_ATT_MTU_MAX, BLE_GAP_EVENT_LENGTH_MIN, 1, 1);
+    Bluefruit.configPrphConn(BLE_GATT_ATT_MTU_MAX, BLE_GAP_EVENT_LENGTH_MIN,
+                            BlePerformance::NotificationQueueCapacity, 1);
     if (!Bluefruit.begin(1, 0)) return fail("SoftDevice initialization");
     Bluefruit.setName("TacticPod"); // begin() installs the framework's default name.
     if (!InternalFS.exists("/adafruit/bond_prph") || !InternalFS.exists("/adafruit/bond_cntr"))
@@ -193,6 +234,16 @@ struct Adapter {
       Serial.print("BLE performance diagnostics unavailable: GATT error=");
       Serial.println(static_cast<unsigned long>(performanceError));
     }
+    linkPerformance.setProperties(CHR_PROPS_READ);
+    linkPerformance.setPermission(SECMODE_OPEN,SECMODE_NO_ACCESS);
+    linkPerformance.setFixedLen(BlePerformance::LinkSnapshotSize);
+    linkPerformance.setReadAuthorizeCallback(onLinkRead,false);
+    const err_t linkPerformanceError=linkPerformance.begin();
+    linkPerformanceAvailable=linkPerformanceError==ERROR_NONE;
+    if(!linkPerformanceAvailable){
+      Serial.print("BLE link diagnostics unavailable: GATT error=");
+      Serial.println(static_cast<unsigned long>(linkPerformanceError));
+    }
     if (!updateBattery()) return false;
     if (!Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE) ||
         !Bluefruit.Advertising.addService(gattService) || !Bluefruit.ScanResponse.addName())
@@ -243,6 +294,7 @@ struct Adapter {
     prepareMessage();
     transmit(now);
     servicePerformanceRead();
+    serviceLinkRead();
   }
   bool transferActive() const { return transfer!=TransferState::Idle; }
   bool takeProgress() { bool value=progressPending;progressPending=false;return value; }

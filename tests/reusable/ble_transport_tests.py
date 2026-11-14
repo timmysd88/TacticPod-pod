@@ -20,6 +20,7 @@ for name, arguments in (
     ('performanceListCase', (0,)),
     ('performanceReadCase', (0,)),
     ('performanceBoundsCase', (0,)),
+    ('linkDiagnosticsCase', (0, 1)),
 ):
     for argument in arguments:
         result = Native(elf).call(name, argument)

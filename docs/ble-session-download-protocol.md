@@ -14,6 +14,7 @@ The device advertises as `TacticPod` for 180 seconds after the existing double-t
 | `0005` | Data | Subscribe to notifications before sending a list/download command. |
 | `0006` | Protocol version | Read two bytes: `[2, 0]`. |
 | `0007` | Optional performance snapshot | Read-only, 176 bytes; independent version 1 layout below. |
+| `0008` | Optional link snapshot | Read-only, 16 bytes; independent version 1 layout below. |
 
 Standard Device Information Service exposes manufacturer `TacticPod`, model `XIAO nRF52840 Sense`, the FICR-derived serial number, and firmware revision `ble-download-2`. GATT is open and unbonded. Existing pairing rejection, battery and activity behavior remain in place.
 
@@ -41,10 +42,11 @@ that initialization now reaches advertising and connection.
 | Data | Notify | Open / No access | Variable, maximum 244; writable CCCD |
 | Protocol version | Read | Open / No access | Fixed 2 |
 | Performance snapshot | Read, authorized in foreground | Open / No access | Fixed 176 |
+| Link snapshot | Read, authorized in foreground | Open / No access | Fixed 16 |
 
 Initialization order remains Device Information Service, custom service, then
 Activity, Battery, Control, Data and Protocol version, followed by the optional
-Performance snapshot. All seven custom UUIDs share one vendor-specific base.
+Performance snapshot and optional Link snapshot. All eight custom UUIDs share one vendor-specific base.
 Existing UUIDs, packet formats, connection configuration, button timing and
 recording behavior are unchanged. Failure to add the optional characteristic is
 reported on serial and does not fail the existing transfer service. The production branch does
@@ -155,6 +157,7 @@ and run the matching app locally (no production deployment):
    const client = window.tacticPodBluetooth.client;
    console.log(client.performanceDiagnostics);
    console.log(await client.readPerformanceDiagnostics());
+   console.log(await client.readLinkDiagnostics());
    ```
 
 5. Save each report immediately: browser list/download reports describe the
@@ -170,6 +173,40 @@ and run the matching app locally (no production deployment):
 7. Verify the known recording still decodes with existing CRC checks, save the
    reports **before normal disconnect**, and verify stored sessions remain
    accessible. No settings, recording or flash mutation is needed.
+
+The optional link snapshot `0008` is separate from unchanged `TPD1` and is
+read only while the client is idle. Its 16 little-endian bytes are:
+
+| Offset | Type | Meaning |
+|---:|---|---|
+| 0 | 4 bytes | ASCII `TPL1` |
+| 4, 6 | u16 each | Version 1, size 16 |
+| 8 | u8 | Bluefruit effective TX PHY: 1=1M, 2=2M, 4=coded, 0=unavailable |
+| 9 | u8 | Configured SoftDevice notification queue capacity, currently 1 |
+| 10 | u16 | Bluefruit effective TX link-layer data length in octets; 0=unavailable |
+| 12 | u16 | Effective connection interval in units of 1.25 ms; 0=unavailable |
+| 14 | u16 | Reserved zero |
+
+These are foreground snapshots of Bluefruit's connection state, not measured
+radio airtime or throughput. PHY/data length begin at Bluefruit's 1M/27-octet
+defaults and are updated on stack events; interval comes from connection
+parameters. Queue capacity is configured capacity, **not free slots or
+observed occupancy**. RX PHY/data length and actual event duration are not
+reported by these getters. If the optional characteristic could not be added,
+the app reports it unavailable and v2 transfer still works. Long-read offsets
+reuse a frozen snapshot. BLE reset loses snapshots and counters.
+
+For a separately authorized benchmark, record pod firmware identity and the
+browser/OS/adapter; capture both snapshots before and after each operation on
+the same connection. `attMtu` is negotiated MTU; `ackRttTotalUs` divided by
+`ackRttSamples` is average unambiguous firmware ACK turnaround, while browser
+ACK timings include its notification queue and write completion. Calculate
+flash-read time and retries from counter deltas. Use browser download
+`bytesTransferred / elapsedMs` for TPX3 bytes/s, and separately time final
+strict TCB3 validation. Record actual PHY, data length and interval from the
+link snapshot rather than inferring them from configuration or frame size.
+Test a genuine cold cache only when it naturally occurs; compare a warm LIST
+without recording/resetting. Do not upload or connect without separate approval.
 
 Focused regressions are `ble_transport_tests.py` (MTU 23/247, timing, retries,
 duplicates, coherent long reads, invalid reads, rollover and saturation),
