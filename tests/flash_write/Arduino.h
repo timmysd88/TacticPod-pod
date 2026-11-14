@@ -52,6 +52,7 @@ inline unsigned long millis() { return mockTime; }
 // TIMER4 register model shared by all ARM regression harnesses. Capture uses
 // simulated time only; new tests can inject sub-millisecond and wrap races.
 static uint32_t mockSubUs = 0, mockTimerOriginMs = 0, mockTimerLastLow = 0;
+inline unsigned long micros() { return uint32_t(mockTime*1000+mockSubUs); }
 static uint32_t mockPrimask = 0;
 static bool mockWrapOnCapture = false;
 void mockCaptureClock();

@@ -33,6 +33,10 @@ void bleCancel(){++cancelled;}
 
 static void resetMocks(){
   mockNotifyCalls=mockResets=cancelled=released=finished=0;
+  mockNotifyDurationUs=mockReadReplies=mockReadStatus=mockReadOffset=0;
+  mockTime=mockSubUs=0;
+  BlePerformance::counters()=BlePerformance::Counters{};
+  performanceReadReady.store(false);
   mockSerialPins=0;
   mockLink=mockNotifyEnabled=mockNotifyAccepted=true;mockMtu=23;
   listAvailable=true;listPending=false;
@@ -203,5 +207,93 @@ extern "C" unsigned cacheNotReadyCase(unsigned failed){
   listAvailable=true;listPending=false;request(target,0x01,3);target.service(110);
   CHECK(mockNotifyCalls==2 && mockNotifications[1].bytes[1]==kListBegin);
   CHECK(read16(mockNotifications[1].bytes+2)==3);
+  return 0;
+}
+
+extern "C" unsigned performanceTransportCase(unsigned largeMtu){
+  resetMocks();mockMtu=largeMtu?247:23;mockNotifyDurationUs=120;mockTime=100;
+  Adapter target;beginMessage(target);target.service(millis());
+  auto& s=BlePerformance::counters();
+  CHECK(s.mtu==mockMtu && s.fragments==1 && !s.notifyFailures);
+  CHECK(s.notifyTotalUs==120 && s.notifyMaxUs==120);
+  delayMicroseconds(400);ack(target,0);
+  CHECK(s.acks==1 && s.ackSamples==1 && s.ackTotalUs==400 && s.ackMinUs==400 && s.ackMaxUs==400);
+  const unsigned firstPayload=largeMtu?229:5;
+  CHECK(s.ackedPayloadBytes==firstPayload);
+  ack(target,0);CHECK(s.acks==1 && s.duplicateAcks==1);
+  mockTime+=10;mockNotifyAccepted=false;target.transmit(millis());
+  CHECK(s.notifyFailures==1 && s.fragments==1 && !s.retransmissions);
+  mockTime+=99;target.transmit(millis());CHECK(s.notifyFailures==1);
+  ++mockTime;mockNotifyAccepted=true;target.transmit(millis());
+  CHECK(s.fragments==2 && !s.retransmissions);
+  mockTime+=1000;target.transmit(millis());
+  CHECK(s.fragments==3 && s.retransmissions==1 && s.ackTimeouts==1);
+  delayMicroseconds(80);ack(target,3);
+  CHECK(s.acks==2 && s.ackSamples==1 && s.retransmittedAcks==1 && s.ackTotalUs==400);
+  uint8_t bytes[BlePerformance::SnapshotSize];BlePerformance::snapshot(bytes);
+  CHECK(read16(bytes+12)==mockMtu && read16(bytes+14)==(largeMtu?244:20));
+  CHECK(read16(bytes+16)==(largeMtu?229:5) && read32(bytes+48)==3);
+  CHECK(read32(bytes+52)==2 && read32(bytes+56)==1 && read32(bytes+60)==1);
+  return 0;
+}
+
+extern "C" unsigned performanceListCase(unsigned){
+  resetMocks();Adapter target;mockTime=100;target.service(millis());
+  listAvailable=false;listPending=true;mockTime=120;
+  request(target,0x01,2);target.service(millis());
+  ack(target,0);CHECK(BlePerformance::counters().listRequests==1);
+  mockTime=2120;listAvailable=true;listPending=false;
+  uint8_t bytes[6]{kProtocolVersion,0x01};write16(bytes+2,3);
+  write16(bytes+4,crc16(bytes,4));
+  onControlWrite(0,&control,bytes,sizeof(bytes));
+  mockTime=2123;target.processControl();
+  mockTime=2127;target.service(millis());
+  auto& s=BlePerformance::counters();
+  CHECK(s.listRequests==2 && s.listToBeginUs==7000);
+  CHECK(s.firstListToBeginMs==2007 && s.connectionToListMs==2027 && s.haveListBegin);
+  target.transmit(3127);
+  CHECK(s.listToBeginUs==7000 && s.firstListToBeginMs==2007);
+  return 0;
+}
+
+extern "C" unsigned performanceReadCase(unsigned){
+  resetMocks();Adapter target;target.performanceAvailable=true;
+  auto& s=BlePerformance::counters();s.fragments=4;
+  ble_gatts_evt_read_t request{};onPerformanceRead(0,&performance,&request);
+  CHECK(!mockReadReplies);target.service(millis());
+  CHECK(mockReadReplies==1 && mockReadStatus==BLE_GATT_STATUS_SUCCESS);
+  CHECK(!memcmp(mockReadValue,"TPD1",4) && read32(mockReadValue+48)==4);
+  uint8_t first[BlePerformance::SnapshotSize];memcpy(first,mockReadValue,sizeof(first));
+  s.fragments=99;mockTime=500;
+  request.offset=22;onPerformanceRead(0,&performance,&request);target.service(millis());
+  CHECK(mockReadReplies==2 && !memcmp(first,mockReadValue,sizeof(first)));
+  request.offset=0;onPerformanceRead(0,&performance,&request);target.service(millis());
+  CHECK(read32(mockReadValue+48)==99 && read32(mockReadValue+168)==500);
+  request.offset=BlePerformance::SnapshotSize+1;
+  onPerformanceRead(0,&performance,&request);target.service(millis());
+  CHECK(mockReadStatus==BLE_GATT_STATUS_ATTERR_INVALID_OFFSET);
+  request.offset=0;onPerformanceRead(0,&performance,&request);
+  onPerformanceRead(0,&performance,&request);
+  CHECK(mockReadStatus==BLE_GATT_STATUS_ATTERR_UNLIKELY_ERROR);
+  target.service(millis());CHECK(mockReadStatus==BLE_GATT_STATUS_SUCCESS);
+  CHECK(!cancelled && !mockNotifyCalls && target.transfer==TransferState::Idle);
+  return 0;
+}
+
+extern "C" unsigned performanceBoundsCase(unsigned){
+  resetMocks();mockTime=4294967;mockSubUs=280;
+  {
+    BlePerformance::CacheStep step;
+    BlePerformance::FlashRead read(true,64);
+    delayMicroseconds(32);
+  }
+  auto& s=BlePerformance::counters();
+  CHECK(s.readCalls==1 && s.readBytes==64 && s.readTotalUs==32 && s.readMaxUs==32);
+  CHECK(s.cacheSteps==1 && s.cacheServiceUs==32 && s.cacheReadUs==32 && !s.cacheStepActive);
+  s.notifyFailures=UINT32_MAX;s.notifyTotalUs=~uint64_t(0)-1;
+  BlePerformance::notification(false,false,20,5,4);
+  CHECK(s.notifyFailures==UINT32_MAX && s.notifyTotalUs==~uint64_t(0) && s.saturated);
+  uint8_t bytes[BlePerformance::SnapshotSize];BlePerformance::snapshot(bytes);
+  CHECK(read32(bytes+172)==1);
   return 0;
 }

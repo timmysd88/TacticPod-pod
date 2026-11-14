@@ -16,6 +16,10 @@ for name, arguments in (
     ('cancelCase', (0, 1)),
     ('disconnectCase', (0,)),
     ('cacheNotReadyCase', (0, 1)),
+    ('performanceTransportCase', (0, 1)),
+    ('performanceListCase', (0,)),
+    ('performanceReadCase', (0,)),
+    ('performanceBoundsCase', (0,)),
 ):
     for argument in arguments:
         result = Native(elf).call(name, argument)

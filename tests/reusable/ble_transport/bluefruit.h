@@ -8,6 +8,26 @@ constexpr unsigned CHR_PROPS_WRITE=8,CHR_PROPS_READ=2,CHR_PROPS_NOTIFY=16;
 constexpr unsigned SECMODE_NO_ACCESS=0,SECMODE_OPEN=1;
 constexpr unsigned BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE=2;
 constexpr unsigned BLE_GAP_EVT_SEC_PARAMS_REQUEST=1,BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION=19;
+constexpr unsigned BLE_GATTS_AUTHORIZE_TYPE_READ=1,BLE_GATT_STATUS_SUCCESS=0;
+constexpr unsigned BLE_GATT_STATUS_ATTERR_UNLIKELY_ERROR=14,BLE_GATT_STATUS_ATTERR_INVALID_OFFSET=7;
+struct ble_gatts_evt_read_t {uint16_t offset;};
+struct ble_gatts_rw_authorize_reply_params_t {
+  unsigned type;
+  struct {struct {
+    uint16_t gatt_status,update,offset,len;
+    const uint8_t* p_data;
+  } read;} params;
+};
+static uint8_t mockReadValue[176]{};
+static unsigned mockReadReplies=0,mockReadStatus=0,mockReadOffset=0;
+inline err_t sd_ble_gatts_rw_authorize_reply(uint16_t,const ble_gatts_rw_authorize_reply_params_t* reply){
+  ++mockReadReplies;mockReadStatus=reply->params.read.gatt_status;
+  mockReadOffset=reply->params.read.offset;
+  if(!mockReadStatus && reply->params.read.update &&
+     reply->params.read.offset+reply->params.read.len<=sizeof(mockReadValue))
+    memcpy(mockReadValue+reply->params.read.offset,reply->params.read.p_data,reply->params.read.len);
+  return NRF_SUCCESS;
+}
 struct ble_evt_t {
   struct {unsigned evt_id;} header;
   struct {struct {uint16_t conn_handle;} gap_evt;} evt;
@@ -17,6 +37,7 @@ static MockNotification mockNotifications[128]{};
 static unsigned mockNotifyCalls=0,mockResets=0;
 static uint16_t mockMtu=23;
 static bool mockLink=true,mockNotifyEnabled=true,mockNotifyAccepted=true;
+static unsigned mockNotifyDurationUs=0;
 struct MockFicr {uint32_t DEVICEID[2]{};};
 struct MockNvmc {uint32_t READY=1;};
 static MockFicr mockFicr;
@@ -38,10 +59,12 @@ struct BLECharacteristic {
   void setMaxLen(unsigned){}
   void setFixedLen(unsigned){}
   void setWriteCallback(void (*)(uint16_t,BLECharacteristic*,uint8_t*,uint16_t),bool){}
+  void setReadAuthorizeCallback(void (*)(uint16_t,BLECharacteristic*,ble_gatts_evt_read_t*),bool){}
   err_t begin(){return ERROR_NONE;}
   unsigned write(const void*,unsigned length){return length;}
   bool notifyEnabled(){return mockNotifyEnabled;}
   bool notify(const void* bytes,unsigned length){
+    delayMicroseconds(mockNotifyDurationUs);
     if(mockNotifyCalls<128){
       MockNotification& notification=mockNotifications[mockNotifyCalls];
       notification.length=length;notification.accepted=mockNotifyAccepted;
