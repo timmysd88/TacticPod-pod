@@ -37,8 +37,10 @@ static void resetMocks(){
   mockTime=mockSubUs=0;
   BlePerformance::counters()=BlePerformance::Counters{};
   performanceReadReady.store(false);
+  linkReadReady.store(false);
   mockSerialPins=0;
   mockLink=mockNotifyEnabled=mockNotifyAccepted=true;mockMtu=23;
+  mockConnectionAvailable=true;mockDataLength=27;mockInterval=24;mockPhy=1;
   listAvailable=true;listPending=false;
   started=true;failed=false;events.store(0);controlReady.store(false);
   Bluefruit.Advertising.running=false;
@@ -295,5 +297,31 @@ extern "C" unsigned performanceBoundsCase(unsigned){
   CHECK(s.notifyFailures==UINT32_MAX && s.notifyTotalUs==~uint64_t(0) && s.saturated);
   uint8_t bytes[BlePerformance::SnapshotSize];BlePerformance::snapshot(bytes);
   CHECK(read32(bytes+172)==1);
+  return 0;
+}
+
+extern "C" unsigned linkDiagnosticsCase(unsigned unavailable){
+  resetMocks();Adapter target;target.linkPerformanceAvailable=true;
+  mockConnectionAvailable=!unavailable;
+  ble_gatts_evt_read_t request{};request.offset=1;onLinkRead(0,&linkPerformance,&request);
+  target.service(millis());CHECK(mockReadStatus==BLE_GATT_STATUS_ATTERR_INVALID_OFFSET);
+  request.offset=0;onLinkRead(0,&linkPerformance,&request);
+  target.service(millis());
+  CHECK(mockReadReplies==2 && mockReadStatus==BLE_GATT_STATUS_SUCCESS);
+  CHECK(!memcmp(mockReadValue,"TPL1",4) && read16(mockReadValue+4)==1 &&
+    read16(mockReadValue+6)==BlePerformance::LinkSnapshotSize);
+  CHECK(mockReadValue[8]==(unavailable?0:1) && mockReadValue[9]==1);
+  CHECK(read16(mockReadValue+10)==(unavailable?0:27));
+  CHECK(read16(mockReadValue+12)==(unavailable?0:24) && read16(mockReadValue+14)==0);
+  uint8_t first[BlePerformance::LinkSnapshotSize];memcpy(first,mockReadValue,sizeof(first));
+  mockConnectionAvailable=true;mockPhy=2;mockDataLength=251;mockInterval=12;
+  request.offset=8;onLinkRead(0,&linkPerformance,&request);target.service(millis());
+  CHECK(!memcmp(first,mockReadValue,sizeof(first)));
+  request.offset=0;onLinkRead(0,&linkPerformance,&request);target.service(millis());
+  CHECK(mockReadValue[8]==2 && read16(mockReadValue+10)==251 && read16(mockReadValue+12)==12);
+  request.offset=BlePerformance::LinkSnapshotSize+1;
+  onLinkRead(0,&linkPerformance,&request);target.service(millis());
+  CHECK(mockReadStatus==BLE_GATT_STATUS_ATTERR_INVALID_OFFSET);
+  CHECK(!cancelled && !mockNotifyCalls && target.transfer==TransferState::Idle);
   return 0;
 }

@@ -24,8 +24,10 @@ expected = {
     'data': ('NOTIFY', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', False, 244),
     'protocolVersion': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 2),
     'performance': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 176),
+    'linkPerformance': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 16),
 }
-constants = {'sizeof(controlQueue)': 16, 'kMaxFrameSize': 244, 'BlePerformance::SnapshotSize': 176}
+constants = {'sizeof(controlQueue)': 16, 'kMaxFrameSize': 244, 'BlePerformance::SnapshotSize': 176,
+             'BlePerformance::LinkSnapshotSize': 16}
 for name, (prop, read, write, fixed, length) in expected.items():
     assert re.search(rf'{name}\.setProperties\(CHR_PROPS_{prop}\)', source)
     match = re.search(rf'{name}\.setPermission\((\w+),\s*(\w+)\)', source)
@@ -35,7 +37,7 @@ for name, (prop, read, write, fixed, length) in expected.items():
     assert constants.get(match[2], match[2]) in (length, str(length))
 
 uuids = re.findall(r'constexpr const char\* k\w+Uuid = "([^"]+)"', source)
-assert uuids == [f'b973000{i}-7d2a-4f91-a380-8b52c029dc61' for i in range(1, 8)]
+assert uuids == [f'b973000{i}-7d2a-4f91-a380-8b52c029dc61' for i in range(1, 9)]
 bases = {bytes.fromhex(u.replace('-', ''))[:2] + bytes.fromhex(u.replace('-', ''))[4:] for u in uuids}
 assert len(bases) == 1  # Only the SoftDevice's 16-bit UUID field changes.
 

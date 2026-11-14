@@ -36,7 +36,10 @@ struct MockNotification {uint8_t bytes[244];unsigned length;bool accepted;};
 static MockNotification mockNotifications[128]{};
 static unsigned mockNotifyCalls=0,mockResets=0;
 static uint16_t mockMtu=23;
+static uint16_t mockDataLength=27,mockInterval=24;
+static uint8_t mockPhy=1;
 static bool mockLink=true,mockNotifyEnabled=true,mockNotifyAccepted=true;
+static bool mockConnectionAvailable=true;
 static unsigned mockNotifyDurationUs=0;
 struct MockFicr {uint32_t DEVICEID[2]{};};
 struct MockNvmc {uint32_t READY=1;};
@@ -81,7 +84,12 @@ struct BLEDis {
   void setFirmwareRev(const char*){}
   err_t begin(){return ERROR_NONE;}
 };
-struct BLEConnection {uint16_t getMtu(){return mockMtu;}};
+struct BLEConnection {
+  uint16_t getMtu(){return mockMtu;}
+  uint16_t getDataLength(){return mockDataLength;}
+  uint16_t getConnectionInterval(){return mockInterval;}
+  uint8_t getPHY(){return mockPhy;}
+};
 struct MockAdvertising {
   bool running=false;
   void restartOnDisconnect(bool){}
@@ -105,7 +113,7 @@ struct MockBluefruit {
   void setEventCallback(void (*)(ble_evt_t*)){}
   bool connected(){return mockLink;}
   uint16_t connHandle(){return 0;}
-  BLEConnection* Connection(uint16_t){return &connection;}
+  BLEConnection* Connection(uint16_t){return mockConnectionAvailable?&connection:nullptr;}
   bool disconnect(uint16_t){mockLink=false;return true;}
 };
 static MockBluefruit Bluefruit;
