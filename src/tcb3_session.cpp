@@ -14,15 +14,39 @@
 #include "ble_runtime.h"
 #include "flash_power.h"
 #include "ble_performance.h"
+#include "tcb3_fast_discovery.h"
+#include <new>
 #endif
 namespace {
 namespace TcbDetail {
 Tcb3::Store store;Tcb3::Export dump;
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
-Tcb3::Manifest bleManifest;Tcb3::Export bleDump;
+union BleCacheStorage {
+  Tcb3::Manifest manifest;
+  Tcb3FastDiscovery::Scanner scanner;
+  BleCacheStorage():manifest(){}
+  ~BleCacheStorage()=default;
+} bleCache;
+Tcb3::Export bleDump;
 enum class ManifestCache:uint8_t {Cold,Scanning,Ready,Failed};
 ManifestCache manifestCache=ManifestCache::Cold;
 bool bleReading=false,bleListing=false,bleDownloading=false;
+bool provisionalMode=false,scannerActive=false,validating=false,validationDone=false,validationFailed=false;
+Tcb3::ManifestEntry selectedProvisional{},provisionalEntry{};
+void useManifest(){
+  if(scannerActive){
+    bleCache.scanner.~Scanner();
+    new (&bleCache.manifest) Tcb3::Manifest;
+    scannerActive=false;
+  }
+}
+void useScanner(){
+  if(!scannerActive){
+    bleCache.manifest.~Manifest();
+    new (&bleCache.scanner) Tcb3FastDiscovery::Scanner;
+    scannerActive=true;
+  }
+}
 char bleDiagnostic[256]{};
 unsigned bleDiagnosticSize=0,bleDiagnosticAt=0,bleDiagnosticDropped=0;
 #endif
@@ -163,6 +187,9 @@ bool storeIdentity(uint32_t* observedId=nullptr){
   return true;
 }
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
+Tcb3::Port bleReadOnlyPort(){
+  return {nullptr,read,nullptr,nullptr,nullptr,nullptr,status,nullptr,nullptr,nullptr};
+}
 void bleReport(const char* reason,int flashStatus=-1,uint32_t jedec=0){
   char text[144];unsigned length=0;
   auto append=[&](const char* p){while(*p && length<sizeof(text))text[length++]=*p++;};
@@ -242,16 +269,25 @@ void updateManifestCache(unsigned steps,bool sleepAfter){
   }
   if(manifestCache==ManifestCache::Cold){
     BlePerformance::startCache();
-    bleManifest.begin(port,0,Tcb3Test::WriteEnd);manifestCache=ManifestCache::Scanning;
+    if(scannerActive)bleCache.scanner.begin(bleReadOnlyPort(),Tcb3Test::WriteEnd);
+    else bleCache.manifest.begin(port,0,Tcb3Test::WriteEnd);
+    manifestCache=ManifestCache::Scanning;
   }
-  while(steps-- && !bleManifest.done()){
+  while(steps-- && !(scannerActive?bleCache.scanner.done():bleCache.manifest.done())){
     BlePerformance::CacheStep timing;
-    bleManifest.update();
+    if(scannerActive)bleCache.scanner.update(true);else bleCache.manifest.update();
   }
-  if(bleManifest.done()){
-    manifestCache=bleManifest.failed()?ManifestCache::Failed:ManifestCache::Ready;
-    BlePerformance::finishCache(bleManifest.failed());
-    if(bleManifest.failed())bleReport(bleManifest.errorMessage());
+  if(scannerActive?bleCache.scanner.done():bleCache.manifest.done()){
+    const bool failed=scannerActive?
+      (bleCache.scanner.result()!=Tcb3FastDiscovery::Result::Complete &&
+       bleCache.scanner.result()!=Tcb3FastDiscovery::Result::Incomplete):bleCache.manifest.failed();
+    manifestCache=failed?ManifestCache::Failed:ManifestCache::Ready;
+    BlePerformance::finishCache(failed);
+    if(failed){
+      if(scannerActive && bleCache.scanner.result()==Tcb3FastDiscovery::Result::Overflow)
+        bleReport("provisional session cache overflow");
+      else bleReport(scannerActive?bleCache.scanner.error():bleCache.manifest.errorMessage());
+    }
   }
   if(sleepAfter)bleSleepFlash();
 }
@@ -462,17 +498,32 @@ uint32_t freeSectors(){
 }
 #if TACTICPOD_BLE && TACTICPOD_REUSABLE
 void invalidateBleManifest(){
+  useManifest();provisionalMode=false;validating=validationDone=validationFailed=false;
   manifestCache=ManifestCache::Cold;bleListing=false;
   BlePerformance::invalidateCache();
 }
 void bleIdleService(){
-  if(!BleRuntime::active())updateManifestCache(1,false);
+  if(!BleRuntime::active()){
+    if(provisionalMode)invalidateBleManifest();
+    updateManifestCache(1,false);
+  }
+}
+bool bleEnableProvisional(){
+  if(!bleReadAllowed() || bleDownloading || validating)return false;
+  bleListing=false;useScanner();provisionalMode=true;
+  validationDone=validationFailed=false;
+  manifestCache=ManifestCache::Cold;BlePerformance::invalidateCache();
+  return true;
 }
 bool bleBeginList(bool* notReady){
   if(notReady)*notReady=false;
   if(!bleReadAllowed())return false;
-  if(bleDownloading){
+  if(bleDownloading || validating){
     bleReport("LIST ownership conflict");return false;
+  }
+  if(provisionalMode && !scannerActive){
+    useScanner();manifestCache=ManifestCache::Cold;bleListing=false;
+    validationDone=validationFailed=false;BlePerformance::invalidateCache();
   }
   if(manifestCache!=ManifestCache::Ready){
     if(notReady)*notReady=manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning;
@@ -482,9 +533,63 @@ bool bleBeginList(bool* notReady){
   bleListing=true;bleDownloading=false;
   return true;
 }
+bool bleBeginValidation(uint32_t id,uint32_t epoch){
+  if(!bleReadAllowed() || !provisionalMode || !scannerActive || !bleListDone() ||
+     bleDownloading || validating)return false;
+  const Tcb3FastDiscovery::Candidate* selected=nullptr;
+  for(unsigned i=0;i<bleCache.scanner.count();++i){
+    const auto* candidate=bleCache.scanner.entry(i);
+    if(candidate && candidate->metadata.sessionId==id && candidate->metadata.resetEpoch==epoch){
+      selected=candidate;break;
+    }
+  }
+  if(!selected || !selected->provisional || !selected->metadata.sectorCount ||
+     uint64_t(selected->metadata.firstAddress)+uint64_t(selected->metadata.sectorCount)*Tcb3::Sector>Tcb3Test::WriteEnd)
+    return false;
+  selectedProvisional=selected->metadata;
+  const uint32_t end=selectedProvisional.firstAddress+selectedProvisional.sectorCount*Tcb3::Sector;
+  bleListing=false;useManifest();
+  // Starting at zero makes the existing validator recheck the reset marker and epoch.
+  bleCache.manifest.begin(bleReadOnlyPort(),0,end);
+  manifestCache=ManifestCache::Scanning;validating=true;validationDone=validationFailed=false;
+  return true;
+}
+bool bleValidationDone(){return validationDone;}
+bool bleValidationFailed(){return validationDone && validationFailed;}
+bool sameProvisional(const Tcb3::ManifestEntry& a,const Tcb3::ManifestEntry& b){
+  if(a.sessionId!=b.sessionId || a.resetEpoch!=b.resetEpoch || a.firstAddress!=b.firstAddress ||
+     a.sectorCount!=b.sectorCount || a.formatVersion!=b.formatVersion ||
+     a.footerReason!=b.footerReason || a.startUs!=b.startUs || a.stopUs!=b.stopUs ||
+     a.deviceId!=b.deviceId || (b.flags&3U)!=3U)return false;
+  for(unsigned i=0;i<4;++i)
+    if(a.committed[i]!=b.committed[i] || a.lost[i]!=b.lost[i])return false;
+  return true;
+}
 bool bleService(unsigned steps){
   bleFlushDiagnostic();
   if(!BleRuntime::active())return false;
+  if(validating){
+    if(!steps || !cacheIdle())return false;
+    if(!bleWakeFlash()){
+      validating=false;validationDone=validationFailed=true;manifestCache=ManifestCache::Failed;
+      return false;
+    }
+    bool progressed=false;
+    while(steps-- && !bleCache.manifest.done()){bleCache.manifest.update();progressed=true;}
+    if(bleCache.manifest.done()){
+      const Tcb3::ManifestEntry* match=nullptr;
+      for(unsigned i=0;i<bleCache.manifest.count();++i){
+        const auto* entry=bleCache.manifest.entry(i);
+        if(entry && sameProvisional(selectedProvisional,*entry)){match=entry;break;}
+      }
+      validationFailed=bleCache.manifest.failed() || bleCache.manifest.overflow() || !match;
+      validating=false;validationDone=true;
+      manifestCache=validationFailed?ManifestCache::Failed:ManifestCache::Ready;
+      bleListing=!validationFailed;
+      if(validationFailed)bleReport(bleCache.manifest.failed()?bleCache.manifest.errorMessage():"provisional session validation mismatch");
+    }
+    bleSleepFlash();return progressed;
+  }
   if(!bleListing && !bleDownloading){updateManifestCache(steps?32:0,true);return false;} // Restore steps for Phase 2.
   bool progressed=false;
   while(steps--){
@@ -500,22 +605,44 @@ bool bleService(unsigned steps){
 }
 bool bleListDone(){return bleListing && manifestCache==ManifestCache::Ready;}
 bool bleListFailed(){return manifestCache==ManifestCache::Failed;}
-bool bleListOverflow(){return bleListDone() && bleManifest.overflow();}
-uint32_t bleIncompleteCount(){return bleListDone()?bleManifest.incompleteCountValue():0;}
-unsigned bleSessionCount(){return bleListDone()?bleManifest.count():0;}
+uint16_t bleDiscoveryError(){
+  if(!scannerActive || manifestCache!=ManifestCache::Failed)return 4;
+  switch(bleCache.scanner.result()){
+    case Tcb3FastDiscovery::Result::Overflow:return 8;
+    case Tcb3FastDiscovery::Result::Corrupt:return 9;
+    case Tcb3FastDiscovery::Result::Ambiguous:return 10;
+    case Tcb3FastDiscovery::Result::IoError:return 11;
+    case Tcb3FastDiscovery::Result::NotStarted:
+    case Tcb3FastDiscovery::Result::Scanning:return 11;
+    default:return 4;
+  }
+}
+bool bleListOverflow(){return bleListDone() && (scannerActive?bleCache.scanner.overflow():bleCache.manifest.overflow());}
+uint32_t bleIncompleteCount(){return bleListDone()?(scannerActive?bleCache.scanner.incomplete():bleCache.manifest.incompleteCountValue()):0;}
+unsigned bleSessionCount(){return bleListDone()?(scannerActive?bleCache.scanner.count():bleCache.manifest.count()):0;}
 const Tcb3::ManifestEntry* bleSession(unsigned index){
-  const Tcb3::ManifestEntry* entry=bleListDone()?bleManifest.entry(index):nullptr;
+  const Tcb3::ManifestEntry* entry=nullptr;
+  if(bleListDone()){
+    if(scannerActive){
+      const auto* candidate=bleCache.scanner.entry(index);
+      if(candidate && candidate->provisional){
+        provisionalEntry=candidate->metadata;provisionalEntry.flags=9U;entry=&provisionalEntry;
+      }
+    }else entry=bleCache.manifest.entry(index);
+  }
   if(!entry)bleReport("manifest entry unavailable");
   return entry;
 }
 bool bleBeginSession(uint32_t id,uint32_t epoch){
   if(!bleReadAllowed())return false;
-  if(!bleListDone() || bleDownloading){
+  if(!bleListDone() || bleDownloading || scannerActive ||
+     (provisionalMode && (!validationDone || validationFailed ||
+       selectedProvisional.sessionId!=id || selectedProvisional.resetEpoch!=epoch))){
     bleReport("GET manifest/ownership conflict");return false;
   }
   const Tcb3::ManifestEntry* selected=nullptr;
-  for(unsigned i=0;i<bleManifest.count();++i){
-    const Tcb3::ManifestEntry* candidate=bleManifest.entry(i);
+  for(unsigned i=0;i<bleCache.manifest.count();++i){
+    const Tcb3::ManifestEntry* candidate=bleCache.manifest.entry(i);
     if(candidate && candidate->sessionId==id && candidate->resetEpoch==epoch){selected=candidate;break;}
   }
   if(!selected || (selected->flags&3U)!=3U || !selected->sectorCount ||
@@ -534,7 +661,13 @@ bool bleTransferDone(){return bleDownloading && bleDump.done();}
 bool bleTransferFailed(){return bleDownloading && bleDump.failed();}
 void bleFinishList(){bleSleepFlash();}
 void bleFinishSession(){bleDownloading=false;bleSleepFlash();}
-void bleCancel(){bleListing=bleDownloading=false;bleSleepFlash();}
+void bleCancel(){
+  bleListing=bleDownloading=false;bleSleepFlash();
+  if(validating){
+    validating=false;validationDone=validationFailed=false;
+    useScanner();manifestCache=ManifestCache::Cold;BlePerformance::invalidateCache();
+  }
+}
 #endif
 void update(bool allow){
 #if TACTICPOD_REUSABLE

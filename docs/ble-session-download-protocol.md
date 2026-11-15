@@ -15,6 +15,9 @@ The device advertises as `TacticPod` for 180 seconds after the existing double-t
 | `0006` | Protocol version | Read two bytes: `[2, 0]`. |
 | `0007` | Optional performance snapshot | Read-only, 176 bytes; independent version 1 layout below. |
 | `0008` | Optional link snapshot | Read-only, 16 bytes; independent version 1 layout below. |
+| `0009` | Optional high-speed capability | Read-only, 16 bytes; `TPH1` layout in the high-speed design. |
+| `000a` | Optional high-speed ACK | Write-only, 12 bytes; unchanged v3 ACK layout. |
+| `000b` | Optional feature capability | Read-only, 12 bytes; `TPF1` layout below. |
 
 Standard Device Information Service exposes manufacturer `TacticPod`, model `XIAO nRF52840 Sense`, the FICR-derived serial number, and firmware revision `ble-download-2`. GATT is open and unbonded. Existing pairing rejection, battery and activity behavior remain in place.
 
@@ -43,10 +46,12 @@ that initialization now reaches advertising and connection.
 | Protocol version | Read | Open / No access | Fixed 2 |
 | Performance snapshot | Read, authorized in foreground | Open / No access | Fixed 176 |
 | Link snapshot | Read, authorized in foreground | Open / No access | Fixed 16 |
+| Feature capability | Read | Open / No access | Fixed 12 |
 
-Initialization order remains Device Information Service, custom service, then
+Initialization order is Device Information Service, custom service, then
 Activity, Battery, Control, Data and Protocol version, followed by the optional
-Performance snapshot and optional Link snapshot. All eight custom UUIDs share one vendor-specific base.
+Performance snapshot, Link snapshot, high-speed characteristics and feature capability.
+All custom UUIDs share one vendor-specific base.
 Existing UUIDs, packet formats, connection configuration, button timing and
 recording behavior are unchanged. Failure to add the optional characteristic is
 reported on serial and does not fail the existing transfer service. The production branch does
@@ -247,6 +252,18 @@ The frame is at most `min(244, negotiated MTU - 3)` bytes. A message may span mu
 
 After a valid ACK, the next fragment is eligible on the next foreground service call, without a fixed inter-fragment delay. Each call attempts at most one notification; only a successful BLE stack submission starts the ACK timeout. A rejected submission retains the identical frame and waits 100 ms before retrying, with at most five consecutive submission failures.
 
+Control-write callbacks copy at most four pending commands, including their receive
+timestamps, into a bounded FIFO. The foreground processes one command per service
+call in arrival order, so an ACK followed immediately by the next LIST or GET
+is not lost merely because the ACK has not yet been processed. A full queue
+latches an overflow fault: further control writes are ignored, the foreground
+discards the pending queue, aborts the transfer, logs the fault, and the normal
+BLE fault lifecycle disconnects and resets the pod. A successful GATT write
+response alone does not confirm that a command was processed. Overflow cannot
+be reported reliably as a normal protocol ERROR because the dropped command's
+transfer state is unknown; clients must treat the disconnect as a failed transfer.
+This queue does not change v2 framing or the separate v3 ACK window.
+
 Message types:
 
 | Type | Payload |
@@ -263,9 +280,99 @@ Error codes: `1` bad protocol version/CRC, `2` malformed or unsupported command,
 
 `SESSION_ENTRY` fields are: `sessionId:u32`, `resetEpoch:u32`, `firstAddress:u32`, `sectorCount:u32`, `formatVersion:u32`, `flags:u32`, `footerReason:u32`, `startUs:u64`, `stopUs:u64`, `deviceId:u64`, `committed[4]:u64`, `lost[4]:u64`. Flag bit 0 means the footer is sealed, bit 1 means stored pages/blocks and footer counts passed validation, and bit 2 means clean completion with no loss. The scanner reports at most 64 entries; overflow is explicit. Incomplete sessions are counted but not offered for download.
 
+## Experimental provisional discovery (Phase 4C)
+
+This extension defaults to the existing validated LIST behavior on every
+connection. The Phase 4D browser implements TPF1 negotiation and the
+provisional validation workflow; the combined implementation has not yet been
+tested on hardware. An old firmware rejects its commands with ERROR 2.
+
+The optional read-only capability UUID is
+`b973000b-7d2a-4f91-a380-8b52c029dc61`. Its fixed 12-byte value is:
+
+| Offset | Field |
+|---:|---|
+| 0 | ASCII `TPF1` |
+| 4 | Capability schema `u8 = 1` |
+| 5 | Reserved `u8 = 0` |
+| 6 | Feature flags `u32`, little-endian: bit 0 = provisional discovery; other bits zero in schema 1 |
+| 10 | CRC-16/CCITT-FALSE over bytes 0 through 9, little-endian |
+
+With the feature enabled, the exact value is
+`54 50 46 31 01 00 01 00 00 00 44 02`. The characteristic is independent of
+the unchanged `2.0` protocol and `TPH1` high-speed characteristics. An existing
+client need not read it. Registration or initialization failure disables
+provisional selection and logs the failure without intentionally disabling
+legacy LIST or v2/v3 transfers. Actual SoftDevice resource availability still
+requires hardware testing.
+
+A new client reads the characteristic before selection. If it is absent or
+bit 0 is clear in a valid schema-1 response, use legacy validated LIST. Validate
+the characteristic's length, magic, schema, reserved byte and CRC; report a
+malformed or unsupported response instead of treating it as proof of support.
+Ignore unknown feature bits in an otherwise valid schema-1 response. A read or
+connection error is not proof of absence and must be surfaced. Only after a
+valid response with bit 0 set should a client request provisional discovery,
+and it must confirm and ACK the explicit selection response.
+
+| Command | Bytes before CRC | Total length |
+|---|---|---:|
+| `SELECT_PROVISIONAL` | `version:u8=2, opcode:u8=6, transferId:u16, mode:u8=1` | 7 |
+| `VALIDATE` | `version:u8=2, opcode:u8=7, transferId:u16, sessionId:u32, resetEpoch:u32` | 14 |
+
+`SELECT_PROVISIONAL` replies with acknowledged v2 message `0x88`, payload
+`mode:u8=1`. The scanner starts only after this request is admitted. Cancellation
+or transmission failure before its ACK restores legacy mode and invalidates the
+old cache. Once selected, LIST uses the same framing and ERROR 7 readiness
+response, but scans sector metadata, not data pages. Each entry has flags `9`:
+sealed footer (bit 0) and **provisional** (bit 3); bit 1 (full validation) and
+bit 2 are clear. `LIST_BEGIN` status 0 does not change this interpretation.
+Incomplete sessions are counted and omitted. No partial entries are exposed
+on errors: ERROR 8 means overflow, 9 corrupt metadata, 10 ambiguous metadata,
+and 11 flash/identity failure. Other errors retain their existing meanings.
+Mode is an exact value, not a feature bitmask: while idle, unsupported modes or
+lengths are ERROR 2, and a bad command CRC is ERROR 1. For example, transfer ID 1 selects
+the mode with bytes `02 06 01 00 01 07 55`. If the feature characteristic
+could not be initialized, this command is rejected with ERROR 2.
+For that ID, the single selection notification is
+`02 88 01 00 00 00 00 00 00 00 01 00 01 01 83 b7` and its v2 ACK is
+`02 03 01 00 00 00 00 00 00 00 83 b7 5b 0c`. Other transfer IDs require
+recomputed CRCs; a client must ACK the notification actually received.
+
+The client must send `VALIDATE` for a listed `(sessionId, resetEpoch)` before
+GET or high-speed mode selection. It receives acknowledged v2 messages `0x89`
+(`VALIDATION_PROGRESS`) followed by `0x8a` (`VALIDATION_COMPLETE`); each has
+payload `sessionId:u32, resetEpoch:u32`. A progress message is sent immediately,
+then at most once per second while validator steps advance. ACK each fragment
+using the ordinary v2 rules. ERROR 3 means the selection is unavailable; ERROR 4
+means validation failed. A stall, cancellation, disconnect, failed ACK or error
+does not authorize GET.
+
+Validation reuses the existing full validator from flash address zero through
+the selected sector range. This also rechecks the reset marker/epoch and can
+reject corruption in earlier sessions. It checks every selected data page,
+block and footer, and requires the resulting session identity, epoch, range and
+footer metadata to match the provisional entry. Only the selected validated
+session can then be fetched, using unchanged v2 or v3 GET framing. This work can
+take substantially longer than provisional LIST and has no duration guarantee.
+Full validation is not replaced by the exporter or by client-side CRC checking.
+
+The two scanners share storage rather than keeping two 64-entry tables. Starting
+VALIDATE discards the provisional inventory; to select a *different* session,
+the client must issue LIST again, wait for a new scan, and validate that session.
+An accepted recording/reset invalidates both modes; normal BLE exit still resets
+the MCU. No flash writes are introduced. Cache work uses the existing 32-step
+connected budget and gates; full validation uses the existing 16-step transfer
+budget. TPD1 cache counters describe the most recent discovery scan, not the
+subsequent full-validation work. Normal transfer progress and the existing
+60-second stall timeout apply; if validation cannot make progress, progress
+messages stop rather than indefinitely masking the stall. The Phase 4D browser
+negotiates and displays provisional entries, handles these messages and performs
+VALIDATE before v2/v3 GET.
+
 ## Storage and reconstruction
 
-`LIST` uses the existing 64-entry RAM manifest without rescanning flash. After boot recovery, the unchanged validator populates that same allocation incrementally: reset markers/epochs, header and continuation identity, each page CRC, block CRC/envelope/counts, and session footer/counts are all checked before the cache becomes ready. There is no second session table, persistent index or additional flash write.
+In legacy mode, `LIST` uses the existing 64-entry RAM manifest without rescanning flash. After boot recovery, the unchanged validator populates that same allocation incrementally: reset markers/epochs, header and continuation identity, each page CRC, block CRC/envelope/counts, and session footer/counts are all checked before the cache becomes ready. There is no second session table, persistent index or additional flash write.
 
 An awake idle loop performs at most one validator step when acquisition slack permits. Recording/admission/finalisation, recovery, USB export, diagnostics, identity queries and GPS/capture work have priority. No cache work runs in standby. In this experiment, while BLE is connected and no LIST/GET owns the manifest, up to 32 steps run per service call, waking and sleeping only external flash for that batch. Restore `updateManifestCache(steps,true)` in the session service to return to the Phase 2 budget. The export service budget remains 16. Unchanged flash ownership guards apply to every batch; no transaction is held between steps. Larger batches increase foreground blocking; physical responsiveness and scan time must be measured before adoption.
 

@@ -11,6 +11,10 @@ static unsigned cancelled=0,released=0,finished=0;
 static unsigned cacheServiceCalls=0,cacheServiceBudget=0;
 static bool listAvailable=true;
 static bool listPending=false;
+static bool provisionalEnabled=false,validationAllowed=false,validationDone=false,validationFailed=false;
+static bool validationServiceProgress=false;
+static bool provisionalAdmission=true;
+static uint16_t discoveryError=4;
 static bool streamEnabled=false;
 static bool exporterOwned=false;
 static unsigned streamIndex=0;
@@ -19,9 +23,15 @@ static const unsigned streamLengths[]={40,280,24};
 namespace BatteryRuntime {void capture(Report& report){report=Report{};}}
 namespace Tcb3Session {
 bool bleBeginList(bool* notReady){if(notReady)*notReady=listPending;return listAvailable;}
-bool bleService(unsigned steps){++cacheServiceCalls;cacheServiceBudget=steps;return false;}
+bool bleEnableProvisional(){if(!provisionalAdmission)return false;provisionalEnabled=true;return true;}
+void invalidateBleManifest(){provisionalEnabled=false;}
+bool bleBeginValidation(uint32_t,uint32_t){return provisionalEnabled && validationAllowed;}
+bool bleValidationDone(){return validationDone;}
+bool bleValidationFailed(){return validationFailed;}
+bool bleService(unsigned steps){++cacheServiceCalls;cacheServiceBudget=steps;return validationServiceProgress;}
 bool bleListDone(){return true;}
 bool bleListFailed(){return false;}
+uint16_t bleDiscoveryError(){return discoveryError;}
 bool bleListOverflow(){return false;}
 uint32_t bleIncompleteCount(){return 0;}
 unsigned bleSessionCount(){return 0;}
@@ -53,9 +63,15 @@ static void resetMocks(){
   mockSerialPins=0;
   mockLink=mockNotifyEnabled=mockNotifyAccepted=true;mockMtu=23;
   mockConnectionAvailable=true;mockDataLength=27;mockInterval=24;mockPhy=1;
+  mockFeatureBeginFailure=mockFeatureWriteFailure=false;mockFeatureLength=mockProtocolLength=0;
+  memset(mockFeatureValue,0,sizeof(mockFeatureValue));memset(mockProtocolValue,0,sizeof(mockProtocolValue));
   listAvailable=true;listPending=false;
+  provisionalEnabled=validationAllowed=validationDone=validationFailed=false;discoveryError=4;
+  validationServiceProgress=false;
+  provisionalAdmission=true;
   streamEnabled=exporterOwned=false;streamIndex=0;
-  started=true;failed=false;events.store(0);controlReady.store(false);
+  started=true;failed=false;events.store(0);
+  controlHead.store(0);controlTail.store(0);controlOverflow.store(false);
   Bluefruit.Advertising.running=false;
 }
 static void request(Adapter&,uint8_t,uint16_t,const uint8_t*,unsigned);
@@ -271,23 +287,305 @@ static void beginMessage(Adapter& target){
   target.transfer=TransferState::Downloading;target.transferId=2;
   target.setMessage(kTransportPacket,payload,sizeof(payload));
 }
-static void request(Adapter& target,uint8_t opcode,uint16_t id,const uint8_t* fields=nullptr,unsigned count=0){
+static void enqueueRequest(uint8_t opcode,uint16_t id,const uint8_t* fields=nullptr,unsigned count=0){
   uint8_t bytes[14]{kProtocolVersion,opcode};
   write16(bytes+2,id);
   if(count)memcpy(bytes+4,fields,count);
   write16(bytes+4+count,crc16(bytes,4+count));
   onControlWrite(0,&control,bytes,uint16_t(count+6));
+}
+static void request(Adapter& target,uint8_t opcode,uint16_t id,const uint8_t* fields=nullptr,unsigned count=0){
+  enqueueRequest(opcode,id,fields,count);
   target.processControl();
 }
-static void ack(Adapter& target,unsigned index){
+static void enqueueAck(unsigned index){
   const uint8_t* frame=mockNotifications[index].bytes;
   uint8_t fields[8];write32(fields,read32(frame+4));write16(fields+4,read16(frame+8));
   write16(fields+6,read16(frame+mockNotifications[index].length-2));
-  request(target,0x03,read16(frame+2),fields,sizeof(fields));
+  enqueueRequest(0x03,read16(frame+2),fields,sizeof(fields));
+}
+static void ack(Adapter& target,unsigned index){
+  enqueueAck(index);target.processControl();
 }
 static bool sameFrame(unsigned a,unsigned b){
   return mockNotifications[a].length==mockNotifications[b].length &&
     !memcmp(mockNotifications[a].bytes,mockNotifications[b].bytes,mockNotifications[a].length);
+}
+
+extern "C" unsigned controlQueueCase(unsigned scenario){
+  resetMocks();Adapter target;target.featureAvailable=true;
+  if(scenario==0 || scenario==1 || scenario==3){
+    mockMtu=247;
+    const uint8_t mode[]={1};request(target,0x06,1,mode,sizeof(mode));
+    CHECK(target.transfer==TransferState::SelectingDiscovery);
+    target.transmit(1);CHECK(mockNotifyCalls==1 && target.awaitingAck);
+    if(scenario==3){
+      enqueueAck(0);
+      for(unsigned i=1;i<kControlQueueSize;++i)enqueueRequest(0x01,uint16_t(i+1));
+      enqueueRequest(0x01,9);
+      CHECK(controlOverflow.load() && target.awaitingAck && provisionalEnabled);
+      const uint32_t head=controlHead.load();enqueueRequest(0x04,1);
+      CHECK(controlHead.load()==head);
+      target.service(2);
+      CHECK(failed && target.controlOverflowHandled && !provisionalEnabled);
+      CHECK(target.transfer==TransferState::Idle && !target.messageReady && !target.awaitingAck);
+      CHECK(controlHead.load()==controlTail.load() && !BlePerformance::counters().listRequests);
+      const unsigned stops=cancelled;target.processControl();
+      CHECK(cancelled==stops && mockNotifyCalls==1);
+      return 0;
+    }
+    if(scenario==0){
+      mockTime=10;enqueueAck(0);mockTime=20;enqueueRequest(0x01,2);
+      mockTime=30;
+      target.processControl();
+      CHECK(target.transfer==TransferState::Idle && provisionalEnabled);
+      mockTime=40;
+      target.processControl();
+      CHECK(target.transfer==TransferState::Scanning && target.transferId==2);
+      CHECK(BlePerformance::counters().listRequests==1);
+      mockTime=50;target.service(50);
+      CHECK(BlePerformance::counters().listToBeginUs==30000);
+      return 0;
+    }
+    ack(target,0);
+    validationAllowed=true;
+    uint8_t fields[8];write32(fields,12);write32(fields+4,7);
+    request(target,0x07,2,fields,sizeof(fields));target.transmit(2);
+    CHECK(mockNotifyCalls==2 && mockNotifications[1].bytes[1]==kValidationProgress);
+    ack(target,1);validationDone=true;target.service(3);
+    CHECK(mockNotifyCalls==3 && mockNotifications[2].bytes[1]==kValidationComplete);
+    enqueueAck(2);enqueueRequest(0x02,3,fields,sizeof(fields));
+    target.processControl();
+    CHECK(target.transfer==TransferState::Idle);
+    target.processControl();
+    CHECK(target.transfer==TransferState::Downloading && target.transferId==3 && exporterOwned);
+    return 0;
+  }
+  if(scenario==2){
+    beginMessage(target);target.transmit(1);
+    uint8_t bad[14]{2,3,2,0};write16(bad+12,uint16_t(crc16(bad,12)^1U));
+    const uint8_t* frame=mockNotifications[0].bytes;
+    uint8_t fields[8];write32(fields,read32(frame+4));write16(fields+4,read16(frame+8));
+    write16(fields+6,read16(frame+mockNotifications[0].length-2));
+    onControlWrite(0,&control,bad,sizeof(bad));
+    enqueueRequest(0x03,3,fields,sizeof(fields));enqueueAck(0);enqueueRequest(0x04,2);
+    target.processControl();
+    CHECK(target.awaitingAck && target.messageOffset==0 && (events.load()&kInvalid));
+    target.processControl();
+    CHECK(target.awaitingAck && target.messageOffset==0);
+    target.processControl();
+    CHECK(!target.awaitingAck && target.messageOffset==5);
+    target.processControl();
+    CHECK(target.transfer==TransferState::SendingCancel && finished==1 && !released);
+    return 0;
+  }
+  if(scenario==4 || scenario==7){
+    BlePhase1::Runtime<Adapter> lifecycle;BleMode::Inputs in;
+    in.doubleTap=true;lifecycle.update(0,in,target);
+    in.doubleTap=false;lifecycle.update(1,in,target);
+    CHECK(lifecycle.state()==BleMode::State::Connected);
+    if(scenario==4){
+      enqueueRequest(0x01,4);
+      mockLink=false;onDisconnect(0,0);lifecycle.update(2,in,target);
+      CHECK(!BlePerformance::counters().listRequests && controlHead.load()==controlTail.load());
+    }else{
+      for(unsigned i=0;i<kControlQueueSize+1;++i)enqueueRequest(0x01,uint16_t(i+1));
+      lifecycle.update(2,in,target);
+      CHECK(failed && controlOverflow.load() && !BlePerformance::counters().listRequests);
+    }
+    CHECK(lifecycle.state()==BleMode::State::Stopping);
+    lifecycle.update(3,in,target);lifecycle.update(4,in,target);
+    CHECK(mockResets==1 && controlHead.load()==controlTail.load());
+    return 0;
+  }
+  if(scenario==5){
+    target.speedAvailable=true;target.speedStatus=2;target.speedId=2;streamEnabled=true;
+    CHECK(target.startDownload(2,1,7) && target.speedActive && exporterOwned);
+    enqueueRequest(0x04,2);
+    for(unsigned i=1;i<kControlQueueSize+1;++i)enqueueRequest(0x01,uint16_t(i+1));
+    target.service(2);
+    CHECK(failed && controlOverflow.load() && !exporterOwned && !target.speedActive);
+    CHECK(target.speedStatus==5 && target.transfer==TransferState::Idle && !finished && cancelled==1);
+    return 0;
+  }
+  if(scenario==6){
+    controlHead.store(UINT32_MAX-1);controlTail.store(UINT32_MAX-1);
+    uint8_t shortMessage[]={2},oversize[17]{};
+    onControlWrite(0,&control,shortMessage,0);
+    onControlWrite(0,&control,oversize,sizeof(oversize));
+    CHECK(controlHead.load()==UINT32_MAX-1 && !controlOverflow.load());
+    for(unsigned i=0;i<kControlQueueSize;++i)onControlWrite(0,&control,shortMessage,sizeof(shortMessage));
+    CHECK(controlHead.load()==2 && !controlOverflow.load());
+    for(unsigned i=0;i<kControlQueueSize;++i)target.processControl();
+    CHECK(controlTail.load()==controlHead.load() && !failed);
+    return 0;
+  }
+  if(scenario==8){
+    mockMtu=247;request(target,0x01,10);target.service(1);
+    CHECK(mockNotifyCalls==1 && mockNotifications[0].bytes[1]==kListBegin);
+    ack(target,0);target.service(2);
+    CHECK(mockNotifyCalls==2 && mockNotifications[1].bytes[1]==kListEnd);
+    enqueueAck(1);enqueueRequest(0x01,11);
+    target.processControl();CHECK(target.transfer==TransferState::Idle);
+    target.processControl();
+    CHECK(target.transfer==TransferState::Scanning && target.transferId==11);
+    target.service(3);
+    CHECK(mockNotifyCalls==3 && mockNotifications[2].bytes[1]==kListBegin);
+    CHECK(read16(mockNotifications[2].bytes+2)==11);
+    return 0;
+  }
+  if(scenario==9){
+    mockMtu=247;target.speedAvailable=true;
+    const uint8_t mode[]={3,4};request(target,0x05,15,mode,sizeof(mode));
+    target.transmit(1);CHECK(mockNotifyCalls==1 && target.awaitingAck);
+    uint8_t fields[8];write32(fields,1);write32(fields+4,7);
+    enqueueAck(0);enqueueRequest(0x02,15,fields,sizeof(fields));
+    target.processControl();CHECK(target.speedStatus==2 && target.transfer==TransferState::Idle);
+    target.processControl();
+    CHECK(target.transfer==TransferState::Downloading && target.speedActive && target.speedId==15 && exporterOwned);
+    return 0;
+  }
+  CHECK(false);
+  return 0;
+}
+
+extern "C" unsigned featureCapabilityCase(unsigned scenario){
+  resetMocks();Adapter target;
+  mockFeatureBeginFailure=scenario==1;
+  mockFeatureWriteFailure=scenario==2;
+  CHECK(target.begin() && target.speedAvailable);
+  CHECK(mockProtocolLength==2 && mockProtocolValue[0]==2 && mockProtocolValue[1]==0);
+  CHECK(!provisionalEnabled);
+  if(scenario==1 || scenario==2){
+    CHECK(!target.featureAvailable && !mockFeatureLength);
+    const uint8_t speedMode[]={3,4};request(target,0x05,3,speedMode,sizeof(speedMode));
+    CHECK(target.transfer==TransferState::Selecting && target.speedStatus==1);
+    target.transmit(1);ack(target,0);
+    CHECK(target.transfer==TransferState::Idle && target.speedStatus==2);
+    target.abortTransfer();
+    CHECK(target.startList(7));
+    target.abortTransfer();
+    const uint8_t mode[]={1};request(target,0x06,8,mode,sizeof(mode));
+    CHECK(target.transfer==TransferState::SendingError && target.messageType==kError);
+    CHECK(read16(target.message)==kBadCommand && !provisionalEnabled);
+    return 0;
+  }
+  const uint8_t expected[]={0x54,0x50,0x46,0x31,0x01,0x00,0x01,0x00,0x00,0x00,0x44,0x02};
+  CHECK(target.featureAvailable && mockFeatureLength==sizeof(expected));
+  CHECK(!memcmp(mockFeatureValue,expected,sizeof(expected)));
+  CHECK(read16(mockFeatureValue+10)==crc16(mockFeatureValue,10));
+  ble_gatts_evt_read_t read{};onSpeedRead(0,&speedCapability,&read);target.service(1);
+  CHECK(!memcmp(mockReadValue,"TPH1",4) && mockReadValue[4]==3 && mockReadValue[5]==4);
+  CHECK(!mockReadValue[6] && !mockReadValue[7] && !read16(mockReadValue+8));
+  CHECK(read16(mockReadValue+10)==244 && !read16(mockReadValue+12));
+  CHECK(read16(mockReadValue+14)==crc16(mockReadValue,14));
+  if(scenario==0)return 0;
+  if(scenario==6){
+    uint8_t invalid[]={2,6,1,0,1,0,0};
+    onControlWrite(0,&control,invalid,sizeof(invalid));target.processControl();
+    CHECK(target.messageType==kError && read16(target.message)==kBadProtocol);
+  }else if(scenario==5){
+    request(target,0x06,1);
+    CHECK(target.messageType==kError && read16(target.message)==kBadCommand);
+  }else{
+    const uint8_t mode[]={uint8_t(scenario==3?0:scenario==4?3:scenario==8?0x80:1)};
+    request(target,0x06,1,mode,sizeof(mode));
+    if(scenario==7){
+      CHECK(target.transfer==TransferState::SelectingDiscovery && provisionalEnabled);
+      target.transmit(2);CHECK(mockNotifications[0].bytes[1]==kDiscoverySelected);
+      const uint8_t reply[]={0x02,0x88,0x01,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x01,0x00,0x01,0x01,0x83,0xb7};
+      const uint8_t confirmation[]={0x02,0x03,0x01,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x83,0xb7,0x5b,0x0c};
+      CHECK(mockNotifications[0].length==sizeof(reply) &&
+        !memcmp(mockNotifications[0].bytes,reply,sizeof(reply)));
+      uint8_t copy[sizeof(confirmation)];memcpy(copy,confirmation,sizeof(copy));
+      onControlWrite(0,&control,copy,sizeof(copy));target.processControl();
+      CHECK(target.transfer==TransferState::Idle);
+      return 0;
+    }
+    CHECK(target.messageType==kError && read16(target.message)==kBadCommand);
+  }
+  CHECK(!provisionalEnabled && target.transfer==TransferState::SendingError);
+  return 0;
+}
+
+extern "C" unsigned provisionalTransportCase(unsigned scenario){
+  resetMocks();mockMtu=247;Adapter target;
+  target.featureAvailable=true;
+  uint8_t fields[8];write32(fields,12);write32(fields+4,7);
+  if(scenario==0){
+    validationAllowed=true;request(target,0x07,1,fields,sizeof(fields));
+    CHECK(target.transfer==TransferState::SendingError && !provisionalEnabled);
+    CHECK(target.messageType==kError && read16(target.message)==kNoSession);
+    return 0;
+  }
+  if(scenario==9)provisionalAdmission=false;
+  const uint8_t mode[]={1};request(target,0x06,1,mode,sizeof(mode));
+  if(scenario==9){
+    CHECK(!provisionalEnabled && target.transfer==TransferState::SendingError);
+    CHECK(target.messageType==kError && read16(target.message)==kManifestFailure);
+    return 0;
+  }
+  CHECK(target.transfer==TransferState::SelectingDiscovery && provisionalEnabled);
+  if(scenario==7){
+    CHECK(target.cancel(1) && !provisionalEnabled && target.transfer==TransferState::SendingCancel);
+    return 0;
+  }
+  target.transmit(1);CHECK(mockNotifications[0].bytes[1]==kDiscoverySelected);
+  ack(target,0);CHECK(provisionalEnabled && target.transfer==TransferState::Idle);
+  if(scenario==5){
+    listAvailable=false;discoveryError=8;request(target,0x01,2);
+    CHECK(target.messageType==kError && read16(target.message)==8);
+    return 0;
+  }
+  validationAllowed=true;request(target,0x07,2,fields,sizeof(fields));
+  CHECK(target.transfer==TransferState::Validating && target.messageType==kValidationProgress);
+  CHECK(read32(target.message)==12 && read32(target.message+4)==7);
+  target.transmit(2);CHECK(mockNotifications[1].bytes[1]==kValidationProgress);
+  ack(target,1);
+  if(scenario==3){
+    CHECK(target.cancel(2) && cancelled==1 && target.transfer==TransferState::SendingCancel);
+    return 0;
+  }
+  if(scenario==4){
+    target.abortTransfer();
+    CHECK(cancelled==1 && target.transfer==TransferState::Idle);
+    return 0;
+  }
+  if(scenario==8){
+    target.takeProgress();
+    target.service(1001);
+    CHECK(!target.messageReady && mockNotifyCalls==2 && !target.takeProgress());
+    return 0;
+  }
+  validationServiceProgress=true;target.service(1001);
+  CHECK(target.messageType==kValidationProgress && target.awaitingAck);
+  ack(target,2);
+  validationDone=true;validationFailed=scenario==2;
+  target.service(1002);
+  if(scenario==2){
+    CHECK(target.transfer==TransferState::SendingError && target.messageType==kError);
+    CHECK(read16(target.message)==kManifestFailure && cancelled==1);
+    target.transmit(1003);
+    CHECK(read32(mockNotifications[3].bytes+4)==2);
+  }else{
+    CHECK(target.transfer==TransferState::Validating && target.messageType==kValidationComplete);
+    CHECK(read32(target.message)==12 && read32(target.message+4)==7);
+    CHECK(mockNotifications[3].bytes[1]==kValidationComplete);
+    ack(target,3);
+    CHECK(target.transfer==TransferState::Idle);
+    if(scenario==6){
+      target.speedAvailable=true;
+      const uint8_t speedMode[]={3,4};request(target,0x05,3,speedMode,sizeof(speedMode));
+      target.transmit(1003);ack(target,4);
+      CHECK(target.speedStatus==2);
+    }
+    request(target,0x02,3,fields,sizeof(fields));
+    CHECK(target.transfer==TransferState::Downloading && exporterOwned);
+    CHECK(target.speedActive==bool(scenario==6));
+  }
+  return 0;
 }
 
 extern "C" unsigned fastAckCase(unsigned largeMtu){

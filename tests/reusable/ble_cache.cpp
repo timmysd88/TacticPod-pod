@@ -30,7 +30,7 @@ extern "C" unsigned cacheReadyCase(unsigned){
     CACHE_CHECK(!Tcb3Session::bleService(16));
     CACHE_CHECK(SPI.bulkReads-reads<=32 && SPI.deepPower && !bleReading && !SPI.transactionActive);
     CACHE_CHECK(manifestCache!=ManifestCache::Failed);
-    if(!partialChecked && bleManifest.count() && manifestCache==ManifestCache::Scanning){
+    if(!partialChecked && bleCache.manifest.count() && manifestCache==ManifestCache::Scanning){
       notReady=false;
       CACHE_CHECK(!Tcb3Session::bleBeginList(&notReady) && notReady && !Tcb3Session::bleListDone());
       CACHE_CHECK(!Tcb3Session::bleSessionCount());
@@ -123,9 +123,9 @@ extern "C" unsigned cacheAppendCase(unsigned){
     cycle();CACHE_CHECK(manifestCache==ManifestCache::Cold);
   }
   CACHE_CHECK(!pending && !owned && !locked && store.stats.finished);
-  waitIdle();CACHE_CHECK(warmBleCache() && bleManifest.count()==4);
-  CACHE_CHECK(bleManifest.entry(3)->sessionId==store.stats.session && (bleManifest.entry(3)->flags&3)==3);
-  CACHE_CHECK(bleManifest.entry(0)->sessionId==1 && bleManifest.entry(1)->sessionId==3);
+  waitIdle();CACHE_CHECK(warmBleCache() && bleCache.manifest.count()==4);
+  CACHE_CHECK(bleCache.manifest.entry(3)->sessionId==store.stats.session && (bleCache.manifest.entry(3)->flags&3)==3);
+  CACHE_CHECK(bleCache.manifest.entry(0)->sessionId==1 && bleCache.manifest.entry(1)->sessionId==3);
   return SPI.erases || SPI.violations;
 }
 
@@ -137,7 +137,7 @@ extern "C" unsigned cacheResetCase(unsigned){
   CACHE_CHECK(resetting && manifestCache==ManifestCache::Cold && !Tcb3Session::bleSessionCount());
   for(unsigned n=0;n<400000 && resetting;++n)cycle();
   CACHE_CHECK(!resetting && !resetFailed && SPI.erases==1);
-  waitIdle();CACHE_CHECK(warmBleCache() && !bleManifest.count());
+  waitIdle();CACHE_CHECK(warmBleCache() && !bleCache.manifest.count());
   CACHE_CHECK(cacheConnect() && Tcb3Session::bleBeginList() && Tcb3Session::bleListDone());
   CACHE_CHECK(!Tcb3Session::bleSessionCount() && !Tcb3Session::bleListFailed());
   return SPI.violations;
@@ -150,15 +150,18 @@ extern "C" unsigned cacheEraseGuardCase(unsigned){
   // Model an externally erased image followed by explicit invalidation.
   memset(SPI.memory,255,Tcb3Test::WriteEnd);Tcb3Session::invalidateBleManifest();
   CACHE_CHECK(!Tcb3Session::bleListDone() && !Tcb3Session::bleSessionCount());
-  CACHE_CHECK(warmBleCache() && !bleManifest.count());
+  CACHE_CHECK(warmBleCache() && !bleCache.manifest.count());
   return SPI.programs || SPI.enables || SPI.erases || SPI.violations;
 }
 
 extern "C" unsigned cacheValidationCase(unsigned){
   CACHE_CHECK(cacheBoot() && cacheConnect());
   for(unsigned n=0;n<20000 &&
-      (manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning);++n)
+      (manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning);++n){
+    const unsigned before=SPI.bulkReads;
     Tcb3Session::bleService(16);
+    CACHE_CHECK(SPI.bulkReads-before<=32 && !bleReading && !SPI.transactionActive);
+  }
   const bool ready=manifestCache==ManifestCache::Ready;
   CACHE_CHECK(ready==!cacheExpected[0]);
   if(!ready){
@@ -218,6 +221,108 @@ extern "C" unsigned cachePerformanceCase(unsigned){
     Tcb3Session::bleService(16);
     CACHE_CHECK(SPI.bulkReads==failedReads && manifestCache==ManifestCache::Failed);
     Tcb3Session::invalidateBleManifest();
+  }
+  return SPI.programs || SPI.enables || SPI.erases || SPI.violations || SPI.wakeDelayViolations;
+}
+
+extern "C" unsigned provisionalCacheCase(unsigned scenario){
+  CACHE_CHECK(cacheBoot() && cacheConnect());
+  CACHE_CHECK(Tcb3Session::bleEnableProvisional() && scannerActive && provisionalMode);
+  CACHE_CHECK(!Tcb3Session::bleBeginSession(1,0xffffffffU));
+  if(scenario==12){
+    SPI.wrongId=true;Tcb3Session::bleService(16);SPI.wrongId=false;
+    CACHE_CHECK(manifestCache==ManifestCache::Failed && Tcb3Session::bleDiscoveryError()==11);
+    CACHE_CHECK(!Tcb3Session::bleBeginList());
+    return SPI.programs || SPI.enables || SPI.erases || SPI.violations;
+  }
+  if(scenario==9){
+    const unsigned before=SPI.bulkReads;
+    gpsTestDiagnosticAvailable=false;Tcb3Session::bleService(16);
+    CACHE_CHECK(SPI.bulkReads==before && manifestCache==ManifestCache::Cold);
+    gpsTestDiagnosticAvailable=true;
+  }
+  for(unsigned n=0;n<20000 &&
+      (manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning);++n){
+    const unsigned before=SPI.bulkReads;
+    Tcb3Session::bleService(16);
+    CACHE_CHECK(SPI.bulkReads-before<=32 && !bleReading && !SPI.transactionActive);
+  }
+  if(scenario==6 || scenario==7 || scenario==8){
+    CACHE_CHECK(manifestCache==ManifestCache::Failed && !Tcb3Session::bleBeginList());
+    CACHE_CHECK(!Tcb3Session::bleSessionCount());
+    CACHE_CHECK(Tcb3Session::bleDiscoveryError()==(scenario==6?8:scenario==7?9:10));
+    return SPI.programs || SPI.enables || SPI.erases || SPI.violations;
+  }
+  CACHE_CHECK(manifestCache==ManifestCache::Ready && Tcb3Session::bleBeginList());
+  CACHE_CHECK(Tcb3Session::bleSessionCount()==(scenario==2?2U:3U));
+  CACHE_CHECK(Tcb3Session::bleIncompleteCount()==(scenario==2?1U:0U));
+  const auto* entry=Tcb3Session::bleSession((scenario==2 || scenario==17)?0:2);
+  CACHE_CHECK(entry && entry->flags==9 && !(entry->flags&2));
+  const uint32_t id=entry->sessionId,epoch=entry->resetEpoch;
+  CACHE_CHECK(!Tcb3Session::bleBeginSession(id,epoch));
+  if(scenario==2)CACHE_CHECK(!Tcb3Session::bleBeginValidation(12,epoch));
+  if(scenario==3){
+    CACHE_CHECK(Tcb3::get(SPI.memory)==Tcb3::ResetMagic && epoch==7);
+    Tcb3::put(SPI.memory+4,8);Tcb3::put(SPI.memory+248,~Tcb3::crc32(SPI.memory,248));
+  }
+  if(scenario==10)SPI.memory[45056+256+32]^=1;
+  if(scenario==13)SPI.memory[45056+45*4096+15*256+32]^=1;
+  if(scenario==14)SPI.memory[45056+4096+20]^=1;
+  if(scenario==17){
+    uint8_t* footer=SPI.memory+4096+15*256;
+    const uint64_t stop=uint64_t(Tcb3::get(footer+24))|(uint64_t(Tcb3::get(footer+28))<<32);
+    Tcb3::put(footer+24,stop+1,8);
+    Tcb3::put(footer+248,~Tcb3::crc32(footer,248));
+  }
+  CACHE_CHECK(Tcb3Session::bleBeginValidation(id,epoch));
+  CACHE_CHECK(!scannerActive && validating && !Tcb3Session::bleBeginSession(id,epoch));
+  if(scenario==18){
+    for(unsigned mode=0;mode<7;++mode){
+      if(mode==0)pending=true;
+      if(mode==1)owned=true;
+      if(mode==2)dumping=true;
+      if(mode==3)resetting=true;
+      if(mode==4)pageOpen=true;
+      if(mode==5)locked=true;
+      if(mode==6)gpsTestDiagnosticAvailable=false;
+      const unsigned before=SPI.bulkReads;
+      CACHE_CHECK(!Tcb3Session::bleService(16) && SPI.bulkReads==before && validating && !bleReading);
+      pending=owned=dumping=resetting=pageOpen=locked=false;gpsTestDiagnosticAvailable=true;
+    }
+  }
+  if(scenario==4 || scenario==11){
+    Tcb3Session::bleService(16);
+    if(scenario==4){
+      Tcb3Session::bleCancel();
+      CACHE_CHECK(scannerActive && provisionalMode && manifestCache==ManifestCache::Cold);
+    }else{
+      Tcb3Session::invalidateBleManifest();
+      CACHE_CHECK(!scannerActive && !provisionalMode && manifestCache==ManifestCache::Cold);
+    }
+    CACHE_CHECK(!validating && !Tcb3Session::bleBeginSession(id,epoch));
+    return SPI.programs || SPI.enables || SPI.erases || SPI.violations;
+  }
+  if(scenario==5)SPI.stuckBusy=true;
+  for(unsigned n=0;n<30000 && !Tcb3Session::bleValidationDone();++n){
+    const unsigned before=SPI.bulkReads;
+    Tcb3Session::bleService(16);
+    CACHE_CHECK(SPI.bulkReads-before<=16 && !bleReading && !SPI.transactionActive);
+  }
+  SPI.stuckBusy=false;
+  CACHE_CHECK(Tcb3Session::bleValidationDone());
+  const bool bad=scenario==1 || scenario==3 || scenario==5 || scenario==10 ||
+    (scenario>=13 && scenario<=17);
+  CACHE_CHECK(Tcb3Session::bleValidationFailed()==bad);
+  if(bad){
+    CACHE_CHECK(!Tcb3Session::bleBeginSession(id,epoch));
+  }else{
+    CACHE_CHECK(Tcb3Session::bleBeginSession(id,epoch));
+    Tcb3Session::bleFinishSession();
+    CACHE_CHECK(!Tcb3Session::bleBeginSession(id==1?3:1,epoch));
+    bool notReady=false;
+    CACHE_CHECK(!Tcb3Session::bleBeginList(&notReady) && notReady);
+    CACHE_CHECK(scannerActive && manifestCache==ManifestCache::Cold);
+    CACHE_CHECK(!Tcb3Session::bleBeginSession(id,epoch));
   }
   return SPI.programs || SPI.enables || SPI.erases || SPI.violations || SPI.wakeDelayViolations;
 }
