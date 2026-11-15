@@ -28,12 +28,16 @@ extern "C" unsigned cacheReadyCase(unsigned){
   for(unsigned n=0;n<20000 && manifestCache!=ManifestCache::Ready;++n){
     const unsigned reads=SPI.bulkReads;
     CACHE_CHECK(!Tcb3Session::bleService(16));
-    CACHE_CHECK(SPI.bulkReads-reads<=16 && SPI.deepPower && !bleReading && !SPI.transactionActive);
+    CACHE_CHECK(SPI.bulkReads-reads<=32 && SPI.deepPower && !bleReading && !SPI.transactionActive);
     CACHE_CHECK(manifestCache!=ManifestCache::Failed);
     if(!partialChecked && bleManifest.count() && manifestCache==ManifestCache::Scanning){
       notReady=false;
       CACHE_CHECK(!Tcb3Session::bleBeginList(&notReady) && notReady && !Tcb3Session::bleListDone());
-      CACHE_CHECK(!Tcb3Session::bleSessionCount());partialChecked=true;
+      CACHE_CHECK(!Tcb3Session::bleSessionCount());
+      const unsigned steps=BlePerformance::counters().cacheSteps;
+      Tcb3Session::bleCancel();
+      CACHE_CHECK(manifestCache==ManifestCache::Scanning && BlePerformance::counters().cacheSteps==steps);
+      partialChecked=true;
     }
   }
   CACHE_CHECK(partialChecked && manifestCache==ManifestCache::Ready && SPI.bulkReads>before);
@@ -151,10 +155,12 @@ extern "C" unsigned cacheEraseGuardCase(unsigned){
 }
 
 extern "C" unsigned cacheValidationCase(unsigned){
-  CACHE_CHECK(cacheBoot());
-  const bool ready=warmBleCache();
+  CACHE_CHECK(cacheBoot() && cacheConnect());
+  for(unsigned n=0;n<20000 &&
+      (manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning);++n)
+    Tcb3Session::bleService(16);
+  const bool ready=manifestCache==ManifestCache::Ready;
   CACHE_CHECK(ready==!cacheExpected[0]);
-  CACHE_CHECK(cacheConnect());
   if(!ready){
     bool notReady=true;
     CACHE_CHECK(manifestCache==ManifestCache::Failed && !Tcb3Session::bleBeginList(&notReady) && !notReady);
@@ -175,9 +181,11 @@ extern "C" unsigned cachePerformanceCase(unsigned){
   CACHE_CHECK(cacheBoot() && cacheConnect());
   BlePerformance::counters()=BlePerformance::Counters{};
   const unsigned before=SPI.bulkReads;
+  Tcb3Session::bleService(0);
+  CACHE_CHECK(manifestCache==ManifestCache::Cold && SPI.bulkReads==before);
   Tcb3Session::bleService(16);
   auto& s=BlePerformance::counters();
-  CACHE_CHECK(s.cacheState==1 && s.cacheSteps==16);
+  CACHE_CHECK(s.cacheState==1 && s.cacheSteps==32);
   CACHE_CHECK(s.readCalls==SPI.bulkReads-before);
   CACHE_CHECK(s.readTotalUs==(s.readBytes+uint64_t(s.readCalls)*4)*8);
   CACHE_CHECK(s.cacheServiceUs>=s.cacheReadUs && s.cacheReadUs==s.readTotalUs);
@@ -185,7 +193,7 @@ extern "C" unsigned cachePerformanceCase(unsigned){
   for(unsigned n=0;n<20000 && manifestCache!=ManifestCache::Ready;++n){
     ++mockTime;Tcb3Session::bleService(16);
   }
-  CACHE_CHECK(manifestCache==ManifestCache::Ready && s.cacheState==2 && s.cacheSteps>16);
+  CACHE_CHECK(manifestCache==ManifestCache::Ready && s.cacheState==2 && s.cacheSteps>32);
   CACHE_CHECK(s.cacheElapsedMs>=50 && uint32_t(millis()-s.cacheStartedAt)-s.cacheElapsedMs<=1);
   const uint32_t steps=s.cacheSteps,reads=s.readCalls;
   CACHE_CHECK(Tcb3Session::bleBeginList());Tcb3Session::bleFinishList();Tcb3Session::bleCancel();
@@ -199,5 +207,17 @@ extern "C" unsigned cachePerformanceCase(unsigned){
   Tcb3Session::invalidateBleManifest();
   CACHE_CHECK(!s.cacheState && !s.cacheSteps && !s.cacheElapsedMs && !s.cacheServiceUs && !s.cacheReadUs);
   CACHE_CHECK(s.readCalls==reads);
+  for(unsigned fault=0;fault<2;++fault){
+    Tcb3Session::bleService(16);
+    CACHE_CHECK(manifestCache==ManifestCache::Scanning);
+    if(fault==0)SPI.wrongId=true;else SPI.stuckBusy=true;
+    Tcb3Session::bleService(16);
+    CACHE_CHECK(manifestCache==ManifestCache::Failed && s.cacheState==3);
+    const unsigned failedReads=SPI.bulkReads;
+    SPI.wrongId=SPI.stuckBusy=false;
+    Tcb3Session::bleService(16);
+    CACHE_CHECK(SPI.bulkReads==failedReads && manifestCache==ManifestCache::Failed);
+    Tcb3Session::invalidateBleManifest();
+  }
   return SPI.programs || SPI.enables || SPI.erases || SPI.violations || SPI.wakeDelayViolations;
 }

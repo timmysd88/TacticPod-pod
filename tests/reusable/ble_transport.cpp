@@ -8,6 +8,7 @@ uint32_t mockTime=0;
 unsigned mockRedWrites=0;
 MockSerial Serial;
 static unsigned cancelled=0,released=0,finished=0;
+static unsigned cacheServiceCalls=0,cacheServiceBudget=0;
 static bool listAvailable=true;
 static bool listPending=false;
 static bool streamEnabled=false;
@@ -18,7 +19,7 @@ static const unsigned streamLengths[]={40,280,24};
 namespace BatteryRuntime {void capture(Report& report){report=Report{};}}
 namespace Tcb3Session {
 bool bleBeginList(bool* notReady){if(notReady)*notReady=listPending;return listAvailable;}
-bool bleService(unsigned){return false;}
+bool bleService(unsigned steps){++cacheServiceCalls;cacheServiceBudget=steps;return false;}
 bool bleListDone(){return true;}
 bool bleListFailed(){return false;}
 bool bleListOverflow(){return false;}
@@ -41,6 +42,7 @@ void bleCancel(){exporterOwned=false;++cancelled;}
 
 static void resetMocks(){
   mockNotifyCalls=mockResets=cancelled=released=finished=0;
+  cacheServiceCalls=cacheServiceBudget=0;
   mockNotifyDurationUs=mockReadReplies=mockReadStatus=mockReadOffset=0;
   mockTime=mockSubUs=0;
   BlePerformance::counters()=BlePerformance::Counters{};
@@ -386,11 +388,14 @@ extern "C" unsigned cancelCase(unsigned backpressured){
   request(target,0x04,3);
   CHECK(target.transfer==TransferState::Downloading && target.awaitingAck==!backpressured);
   mockNotifyAccepted=true;
-  request(target,0x04,2);
-  CHECK(target.transfer==TransferState::SendingCancel && !target.awaitingAck && finished==1);
+  uint8_t cancelBytes[6]{kProtocolVersion,0x04};
+  write16(cancelBytes+2,2);write16(cancelBytes+4,crc16(cancelBytes,4));
+  onControlWrite(0,&control,cancelBytes,sizeof(cancelBytes));
+  target.service(110);
+  CHECK(cacheServiceCalls==1 && cacheServiceBudget==16);
+  CHECK(target.transfer==TransferState::SendingCancel && target.awaitingAck && finished==1);
   ack(target,0);
-  CHECK(target.transfer==TransferState::SendingCancel && !target.awaitingAck && !released);
-  target.transmit(110);
+  CHECK(target.transfer==TransferState::SendingCancel && target.awaitingAck && !released);
   CHECK(mockNotifyCalls==2 && mockNotifications[1].bytes[1]==kCancelled);
   ack(target,1);
   CHECK(target.transfer==TransferState::Idle && !target.messageReady && !target.awaitingAck);
@@ -420,6 +425,7 @@ extern "C" unsigned disconnectCase(unsigned){
 extern "C" unsigned cacheNotReadyCase(unsigned failed){
   resetMocks();Adapter target;listAvailable=false;listPending=!failed;
   request(target,0x01,2);target.service(100);
+  CHECK(cacheServiceCalls==1 && cacheServiceBudget==16);
   CHECK(mockNotifyCalls==1 && target.transfer==TransferState::SendingError);
   CHECK(mockNotifications[0].bytes[1]==kError &&
     read16(mockNotifications[0].bytes+13)==(failed?kManifestFailure:kManifestNotReady));
@@ -481,6 +487,7 @@ extern "C" unsigned performanceReadCase(unsigned){
   auto& s=BlePerformance::counters();s.fragments=4;
   ble_gatts_evt_read_t request{};onPerformanceRead(0,&performance,&request);
   CHECK(!mockReadReplies);target.service(millis());
+  CHECK(cacheServiceCalls==1 && cacheServiceBudget==16);
   CHECK(mockReadReplies==1 && mockReadStatus==BLE_GATT_STATUS_SUCCESS);
   CHECK(!memcmp(mockReadValue,"TPD1",4) && read32(mockReadValue+48)==4);
   uint8_t first[BlePerformance::SnapshotSize];memcpy(first,mockReadValue,sizeof(first));

@@ -485,7 +485,7 @@ bool bleBeginList(bool* notReady){
 bool bleService(unsigned steps){
   bleFlushDiagnostic();
   if(!BleRuntime::active())return false;
-  if(!bleListing && !bleDownloading){updateManifestCache(steps,true);return false;}
+  if(!bleListing && !bleDownloading){updateManifestCache(steps?32:0,true);return false;} // Restore steps for Phase 2.
   bool progressed=false;
   while(steps--){
     if(bleDownloading && !bleDump.done() && !bleDump.failed()){
