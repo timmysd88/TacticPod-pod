@@ -8,6 +8,7 @@ constexpr unsigned CHR_PROPS_WRITE=8,CHR_PROPS_READ=2,CHR_PROPS_NOTIFY=16;
 constexpr unsigned SECMODE_NO_ACCESS=0,SECMODE_OPEN=1;
 constexpr unsigned BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE=2;
 constexpr unsigned BLE_GAP_EVT_SEC_PARAMS_REQUEST=1,BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION=19;
+constexpr unsigned BLE_GATTS_EVT_HVN_TX_COMPLETE=2;
 constexpr unsigned BLE_GATTS_AUTHORIZE_TYPE_READ=1,BLE_GATT_STATUS_SUCCESS=0;
 constexpr unsigned BLE_GATT_STATUS_ATTERR_UNLIKELY_ERROR=14,BLE_GATT_STATUS_ATTERR_INVALID_OFFSET=7;
 struct ble_gatts_evt_read_t {uint16_t offset;};
@@ -41,6 +42,9 @@ static uint8_t mockPhy=1;
 static bool mockLink=true,mockNotifyEnabled=true,mockNotifyAccepted=true;
 static bool mockConnectionAvailable=true;
 static unsigned mockNotifyDurationUs=0;
+static bool mockFeatureBeginFailure=false,mockFeatureWriteFailure=false;
+static uint8_t mockFeatureValue[12]{},mockProtocolValue[2]{};
+static unsigned mockFeatureLength=0,mockProtocolLength=0;
 struct MockFicr {uint32_t DEVICEID[2]{};};
 struct MockNvmc {uint32_t READY=1;};
 static MockFicr mockFicr;
@@ -56,15 +60,27 @@ struct BLEService {
   err_t begin(){return ERROR_NONE;}
 };
 struct BLECharacteristic {
-  explicit BLECharacteristic(const char*){}
+  const char* uuid;
+  explicit BLECharacteristic(const char* value):uuid(value){}
+  bool isFeature() const {return !strcmp(uuid,"b973000b-7d2a-4f91-a380-8b52c029dc61");}
   void setProperties(unsigned){}
   void setPermission(unsigned,unsigned){}
   void setMaxLen(unsigned){}
   void setFixedLen(unsigned){}
   void setWriteCallback(void (*)(uint16_t,BLECharacteristic*,uint8_t*,uint16_t),bool){}
   void setReadAuthorizeCallback(void (*)(uint16_t,BLECharacteristic*,ble_gatts_evt_read_t*),bool){}
-  err_t begin(){return ERROR_NONE;}
-  unsigned write(const void*,unsigned length){return length;}
+  err_t begin(){return isFeature() && mockFeatureBeginFailure?-1:ERROR_NONE;}
+  unsigned write(const void* value,unsigned length){
+    if(isFeature()){
+      if(mockFeatureWriteFailure)return 0;
+      if(length<=sizeof(mockFeatureValue))memcpy(mockFeatureValue,value,length);
+      mockFeatureLength=length;
+    }else if(!strcmp(uuid,"b9730006-7d2a-4f91-a380-8b52c029dc61")){
+      if(length<=sizeof(mockProtocolValue))memcpy(mockProtocolValue,value,length);
+      mockProtocolLength=length;
+    }
+    return length;
+  }
   bool notifyEnabled(){return mockNotifyEnabled;}
   bool notify(const void* bytes,unsigned length){
     delayMicroseconds(mockNotifyDurationUs);

@@ -1,26 +1,45 @@
-# Optional high-speed BLE transfer: design proposal
+# Optional high-speed BLE transfer: Phase 2
 
-Status: design only. No high-speed frames, negotiation, ACKs or retransmission
-are implemented. Protocol 2 LIST/GET, frame CRC16, per-fragment ACK and
-stop-and-wait behavior remain unchanged.
+Status: the four-frame sender and browser receiver are integrated with GATT
+and GET. The BLE build intentionally enables optional capability discovery;
+streaming requires explicit selection and confirmation. Existing clients retain
+protocol 2 LIST/GET, CRC16, per-fragment ACK and stop-and-wait behavior.
+Host regressions do not qualify the physical radio, throughput or runtime RAM
+margin. No firmware upload or physical benchmark has been performed.
 
 ## Compatibility and negotiation
 
 Keep the existing protocol-version characteristic at `[2, 0]` and the existing
-Control/Data properties and v2 operations. A future firmware exposes an
-additional, optional, read-only capability characteristic and a separate ACK
-characteristic; UUIDs and the capability layout must be allocated in the
-implementation change, not inferred from the diagnostics UUIDs.
+Control/Data properties and v2 operations. The optional read-only capability uses
+`b9730009-7d2a-4f91-a380-8b52c029dc61`; write-with-response ACKs use
+`b973000a-7d2a-4f91-a380-8b52c029dc61`. TPD1 and TPL1 are unchanged.
+
+The 16-byte little-endian capability/status value is:
+
+| Offset | Field |
+|---:|---|
+| 0 | ASCII `TPH1` |
+| 4 | stream version `u8 = 3` |
+| 5 | supported window `u8 = 4` |
+| 6 | state: 0 idle, 1 selecting, 2 ready, 3 transferring/completing, 4 completed, 5 aborted |
+| 7 | reserved zero |
+| 8 | selected transfer ID `u16` |
+| 10 | maximum notification value `u16 = 244`, not negotiated MTU |
+| 12 | reserved `u16 = 0` |
+| 14 | CRC16 over bytes 0 through 13 |
 
 The app discovers the optional capability after connecting and before a GET.
-It advertises a high-speed mode version, supported windows (4/8/16), maximum
-frame size and ACK transport properties. Absence, unreadable/unsupported
-version or no mutually supported window means use v2. An optional SET_MODE
-command on existing Control selects the mode and window with a nonzero transfer
-ID. The firmware must explicitly confirm the selection using an acknowledged
-v2 response before any high-speed frame is sent. An error, timeout, link loss,
+Only window 4 and write-with-response are implemented; windows 8/16 and
+write-without-response remain future options. Missing characteristics or a
+malformed/unsupported capability mean use v2 before selection. Unexpected GATT
+read errors surface rather than assuming a safe fallback. SET_MODE on Control
+is a CRC-protected v2 command with opcode `0x05`, a fresh nonzero transfer ID
+and payload `[3, 4]`. The pod confirms with acknowledged v2 response `0x87`
+and payload `[3, 4]`; the app also requires status READY for the same ID.
+GET then reuses that ID and the existing session/epoch fields. An error, timeout, link loss,
 or ambiguous confirmation never permits an assumed mode: cancel or disconnect
-as needed and reconnect using v2. New firmware starts in v2 every connection;
+as needed. An explicit refusal may fall back on the same link only after status
+confirms idle, completed or aborted, before any high-speed GET. New firmware starts in v2 every connection;
 old apps never attempt selection.
 
 Only GET uses the new mode; LIST and discovery retain v2. A GET still requires
@@ -31,9 +50,23 @@ Do not silently reuse a transfer ID while any old frames/ACKs can be queued;
 disconnect/reconnect before ID wrap if necessary. Neither mode resumes after
 disconnect. No recording, reset, erase or USB export may overlap BLE ownership.
 
+High-speed browser cancellation deliberately closes the connection at selection,
+during streaming or while final completion is pending. It does not wait behind
+a potentially stalled GATT write to send CANCEL. Pending GATT consumers reject
+with the original cancellation/disconnection error; queued work and ACK timers
+cannot act on a successor operation. BLE v2 retains its existing acknowledged
+CANCEL behavior and connection reuse.
+
+The peripheral disconnect callback only reports an event. State 3 and exporter
+ownership may remain until the next foreground lifecycle pass; they are not
+completion. That pass aborts, clears the bounded ACK queue, stops BLE and then
+resets. `bleCancel()` clears download/list ownership and sleeps flash before reset.
+No download resumes across disconnect. An explicit firmware CANCEL also stops
+the window and releases the exporter before its v2 CANCELLED confirmation.
+
 ## Frame stream and integrity
 
-Proposed high-speed Data notification, little-endian:
+Implemented high-speed Data notification, little-endian:
 
 | Offset | Field |
 |---:|---|
@@ -85,7 +118,7 @@ Bluefruit's current `notify` can block waiting for its semaphore; any nonblockin
 submission implementation must coordinate with that semaphore and SoftDevice
 credits. Bound work per foreground pass and preserve lifecycle progress.
 
-Proposed ACK written on the new characteristic:
+Implemented ACK written on the new characteristic:
 
 | Offset | Field |
 |---:|---|
@@ -110,8 +143,11 @@ report success. Timeout values and ACK cadence require measured link data.
 Write-with-response is the interoperable ACK baseline. If supported by both
 the characteristic and browser, write-without-response can be negotiated as
 an option; promise completion is not pod receipt. Repeated cumulative ACKs
-recover lost writes, and the pod needs bounded ACK coalescing/queueing rather
-than the current single-slot Control callback. Explicitly test slow browser
+recover lost writes. The implemented pod has a four-entry SPSC ACK queue;
+overflow fails closed and foreground work consumes at most one ACK per pass.
+The browser coalesces four contiguous fragments or sends after 30 ms, and
+immediately ACKs gaps, duplicates, CRC failures and the final frame.
+Explicitly test slow browser
 dispatch, ACK queue overflow, disconnect, cancel and retransmission races.
 
 ## Memory and scheduling
@@ -120,14 +156,19 @@ Retaining W complete 244-byte frames costs 976, 1,952 or 3,904 bytes for
 windows 4, 8 or 16, plus metadata, packet producer state, alignment, stack,
 and separately configured SoftDevice queues. A design storing source packets
 instead must prove their immutable lifetime and account for all queued packets.
-The existing exporter holds one 280-byte packet; extending across packet
+The implemented producer additionally holds at most 233 bytes between packets,
+and the ACK queue holds four 12-byte entries. The existing exporter holds one
+280-byte packet; extending across packet
 boundaries requires bounded producer state and must not overwrite data needed
 for recovery. No unbounded queue or blocking flash transaction is permitted.
 Flash reads and packet CRC remain synchronous foreground work unless a later
 measured prefetch stage introduces a bounded second buffer.
 
-Browser receive/reorder storage is at most W frames plus metadata and the
-existing manifest-bounded TPX3 session buffer. Reject lengths beyond that
+Browser reorder storage is at most W frames, plus four recent frames retained
+for duplicate-content checks, metadata and transient contiguous payload copies.
+The notification chain is capped at 32 pending high-speed notifications
+(at most 7,808 frame bytes for valid 244-byte values), separately from the
+manifest-bounded TPX3 session buffer. Reject lengths beyond that
 buffer before allocation or append. Account for the existing strict decoder's
 additional copies and worker memory; test maximum supported session, allocation
 failure and cleanup. Do not retain both unlimited received frames and a second
@@ -156,3 +197,29 @@ over these parameters. Measure on each supported combination. GATT caching,
 browser background throttling and simultaneous operations can disrupt
 negotiation or recovery; the app must fail closed or fall back explicitly.
 No throughput target is guaranteed until real hardware tests pass.
+
+## Current validation and release requirements
+
+Browser simulations compare complete fixture bytes and strict TPX3/TCB3 decoder
+results for normal transfers, missing/corrupt/reordered/duplicate fragments,
+lost data ACKs and lost final completion ACKs. Cancellation covers selection,
+an outstanding four-fragment window and a stalled final ACK. Disconnect tests
+await modeled peripheral foreground cleanup, verify exporter release and test a
+fresh download. Late GATT work is rejected without touching the next operation.
+
+The real firmware adapter is exercised with mocked GATT acceptance and ACKs.
+Lifecycle tests drive the actual disconnect callback/controller through abort
+and reset with a queued invalid ACK, including READY, an outstanding window
+and pending TRANSFER_END. Explicit CANCEL covers the same stages. Session
+integration tests independently verify sleeping flash, released read ownership,
+repeated GET and byte-identical read-only fixture export. Window tests cover
+MTU 23/247, impossible and CRC-invalid ACKs, retry limits, queue-full and queue
+overflow. These are not a real firmware-to-browser radio interoperability test.
+
+Before release, separately authorize a hardware benchmark: use a preserved
+recording, capture TPD1/TPL1 and browser metrics, verify actual MTU/PHY/data
+length/interval, compare high-speed and v2 output bytes with strict decoding,
+and measure ACK latency, retries, flash-read time, throughput and runtime
+stack/heap margin. Repeat cancellation/disconnect near selection, mid-stream
+and completion, then reconnect and confirm recordings remain unchanged.
+Test supported Windows Chrome/Edge adapters and browser background throttling.

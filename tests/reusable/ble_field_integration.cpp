@@ -1,5 +1,6 @@
 #define TACTICPOD_BLE 1
 #include "field_integration.cpp"
+#include "../../src/tcb3_fast_discovery.cpp"
 #include "../../src/ble_phase1.h"
 
 struct FieldBleAdapter {
