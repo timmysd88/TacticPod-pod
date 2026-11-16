@@ -43,8 +43,12 @@ static bool mockLink=true,mockNotifyEnabled=true,mockNotifyAccepted=true;
 static bool mockConnectionAvailable=true;
 static unsigned mockNotifyDurationUs=0;
 static bool mockFeatureBeginFailure=false,mockFeatureWriteFailure=false;
+static bool mockIdentityBeginFailure=false,mockIdentityWriteFailure=false;
 static uint8_t mockFeatureValue[12]{},mockProtocolValue[2]{};
+static uint8_t mockIdentityValue[17]{};
 static unsigned mockFeatureLength=0,mockProtocolLength=0;
+static unsigned mockIdentityLength=0;
+static const char* mockCurrentServiceUuid=nullptr;
 struct MockFicr {uint32_t DEVICEID[2]{};};
 struct MockNvmc {uint32_t READY=1;};
 static MockFicr mockFicr;
@@ -56,20 +60,27 @@ inline void NVIC_SystemReset(){++mockResets;}
 inline err_t sd_ble_gap_disconnect(uint16_t,unsigned){mockLink=false;return NRF_SUCCESS;}
 
 struct BLEService {
-  explicit BLEService(const char*){}
-  err_t begin(){return ERROR_NONE;}
+  const char* uuid;
+  explicit BLEService(const char* value):uuid(value){}
+  err_t begin(){mockCurrentServiceUuid=uuid;return ERROR_NONE;}
 };
 struct BLECharacteristic {
   const char* uuid;
+  const char* serviceUuid=nullptr;
+  unsigned properties=0,readPermission=0,writePermission=0,fixedLength=0;
   explicit BLECharacteristic(const char* value):uuid(value){}
   bool isFeature() const {return !strcmp(uuid,"b973000b-7d2a-4f91-a380-8b52c029dc61");}
-  void setProperties(unsigned){}
-  void setPermission(unsigned,unsigned){}
+  bool isIdentity() const {return !strcmp(uuid,"b973000c-7d2a-4f91-a380-8b52c029dc61");}
+  void setProperties(unsigned value){properties=value;}
+  void setPermission(unsigned read,unsigned write){readPermission=read;writePermission=write;}
   void setMaxLen(unsigned){}
-  void setFixedLen(unsigned){}
+  void setFixedLen(unsigned value){fixedLength=value;}
   void setWriteCallback(void (*)(uint16_t,BLECharacteristic*,uint8_t*,uint16_t),bool){}
   void setReadAuthorizeCallback(void (*)(uint16_t,BLECharacteristic*,ble_gatts_evt_read_t*),bool){}
-  err_t begin(){return isFeature() && mockFeatureBeginFailure?-1:ERROR_NONE;}
+  err_t begin(){
+    serviceUuid=mockCurrentServiceUuid;
+    return (isFeature() && mockFeatureBeginFailure) || (isIdentity() && mockIdentityBeginFailure)?-1:ERROR_NONE;
+  }
   unsigned write(const void* value,unsigned length){
     if(isFeature()){
       if(mockFeatureWriteFailure)return 0;
@@ -78,6 +89,10 @@ struct BLECharacteristic {
     }else if(!strcmp(uuid,"b9730006-7d2a-4f91-a380-8b52c029dc61")){
       if(length<=sizeof(mockProtocolValue))memcpy(mockProtocolValue,value,length);
       mockProtocolLength=length;
+    }else if(isIdentity()){
+      if(mockIdentityWriteFailure)return 0;
+      if(length<=sizeof(mockIdentityValue))memcpy(mockIdentityValue,value,length);
+      mockIdentityLength=length;
     }
     return length;
   }
@@ -93,10 +108,11 @@ struct BLECharacteristic {
     return mockNotifyAccepted;
   }
 };
+static char mockBleSerial[17]{},mockBleName[32]{};
 struct BLEDis {
   void setManufacturer(const char*){}
   void setModel(const char*){}
-  void setSerialNum(const char*){}
+  void setSerialNum(const char* value){strncpy(mockBleSerial,value,sizeof(mockBleSerial)-1);}
   void setFirmwareRev(const char*){}
   err_t begin(){return ERROR_NONE;}
 };
@@ -125,7 +141,7 @@ struct MockBluefruit {
   void autoConnLed(bool){}
   void configPrphConn(unsigned,unsigned,unsigned,unsigned){}
   bool begin(unsigned,unsigned){return true;}
-  void setName(const char*){}
+  void setName(const char* value){strncpy(mockBleName,value,sizeof(mockBleName)-1);}
   void setEventCallback(void (*)(ble_evt_t*)){}
   bool connected(){return mockLink;}
   uint16_t connHandle(){return 0;}
