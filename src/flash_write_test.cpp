@@ -338,6 +338,7 @@ void stepTest() {
 namespace FlashWriteTest {
 void update() {
   serviceInput();
+  SerialConsole::serviceDeviceInfo();
   if (!Tcb3Session::exclusive()) stepTest();
 }
 

@@ -9,6 +9,7 @@
 #include "ble_runtime.h"
 #include "tcb3_session.h"
 #include "ble_download_protocol.h"
+#include "device_identity.h"
 #include "ble_high_speed_window.h"
 #include "ble_performance.h"
 
@@ -31,6 +32,7 @@ constexpr const char* kLinkPerformanceUuid = "b9730008-7d2a-4f91-a380-8b52c029dc
 constexpr const char* kSpeedCapabilityUuid = "b9730009-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kSpeedAckUuid = "b973000a-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kFeatureCapabilityUuid = "b973000b-7d2a-4f91-a380-8b52c029dc61";
+constexpr const char* kHardwareIdentityUuid = "b973000c-7d2a-4f91-a380-8b52c029dc61";
 BLEService gattService(kServiceUuid);
 BLECharacteristic activity(kActivityUuid);
 BLECharacteristic battery(kBatteryUuid);
@@ -42,6 +44,7 @@ BLECharacteristic linkPerformance(kLinkPerformanceUuid);
 BLECharacteristic speedCapability(kSpeedCapabilityUuid);
 BLECharacteristic speedAck(kSpeedAckUuid);
 BLECharacteristic featureCapability(kFeatureCapabilityUuid);
+BLECharacteristic hardwareIdentity(kHardwareIdentityUuid);
 BLEDis deviceInfo;
 std::atomic<uint32_t> events{0};
 constexpr uint32_t kActivity = 1, kDisconnected = 2, kInvalid = 4, kPairing = 8;
@@ -271,20 +274,22 @@ struct Adapter {
     Bluefruit.configPrphConn(BLE_GATT_ATT_MTU_MAX, BLE_GAP_EVENT_LENGTH_MIN,
                             BlePerformance::NotificationQueueCapacity, 1);
     if (!Bluefruit.begin(1, 0)) return fail("SoftDevice initialization");
-    Bluefruit.setName("TacticPod"); // begin() installs the framework's default name.
+    DeviceIdentity::Id identity;
+    if (!DeviceIdentity::read(identity)) return fail("hardware identity unavailable");
+    DeviceIdentity::hex(identity, podId);
+    char displayName[DeviceIdentity::BleNameLength + 1];
+    DeviceIdentity::bleName(identity, displayName);
+    Bluefruit.setName(displayName); // begin() installs the framework's default name.
     if (!InternalFS.exists("/adafruit/bond_prph") || !InternalFS.exists("/adafruit/bond_cntr"))
       return fail("internal filesystem initialization");
     flash_nrf5x_flush();
     Bluefruit.Periph.setDisconnectCallback(onDisconnect);
     Bluefruit.setEventCallback(onEvent);
     Bluefruit.Advertising.restartOnDisconnect(false);
-    snprintf(podId, sizeof(podId), "%08lx%08lx",
-             static_cast<unsigned long>(NRF_FICR->DEVICEID[1]),
-             static_cast<unsigned long>(NRF_FICR->DEVICEID[0]));
     deviceInfo.setManufacturer("TacticPod");
     deviceInfo.setModel("XIAO nRF52840 Sense");
     deviceInfo.setSerialNum(podId);
-    deviceInfo.setFirmwareRev("ble-download-2");
+    deviceInfo.setFirmwareRev(DeviceIdentity::BleFirmwareRevision);
     if (deviceInfo.begin() != ERROR_NONE || gattService.begin() != ERROR_NONE)
       return fail("GATT service initialization");
     activity.setProperties(CHR_PROPS_WRITE);
@@ -360,6 +365,12 @@ struct Adapter {
       Serial.print("BLE feature capability unavailable; provisional discovery disabled. GATT error=");
       Serial.println(static_cast<unsigned long>(featureError));
     }
+    hardwareIdentity.setProperties(CHR_PROPS_READ);
+    hardwareIdentity.setPermission(SECMODE_OPEN,SECMODE_NO_ACCESS);
+    hardwareIdentity.setFixedLen(DeviceIdentity::HexLength);
+    if(!beginCharacteristic(hardwareIdentity,"hardware identity"))return false;
+    if(hardwareIdentity.write(podId,DeviceIdentity::HexLength)!=DeviceIdentity::HexLength)
+      return fail("hardware identity characteristic");
     if (!updateBattery()) return false;
     if (!Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE) ||
         !Bluefruit.Advertising.addService(gattService) || !Bluefruit.ScanResponse.addName())

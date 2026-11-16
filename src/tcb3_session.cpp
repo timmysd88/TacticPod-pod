@@ -1,4 +1,5 @@
 #include "tcb3_session.h"
+#include "device_identity.h"
 #if TACTICPOD_TCB3_FLASH_ENABLED
 #include "tcb3_store.h"
 #include "compact_recorder.h"
@@ -763,7 +764,9 @@ void update(bool allow){
 #endif
       uint8_t m[Tcb3::MetadataBytes];Tcb3::metadata(m,MonotonicClock::now());
 #ifdef NRF_FICR
-      Tcb3::put(m+16,uint64_t(NRF_FICR->DEVICEID[0])|(uint64_t(NRF_FICR->DEVICEID[1])<<32),8);
+      DeviceIdentity::Id identity;
+      DeviceIdentity::read(identity);
+      Tcb3::put(m+16,identity.value(),8);
       Tcb3::put(m+68,1); // Bit 0: device ID present; build ID remains unavailable.
 #endif
       if(store.start(m) && CompactRecorder::start()){
