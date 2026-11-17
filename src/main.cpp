@@ -598,7 +598,7 @@ void loop() {
   if (BleRuntime::active()) {
     updateFieldControls();
     if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);
-    delay(10);
+    delay(BleRuntime::downloading() ? 1 : 10);
     return; // No USB commands, IMU/GPS service, recorder updates or flash access in BLE mode.
   }
 #endif

@@ -28,6 +28,7 @@ FieldBleAdapter fieldBle;
 BlePhase1::Runtime<FieldBleAdapter> fieldBleRuntime;
 namespace BleRuntime {
 bool active() { return fieldBleRuntime.active(); }
+bool downloading() { return false; }
 void update(uint32_t now, const BleMode::Inputs& in) { fieldBleRuntime.update(now, in, fieldBle); }
 StatusLed::Color ledColor(uint32_t now) { return fieldBleRuntime.ledColor(now); }
 bool returnedFromBle() { return false; }

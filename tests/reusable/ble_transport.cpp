@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include "../../src/ble_runtime.cpp"
 
+void mockTransmissionComplete(unsigned count){
+  ble_evt_t event{};event.header.evt_id=BLE_GATTS_EVT_HVN_TX_COMPLETE;
+  event.evt.gatts_evt.params.hvn_tx_complete.count=uint16_t(count);onEvent(&event);
+}
 uint32_t mockTime=0;
 unsigned mockRedWrites=0;
 MockSerial Serial;
@@ -59,10 +63,13 @@ static void resetMocks(){
   performanceReadReady.store(false);
   linkReadReady.store(false);
   speedReadReady.store(false);speedAckHead.store(0);speedAckTail.store(0);speedAckOverflow.store(false);
-  notificationCredit.store(true);
+  notificationCredits.store(BlePerformance::NotificationQueueCapacity);
+  notificationCreditFault.store(false);notificationResourceWait.store(false);
+  mockAutoComplete=true;mockResourceExhausted=false;
   mockSerialPins=0;
   mockLink=mockNotifyEnabled=mockNotifyAccepted=true;mockMtu=23;
   mockConnectionAvailable=true;mockDataLength=27;mockInterval=24;mockPhy=1;
+  mockLinkRequestAccepted=true;memset(mockLinkRequests,0,sizeof(mockLinkRequests));
   mockFeatureBeginFailure=mockFeatureWriteFailure=false;mockFeatureLength=mockProtocolLength=0;
   memset(mockFeatureValue,0,sizeof(mockFeatureValue));memset(mockProtocolValue,0,sizeof(mockProtocolValue));
   listAvailable=true;listPending=false;
@@ -74,6 +81,28 @@ static void resetMocks(){
   controlHead.store(0);controlTail.store(0);controlOverflow.store(false);
   Bluefruit.Advertising.running=false;
 }
+static unsigned notificationCreditsCase(){
+  resetMocks();mockAutoComplete=false;
+  const uint8_t bytes[]={1,2,3};
+  for(unsigned i=0;i<BlePerformance::NotificationQueueCapacity;++i)
+    CHECK(submitNotification(bytes,sizeof(bytes))==NotificationResult::Accepted);
+  CHECK(notificationCredits.load()==0);
+  CHECK(submitNotification(bytes,sizeof(bytes))==NotificationResult::Busy);
+  CHECK(mockNotifyCalls==BlePerformance::NotificationQueueCapacity);
+  mockTransmissionComplete(3);
+  CHECK(notificationCredits.load()==3 && !notificationCreditFault.load());
+  for(unsigned i=0;i<3;++i)
+    CHECK(submitNotification(bytes,sizeof(bytes))==NotificationResult::Accepted);
+  mockTransmissionComplete(2);mockResourceExhausted=true;
+  CHECK(submitNotification(bytes,sizeof(bytes))==NotificationResult::Busy);
+  CHECK(notificationCredits.load()==2 && notificationResourceWait.load());
+  mockResourceExhausted=false;mockTime+=5;
+  CHECK(submitNotification(bytes,sizeof(bytes))==NotificationResult::Accepted);
+  CHECK(notificationCredits.load()==1);
+  mockTransmissionComplete(BlePerformance::NotificationQueueCapacity);
+  CHECK(notificationCreditFault.load());
+  return 0;
+}
 static void request(Adapter&,uint8_t,uint16_t,const uint8_t*,unsigned);
 static void ack(Adapter&,unsigned);
 static void speedAckRequest(Adapter& target,uint16_t id,uint32_t next,uint16_t bitmap){
@@ -82,7 +111,8 @@ static void speedAckRequest(Adapter& target,uint16_t id,uint32_t next,uint16_t b
   onSpeedAck(0,&speedAck,bytes,sizeof(bytes));target.processSpeedAck();
 }
 
-extern "C" unsigned highSpeedTransferCase(unsigned loseCompletionAck){
+extern "C" unsigned highSpeedTransferCase(unsigned scenario){
+  const bool loseCompletionAck=scenario==1,upgradeMtu=scenario==2;
   resetMocks();Adapter target;target.speedAvailable=true;streamEnabled=true;
   for(unsigned packet=0;packet<3;++packet){
     for(unsigned i=0;i<streamLengths[packet];++i)streamPackets[packet][i]=uint8_t(packet*31U+i);
@@ -97,8 +127,8 @@ extern "C" unsigned highSpeedTransferCase(unsigned loseCompletionAck){
   request(target,0x02,2,fields,sizeof(fields));
   CHECK(target.speedActive && target.speedStatus==3);
   unsigned seen=1;uint32_t now=10;uint8_t reconstructed[344]{};unsigned used=0;
-  while(target.speedWindow.next()<4 && now<1000){
-    notificationCredit.store(true);target.service(now++);
+  while(mockNotifyCalls<5 && now<1000){
+    target.service(now++);
   }
   CHECK(mockNotifyCalls==5 && target.speedWindow.base()==0 && !finished);
   for(unsigned index=1;index<5;++index){
@@ -108,15 +138,20 @@ extern "C" unsigned highSpeedTransferCase(unsigned loseCompletionAck){
   }
   speedAckRequest(target,2,1,0x0006);
   CHECK(target.speedWindow.base()==1 && !finished);
-  notificationCredit.store(true);target.service(1020);
+  mockAutoComplete=false;notificationCredits.store(1);
+  target.service(1020);
   CHECK(mockNotifyCalls==6 && read32(mockNotifications[5].bytes+4)==1);
   memcpy(reconstructed+9,mockNotifications[5].bytes+9,mockNotifications[5].bytes[8]);
   speedAckRequest(target,2,4,0);used=36;
+  if(upgradeMtu)mockMtu=247;
+  mockAutoComplete=true;notificationCredits.store(BlePerformance::NotificationQueueCapacity);
+  bool sawLargeFrame=false;
   seen=6;now=1030;
   while(target.transfer==TransferState::Downloading && now<10000){
-    notificationCredit.store(true);target.service(now++);
+    target.service(now++);
     while(seen<mockNotifyCalls){
       const MockNotification& notification=mockNotifications[seen++];
+      if(notification.bytes[8]==233)sawLargeFrame=true;
       CHECK(notification.bytes[0]==3 && read32(notification.bytes+4)==target.speedWindow.base());
       CHECK(used+notification.bytes[8]<=sizeof(reconstructed));
       memcpy(reconstructed+used,notification.bytes+9,notification.bytes[8]);used+=notification.bytes[8];
@@ -124,6 +159,7 @@ extern "C" unsigned highSpeedTransferCase(unsigned loseCompletionAck){
     }
   }
   CHECK(used==sizeof(reconstructed) && released==3 && !finished && exporterOwned);
+  CHECK(sawLargeFrame==upgradeMtu);
   unsigned offset=0;
   for(unsigned packet=0;packet<3;++packet){
     CHECK(memcmp(reconstructed+offset,streamPackets[packet],streamLengths[packet])==0);
@@ -168,20 +204,20 @@ extern "C" unsigned highSpeedFailureCase(unsigned scenario){
     CHECK(target.transfer==TransferState::SendingError && cancelled==1 && !finished);
     CHECK(target.speedStatus==5 && !target.speedActive);
   }else if(scenario==1){
-    notificationCredit.store(false);
+    notificationCredits.store(0);
     target.service(10);CHECK(mockNotifyCalls==0 && target.speedActive);
     target.service(5010);
     CHECK(target.transfer==TransferState::SendingError && cancelled==1 && !finished);
   }else if(scenario==6){
     target.service(10);
-    CHECK(mockNotifyCalls==1 && target.speedWindow.base()==0);
+    CHECK(mockNotifyCalls==4 && target.speedWindow.base()==0);
     speedAckRequest(target,3,1,0);
     CHECK(target.speedWindow.base()==0 && target.speedActive);
     speedAckRequest(target,2,1,0);
     CHECK(target.speedWindow.base()==1 && target.speedActive);
     speedAckRequest(target,2,0,0);
     CHECK(target.speedWindow.base()==1 && target.speedActive);
-    speedAckRequest(target,2,3,0);
+    speedAckRequest(target,2,5,0);
     CHECK(target.transfer==TransferState::SendingError && cancelled==1 && !finished);
   }else if(scenario==7 || scenario==8){
     target.service(10);CHECK(exporterOwned && target.speedActive);
@@ -205,12 +241,12 @@ extern "C" unsigned highSpeedFailureCase(unsigned scenario){
       CHECK(speedAckHead.load()==speedAckTail.load());
     }
   }else{
-    target.service(10);CHECK(mockNotifyCalls==1 && target.speedActive);
+    target.service(10);CHECK(mockNotifyCalls==4 && target.speedActive);
     if(scenario==2){
       CHECK(target.cancel(2) && target.transfer==TransferState::SendingCancel && finished==1);
       speedAckRequest(target,2,1,0);
       CHECK(target.transfer==TransferState::SendingCancel && target.speedStatus==5);
-      target.transmit(20);ack(target,1);
+      target.transmit(20);ack(target,4);
       CHECK(target.transfer==TransferState::Idle);
     }else{
       target.abortTransfer();
@@ -238,14 +274,14 @@ extern "C" unsigned highSpeedLifecycleCase(unsigned scenario){
     }
     CHECK(target.startDownload(2,1,7) && exporterOwned);
     uint32_t now=10;
-    while(target.speedWindow.next()<4 && now<100){
-      notificationCredit.store(true);target.service(now++);
+    while(mockNotifyCalls<5 && now<100){
+      target.service(now++);
     }
     CHECK(target.speedWindow.next()==4 && target.speedWindow.base()==0 && exporterOwned);
     if(scenario==2 || scenario==5){
       speedAckRequest(target,2,4,0);
       while(target.transfer==TransferState::Downloading && now<1000){
-        notificationCredit.store(true);target.service(now++);
+        target.service(now++);
         const unsigned index=mockNotifyCalls-1;
         if(mockNotifications[index].bytes[0]==3 && read32(mockNotifications[index].bytes+4)>=target.speedWindow.base())
           speedAckRequest(target,2,read32(mockNotifications[index].bytes+4)+1,0);
@@ -589,6 +625,7 @@ extern "C" unsigned provisionalTransportCase(unsigned scenario){
 }
 
 extern "C" unsigned fastAckCase(unsigned largeMtu){
+  if(largeMtu)CHECK(notificationCreditsCase()==0);
   resetMocks();mockMtu=largeMtu?247:23;Adapter target;beginMessage(target);
   uint8_t collected[280]{};unsigned offset=0;uint32_t now=100;
   while(target.messageReady){
@@ -613,6 +650,38 @@ extern "C" unsigned fastAckCase(unsigned largeMtu){
   for(unsigned i=0;i<sizeof(collected);++i)CHECK(collected[i]==uint8_t(i*37U));
   target.setMessage(kTransferEnd,collected,12);target.transmit(now);
   CHECK(mockNotifyCalls==(largeMtu?3U:57U) && target.awaitingAck);
+  if(largeMtu){
+    resetMocks();mockMtu=247;mockAutoComplete=false;streamEnabled=true;
+    for(unsigned packet=0;packet<3;++packet){
+      memset(streamPackets[packet],uint8_t(packet),streamLengths[packet]);
+      memcpy(streamPackets[packet],"TPX3",4);
+      streamPackets[packet][5]=packet==0?1:packet==1?2:4;
+    }
+    Adapter burst;burst.speedAvailable=true;burst.speedStatus=2;burst.speedId=2;
+    CHECK(burst.startDownload(2,1,7));burst.service(10);
+    CHECK(mockNotifyCalls==2 && streamIndex==3 && !finished);
+    CHECK(mockNotifications[0].bytes[8]==233 && mockNotifications[1].bytes[8]==111);
+    CHECK(!memcmp(mockNotifications[0].bytes+9,streamPackets[0],40));
+    CHECK(!memcmp(mockNotifications[0].bytes+49,streamPackets[1],193));
+    CHECK(notificationCredits.load()==BlePerformance::NotificationQueueCapacity-2);
+    for(unsigned size=8;size<=16;size*=2){
+      resetMocks();streamEnabled=true;
+      Adapter extended;extended.speedAvailable=extended.speedWindowAvailable=true;
+      const uint8_t mode[]={3,uint8_t(size)};
+      request(extended,0x05,2,mode,sizeof(mode));
+      extended.transmit(1);ack(extended,0);
+      CHECK(extended.selectedWindow==size && extended.speedStatus==2);
+      mockAutoComplete=false;
+      CHECK(extended.startDownload(2,1,7));extended.service(10);
+      CHECK(mockNotifyCalls==9 && notificationCredits.load()==0);
+      CHECK(extended.speedWindow.capacity()==size);
+      mockTransmissionComplete(8);extended.service(20);
+      CHECK(mockNotifyCalls==size+1 && extended.speedWindow.next()==size);
+      for(unsigned i=1;i<=size;++i)CHECK(read32(mockNotifications[i].bytes+4)==i-1);
+      CHECK(extended.cancel(2) && !exporterOwned && !extended.speedActive);
+      CHECK(extended.transfer==TransferState::SendingCancel);
+    }
+  }
   return 0;
 }
 
@@ -833,7 +902,8 @@ extern "C" unsigned linkDiagnosticsCase(unsigned unavailable){
   CHECK(mockReadReplies==2 && mockReadStatus==BLE_GATT_STATUS_SUCCESS);
   CHECK(!memcmp(mockReadValue,"TPL1",4) && read16(mockReadValue+4)==1 &&
     read16(mockReadValue+6)==BlePerformance::LinkSnapshotSize);
-  CHECK(mockReadValue[8]==(unavailable?0:1) && mockReadValue[9]==1);
+  CHECK(mockReadValue[8]==(unavailable?0:1) &&
+    mockReadValue[9]==BlePerformance::NotificationQueueCapacity);
   CHECK(read16(mockReadValue+10)==(unavailable?0:27));
   CHECK(read16(mockReadValue+12)==(unavailable?0:24) && read16(mockReadValue+14)==0);
   uint8_t first[BlePerformance::LinkSnapshotSize];memcpy(first,mockReadValue,sizeof(first));
@@ -846,5 +916,11 @@ extern "C" unsigned linkDiagnosticsCase(unsigned unavailable){
   onLinkRead(0,&linkPerformance,&request);target.service(millis());
   CHECK(mockReadStatus==BLE_GATT_STATUS_ATTERR_INVALID_OFFSET);
   CHECK(!cancelled && !mockNotifyCalls && target.transfer==TransferState::Idle);
+  resetMocks();Adapter requests;mockLinkRequestAccepted=!unavailable;
+  requests.service(0);
+  for(unsigned time=100;time<5000;time+=250)requests.service(time);
+  for(unsigned i=0;i<4;++i)CHECK(mockLinkRequests[i]==(unavailable?4U:1U));
+  CHECK(requests.linkRequestStage==4 && !failed);
+  CHECK(mockMtu==23 && mockDataLength==27 && mockPhy==1);
   return 0;
 }

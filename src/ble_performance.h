@@ -7,7 +7,7 @@ constexpr unsigned SnapshotSize=176;
 constexpr uint16_t SnapshotVersion=1;
 constexpr unsigned LinkSnapshotSize=16;
 constexpr uint16_t LinkSnapshotVersion=1;
-constexpr uint8_t NotificationQueueCapacity=1;
+constexpr uint8_t NotificationQueueCapacity=8;
 
 struct Counters {
   uint16_t mtu=0,lastPayload=0;

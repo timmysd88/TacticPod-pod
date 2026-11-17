@@ -36,6 +36,8 @@ for name in ('seeed_xiao_nrf52840_sense', 'tacticpod_reusable_usb', 'tacticpod_r
             if segment['p_type'] == 'PT_LOAD' and segment['p_filesz']:
                 assert segment['p_paddr'] + segment['p_filesz'] <= 0xED000
         symbols = elf.get_section_by_name('.symtab')
+        assert symbols.get_symbol_by_name('__data_start__')[0]['st_value'] == 0x20008000
+        assert heap['sh_addr'] + 32768 < 0x2003F800, (name, 'less than 32 KiB runtime heap margin')
         assert symbols.get_symbol_by_name('__flash_arduino_start')[0]['st_value'] == 0x27000
         assert symbols.get_symbol_by_name('__flash_arduino_end')[0]['st_value'] == 0xED000
         print('PASS: BLE ELF application boundary and 8-byte NOLOAD marker between BSS and heap')

@@ -3,6 +3,9 @@
 
 typedef int err_t;
 constexpr err_t ERROR_NONE=0,NRF_SUCCESS=0;
+constexpr err_t NRF_ERROR_RESOURCES=19,NRF_ERROR_INTERNAL=3;
+constexpr unsigned BLE_GATT_HVX_NOTIFICATION=1;
+constexpr uint8_t BLE_GAP_PHY_2MBPS=2;
 constexpr unsigned BLE_GATT_ATT_MTU_MAX=247,BLE_GAP_EVENT_LENGTH_MIN=6;
 constexpr unsigned CHR_PROPS_WRITE=8,CHR_PROPS_READ=2,CHR_PROPS_NOTIFY=16;
 constexpr unsigned SECMODE_NO_ACCESS=0,SECMODE_OPEN=1;
@@ -31,7 +34,16 @@ inline err_t sd_ble_gatts_rw_authorize_reply(uint16_t,const ble_gatts_rw_authori
 }
 struct ble_evt_t {
   struct {unsigned evt_id;} header;
-  struct {struct {uint16_t conn_handle;} gap_evt;} evt;
+  struct {
+    struct {uint16_t conn_handle;} gap_evt;
+    struct {struct {struct {uint16_t count;} hvn_tx_complete;} params;} gatts_evt;
+  } evt;
+};
+struct ble_gatts_char_handles_t {uint16_t value_handle;};
+struct ble_gatts_hvx_params_t {
+  uint16_t handle,type,offset;
+  uint16_t* p_len;
+  const uint8_t* p_data;
 };
 struct MockNotification {uint8_t bytes[244];unsigned length;bool accepted;};
 static MockNotification mockNotifications[128]{};
@@ -40,7 +52,10 @@ static uint16_t mockMtu=23;
 static uint16_t mockDataLength=27,mockInterval=24;
 static uint8_t mockPhy=1;
 static bool mockLink=true,mockNotifyEnabled=true,mockNotifyAccepted=true;
+static bool mockAutoComplete=true,mockResourceExhausted=false;
 static bool mockConnectionAvailable=true;
+static bool mockLinkRequestAccepted=true;
+static unsigned mockLinkRequests[4]{};
 static unsigned mockNotifyDurationUs=0;
 static bool mockFeatureBeginFailure=false,mockFeatureWriteFailure=false;
 static bool mockIdentityBeginFailure=false,mockIdentityWriteFailure=false;
@@ -58,6 +73,20 @@ static MockNvmc mockNvmc;
 inline void __DSB(){}
 inline void NVIC_SystemReset(){++mockResets;}
 inline err_t sd_ble_gap_disconnect(uint16_t,unsigned){mockLink=false;return NRF_SUCCESS;}
+void mockTransmissionComplete(unsigned count);
+inline err_t sd_ble_gatts_hvx(uint16_t,const ble_gatts_hvx_params_t* params){
+  if(mockResourceExhausted)return NRF_ERROR_RESOURCES;
+  delayMicroseconds(mockNotifyDurationUs);
+  if(mockNotifyCalls<128){
+    MockNotification& notification=mockNotifications[mockNotifyCalls];
+    notification.length=*params->p_len;notification.accepted=mockNotifyAccepted;
+    if(*params->p_len<=sizeof(notification.bytes))
+      memcpy(notification.bytes,params->p_data,*params->p_len);
+  }
+  ++mockNotifyCalls;
+  if(mockNotifyAccepted && mockAutoComplete)mockTransmissionComplete(1);
+  return mockNotifyAccepted?NRF_SUCCESS:NRF_ERROR_INTERNAL;
+}
 
 struct BLEService {
   const char* uuid;
@@ -97,6 +126,7 @@ struct BLECharacteristic {
     return length;
   }
   bool notifyEnabled(){return mockNotifyEnabled;}
+  ble_gatts_char_handles_t handles(){return {1};}
   bool notify(const void* bytes,unsigned length){
     delayMicroseconds(mockNotifyDurationUs);
     if(mockNotifyCalls<128){
@@ -121,6 +151,10 @@ struct BLEConnection {
   uint16_t getDataLength(){return mockDataLength;}
   uint16_t getConnectionInterval(){return mockInterval;}
   uint8_t getPHY(){return mockPhy;}
+  bool requestMtuExchange(uint16_t mtu){++mockLinkRequests[0];return mtu==247 && mockLinkRequestAccepted;}
+  bool requestDataLengthUpdate(){++mockLinkRequests[1];return mockLinkRequestAccepted;}
+  bool requestPHY(uint8_t phy){++mockLinkRequests[2];return phy==2 && mockLinkRequestAccepted;}
+  bool requestConnectionParameter(uint16_t interval){++mockLinkRequests[3];return interval==12 && mockLinkRequestAccepted;}
 };
 struct MockAdvertising {
   bool running=false;
@@ -133,7 +167,10 @@ struct MockAdvertising {
   bool stop(){running=false;return true;}
   bool isRunning(){return running;}
 };
-struct MockPeripheral {void setDisconnectCallback(void (*)(uint16_t,uint8_t)){}};
+struct MockPeripheral {
+  void setDisconnectCallback(void (*)(uint16_t,uint8_t)){}
+  bool setConnInterval(unsigned,unsigned){return true;}
+};
 struct MockBluefruit {
   MockAdvertising Advertising,ScanResponse;
   MockPeripheral Periph;
