@@ -103,6 +103,12 @@ static void step(bool allow){
   }
 #endif
 }
+unsigned idleDelayMs(unsigned requested){
+#ifndef TACTICPOD_BATTERY_SIM
+  if(phase || burstCount)return requested>1?1:requested;
+#endif
+  return requested;
+}
 void update(bool allow){
   step(allow);
   const uint64_t now=MonotonicClock::now();

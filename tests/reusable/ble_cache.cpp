@@ -4,7 +4,7 @@ using namespace TcbDetail;
 uint32_t cacheExpected[4]{};
 
 static bool cacheBoot(){
-  Serial.connected=true;setup();startupPending=false;waitIdle();
+  Serial.connected=true;setup();waitIdle(); // Exercise actual GPS identity/profile startup.
   for(unsigned n=0;n<200000 && GpsReceiver::busy();++n)cycle();
   Tcb3Session::invalidateBleManifest();
   return !Recorder::exclusive() && !GpsReceiver::busy();

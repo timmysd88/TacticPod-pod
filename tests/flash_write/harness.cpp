@@ -21,7 +21,7 @@ bool configurationActive() { return mockConfigurationActive; }
 bool profileAuditActive() { return mockProfileAuditActive; }
 bool hasFreshFix() { return false; }
 bool busy() { return false; }
-void suspend() {}
+bool suspend() { return true; }
 void resume() {}
 }
 // These regressions isolate the original flash test and console/IMU behavior.

@@ -6,6 +6,9 @@
 #include "recorder.h"
 #include "flash_write_test.h"
 #include "gps_profile.h"
+#if TACTICPOD_REUSABLE
+#include "gps_power.h"
+#endif
 
 namespace {
 namespace Config {
@@ -243,6 +246,7 @@ bool start() {
   started = phaseAt = millis(); lineLength = 0; phase = Phase::Send;
   return true;
 }
+void resetParser() { Config::step=0; }
 bool consume(uint8_t value) {
   using namespace Config;
   // Always demultiplex UBX, including late replies after CONFIG has finished.
@@ -268,7 +272,12 @@ bool consume(uint8_t value) {
   else {
     step = 0;
     if (receivedA == ckA && value == ckB) {
-      if (length <= sizeof(payload)) { GpsProfile::onFrame(cls, id, payload, length); frame(); }
+      if (length <= sizeof(payload)) {
+#if TACTICPOD_REUSABLE
+        GpsPower::controller().onFrame(cls,id,payload,length,millis());
+#endif
+        GpsProfile::onFrame(cls, id, payload, length); frame();
+      }
     }
     else if (active()) ++badChecksums;
     return true;

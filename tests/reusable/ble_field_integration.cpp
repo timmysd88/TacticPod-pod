@@ -26,9 +26,10 @@ struct FieldBleAdapter {
 };
 FieldBleAdapter fieldBle;
 BlePhase1::Runtime<FieldBleAdapter> fieldBleRuntime;
+bool fieldDownloadPace=false;
 namespace BleRuntime {
 bool active() { return fieldBleRuntime.active(); }
-bool downloading() { return false; }
+bool downloading() { return fieldDownloadPace || TcbDetail::bleDownloading; }
 void update(uint32_t now, const BleMode::Inputs& in) { fieldBleRuntime.update(now, in, fieldBle); }
 StatusLed::Color ledColor(uint32_t now) { return fieldBleRuntime.ledColor(now); }
 bool returnedFromBle() { return false; }
@@ -36,7 +37,7 @@ bool returnedFromBle() { return false; }
 
 bool warmBleCache(){
   using namespace TcbDetail;
-  for(unsigned n=0;n<200000 &&
+  for(unsigned n=0;n<1000000 &&
       (manifestCache==ManifestCache::Cold || manifestCache==ManifestCache::Scanning);++n)cycle();
   return manifestCache==ManifestCache::Ready;
 }
@@ -77,7 +78,7 @@ extern "C" unsigned bleFieldCase(unsigned c) {
     return result ? result : fieldBle.begins ? 100 : 0;
   }
   Serial.connected = c != 5;
-  setup(); startupPending = false; waitIdle(); runMs(3500);
+  setup(); waitIdle(); runMs(20000); // Identify SPG 5.10 through the real startup before PMREQ.
   if (c == 5 && !standbyPolicy.inStandby()) return 1;
   if(c>=6 && !warmBleCache())return 52;
   // Deliberate taps exercise the actual 50/10 ms polling and release debounce.
