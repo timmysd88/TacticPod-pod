@@ -13,7 +13,7 @@ bool handleCommand(const char*) { return false; }
 bool uartScanBusy() { return false; }
 bool hasFreshFix() { return false; }
 bool busy() { return false; }
-void suspend() {}
+bool suspend() { return true; }
 void resume() {}
 }
 bool diagnosticAvailable = true;

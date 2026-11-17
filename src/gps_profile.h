@@ -10,6 +10,7 @@ const char* error();
 bool startCheck(bool recover);
 void invalidate(const char* reason);
 bool currentVerified();
+bool standbySupported(); // A real MON-VER response identified SPG 5.10.
 uint32_t checkedAt();
 const char* lastApplied();
 bool automaticStartup();

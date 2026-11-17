@@ -50,7 +50,7 @@ char configurationValues[220];
 enum class Job { Version, Snapshot, Write, Verify, Audit };
 #if TACTICPOD_REUSABLE
 // Field-only audit state must not consume the default build's RAM budget.
-bool currentValid=false, auditRecover=false, auditMismatch=false;
+bool currentValid=false, auditRecover=false, auditMismatch=false, supportedVersion=false;
 uint32_t checkedMs=0;
 const char* currentDetail="UNVERIFIED (no current RAM readback)";
 #endif
@@ -335,6 +335,13 @@ const char* status() {
 #endif
 }
 const char* lastApplied() { return Profile::configuration; }
+bool standbySupported() {
+#if TACTICPOD_REUSABLE
+  return Profile::supportedVersion;
+#else
+  return false;
+#endif
+}
 bool currentVerified() {
 #if TACTICPOD_REUSABLE
   return Profile::currentValid && !active();
@@ -373,6 +380,7 @@ bool startCheck(bool recover) {
 #if TACTICPOD_REUSABLE
   using namespace Profile;
   if(active() || GpsConfig::active() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed())return false;
+  if(!supportedVersion)return startStartup();
   currentValid=false; currentDetail="UNVERIFIED (RAM audit pending)";
   auditRecover=recover;auditMismatch=false;keyIndex=0;failedKey=0;readRetries=0;
   // No VALSET is emitted unless a complete audit detects profile loss.
@@ -422,6 +430,9 @@ void onFrame(uint8_t cls, uint8_t id, const uint8_t* p, size_t length) {
     }
     if (cls != 10 || id != 4 || length < 40 || (length - 40) % 30) return;
     if (!matchingVersion(p, length)) { fail("receiver must advertise FWVER=SPG 5.10"); return; }
+#if TACTICPOD_REUSABLE
+    supportedVersion=true;
+#endif
     readRetries = 0; job = Job::Snapshot; keyIndex = 0; gap(200); return;
   }
   const uint8_t expectedId = job == Job::Write ? 0x8a : 0x8b;

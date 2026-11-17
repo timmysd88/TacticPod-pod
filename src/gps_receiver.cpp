@@ -3,6 +3,7 @@
 #include <TinyGPS++.h>
 #include <string.h>
 #include "gps_receiver.h"
+#include "flash_write_test.h"
 #include "recorder.h"
 #include "gps_uart_scan.h"
 #include "gps_uart_config.h"
@@ -13,6 +14,9 @@
 #include "ram_observations.h"
 #include "compact_recorder.h"
 #include "tcb3_session.h"
+#if TACTICPOD_REUSABLE
+#include "gps_power.h"
+#endif
 
 // Verified in Seeed_XIAO_nRF52840/variant.h and cores/nRF5/Uart.cpp:
 // Serial1 = UARTE0, RX = D7/P1.12, TX = D6/P1.11.
@@ -31,6 +35,24 @@ bool printing = false, receivedByte = false, receivedValid = false;
 bool startupPending = false, startupNoCommunication = false;
 #if TACTICPOD_REUSABLE
 bool profileRequested=false, profileRunning=false, profileFailed=false;
+bool bootWakeAttempted=false;
+struct PowerIo {
+  bool txReady(){return GpsUartTx::ready();}
+  size_t write(const uint8_t* p,size_t n){
+    if(n==1){
+      // AMOUNT survives a UART restart. A repeated wake byte must not match
+      // stale DMA completion, or a stalled TX could reach a blocking write.
+      const uint8_t wake[]={0xff,0xff};
+      const size_t count=NRF_UARTE0->TXD.AMOUNT==1?2:1;
+      return GpsUartTx::write(wake,count)==count?1:0;
+    }
+    return GpsUartTx::write(p,n);
+  }
+  void baud(uint32_t value){
+    Serial1.end();GpsUartTx::resetIdle();GpsConfig::resetParser();
+    Serial1.begin(value);
+  }
+} powerIo;
 uint32_t profileRequestedAt=0, lastRmcMs=0;
 unsigned slowRmc=0;
 #endif
@@ -163,6 +185,9 @@ void buildStatus() {
   text(" | last_valid_message_age_ms=");
   if (receivedValid) number(now - lastValidAt); else text("N/A");
   text("\n");
+#if TACTICPOD_REUSABLE
+  text("GPS power: ");text(GpsPower::controller().error());text("\n");
+#endif
   text("GPS configuration: "); text(GpsProfile::status()); text("\n");
   text("GPS last applied profile (historical): "); text(GpsProfile::lastApplied());text("\n");
   text("GPS RAM readback t_ms=");number(GpsProfile::checkedAt());text(" (snapshot, not proof of navigation cadence)\n");
@@ -306,34 +331,58 @@ bool hasFreshFix() { return !suspended && liveFix(); }
 bool busy() {
   return startupPending ||
 #if TACTICPOD_REUSABLE
+         GpsPower::controller().active() ||
+#endif
+#if TACTICPOD_REUSABLE
          profileRequested || profileRunning ||
 #endif
          GpsProfile::active() || GpsConfig::active() || GpsRate::active() ||
          GpsUartScan::active() || GpsUartScan::faulted() || rawPhase != RawPhase::Idle ||
          loopPhase != LoopPhase::Idle;
 }
-void suspend() {
-  if (suspended) return;
+bool suspend() {
+  if (suspended) return true;
+#if TACTICPOD_REUSABLE
+  // Admission is checked here too, so callers cannot power down an owner.
+  if(busy() || Recorder::exclusive() || Tcb3Session::exclusive() ||
+     CompactRecorder::capturing() || RamObservations::capturing() || RamObservations::fastImu() ||
+     !FlashWriteTest::diagnosticsAllowed() || !GpsProfile::standbySupported() || !GpsUartTx::ready())return false;
+  uint8_t command[24];GpsPower::sleepPacket(command);
+  // One bounded DMA batch; 24 bytes take 6.25 ms at 38400. A short/uncertain
+  // write triggers recovery, never another sleep request or a recording.
+  const bool sent=GpsUartTx::write(command,sizeof(command))==sizeof(command);
+  const uint32_t at=millis();
+  while(!GpsUartTx::ready() && uint32_t(millis()-at)<20)delay(1);
+  if(!sent || !GpsUartTx::ready()){
+    GpsPower::controller().beginWake(millis());
+    GpsProfile::invalidate("UNVERIFIED (standby TX failed)");return false;
+  }
+#endif
   Serial1.end();
+  GpsUartTx::resetIdle();GpsConfig::resetParser();
   // Park our TX at the UART idle level instead of leaving the GPS RX input floating.
   pinMode(PIN_SERIAL1_TX, OUTPUT);
   digitalWrite(PIN_SERIAL1_TX, HIGH);
   suspended = true;
 #if TACTICPOD_REUSABLE
-  GpsProfile::invalidate("UNVERIFIED (UART suspended; receiver RAM not observed)");
+  GpsPower::controller().asleep();
+  GpsProfile::invalidate("UNVERIFIED (PMREQ standby requested; RAM lost)");
 #endif
+  return true;
 }
 void resume() {
   if (!suspended) return;
   Serial1.begin(GpsUartConfig::kNormalBaud);
+  GpsUartTx::resetIdle();GpsConfig::resetParser();
   suspended = false;
   fixReported = false;
   receivedByte = false;
 #if TACTICPOD_REUSABLE
   receivedValid=false;lastRmcMs=0;slowRmc=0;
   startupPending=false;startupNoCommunication=false;
-  profileRequested=true;profileRunning=profileFailed=false;
+  profileRequested=false;profileRunning=profileFailed=false;
   profileRequestedAt=startedAt=millis();
+  GpsPower::controller().beginWake(millis());
   GpsProfile::invalidate("UNVERIFIED (UART wake; fresh RAM audit required)");
 #endif
   if (startupNoCommunication) {
@@ -350,6 +399,30 @@ void begin() {
 }
 void update() {
   if (suspended) return;
+#if TACTICPOD_REUSABLE
+  auto& power=GpsPower::controller();
+  // An MCU-only reset may leave GPS in standby. Recover once if ordinary boot
+  // reception never appears; never reset the receiver or alter persistent layers.
+  if(startupPending && !receivedValid && !bootWakeAttempted &&
+     !GpsConfig::active() && !GpsProfile::active() && !GpsUartScan::active() && !GpsUartScan::faulted() &&
+     rawPhase==RawPhase::Idle && loopPhase==LoopPhase::Idle && !GpsRate::active() &&
+     uint32_t(millis()-startedAt)>=1500){
+    bootWakeAttempted=true;startupPending=false;power.beginWake(millis());
+  }
+  if(power.active()){
+    pollUart();power.update(powerIo,millis());
+    if(power.ready()){
+      // Drop stale navigation state and require the existing full RAM audit.
+      receivedValid=false;fixReported=false;lastRmcMs=0;slowRmc=0;
+      profileRequested=true;profileRunning=profileFailed=false;profileRequestedAt=millis();
+    }else if(power.failed()){
+      power.restoreFailureUart(powerIo);
+      profileRequested=profileRunning=false;profileFailed=true;
+      GpsProfile::invalidate(power.error());
+    }
+    return;
+  }
+#endif
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
 #if TACTICPOD_REUSABLE
@@ -412,8 +485,10 @@ bool prepareRecording() {
   if(suspended || GpsConfig::active() || GpsRate::active() || GpsUartScan::active() ||
      GpsUartScan::faulted() || rawPhase!=RawPhase::Idle || loopPhase!=LoopPhase::Idle ||
      (GpsProfile::active() && !GpsProfile::automaticStartup()))return false;
+  // Retry only after all existing diagnostic owners have been excluded.
+  if(GpsPower::controller().failed())GpsPower::controller().beginWake(millis());
   profileFailed=false;
-  if(!profileRequested && !profileRunning) {
+  if(!GpsPower::controller().active() && !profileRequested && !profileRunning) {
     profileRequested=true;profileRequestedAt=millis();
     if(GpsProfile::active())profileRunning=true;
   }
@@ -424,7 +499,8 @@ bool prepareRecording() {
 }
 bool recordingReady() {
 #if TACTICPOD_REUSABLE
-  return !startupPending && !profileRequested && !profileRunning && GpsProfile::currentVerified();
+  return !suspended && !GpsPower::controller().active() && !GpsPower::controller().failed() &&
+    !startupPending && !profileRequested && !profileRunning && GpsProfile::currentVerified();
 #else
   return true;
 #endif
@@ -437,6 +513,11 @@ bool preparationFailed() {
 #endif
 }
 bool handleCommand(const char* line) {
+#if TACTICPOD_REUSABLE
+  if(GpsPower::controller().active() && (!strncmp(line,"GPS ",4) || !strcmp(line,"UART LOOPBACK TEST"))){
+    Serial.println("GPS UART wake/recovery active; wait before diagnostics.");return true;
+  }
+#endif
   if (strcmp(line, "GPS 10HZ TEST") == 0 || strcmp(line, "GPS RESTORE") == 0) {
     const bool test = strcmp(line, "GPS 10HZ TEST") == 0;
     if (rawPhase != RawPhase::Idle || loopPhase != LoopPhase::Idle || GpsRate::active() ||
@@ -547,5 +628,10 @@ bool handleCommand(const char* line) {
 bool uartScanActive() { return GpsUartScan::active(); }
 bool configurationActive() { return GpsConfig::active(); }
 bool profileAuditActive() { return GpsProfile::active(); }
-bool uartScanBusy() { return GpsUartScan::active() || GpsConfig::active() || GpsProfile::active(); }
+bool uartScanBusy() {
+#if TACTICPOD_REUSABLE
+  if(GpsPower::controller().active())return true;
+#endif
+  return GpsUartScan::active() || GpsConfig::active() || GpsProfile::active();
+}
 }

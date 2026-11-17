@@ -17,6 +17,8 @@ paths.append('tests/reusable/ble_transport_tests.py')
 paths.append('tests/reusable/ble_cache_tests.py')
 paths.append('tests/reusable/fast_discovery_production_tests.py')
 paths.append('tests/device_identity/run_tests.py')
+paths.append('tests/reusable/idle_power_tests.py')
+paths.append('tests/reusable/idle_throughput_tests.py')
 results={}
 for path in paths:
     name=path.replace('/','_').replace('.py','')
@@ -26,4 +28,7 @@ for path in paths:
     results[path]=p.returncode
     (out/'results.json').write_text(json.dumps(results,indent=2)+'\n')
     print('PASS' if p.returncode==0 else 'FAIL',path,flush=True)
+    if p.returncode:
+        print('STOP: regression failed; see',out/(name+'.txt'),flush=True)
+        sys.exit(p.returncode)
 sys.exit(0 if all(v==0 for v in results.values()) else 1)

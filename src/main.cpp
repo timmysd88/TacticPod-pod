@@ -98,13 +98,18 @@ struct FlashIo {
 
 // Standby leaves D0, P0.14 (VBAT_ENABLE, LOW) and P0.13 (charge current, input) untouched.
 bool enterStandby() {
+  // Refuse before sending even a flash power command to another owner.
+  if(Recorder::exclusive() || Tcb3Session::exclusive() || Tcb3Session::faulted() ||
+     identityRequested || identityRunning || GpsReceiver::busy() ||
+     CompactRecorder::capturing() || RamObservations::capturing() || RamObservations::fastImu() ||
+     !FlashWriteTest::diagnosticsAllowed())return false;
   FlashIo flash;
   if (!FlashPower::deepPowerDown(flash)) return false;  // Flash busy: stay awake, retry later.
+  if (!GpsReceiver::suspend()) { FlashPower::release(flash); return false; }
   if (imuReady) {
     imu.writeRegister(0x10, 0);  // CTRL1_XL: accelerometer power-down.
     imu.writeRegister(0x11, 0);  // CTRL2_G: gyroscope power-down.
   }
-  GpsReceiver::suspend();
   MonotonicClock::suspend();
   setUserLed(StatusLed::Color::Off);
   return true;
@@ -224,12 +229,12 @@ void flushFieldTrace() {
 
 // Standby pace: no GPS/IMU/flash/LED work. D0 is polled; sleeping is the RTOS tickless idle.
 void standbyIdle() {
-  if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);  // Keeps armed-cell trust warm.
+  BatteryRuntime::update(BatteryRuntime::monitor().s.cell);
+  unsigned pace = digitalRead(PIN_A0) == LOW ? 10 : 50;
 #if TACTICPOD_BLE
-  delay(bleGesture.wantsFastPoll() || digitalRead(PIN_A0) == LOW ? 10 : 50);
-#else
-  delay(digitalRead(PIN_A0) == LOW ? 10 : 50);
+  if (bleGesture.wantsFastPoll()) pace=10;
 #endif
+  delay(BatteryRuntime::idleDelayMs(pace));
 }
 #endif
 
@@ -597,8 +602,8 @@ void loop() {
 #if TACTICPOD_BLE
   if (BleRuntime::active()) {
     updateFieldControls();
-    if (BatteryRuntime::monitor().s.cell) BatteryRuntime::update(true);
-    delay(BleRuntime::downloading() ? 1 : 10);
+    BatteryRuntime::update(BatteryRuntime::monitor().s.cell);
+    delay(BatteryRuntime::idleDelayMs(BleRuntime::downloading() ? 1 : 10));
     return; // No USB commands, IMU/GPS service, recorder updates or flash access in BLE mode.
   }
 #endif

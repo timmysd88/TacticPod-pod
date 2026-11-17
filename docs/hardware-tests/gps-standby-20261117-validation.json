@@ -1,0 +1,159 @@
+{
+  "schema": "tacticpod.working-gps-standby/1",
+  "date": "2026-11-17",
+  "label": "WORKING \u2014 GPS STANDBY + FAST BLE \u2014 HARDWARE TESTED",
+  "firmware_sha256": "1ad514561794458b805bb41ee34af369891916c4067bff964b52f1863c498740",
+  "validated_build_base_head": "81abe0514d906a7cc997d7a3c705c704830acd56",
+  "merged_throughput_main": "e92e885849b54e25c49f9e60a0de218c299cf2f6",
+  "reviewed_throughput_commit": "8fee73507673121c126ba36a14593863236a3fe6",
+  "regression_count": 48,
+  "regression_results": {
+    "tests/gps/run_tests.py": 0,
+    "tests/recording/run_tests.py": 0,
+    "tests/flash_write/run_tests.py": 0,
+    "tests/recorder_v2/run_tests.py": 0,
+    "tests/storage_benchmark/run_tests.py": 0,
+    "tests/compact/run_tests.py": 0,
+    "tests/compact/test_decoder.py": 0,
+    "tests/compact/test_timing_model.py": 0,
+    "tests/compact/test_resources.py": 0,
+    "tests/tcb3/run_tests.py": 0,
+    "tests/tcb3/integration_tests.py": 0,
+    "tests/tcb3/console_tests.py": 0,
+    "tests/flash_identity/run_tests.py": 0,
+    "tests/tcb3/sustained_tests.py": 0,
+    "tests/tcb3/long_integration_tests.py": 0,
+    "tests/recording/erase_review_tests.py": 0,
+    "tests/tcb3/first_write_tests.py": 0,
+    "tests/tcb3/append_30s_tests.py": 0,
+    "tests/tcb3/movement_120s_tests.py": 0,
+    "tests/tcb3/movement_controls_tests.py": 0,
+    "tests/reusable/policy_tests.py": 0,
+    "tests/reusable/store_tests.py": 0,
+    "tests/reusable/reset_tests.py": 0,
+    "tests/reusable/reset_integration_tests.py": 0,
+    "tests/reusable/adc_tests.py": 0,
+    "tests/reusable/console_tests.py": 0,
+    "tests/reusable/integration_tests.py": 0,
+    "tests/reusable/startup_tests.py": 0,
+    "tests/reusable/switchless_tests.py": 0,
+    "tests/reusable/download_tests.py": 0,
+    "tests/reusable/manifest_tests.py": 0,
+    "tests/reusable/ble_protocol_tests.py": 0,
+    "tests/reusable/button_tests.py": 0,
+    "tests/reusable/standby_tests.py": 0,
+    "tests/reusable/battery_gauge_tests.py": 0,
+    "tests/reusable/field_tests.py": 0,
+    "tests/reusable/ble_groundwork_tests.py": 0,
+    "tests/reusable/ble_phase1_tests.py": 0,
+    "tests/reusable/ble_gatt_tests.py": 0,
+    "tests/reusable/ble_elf_tests.py": 0,
+    "tests/reusable/manifest_status2_tests.py": 0,
+    "tests/reusable/usb_pump_tests.py": 0,
+    "tests/reusable/ble_transport_tests.py": 0,
+    "tests/reusable/ble_cache_tests.py": 0,
+    "tests/reusable/fast_discovery_production_tests.py": 0,
+    "tests/device_identity/run_tests.py": 0,
+    "tests/reusable/idle_power_tests.py": 0,
+    "tests/reusable/idle_throughput_tests.py": 0
+  },
+  "builds": {
+    "seeed_xiao_nrf52840_sense": {
+      "result": "PASS",
+      "log": "C:\\Tacticpod\\TacticPod-pod\\.pio\\idle-throughput-build-seeed_xiao_nrf52840_sense.log",
+      "ram_bytes": 119000,
+      "ram_limit_bytes": 237568,
+      "flash_bytes": 167964,
+      "flash_limit_bytes": 811008,
+      "application_only": true,
+      "binary_sha256": "e2cd93d11a262f177c9d0833945c5487725774409992c9d1d2ab270b07db3e3c",
+      "artifacts": {
+        "firmware.zip": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\seeed_xiao_nrf52840_sense\\firmware.zip",
+          "sha256": "0319e45778028eac3d46244410f18537fd667e73dcb8699faa0f2eaf0d7a689c"
+        },
+        "firmware.elf": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\seeed_xiao_nrf52840_sense\\firmware.elf",
+          "sha256": "2bfbebd8646ea369bafdec2edf6878546ee5e6c1999964b07ef0f51b68de3228"
+        },
+        "firmware.hex": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\seeed_xiao_nrf52840_sense\\firmware.hex",
+          "sha256": "316e247d30a2bf0c0236a6b184e2bb67cd3ca84b24ca89cd8400abf18304cb4b"
+        }
+      }
+    },
+    "tacticpod_reusable_usb": {
+      "result": "PASS",
+      "log": "C:\\Tacticpod\\TacticPod-pod\\.pio\\idle-throughput-build-tacticpod_reusable_usb.log",
+      "ram_bytes": 123468,
+      "ram_limit_bytes": 237568,
+      "flash_bytes": 224288,
+      "flash_limit_bytes": 811008,
+      "application_only": true,
+      "binary_sha256": "86315d89bdd58c88d1f5600a480448c7c5ffeae393cf1e17920d265eabc9f246",
+      "artifacts": {
+        "firmware.zip": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\tacticpod_reusable_usb\\firmware.zip",
+          "sha256": "27e666c1daa6f8d6ceb8c3d241fd8e4891c887bbf289de390450e968a6032a19"
+        },
+        "firmware.elf": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\tacticpod_reusable_usb\\firmware.elf",
+          "sha256": "3b96efb769d0ce75259e545b371b085a8fd7c958f0718983b61085b1c450a43d"
+        },
+        "firmware.hex": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\tacticpod_reusable_usb\\firmware.hex",
+          "sha256": "1ede204bbe2331283697a54745bf85819445ca81302dc3b84c186ed78e23747a"
+        }
+      }
+    },
+    "tacticpod_reusable_ble": {
+      "result": "PASS",
+      "log": "C:\\Tacticpod\\TacticPod-pod\\.pio\\idle-throughput-build-tacticpod_reusable_ble.log",
+      "ram_bytes": 148072,
+      "ram_limit_bytes": 229376,
+      "flash_bytes": 340604,
+      "flash_limit_bytes": 811008,
+      "application_only": true,
+      "binary_sha256": "3df6d0885e798a0aae6c3cccf5effd145ac1977ca31587f632c61d618ab0558c",
+      "artifacts": {
+        "firmware.zip": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\tacticpod_reusable_ble\\firmware.zip",
+          "sha256": "1ad514561794458b805bb41ee34af369891916c4067bff964b52f1863c498740"
+        },
+        "firmware.elf": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\tacticpod_reusable_ble\\firmware.elf",
+          "sha256": "fa541f4464f006daf598d6fe3bdc0385ae3dd88093001b90a4952dbdf037c2be"
+        },
+        "firmware.hex": {
+          "path": "C:\\Tacticpod\\TacticPod-pod\\.pio\\build\\tacticpod_reusable_ble\\firmware.hex",
+          "sha256": "fde2ccd825ed1ad8a4c0ab7ba6e4e9b05a3eaa526a5dca71c54dcd888e19d06a"
+        }
+      }
+    }
+  },
+  "hardware_controlled_upload": {
+    "exit_code": 0,
+    "recordings_byte_identical": true,
+    "recording_bytes": 219584,
+    "recording_sha256": "daf975e905f009735c8285f0395948a9ec4210ad4d5a3c810a37b809c94621dd",
+    "sessions": [
+      2,
+      45
+    ],
+    "gps_startup_profile_verified": true,
+    "gps_uart_baud": 38400,
+    "gps_checksum_failures": 0
+  },
+  "user_confirmed_physical_tests": [
+    "GPS standby and wake",
+    "recording start and stop",
+    "GPS recording",
+    "high-speed BLE download",
+    "downloaded recording import"
+  ],
+  "idle_current_measured": false,
+  "battery_runtime_measured": false,
+  "archive_path": "C:\\Tacticpod\\TacticPod-recovery-artifacts\\working-gps-standby-20261117",
+  "recovery_zip_sha256": "5d3363583a201fd34f0a2534a6830e6d28fb9e8693c865dc3aca2e25856e7e88",
+  "sleeping_gps_recovery_image_physically_proven": false
+}

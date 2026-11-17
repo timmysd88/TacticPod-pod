@@ -11,11 +11,41 @@ void reusableObservation(const uint8_t*,unsigned);
 #include "../../src/battery_runtime.cpp"
 // Recorder tests now receive real UBX replies from the independent receiver
 // transaction model. No production GPS readiness check is bypassed.
-ProfileModel::Receiver reusableReceiver(0);
+struct PowerReceiver : ProfileModel::Receiver {
+  bool sleeping=false,factoryWake=false,missing=false,rejectBaud=false;
+  unsigned sleeps=0,wakes=0,baudChanges=0;
+  PowerReceiver():ProfileModel::Receiver(0){}
+  void service(){
+    if(handled>=Serial1.writeCalls || handled>=256)return;
+    const uint8_t* p=Serial1.writes[handled];const unsigned n=Serial1.writeSizes[handled];
+    if(n==24 && p[2]==2 && p[3]==0x41){
+      uint8_t a=0,b=0;for(unsigned i=2;i<22;++i){a+=p[i];b+=a;}
+      if(p[4]!=16 || p[5] || p[6] || p[7] || p[8] || p[9] ||
+         read(p+10,4) || read(p+14,4)!=6 || read(p+18,4)!=8 || a!=p[22] || b!=p[23])++invalid;
+      ++handled;++sleeps;sleeping=true;return;
+    }
+    if((n==1 || n==2) && p[0]==0xff && (n==1 || p[1]==0xff)){
+      ++handled;++wakes;
+      if(sleeping){memcpy(db,ProfileModel::initial,sizeof(db));if(factoryWake)db[22]=9600;}
+      sleeping=false;return;
+    }
+    if(sleeping || missing || Serial1.baud!=db[22]){++handled;return;}
+    if(n==20 && p[2]==6 && p[3]==0x8a && p[6]==0){
+      ++handled;
+      uint8_t a=0,b=0;for(unsigned i=2;i<18;++i){a+=p[i];b+=a;}
+      if(p[4]!=12 || p[5] || p[7]!=1 || p[8] || p[9] ||
+         read(p+10,4)!=0x40520001 || read(p+14,4)!=38400 || p[18]!=a || p[19]!=b){++invalid;return;}
+      if(rejectBaud){ack(false);return;}
+      db[22]=38400;++baudChanges;return; // Deliberately lose baud-change ACK.
+    }
+    ProfileModel::Receiver::service();
+  }
+} reusableReceiver;
 bool reusableGpsEnabled=true;
 void reusableGpsService(){
-  if(suspended || !reusableGpsEnabled)return; // No delivery through a stopped MCU UART.
-  reusableReceiver.service();
+  if(!reusableGpsEnabled)return;
+  reusableReceiver.service(); // Process outbound PMREQ even when the MCU UART just stopped.
+  if(suspended || reusableReceiver.sleeping || reusableReceiver.missing || Serial1.baud!=reusableReceiver.db[22])return;
   if(!receivedValid || uint32_t(millis()-lastValidAt)>1000)validFix();
 }
 uint8_t protectedPrefix[0x39000],newWire[200000];unsigned newWireSize=0;

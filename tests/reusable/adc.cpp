@@ -29,6 +29,37 @@ extern "C" unsigned adcCase(unsigned c){
     adc.ENABLE=c==2?1:0;adc.INTENSET=c==3?1:0;BatteryRuntime::update(true);
     return adc.TASKS_START || adc.TASKS_CALIBRATEOFFSET || (c==2 && !adc.ENABLE)?3:0;
   }
+  if(c>=10){
+    auto& m=BatteryRuntime::monitor();m.calibrate(1000000);m.cell(true);
+    if(m.mayStart(clockUs))return 30;
+    if(c==13){
+      BatteryRuntime::update(true);m.cell(false);
+      while(BatteryDetail::phase){clockUs+=1000;complete(1500);}
+      for(unsigned i=0;i<20;++i){clockUs+=50000;BatteryRuntime::update(false);}
+      return adc.ENABLE || BatteryRuntime::idleDelayMs(50)!=50 || BatteryRuntime::timeouts()?37:0;
+    }
+    if(c==12){
+      BatteryRuntime::update(true);clockUs+=50000;BatteryRuntime::update(true);
+      return !BatteryRuntime::timeouts() || adc.ENABLE || m.mayStart(clockUs)?31:0;
+    }
+    const uint64_t until=clockUs+4500000;
+    while(clockUs<until){
+      BatteryRuntime::update(true);
+      unsigned pause=BatteryRuntime::idleDelayMs(50);
+      if(BatteryDetail::phase && pause>1)return 32;
+      clockUs+=pause*1000;
+      // Hardware completes asynchronously, independently of the foreground.
+      if(BatteryDetail::phase==1)adc.EVENTS_CALIBRATEDONE=1;
+      if(BatteryDetail::phase==2)adc.EVENTS_STARTED=1;
+      if(BatteryDetail::phase==3){BatteryDetail::sample=c==11?1250:1500;adc.RESULT.AMOUNT=1;adc.EVENTS_END=1;}
+      if(BatteryDetail::phase==4 || BatteryDetail::phase==5)adc.EVENTS_STOPPED=1;
+    }
+    if(BatteryRuntime::timeouts() || !m.trusted(clockUs) || m.s.samples<3)return 33;
+    if(c==11)return m.mayStart(clockUs)?34:0;
+    if(!m.mayStart(clockUs))return 35;
+    clockUs+=3000001;
+    return m.mayStart(clockUs) || m.fresh(clockUs)?36:0;
+  }
   BatteryRuntime::update(true);
   if(!adc.TASKS_CALIBRATEOFFSET || adc.CH[0].PSELP!=SAADC_CH_PSELP_PSELP_AnalogInput7 || adc.RESULT.PTR%4)return 4;
   if(c==1){clockUs+=20001;BatteryRuntime::update(false);return adc.ENABLE || BatteryRuntime::timeouts()!=1 || BatteryRuntime::monitor().s.valid?5:0;}

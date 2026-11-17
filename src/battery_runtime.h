@@ -7,6 +7,7 @@ namespace BatteryRuntime {
 constexpr unsigned kBurstSamples=5; // Conversions per measurement (real ADC backend).
 void begin();
 void update(bool allowStart=true);
+unsigned idleDelayMs(unsigned requested); // Active ADC/burst needs prompt foreground service.
 Battery::Monitor& monitor();
 bool command(const char* line); // RAM-only configuration; caller requires idle.
 unsigned format(char*,unsigned); // Legacy single machine-readable "BAT source=..." line.
