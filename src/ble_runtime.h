@@ -5,6 +5,7 @@
 #if TACTICPOD_BLE
 namespace BleRuntime {
 bool active();
+bool downloading();
 void update(uint32_t now, const BleMode::Inputs& in);
 StatusLed::Color ledColor(uint32_t now);
 bool returnedFromBle();

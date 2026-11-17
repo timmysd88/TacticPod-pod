@@ -27,6 +27,7 @@ expected = {
     'performance': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 176),
     'linkPerformance': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 16),
     'speedCapability': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 16),
+    'speedWindowCapability': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 12),
     'speedAck': ('WRITE', 'SECMODE_NO_ACCESS', 'SECMODE_OPEN', True, 12),
     'featureCapability': ('READ', 'SECMODE_OPEN', 'SECMODE_NO_ACCESS', True, 12),
 }
@@ -42,7 +43,7 @@ for name, (prop, read, write, fixed, length) in expected.items():
     assert constants.get(match[2], match[2]) in (length, str(length))
 
 uuids = re.findall(r'constexpr const char\* k\w+Uuid = "([^"]+)"', source)
-assert uuids == [f'b973000{i:x}-7d2a-4f91-a380-8b52c029dc61' for i in range(1, 13)]
+assert uuids == [f'b973000{i:x}-7d2a-4f91-a380-8b52c029dc61' for i in range(1, 14)]
 bases = {bytes.fromhex(u.replace('-', ''))[:2] + bytes.fromhex(u.replace('-', ''))[4:] for u in uuids}
 assert len(bases) == 1  # Only the SoftDevice's 16-bit UUID field changes.
 

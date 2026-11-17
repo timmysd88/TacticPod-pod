@@ -33,6 +33,7 @@ constexpr const char* kSpeedCapabilityUuid = "b9730009-7d2a-4f91-a380-8b52c029dc
 constexpr const char* kSpeedAckUuid = "b973000a-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kFeatureCapabilityUuid = "b973000b-7d2a-4f91-a380-8b52c029dc61";
 constexpr const char* kHardwareIdentityUuid = "b973000c-7d2a-4f91-a380-8b52c029dc61";
+constexpr const char* kSpeedWindowUuid = "b973000d-7d2a-4f91-a380-8b52c029dc61";
 BLEService gattService(kServiceUuid);
 BLECharacteristic activity(kActivityUuid);
 BLECharacteristic battery(kBatteryUuid);
@@ -45,6 +46,7 @@ BLECharacteristic speedCapability(kSpeedCapabilityUuid);
 BLECharacteristic speedAck(kSpeedAckUuid);
 BLECharacteristic featureCapability(kFeatureCapabilityUuid);
 BLECharacteristic hardwareIdentity(kHardwareIdentityUuid);
+BLECharacteristic speedWindowCapability(kSpeedWindowUuid);
 BLEDis deviceInfo;
 std::atomic<uint32_t> events{0};
 constexpr uint32_t kActivity = 1, kDisconnected = 2, kInvalid = 4, kPairing = 8;
@@ -80,7 +82,9 @@ std::atomic<bool> linkReadReady{false};
 uint16_t linkReadConnection=0,linkReadOffset=0;
 std::atomic<bool> speedReadReady{false},speedAckOverflow{false};
 std::atomic<uint32_t> speedAckHead{0},speedAckTail{0};
-std::atomic<bool> notificationCredit{true};
+std::atomic<uint32_t> notificationCredits{BlePerformance::NotificationQueueCapacity};
+std::atomic<bool> notificationCreditFault{false},notificationResourceWait{false};
+uint32_t notificationResourceAt=0;
 uint16_t speedReadConnection=0,speedReadOffset=0;
 constexpr unsigned kSpeedAckQueueSize=4;
 uint8_t speedAckQueue[kSpeedAckQueueSize][BleHighSpeed::AckSize]{};
@@ -156,8 +160,18 @@ void onLinkRead(uint16_t connection,BLECharacteristic*,ble_gatts_evt_read_t* req
   linkReadReady.store(true,std::memory_order_release);
 }
 void onEvent(ble_evt_t* event) {
-  if(event->header.evt_id==BLE_GATTS_EVT_HVN_TX_COMPLETE)
-    notificationCredit.store(true,std::memory_order_release);
+  if(event->header.evt_id==BLE_GATTS_EVT_HVN_TX_COMPLETE){
+    const unsigned count=event->evt.gatts_evt.params.hvn_tx_complete.count;
+    uint32_t available=notificationCredits.load(std::memory_order_acquire);
+    do{
+      if(count>BlePerformance::NotificationQueueCapacity ||
+         available>BlePerformance::NotificationQueueCapacity-count){
+        notificationCreditFault.store(true,std::memory_order_release);break;
+      }
+    }while(!notificationCredits.compare_exchange_weak(available,available+count,
+              std::memory_order_acq_rel,std::memory_order_acquire));
+    notificationResourceWait.store(false,std::memory_order_release);
+  }
   if (event->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
     // Phase 1 uses open GATT only; terminate unsolicited pairing before it can save bonds.
     events.fetch_or(kPairing);
@@ -165,6 +179,33 @@ void onEvent(ble_evt_t* event) {
                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION) != NRF_SUCCESS)
       events.fetch_or(kDisconnected);
   }
+}
+
+enum class NotificationResult : uint8_t { Accepted, Busy, Failed };
+NotificationResult submitNotification(const uint8_t* bytes,uint16_t length){
+  if(notificationResourceWait.load(std::memory_order_acquire) &&
+     uint32_t(millis()-notificationResourceAt)<5)return NotificationResult::Busy;
+  uint32_t available=notificationCredits.load(std::memory_order_acquire);
+  do{
+    if(!available)return NotificationResult::Busy;
+  }while(!notificationCredits.compare_exchange_weak(available,available-1,
+            std::memory_order_acq_rel,std::memory_order_acquire));
+  // This is the only notification producer. Do not mix it with Bluefruit's
+  // semaphore-based notify(), which can block for 100 ms.
+  ble_gatts_hvx_params_t params{};
+  params.handle=data.handles().value_handle;
+  params.type=BLE_GATT_HVX_NOTIFICATION;params.p_len=&length;
+  params.p_data=bytes;
+  const uint32_t result=sd_ble_gatts_hvx(Bluefruit.connHandle(),&params);
+  if(result==NRF_SUCCESS)return NotificationResult::Accepted;
+  notificationCredits.fetch_add(1,std::memory_order_release);
+  if(result==NRF_ERROR_RESOURCES){
+    notificationResourceAt=millis();
+    notificationResourceWait.store(true,std::memory_order_release);
+    return NotificationResult::Busy;
+  }
+  Serial.print("BLE notification submission failed: ");Serial.println(result);
+  return NotificationResult::Failed;
 }
 
 struct Adapter {
@@ -194,11 +235,37 @@ struct Adapter {
   unsigned speedBuffered=0,speedPacketOffset=0,speedCapacity=0;
   uint16_t speedId=0,lastSpeedId=0;
   uint8_t speedStatus=0;
-  bool speedAvailable=false,speedActive=false,speedSnapshotValid=false;
+  bool speedAvailable=false,speedActive=false,speedSnapshotValid=false,speedWindowAvailable=false;
+  unsigned selectedWindow=BleHighSpeed::WindowSize;
   bool featureAvailable=false;
   bool controlOverflowHandled=false;
   bool creditWaiting=false;
   uint32_t creditWaitAt=0;
+  uint32_t nextLinkRequestAt=0;
+  uint8_t linkRequestStage=0,linkRequestAttempts=0;
+  bool linkRequestsStarted=false;
+
+  void serviceLink(uint32_t now,BLEConnection* connection){
+    if(!connection || linkRequestStage==4)return;
+    if(!linkRequestsStarted){
+      linkRequestsStarted=true;nextLinkRequestAt=now+100;return;
+    }
+    if(int32_t(now-nextLinkRequestAt)<0)return;
+    bool accepted=false;
+    switch(linkRequestStage){
+      case 0: accepted=connection->getMtu()>=247 || connection->requestMtuExchange(247);break;
+      case 1: accepted=connection->getDataLength()>=251 || connection->requestDataLengthUpdate();break;
+      case 2: accepted=connection->getPHY()==BLE_GAP_PHY_2MBPS || connection->requestPHY(BLE_GAP_PHY_2MBPS);break;
+      case 3: accepted=connection->getConnectionInterval()<=12 || connection->requestConnectionParameter(12);break;
+    }
+    nextLinkRequestAt=now+250;
+    if(!accepted && ++linkRequestAttempts<4)return;
+    if(!accepted){
+      Serial.print("BLE optional link request not accepted; retaining negotiated settings. stage=");
+      Serial.println(linkRequestStage);
+    }
+    ++linkRequestStage;linkRequestAttempts=0;
+  }
 
   void serviceSpeedRead(){
     if(!speedAvailable || !speedReadReady.load(std::memory_order_acquire))return;
@@ -269,11 +336,12 @@ struct Adapter {
 
   bool begin() {
     Bluefruit.autoConnLed(false);
-    // Keep the connection event and notification queues at their conservative defaults.
     started = true; // A partially initialized stack still needs a reset on failure.
-    Bluefruit.configPrphConn(BLE_GATT_ATT_MTU_MAX, BLE_GAP_EVENT_LENGTH_MIN,
+    Bluefruit.configPrphConn(BLE_GATT_ATT_MTU_MAX, 12,
                             BlePerformance::NotificationQueueCapacity, 1);
     if (!Bluefruit.begin(1, 0)) return fail("SoftDevice initialization");
+    if(!Bluefruit.Periph.setConnInterval(6,12))
+      Serial.println("BLE preferred interval unavailable; retaining stack defaults.");
     DeviceIdentity::Id identity;
     if (!DeviceIdentity::read(identity)) return fail("hardware identity unavailable");
     DeviceIdentity::hex(identity, podId);
@@ -350,6 +418,16 @@ struct Adapter {
       speedAvailable=speedCapability.begin()==ERROR_NONE;
     }
     if(!speedAvailable)Serial.println("BLE high-speed capability unavailable; protocol v2 remains available.");
+    if(speedAvailable){
+      speedWindowCapability.setProperties(CHR_PROPS_READ);
+      speedWindowCapability.setPermission(SECMODE_OPEN,SECMODE_NO_ACCESS);
+      speedWindowCapability.setFixedLen(12);
+      uint8_t windows[12]{'T','P','W','1',1,BleHighSpeed::MaxWindowSize,8,0};
+      write16(windows+10,crc16(windows,10));
+      speedWindowAvailable=speedWindowCapability.begin()==ERROR_NONE &&
+        speedWindowCapability.write(windows,sizeof(windows))==sizeof(windows);
+      if(!speedWindowAvailable)Serial.println("BLE extended window unavailable; window 4 remains available.");
+    }
     featureCapability.setProperties(CHR_PROPS_READ);
     featureCapability.setPermission(SECMODE_OPEN,SECMODE_NO_ACCESS);
     featureCapability.setFixedLen(kFeatureCapabilitySize);
@@ -406,8 +484,12 @@ struct Adapter {
   bool failed() { return ::failed; }
   void service(uint32_t now) {
     if(!connected())return;
+    if(notificationCreditFault.load(std::memory_order_acquire)){
+      abortTransfer();fail("notification credit accounting");return;
+    }
     BLEConnection* connection=Bluefruit.Connection(Bluefruit.connHandle());
     if(connection)BlePerformance::observeConnection(connection->getMtu());
+    serviceLink(now,connection);
     processControl();
     if(handleControlOverflow())return;
     processSpeedAck();
@@ -504,7 +586,8 @@ struct Adapter {
     if(!Tcb3Session::bleBeginSession(session,epoch)){queueError(kNoSession);return false;}
     sessionId=session;sessionEpoch=epoch;totalBytes=0;messageSequence=speedActive?1:0;
     if(speedActive){
-      speedStatus=3;speedWindow.reset(id);speedBuffered=speedPacketOffset=0;speedCapacity=0;creditWaiting=false;
+      speedStatus=3;speedWindow.reset(id,selectedWindow);
+      speedBuffered=speedPacketOffset=0;speedCapacity=0;creditWaiting=false;
     }
     haveLastAck=false;transfer=TransferState::Downloading;return true;
   }
@@ -547,13 +630,15 @@ struct Adapter {
       if(cancel(id))events.fetch_or(kActivity);else events.fetch_or(kInvalid);
       return;
     }
-    if(opcode==0x05 && length==8 && bytes[4]==3 && bytes[5]==4 && speedAvailable){
+    if(opcode==0x05 && length==8 && bytes[4]==3 && speedAvailable &&
+       (bytes[5]==4 || (speedWindowAvailable && (bytes[5]==8 || bytes[5]==16)))){
       if(transfer!=TransferState::Idle || speedStatus==2 || id<=lastSpeedId){
         events.fetch_or(kInvalid);return;
       }
       speedId=lastSpeedId=id;speedStatus=1;transferId=id;
+      selectedWindow=bytes[5];
       transfer=TransferState::Selecting;messageSequence=0;haveLastAck=false;
-      const uint8_t selected[]={3,4};setMessage(kModeSelected,selected,sizeof(selected));
+      const uint8_t selected[]={3,uint8_t(selectedWindow)};setMessage(kModeSelected,selected,sizeof(selected));
       events.fetch_or(kActivity);return;
     }
     if(opcode==0x06 && length==7 && bytes[4]==1 && featureAvailable){
@@ -730,53 +815,76 @@ struct Adapter {
     if(!connection || connection->getMtu()<23){queueError(kBadProtocol);return;}
     unsigned capacity=connection->getMtu()-3;
     if(capacity>kMaxFrameSize)capacity=kMaxFrameSize;
-    if(!speedCapacity)speedCapacity=capacity;
     if(capacity<speedCapacity){queueError(kBadProtocol);return;}
-    if(!speedWindow.finalQueued() && speedWindow.next()-speedWindow.base()<BleHighSpeed::WindowSize){
-      unsigned length=0;const uint8_t* packet=Tcb3Session::blePacket(length);
-      if(packet){
-        if(length<24 || length>sizeof(message) || speedPacketOffset>=length ||
-           memcmp(packet,"TPX3",4) || (packet[5]!=1 && packet[5]!=2 && packet[5]!=4)){
-          queueError(kExportFailure);return;
+    speedCapacity=capacity;
+    const uint32_t startedUs=micros();
+    for(unsigned work=0;work<64 && uint32_t(micros()-startedUs)<2000;++work){
+      if(!connected() || (events.load()&(kDisconnected|kPairing)))return;
+      processControl();
+      if(handleControlOverflow())return;
+      processSpeedAck();
+      if(!speedActive || transfer!=TransferState::Downloading)return;
+      bool progressed=false;
+      if(!speedWindow.finalQueued() && speedWindow.next()-speedWindow.base()<speedWindow.capacity()){
+        unsigned length=0;const uint8_t* packet=Tcb3Session::blePacket(length);
+        if(!packet){
+          progressed=Tcb3Session::bleService(1);
+          if(Tcb3Session::bleTransferFailed()){queueError(kExportFailure);return;}
+          packet=Tcb3Session::blePacket(length);
         }
-        const unsigned room=speedCapacity-BleHighSpeed::Overhead-speedBuffered;
-        const unsigned remaining=length-speedPacketOffset;
-        const unsigned amount=remaining<room?remaining:room;
-        memcpy(speedBuffer+speedBuffered,packet+speedPacketOffset,amount);
-        speedBuffered+=amount;speedPacketOffset+=amount;totalBytes+=amount;
-        const bool ended=speedPacketOffset==length && packet[5]==4;
-        if(speedPacketOffset==length){Tcb3Session::bleReleasePacket();speedPacketOffset=0;}
-        if(ended && !Tcb3Session::bleTransferDone()){queueError(kExportFailure);return;}
-        if(ended || speedBuffered==speedCapacity-BleHighSpeed::Overhead){
-          if(speedWindow.append(speedBuffer,speedBuffered,speedCapacity,ended)!=Result::Ok){
-            queueError(kBadProtocol);return;
+        if(packet){
+          if(length<24 || length>sizeof(message) || speedPacketOffset>=length ||
+             memcmp(packet,"TPX3",4) || (packet[5]!=1 && packet[5]!=2 && packet[5]!=4)){
+            queueError(kExportFailure);return;
           }
-          speedBuffered=0;
+          const unsigned room=speedCapacity-BleHighSpeed::Overhead-speedBuffered;
+          const unsigned remaining=length-speedPacketOffset;
+          const unsigned amount=remaining<room?remaining:room;
+          memcpy(speedBuffer+speedBuffered,packet+speedPacketOffset,amount);
+          progressed=true;
+          speedBuffered+=amount;speedPacketOffset+=amount;totalBytes+=amount;
+          const bool ended=speedPacketOffset==length && packet[5]==4;
+          if(speedPacketOffset==length){Tcb3Session::bleReleasePacket();speedPacketOffset=0;}
+          if(ended && !Tcb3Session::bleTransferDone()){queueError(kExportFailure);return;}
+          if(ended || speedBuffered==speedCapacity-BleHighSpeed::Overhead){
+            if(speedWindow.append(speedBuffer,speedBuffered,speedCapacity,ended)!=Result::Ok){
+              queueError(kBadProtocol);return;
+            }
+            speedBuffered=0;
+          }
         }
       }
+      if(speedWindow.finalQueued() && speedWindow.base()==speedWindow.next()){
+        transfer=TransferState::SendingEnd;uint8_t payload[12];
+        write32(payload,sessionId);write32(payload+4,sessionEpoch);write32(payload+8,totalBytes);
+        setMessage(kTransferEnd,payload,sizeof(payload));return;
+      }
+      const BleHighSpeed::SendWindow::Frame* candidate=nullptr;
+      const Result result=speedWindow.candidate(now,candidate);
+      if(result==Result::RetryExhausted || result==Result::QueueExhausted){queueError(kAckTimeout);return;}
+      if(result==Result::Ok && data.notifyEnabled()){
+        const uint32_t start=micros();
+        const NotificationResult submitted=submitNotification(candidate->bytes,candidate->length);
+        if(submitted==NotificationResult::Busy){
+          waitForCredit(now);
+          return;
+        }
+        creditWaiting=false;
+        const bool accepted=submitted==NotificationResult::Accepted;
+        BlePerformance::notification(accepted,candidate->attempts>0,candidate->length,
+                                    candidate->bytes[8],uint32_t(micros()-start));
+        if(speedWindow.submitted(candidate->sequence,now,accepted)!=Result::Ok){
+          queueError(kBadProtocol);return;
+        }
+        if(!accepted)return;
+        progressed=true;
+      }
+      if(!progressed)return;
     }
-    if(speedWindow.finalQueued() && speedWindow.base()==speedWindow.next()){
-      transfer=TransferState::SendingEnd;uint8_t payload[12];
-      write32(payload,sessionId);write32(payload+4,sessionEpoch);write32(payload+8,totalBytes);
-      setMessage(kTransferEnd,payload,sizeof(payload));return;
-    }
-    const BleHighSpeed::SendWindow::Frame* candidate=nullptr;
-    const Result result=speedWindow.candidate(now,candidate);
-    if(result==Result::RetryExhausted || result==Result::QueueExhausted){queueError(kAckTimeout);return;}
-    if(result!=Result::Ok || !data.notifyEnabled()){creditWaiting=false;return;}
-    if(!notificationCredit.exchange(false,std::memory_order_acq_rel)){
-      if(!creditWaiting){creditWaiting=true;creditWaitAt=now;}
-      else if(uint32_t(now-creditWaitAt)>=5000)queueError(kAckTimeout);
-      return;
-    }
-    creditWaiting=false;
-    const uint32_t start=micros();
-    const bool accepted=data.notify(candidate->bytes,candidate->length);
-    const uint32_t elapsed=uint32_t(micros()-start);
-    BlePerformance::notification(accepted,candidate->attempts>0,candidate->length,
-                                candidate->bytes[8],elapsed);
-    if(!accepted)notificationCredit.store(true,std::memory_order_release);
-    if(speedWindow.submitted(candidate->sequence,now,accepted)!=Result::Ok)queueError(kBadProtocol);
+  }
+  void waitForCredit(uint32_t now){
+    if(!creditWaiting){creditWaiting=true;creditWaitAt=now;}
+    else if(uint32_t(now-creditWaitAt)>=5000)queueError(kAckTimeout);
   }
   void transmit(uint32_t now) {
     if(!messageReady || !data.notifyEnabled())return;
@@ -790,9 +898,10 @@ struct Adapter {
     if(queueFailures && uint32_t(now-lastAttemptAt)<100)return;
     lastAttemptAt=now;
     const uint32_t notifyStartedUs=micros();
-    notificationCredit.store(false,std::memory_order_release);
-    const bool accepted=data.notify(frame,frameLength);
-    if(!accepted)notificationCredit.store(true,std::memory_order_release);
+    const NotificationResult submitted=submitNotification(frame,frameLength);
+    if(submitted==NotificationResult::Busy){waitForCredit(now);return;}
+    creditWaiting=false;
+    const bool accepted=submitted==NotificationResult::Accepted;
     const uint32_t notifyFinishedUs=micros();
     BlePerformance::notification(accepted,frameAttempts>0,frameLength,framePayloadLength,
                                 uint32_t(notifyFinishedUs-notifyStartedUs));
@@ -832,6 +941,9 @@ uint32_t lastBatteryAt = 0;
 
 namespace BleRuntime {
 bool active() { return runtime.active(); }
+bool downloading() {
+  return adapter.transfer==TransferState::Downloading || adapter.transfer==TransferState::SendingEnd;
+}
 StatusLed::Color ledColor(uint32_t now) { return runtime.ledColor(now); }
 void update(uint32_t now, const BleMode::Inputs& in) {
   runtime.update(now, in, adapter);

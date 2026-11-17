@@ -24,7 +24,7 @@ for name, arguments in (
     ('performanceReadCase', (0,)),
     ('performanceBoundsCase', (0,)),
     ('linkDiagnosticsCase', (0, 1)),
-    ('highSpeedTransferCase', (0, 1)),
+    ('highSpeedTransferCase', (0, 1, 2)),
     ('highSpeedFailureCase', (0, 1, 2, 3, 4, 5, 6, 7, 8)),
     ('highSpeedLifecycleCase', (0, 1, 2, 3, 4, 5)),
 ):

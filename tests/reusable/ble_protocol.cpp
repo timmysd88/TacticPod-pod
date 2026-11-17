@@ -88,6 +88,36 @@ static int highSpeedFailureCase() {
   return 0;
 }
 
+static int extendedWindowCase(unsigned size){
+  using BleHighSpeed::SendWindow;
+  using Result=SendWindow::Result;
+  SendWindow window(7);
+  CHECK(window.reset(7,size) && !window.reset(7,7));
+  const uint8_t payload[]={1,2,3};
+  uint8_t ack[12];
+  for(unsigned i=0;i<size;++i)CHECK(window.append(payload,3,20,false)==Result::Ok);
+  CHECK(window.append(payload,3,20,false)==Result::Full);
+  for(unsigned i=0;i<size;++i)CHECK(window.submitted(i,100,true)==Result::Ok);
+  windowAck(ack,7,1,uint16_t(1U<<(size-2)));
+  CHECK(window.acknowledge(ack,12)==Result::Ok);
+  const SendWindow::Frame* frame=nullptr;
+  CHECK(window.candidate(101,frame)==Result::Ok && frame->sequence==1);
+  CHECK(window.submitted(1,101,true)==Result::Ok);
+  CHECK(window.acknowledge(ack,12)==Result::Ok);
+  CHECK(window.candidate(102,frame)==Result::Wait);
+  windowAck(ack,7,size,0);
+  CHECK(window.acknowledge(ack,12)==Result::Ok);
+  for(unsigned i=0;i<size;++i)CHECK(window.append(payload,3,20,i+1==size)==Result::Ok);
+  for(unsigned i=size;i<size*2;++i){
+    CHECK(window.candidate(200,frame)==Result::Ok && frame->sequence==i);
+    CHECK(window.submitted(i,200,true)==Result::Ok);
+  }
+  windowAck(ack,7,size*2,0);
+  CHECK(window.acknowledge(ack,12)==Result::Ok && window.finalQueued());
+  CHECK(window.candidate(201,frame)==Result::Empty);
+  return 0;
+}
+
 int main() {
   const uint8_t check[]="123456789";
   CHECK(BleDownloadProtocol::crc16(check,9)==0x29b1);
@@ -122,5 +152,7 @@ int main() {
   CHECK(highSpeedWindowCase(20)==0);
   CHECK(highSpeedWindowCase(BleDownloadProtocol::MaxFrameSize)==0);
   CHECK(highSpeedFailureCase()==0);
+  CHECK(extendedWindowCase(8)==0);
+  CHECK(extendedWindowCase(16)==0);
   return 0;
 }

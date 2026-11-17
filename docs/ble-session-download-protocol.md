@@ -18,6 +18,8 @@ The device advertises as `TacticPod` for 180 seconds after the existing double-t
 | `0009` | Optional high-speed capability | Read-only, 16 bytes; `TPH1` layout in the high-speed design. |
 | `000a` | Optional high-speed ACK | Write-only, 12 bytes; unchanged v3 ACK layout. |
 | `000b` | Optional feature capability | Read-only, 12 bytes; `TPF1` layout below. |
+| `000c` | Factory hardware identity | Read-only, fixed 16 ASCII hex bytes; full FICR UID. |
+| `000d` | Optional extended-window capability | Read-only, 12 bytes; CRC-protected `TPW1` schema 1, maximum window 16, ACK batch 8. |
 
 Standard Device Information Service exposes manufacturer `TacticPod`, model `XIAO nRF52840 Sense`, the FICR-derived serial number, and firmware revision `ble-download-2`. GATT is open and unbonded. Existing pairing rejection, battery and activity behavior remain in place.
 
@@ -46,13 +48,13 @@ that initialization now reaches advertising and connection.
 | Protocol version | Read | Open / No access | Fixed 2 |
 | Performance snapshot | Read, authorized in foreground | Open / No access | Fixed 176 |
 | Link snapshot | Read, authorized in foreground | Open / No access | Fixed 16 |
-| Feature capability | Read | Open / No access | Fixed 12 |
+| Feature capability / extended-window capability | Read | Open / No access | Fixed 12 each |
 
 Initialization order is Device Information Service, custom service, then
 Activity, Battery, Control, Data and Protocol version, followed by the optional
 Performance snapshot, Link snapshot, high-speed characteristics and feature capability.
 All custom UUIDs share one vendor-specific base.
-Existing UUIDs, packet formats, connection configuration, button timing and
+Existing UUIDs, packet formats, button timing and
 recording behavior are unchanged. Failure to add the optional characteristic is
 reported on serial and does not fail the existing transfer service. The production branch does
 not include the diagnostic environment, retained boot structure or `BOOT STATUS`;
@@ -66,7 +68,16 @@ contents, ELF payload and CRC16 were verified without flashing. Build/test
 paths honor `PLATFORMIO_BUILD_DIR` so existing firmware packages are not rebuilt
 or overwritten during isolated validation.
 
-The peripheral permits ATT MTU up to 247 while retaining the minimum connection-event length and one-entry notification/write-command queues. Actual MTU is negotiated by the browser/OS and can remain 23; every notification is sized to the negotiated MTU. The corrected non-diagnostic target build uses 140,992 / 237,568 B RAM (59.3%) and 316,892 / 811,008 B application flash (39.1%). This is a link-time measurement only; runtime heap, radio throughput and physical power/timing have not been measured.
+The peripheral permits ATT MTU up to 247, eight notification slots, a 15 ms
+connection-event budget and the unchanged one-entry write-command queue. It
+optionally requests MTU 247, maximum DLE, 2M PHY and a 15 ms connection interval;
+rejected requests retain 1M/smaller-MTU compatibility. Actual settings are
+negotiated by the central and can remain at their defaults. Notifications are
+always sized to the effective MTU. The current throughput build uses 148,040 /
+229,376 B static RAM and 336,868 / 811,008 B application flash, with a BLE-only
+32 KiB SoftDevice reservation. This has not been physically qualified. See
+[high-speed design](ble-high-speed-design.md) for scheduling, TPW1 negotiation,
+credit accounting, exact memory layout and remaining hardware gates.
 
 ## Optional performance diagnostics
 
@@ -187,7 +198,7 @@ read only while the client is idle. Its 16 little-endian bytes are:
 | 0 | 4 bytes | ASCII `TPL1` |
 | 4, 6 | u16 each | Version 1, size 16 |
 | 8 | u8 | Bluefruit effective TX PHY: 1=1M, 2=2M, 4=coded, 0=unavailable |
-| 9 | u8 | Configured SoftDevice notification queue capacity, currently 1 |
+| 9 | u8 | Configured SoftDevice notification queue capacity, currently 8 |
 | 10 | u16 | Bluefruit effective TX link-layer data length in octets; 0=unavailable |
 | 12 | u16 | Effective connection interval in units of 1.25 ms; 0=unavailable |
 | 14 | u16 | Reserved zero |
@@ -200,6 +211,13 @@ observed occupancy**. RX PHY/data length and actual event duration are not
 reported by these getters. If the optional characteristic could not be added,
 the app reports it unavailable and v2 transfer still works. Long-read offsets
 reuse a frozen snapshot. BLE reset loses snapshots and counters.
+
+For v3, use the browser's validated `bytesTransferred`, `elapsedMs`,
+`retransmissionsObserved`, `crcFailures` and `ackWrites`. TPD1 notification,
+retransmission and flash counters also include v3, but its ACK turnaround,
+ACKed-payload and ACK-timeout fields instrument v2 stop-and-wait frames only;
+they are not v3 cumulative-window measurements. Queue-resource backoff is not
+a submitted-notification failure or a retransmission.
 
 For a separately authorized benchmark, record pod firmware identity and the
 browser/OS/adapter; capture both snapshots before and after each operation on
@@ -519,4 +537,4 @@ changes. No hardware commands or uploads were performed for this correction.
 - No on-device recording transfer has been exercised. Re-verify LIST after a separately authorized application update, then seek separate authorization for a small completed recording download. Validate ACK/retry behavior at the negotiated MTU (including MTU 23), transfer completion, disconnect, and reconnect on the intended browser/OS.
 - The client must reject incomplete transfers and validate every frame CRC, TPX3 packet CRC, and reconstructed TCB3 contents before import. Protocol v2 has neither an aggregate SHA-256 nor resume; after connection loss, restart with LIST and download the session again.
 - The manifest scanner and transfer exporter are read-only by construction; host tests compare flash bytes before and after scanning/export. Physical flash behavior and preservation under reset, disconnect, and power loss remain unverified. Do not include reset/erase operations in a download test.
-- With the flash-power correction, link-time use is 141,272 / 237,568 B RAM (59.5%) and 319,516 / 811,008 B application flash (39.4%). This leaves 96,296 B within the reported RAM region, but runtime heap/stack high-water, BLE-stack allocation, RF throughput, and power/timing margins have not been measured on hardware.
+- The earlier flash-power correction used 141,272 / 237,568 B RAM and 319,516 / 811,008 B application flash. The throughput changes supersede those figures: 148,040 / 229,376 B static RAM, 336,868 / 811,008 B application flash, and 79,280 B runtime heap-address margin below the ISR stack reserve. Actual SoftDevice RAM acceptance, heap/stack high-water, RF throughput and power/timing still require physical validation.
