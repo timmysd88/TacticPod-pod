@@ -7,6 +7,7 @@
 //
 //   Idle / standby / low power   all OFF, no heartbeat
 //   Power on (startup succeeded) 3 x BLUE, 150 ms on / 150 ms off, once
+//   Recording preparation        GREEN, 500 ms on / 500 ms off
 //   Recording                    solid GREEN while recording is active
 //   Start refused (existing)     3 x RED, 100 ms on / 100 ms off
 //   Recorder fault (existing)    3 x RED repeating every 2 s
@@ -31,12 +32,14 @@ class Scheduler {
   // True while a one-shot pattern is still being shown (keeps the device out of standby).
   bool eventActive() const { return activeEvent != Event::None; }
 
-  // Priority: fault > one-shot events > recording > off. Never blocks.
-  Color update(uint32_t now, bool fault, bool recording) {
+  // Priority: fault > one-shot events > recording > preparation > off. Never blocks.
+  Color update(uint32_t now, bool fault, bool recording, bool preparing = false) {
     if (!initialized) {
       initialized = true;
       epoch = now;
     }
+    if (preparing && !wasPreparing) preparationStartedAt = now;
+    wasPreparing = preparing;
     if (fault) return repeatingRed(now);
 
     const uint32_t eventAge = uint32_t(now - eventStartedAt);
@@ -47,7 +50,9 @@ class Scheduler {
       if (eventAge >= 500) activeEvent = Event::None;
       else return burstRed(eventAge);
     }
-    return recording ? Color::Green : Color::Off;
+    if (recording) return Color::Green;
+    if (preparing) return uint32_t(now - preparationStartedAt) % 1000 < 500 ? Color::Green : Color::Off;
+    return Color::Off;
   }
 
  private:
@@ -65,5 +70,7 @@ class Scheduler {
   Event activeEvent = Event::None;
   uint32_t epoch = 0;
   uint32_t eventStartedAt = 0;
+  bool wasPreparing = false;
+  uint32_t preparationStartedAt = 0;
 };
 }

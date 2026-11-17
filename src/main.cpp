@@ -166,6 +166,7 @@ void updateFieldControls() {
   }
 #endif
   if (action == PhysicalButton::Action::Start) {
+    setUserLed(userLed.update(now, Tcb3Session::faulted(), Tcb3Session::recording(), true));
     // Peripherals are awake and the flash is released BEFORE the recorder is asked to start.
     if (standbyPolicy.inStandby()) leaveStandby(now);
     if (Tcb3Session::startFromButton()) {
@@ -213,7 +214,7 @@ void updateFieldControls() {
     return;
   }
 
-  setUserLed(userLed.update(now, Tcb3Session::faulted(), recording));
+  setUserLed(userLed.update(now, Tcb3Session::faulted(), recording, startAttempt));
 }
 
 // Requested explicitly while stopped; one bounded line per foreground slice.

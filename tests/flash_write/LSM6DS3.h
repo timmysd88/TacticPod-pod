@@ -23,6 +23,9 @@ struct LSM6DS3 {
   } settings;
   LSM6DS3(int, int) {}
   int begin() {
+#ifdef TCB_SIM_IMU_BEGIN
+    TCB_SIM_IMU_BEGIN();
+#endif
     ++mockImuBegins; mockImuOn = true;
     const uint8_t accelFs = settings.accelRange == 2 ? 0x00 :
                             settings.accelRange == 4 ? 0x08 :

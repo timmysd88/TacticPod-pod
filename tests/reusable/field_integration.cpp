@@ -1,5 +1,7 @@
 // Production setup/loop, physical-button path, asynchronous recorder and UBX
 // transaction model. Never notify the LED directly in these integration cases.
+void preparationWakeLed();
+#define TCB_SIM_IMU_BEGIN preparationWakeLed
 #include "integration.cpp"
 uint32_t fieldStep=0;
 
@@ -10,6 +12,10 @@ unsigned eventCount(FieldTrace::Kind kind) {
 }
 void runMs(unsigned ms) {const uint32_t at=millis();while(uint32_t(millis()-at)<ms)cycle();}
 bool green(){return mockPinLevels[LED_GREEN]==LOW && mockPinLevels[LED_RED]!=LOW;}
+bool watchPreparationWake=false,preparationWakeGreen=false;
+void preparationWakeLed(){
+  if(watchPreparationWake)preparationWakeGreen=green();
+}
 extern "C" unsigned fieldCase(unsigned c) {
   using namespace TcbDetail;
   if(c==6)mockButtonLow=true;
@@ -136,4 +142,105 @@ extern "C" unsigned fieldCase(unsigned c) {
   if(!standbyPolicy.inStandby())return 19;
   Serial.connected=true;runMs(100);
   return owned || pending || eventCount(FieldTrace::Kind::SessionCreated)!=1 ? 40 : 0;
+}
+
+extern "C" unsigned preparationLedCase(unsigned c) {
+  using namespace TcbDetail;
+  const bool delayedWake=c==0 || c==9;
+  if(c==4)SPI.memory[0xffd000]=0;
+  if(c==5)SPI.memory[0x39040]=0;
+  Serial.connected=true;setup();waitIdle();
+  BatteryRuntime::inject(4000,true);
+  const uint32_t bootAt=millis();
+  while((!GpsProfile::currentVerified() || GpsReceiver::busy()) &&
+        uint32_t(millis()-bootAt)<45000)cycle();
+  if(!GpsProfile::currentVerified() || GpsReceiver::busy())return 101;
+  if(c<2 || delayedWake){
+    reusableReceiver.factoryWake=true;
+    Serial.connected=false;runMs(3500);reusableReceiver.service();
+    if(!standbyPolicy.inStandby() || !reusableReceiver.sleeping ||
+       mockPinLevels[LED_GREEN]!=HIGH)return 102;
+  }
+
+  mockButtonLow=false;runMs(50);
+  mockButtonLow=true;updateFieldControls();
+  advanceUs(25000);updateFieldControls();
+  advanceUs(2999000);updateFieldControls();
+  if(startAttempt || pending || owned || green() || SPI.programs)return 103;
+  if(delayedWake){reusableGpsEnabled=false;watchPreparationWake=true;}
+  if(c==1)reusableReceiver.missing=true;
+  if(c==2){
+    memcpy(reusableReceiver.db,ProfileModel::initial,sizeof(reusableReceiver.db));
+    reusableReceiver.scenario=107;
+  }
+  if(c==3)BatteryRuntime::monitor().cell(true);
+  advanceUs(1000);const uint32_t acceptedAt=millis();updateFieldControls();
+  if(c==3){
+    if(startAttempt || pending || owned || green() || mockPinLevels[LED_RED]!=LOW)return 104;
+  }else if(!startAttempt || !pending || owned || !green())return 105;
+
+  if(delayedWake){
+    if(standbyPolicy.inStandby() || !GpsPower::controller().active() ||
+       !preparationWakeGreen)return 106;
+    if(c==9){mockButtonLow=false;updateFieldControls();}
+    while(uint32_t(millis()-acceptedAt)<2100){
+      cycle();updateFieldControls();
+      const bool expected=uint32_t(millis()-acceptedAt)%1000<500;
+      if(green()!=expected || owned || !pending || SPI.programs ||
+         mockPinLevels[LED_RED]==LOW || mockPinLevels[LED_BLUE]==LOW)return 107;
+      if(c==9 && (!startAttempt || !waitingGps || GpsReceiver::recordingReady() ||
+         standbyPolicy.inStandby()))return 118;
+    }
+    if(c==9 && (physicalButton.pressed() ||
+       eventCount(FieldTrace::Kind::Release)!=1))return 119;
+    reusableGpsEnabled=true;
+  }
+  if(c==6)Tcb3Session::handleCommand("TCB STOP");
+  if(c==7){
+    gpsWaitAt=millis()-90000;
+    Tcb3Session::update(false);
+    if(pending)return 108;
+  }
+  if(c==8){
+    for(unsigned n=0;n<1000000 && waitingGps && pending;++n)cycle();
+    if(waitingGps || !pending || owned)return 109;
+    BatteryRuntime::monitor().cell(true);
+  }
+  for(unsigned n=0;n<1000000 && pending;++n){
+    cycle();updateFieldControls();
+    if(pending && !Tcb3Session::faulted() &&
+       green()!=(uint32_t(millis()-acceptedAt)%1000<500))return 117;
+  }
+  updateFieldControls();
+  if(delayedWake){
+    if(!owned || startAttempt || !Tcb3Session::recording() ||
+       !GpsProfile::currentVerified() || Serial1.baud!=38400 ||
+       !reusableReceiver.baudChanges)return 110;
+    const uint32_t activeAt=millis();
+    while(uint32_t(millis()-activeAt)<1200){
+      cycle();updateFieldControls();
+      if(!green() || mockPinLevels[LED_RED]==LOW || mockPinLevels[LED_BLUE]==LOW)return 111;
+    }
+    if(c==9){
+      if(physicalButton.pressed() || !Tcb3Session::recording() || standbyPolicy.inStandby() ||
+         eventCount(FieldTrace::Kind::StartAccepted)!=1 ||
+         eventCount(FieldTrace::Kind::SessionCreated)!=1 ||
+         eventCount(FieldTrace::Kind::StopArmed) ||
+         eventCount(FieldTrace::Kind::StopAccepted))return 120;
+#if TACTICPOD_BLE
+      if(BleRuntime::active())return 121;
+#endif
+    }
+    return 0;
+  }
+  if(owned || pending || startAttempt || SPI.programs || eventCount(FieldTrace::Kind::SessionCreated))return 112;
+  if(c==5 && !Tcb3Session::faulted())return 113;
+  bool redSeen=mockPinLevels[LED_RED]==LOW;
+  for(unsigned age=0;age<2200;age+=100){
+    advanceUs(100000);updateFieldControls();
+    if(green())return 114;
+    if(mockPinLevels[LED_RED]==LOW)redSeen=true;
+    if(c!=5 && age>=500 && mockPinLevels[LED_RED]==LOW)return 115;
+  }
+  return !redSeen || SPI.programs || SPI.erases ? 116:0;
 }

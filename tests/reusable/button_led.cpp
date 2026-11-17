@@ -166,5 +166,30 @@ int main() {
     if (led.update(1500, false, false) != Color::Off) return 74;
     if (led.eventActive()) return 75;
   }
+  {
+    StatusLed::Scheduler led;
+    for (uint32_t t = 0; t < 3000; ++t)
+      if (led.update(t, false, false) != Color::Off) return 81;
+    for (uint32_t t = 3000; t < 7500; ++t) {
+      const Color expected = (t - 3000) % 1000 < 500 ? Color::Green : Color::Off;
+      if (led.update(t, false, false, true) != expected) return 82;
+    }
+    if (led.update(7750, false, true, true) != Color::Green) return 83;
+    if (led.update(7800, false, false) != Color::Off) return 84;
+    if (led.update(8000, false, false, true) != Color::Green) return 85;
+    led.notify(Event::StartFailed, 8100);
+    if (led.update(8100, false, false, true) != Color::Red) return 86;
+    if (led.update(8600, false, false) != Color::Off) return 87;
+    if (led.update(10000, true, false, true) != Color::Red) return 88;
+  }
+  {
+    StatusLed::Scheduler led;
+    const uint32_t start = 0xffffff00u;
+    for (uint32_t age = 0; age < 3000; ++age) {
+      const Color expected = age % 1000 < 500 ? Color::Green : Color::Off;
+      if (led.update(start + age, false, false, true) != expected) return 89;
+    }
+    if (led.update(start + 3000, false, false) != Color::Off) return 90;
+  }
   return 0;
 }

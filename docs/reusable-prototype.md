@@ -130,10 +130,10 @@ so storage, battery, duration and fault admission remain firmware-owned:
 
 The reusable build drives the active-LOW XIAO RGB LED using the variant's
 `LED_RED`, `LED_GREEN` and `LED_BLUE` mappings. GPS fix state is not shown. The
-patterns are in `src/status_led.h` (see the LED summary below). All timing is
-non-blocking and phased from the first LED update, so each cadence is measured from
-the start of one flash to the start of the next. LED updates do not delay sensor or
-flash service.
+patterns are in `src/status_led.h` (see the LED summary below). Timing uses
+nonblocking monotonic elapsed time. The preparation phase starts immediately
+when the three-second hold is accepted, before peripheral wake. LED updates do
+not delay sensor or flash service.
 
 ## Standby, wake and USB recovery (System ON)
 
@@ -199,15 +199,24 @@ unverified. The 60-second finalisation watchdog still applies after a stop.
 
 ## LED summary
 
-Priority, highest first: recorder fault, start refused, power-on, recording, idle.
+Priority, highest first: recorder fault, start refused, power-on, recording,
+recording preparation, idle. BLE mode retains its separate existing indication.
 
 | State | Pattern |
 | --- | --- |
 | Power on (successful startup only) | Three blue flashes, 150 ms on / 150 ms off, once |
+| Recording preparation after accepted hold | Green, 500 ms on / 500 ms off |
 | Recording | Solid green |
 | Idle / stopped / standby | All LEDs off (no heartbeat) |
 | Start refused | Three red 100 ms flashes |
 | Recorder fault | Three red flashes repeating every 2 s |
+
+Preparation flashes continue through GPS wake, baud/profile restoration and
+battery/storage admission. Solid green requires the recorder's actual active
+state, not a timer. Admission failure, cancellation or the existing preparation
+timeout ends preparation feedback; the existing brief red-refusal indication
+then returns to idle/off, unless a recorder fault requires repeating red.
+Standby always remains off; no heartbeat or new wake timer is introduced.
 
 Blue = P0.06 (pin 12), green = P0.30 (pin 13), red = P0.26 (pin 11), all active LOW
 and independently driven. No power-off pattern exists: the firmware has no controlled
@@ -229,9 +238,11 @@ Flashing is not modified here and recordings are not erased.
 
 Supervised checks, USB-only first, each by the user: (1) connect USB, confirm
 `TCB STATUS` and `BAT STATUS`; (2) disconnect, wait 3 s, tap D0 briefly: no recording,
-no LED; (3) hold D0 3 s: solid green 1 s then a green pulse every 2 s; (4) confirm
+no LED; (3) hold D0 3 s: green flashes 500 ms on / 500 ms off during preparation,
+then stays solid only once recording starts; (4) confirm
 10 Hz/100 Hz sampling after download; (5) tap, release,
-hold 3 s: green flashes and LED off; (6) reconnect USB and `TCB READ`, compare with the
+hold 3 s: green ends when capture stops, with no new stop animation;
+(6) reconnect USB and `TCB READ`, compare with the
 TPX3 decoder; (7) measure standby current with a meter in the battery lead before any
 claim; (8) battery connection follows the approval-gated procedure in
 [supervised-validation.md](supervised-validation.md).

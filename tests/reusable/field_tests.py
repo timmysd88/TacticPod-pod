@@ -24,3 +24,22 @@ for c,name in enumerate(('main-loop delayed footer; solid green only while recor
     # The unchanged fixture's committed historical prefix remains intact.
     assert bytes(m.m.mem_read(m.s['SPI'],len(seed)))==seed
     print('PASS:',name,flush=True)
+
+for c,name in enumerate((
+    'accepted hold flashes 500/500 during delayed GPS wake and baud restoration, then solid only when recording',
+    'missing GPS wake stops preparation green and shows existing refusal',
+    'profile commit failure stops preparation green and shows existing refusal',
+    'battery admission refusal never leaves green active',
+    'insufficient storage admission stops preparation green',
+    'storage fault overrides preparation with existing red indication',
+    'cancelled preparation retains brief refusal then idle off',
+    '90-second preparation timeout retains brief refusal then idle off',
+    'battery changed during storage scan stops preparation green',
+    'release immediately after accepted hold preserves flashing GPS preparation and starts exactly one session without a stop gesture')):
+    m=Native(elf);m.call('reusableInit');m.m.mem_write(m.s['SPI'],seed)
+    code=m.call('preparationLedCase',c,limit=4000000000)
+    if code:
+        print(m.get('Serial',30000)[8:].split(b'\0',1)[0].decode('utf-8','replace'))
+    assert code==0,(name,code)
+    assert bytes(m.m.mem_read(m.s['SPI'],len(seed)))==seed
+    print('PASS:',name,flush=True)
