@@ -14,6 +14,12 @@ elf = compile('tests/reusable/ble_field_integration.cpp', 'ble-field-integration
               (ROOT / 'lib/TinyGPSPlus/src/TinyGPS++.cpp',))
 seed = (ROOT / 'tests/reusable/fixtures/physical-three-sessions.bin').read_bytes()
 recorded = decode_image(seed)['sessions'][0]
+machine = Native(elf)
+machine.call('reusableInit')
+machine.m.mem_write(machine.s['SPI'], seed)
+assert machine.call('preparationLedCase', 9, limit=4000000000) == 0, 'release during preparation with BLE enabled'
+assert bytes(machine.m.mem_read(machine.s['SPI'], len(seed))) == seed
+print('PASS: release during preparation starts one session without entering BLE or standby', flush=True)
 for case in range(13):
     machine = Native(elf)
     machine.call('reusableInit')
