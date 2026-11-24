@@ -49,3 +49,41 @@ extern "C" unsigned identityCase(unsigned scenario){
   if(scenario!=9 && memcmp(identityReader.data.sfdp[0],SPI.sfdp,256))return 20;
   return 0;
 }
+extern "C" unsigned factoryCase(unsigned scenario) {
+  memset(SPI.memory,0xa5,sizeof(SPI.memory));
+  memset(SPI.sfdp,0,256);
+  memcpy(SPI.sfdp,"SFDP\0\1\0\xff",8);
+  SPI.sfdp[8]=0;SPI.sfdp[9]=0;SPI.sfdp[10]=1;SPI.sfdp[11]=9;
+  SPI.sfdp[12]=16;SPI.sfdp[15]=0xff;
+  SPI.sfdp[20]=0xff;SPI.sfdp[21]=0xff;SPI.sfdp[22]=0xff;SPI.sfdp[23]=7;
+  Serial.connected=true;flashReportPrinted=true;imuReady=true;imuStatus=0;
+  Recorder::mockBusy=true;Recorder::mockFault=true;Recorder::mockDiagnosticStage="Fault";
+  if(scenario==1)SPI.wrongId=true;
+  if(scenario==2)SPI.stuckBusy=true;
+  if(scenario==3)SPI.unavailableStatus=true;
+  if(scenario==4)SPI.wel=true;
+  if(scenario==5)state=State::Ready;
+  if(scenario==6)Serial.freeSpace=0;
+  if(!SerialConsole::handleCommand("FACTORY DIAG"))return 1;
+  if(!factoryOutputActive)return 2;
+  for(unsigned i=0;i<30;++i)updateFactory();
+  if(scenario==6){
+    if(!factoryOutputActive || Serial.used)return 3;
+    Serial.freeSpace=256;for(unsigned i=0;i<30;++i)updateFactory();
+  }
+  if(factoryOutputActive || !strstr(Serial.output,"END_FACTORY_DIAG") ||
+     !strstr(Serial.output,"FACTORY IMU PASS") ||
+     !strstr(Serial.output,"FACTORY RECORDER FAIL stage=Fault") ||
+     !strstr(Serial.output,"startup_fault=\"mock recorder fault\""))return 4;
+  if(SPI.enableCount || SPI.programCount || SPI.eraseCount || SPI.violations || Serial.overfilledWrites)return 5;
+  for(auto b:SPI.memory)if(b!=0xa5)return 6;
+  if(scenario==2 || scenario==3 || scenario==4) {
+    const char* status=scenario==2?"sr1=01":scenario==3?"sr1=FF":"sr1=02";
+    return SPI.traceCount==1 && strstr(Serial.output,status) &&
+      strstr(Serial.output,"FACTORY JEDEC UNVERIFIED raw=not_read")?0:7;
+  }
+  if(scenario==5)return !SPI.traceCount && strstr(Serial.output,"reason=ownership_busy")?0:8;
+  if(SPI.traceCount!=41 || !strstr(Serial.output,scenario==1?"FACTORY JEDEC FAIL raw=EF4018":"FACTORY JEDEC PASS raw=0B4018") ||
+     !strstr(Serial.output,"FACTORY SFDP PASS signature=53464450 capacity_bytes=16777216"))return 9;
+  return 0;
+}

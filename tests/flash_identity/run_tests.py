@@ -17,8 +17,16 @@ for case,name in enumerate(names):
         (Path(__file__).resolve().parents[2]/'.pio/phase3b4-identity-example.txt').write_bytes(raw[start:end])
     print('PASS:',name)
 print(f'PASS: {len(names)} read-only identity scenarios')
+for case,name in enumerate(('faulted recorder with valid flash','raw mismatched JEDEC','busy status blocks reads',
+                            'unavailable status reports raw FF','WEL blocks reads','ownership conflict',
+                            'factory output under USB backpressure')):
+    result=Native(elf).call('factoryCase',case)
+    assert result==0,(case,name,result)
+    print('PASS: FACTORY DIAG',name)
 elf=compile('tests/flash_identity/recording.cpp','flash-identity-recording-tests',('tests/recording','tests/flash_write'))
-for case,name in enumerate(('V1 CSV export remains silent','V1 recording refuses identity without SPI access')):
+for case,name in enumerate(('V1 CSV export remains silent','V1 recording refuses identity without SPI access',
+                            'startup JEDEC fault retained and read-only identity permitted',
+                            'startup busy fault retained and blocks identity reads')):
     m=Native(elf);result=m.call('identityRecordingCase',case)
     assert result==0,(name,result)
     print('PASS:',name)

@@ -19,11 +19,8 @@ struct { bool printImu : 1; bool deviceInfoPending : 1; } consoleFlags{};
 uint32_t deviceInfoRequestedMs = 0;
 constexpr uint32_t kDeviceInfoTimeoutMs = 2000;
 bool deviceInfoAllowed() {
-  const auto compact = CompactRecorder::stats();
-  return Serial && FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() &&
-    !Recorder::exporting() && !Tcb3Session::exclusive() && !Tcb3Session::busy() &&
-    !RamObservations::capturing() && !compact.capturing && !compact.inputUsed && !compact.outputReady &&
-    !GpsReceiver::busy() && !GpsReceiver::uartScanBusy();
+  return Serial && !Recorder::recording() && !Recorder::exporting() &&
+    !Tcb3Session::recording() && !Tcb3Session::exporting();
 }
 }
 
@@ -57,6 +54,7 @@ void serviceDeviceInfo() {
 void printMenu() {
   Serial.println("TacticPod command menu (115200 baud; finish each command with Enter):");
   Serial.println("  DEVICE INFO  - read factory identity JSON v1 while idle");
+  Serial.println("  FACTORY DIAG - independent, read-only manufacturing diagnostics");
   Serial.println("  IMU ON       - print IMU readings at 10 Hz");
   Serial.println("  IMU OFF      - stop printing; sampling continues (100 Hz when recording)");
   if(Tcb3Test::Reusable)Serial.println("  RECORD STATUS / READ - legacy read-only compatibility; use TCB for new sessions");
@@ -94,11 +92,19 @@ void printMenu() {
 bool handleCommand(const char* line) {
   // A new command owns subsequent output. Never defer identity into its export.
   if (strcmp(line, "DEVICE INFO") != 0) consoleFlags.deviceInfoPending = false;
-  if (Tcb3Session::guardCommand(line)) { consoleFlags.deviceInfoPending = false; return true; }
+  if (FlashDiagnostics::factoryActive()) {
+    Serial.println("Command refused: FACTORY DIAG output in progress.");
+    return true;
+  }
   if (strcmp(line, "DEVICE INFO") == 0) {
     if (!deviceInfoAllowed()) { consoleFlags.deviceInfoPending = false; return true; }
     if (!consoleFlags.deviceInfoPending) deviceInfoRequestedMs = millis();
     consoleFlags.deviceInfoPending = true;
+    return true;
+  }
+  if (Tcb3Session::guardCommand(line)) { consoleFlags.deviceInfoPending = false; return true; }
+  if (strcmp(line, "FACTORY DIAG") == 0) {
+    FlashDiagnostics::requestFactory();
     return true;
   }
 #if TACTICPOD_REUSABLE

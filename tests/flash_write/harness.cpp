@@ -12,6 +12,7 @@ MockSPI SPI;
 #include "../../src/gps_receiver.h"
 namespace GpsReceiver {
 bool mockScanActive=false,mockConfigurationActive=false,mockProfileAuditActive=false;
+DiagnosticStatus diagnosticStatus() { return {}; }
 void begin() {}
 void update() {}
 bool handleCommand(const char*) { return false; }
@@ -30,11 +31,15 @@ void resume() {}
 namespace Recorder {
 bool mockBusy=false;
 const char* mockDiagnosticStage="Idle";
+bool mockFault=false;
 void begin(bool) {}
 void update() {}
 bool handleCommand(const char*) { return false; }
 bool recording() { return false; }
 bool exclusive() { return mockBusy; }
+bool faulted() { return mockFault; }
+const char* faultReason() { return mockFault ? "mock recorder fault" : nullptr; }
+const char* startupFaultReason() { return mockFault ? "mock recorder fault" : nullptr; }
 const char* diagnosticStage() { return mockDiagnosticStage; }
 bool exporting() { return false; }
 void addSample(uint32_t, const int16_t[6]) {}

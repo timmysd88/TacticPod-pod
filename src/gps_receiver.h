@@ -1,6 +1,14 @@
 #pragma once
 
 namespace GpsReceiver {
+struct DiagnosticStatus {
+  bool fresh;
+  bool receivedBytes;
+  unsigned long bytes;
+  unsigned long checksumOk;
+  unsigned long checksumFail;
+};
+DiagnosticStatus diagnosticStatus();
 void begin();
 void update();
 bool handleCommand(const char* line);

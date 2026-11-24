@@ -15,13 +15,13 @@ extern "C" unsigned identityConsole(unsigned mode){
     return 0;
   }
   if(mode==1){
-    bool* flags[]={&TcbDetail::pending,&TcbDetail::owned,&TcbDetail::dumping,&TcbDetail::locked,&TcbDetail::resetting,&Recorder::mockBusy,&GpsReceiver::mockScanActive};
-    for(auto flag:flags){*flag=true;VERIFY(identitySilent());*flag=false;}
-    state=State::Ready;VERIFY(identitySilent());state=State::Idle;
-    RamObservations::handleCommand("OBS START");clearIdentityOutput();VERIFY(identitySilent());
-    RamObservations::handleCommand("OBS STOP");RamObservations::handleCommand("OBS CLEAR");clearIdentityOutput();
-    CompactRecorder::handleCommand("COMP START");clearIdentityOutput();VERIFY(identitySilent());
-    CompactRecorder::handleCommand("COMP STOP");CompactRecorder::handleCommand("COMP CLEAR");clearIdentityOutput();
+    bool* flags[]={&TcbDetail::pending,&TcbDetail::locked,&TcbDetail::resetting,&Recorder::mockBusy,&GpsReceiver::mockScanActive};
+    for(auto flag:flags){*flag=true;VERIFY(!identitySilent());clearIdentityOutput();*flag=false;}
+    Recorder::mockBusy=true;Recorder::mockFault=true;
+    VERIFY(!identitySilent());clearIdentityOutput();Recorder::mockBusy=Recorder::mockFault=false;
+    state=State::Ready;VERIFY(!identitySilent());clearIdentityOutput();state=State::Idle;
+    TcbDetail::owned=true;VERIFY(identitySilent());TcbDetail::owned=false;
+    TcbDetail::dumping=true;VERIFY(identitySilent());TcbDetail::dumping=false;
   }else if(mode==2){
     Serial.freeSpace=0;VERIFY(identitySilent());Serial.freeSpace=256;SerialConsole::serviceDeviceInfo();
     VERIFY(Serial.used>0 && Serial.writeCalls==1 && !Serial.overfilledWrites);
@@ -42,6 +42,15 @@ extern "C" unsigned identityConsole(unsigned mode){
   }else if(mode==7){
     mockTime=0xfffffff0;Serial.freeSpace=0;VERIFY(identitySilent());mockTime+=100;
     Serial.freeSpace=256;SerialConsole::serviceDeviceInfo();VERIFY(Serial.used>0);
+  }else if(mode==8){
+    TcbDetail::locked=true;Recorder::mockBusy=true;Recorder::mockFault=true;
+    Recorder::mockDiagnosticStage="Fault";
+    VERIFY(SerialConsole::handleCommand("FACTORY DIAG"));
+    for(unsigned n=0;n<30;++n)updateFactory();
+    VERIFY(!factoryOutputActive && strstr(Serial.output,"FACTORY JEDEC PASS raw=0B4018"));
+    VERIFY(strstr(Serial.output,"FACTORY BATTERY") && strstr(Serial.output,"protection=NOT_ARMED"));
+    VERIFY(strstr(Serial.output,"FACTORY RECORDER FAIL stage=Fault"));
+    VERIFY(strstr(Serial.output,"END_FACTORY_DIAG"));
   }
   VERIFY(SPI.programs==writes && SPI.erases==erases && SPI.enables==enables);
   return 0;

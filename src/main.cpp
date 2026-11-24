@@ -19,6 +19,16 @@
 #include "flash_power.h"
 #include "field_trace.h"
 #include "imu_config.h"
+#include "device_identity.h"
+#ifndef TACTICPOD_BUILD_COMMIT
+#define TACTICPOD_BUILD_COMMIT "unknown"
+#endif
+#ifndef TACTICPOD_BUILD_ENV
+#define TACTICPOD_BUILD_ENV "unknown"
+#endif
+#ifndef TACTICPOD_BUILD_DIRTY
+#define TACTICPOD_BUILD_DIRTY 1
+#endif
 #if TACTICPOD_BLE
 #include "ble_gesture.h"
 #include "ble_runtime.h"
@@ -49,6 +59,7 @@ bool imuFailureReported = false;
 FlashIdentity::Reader identityReader;
 bool identityRequested=false,identityRunning=false;
 unsigned identityOutput=0;
+bool factoryOutputActive=false;
 int beginImu() {
   imu.settings.accelEnabled = 1;
   imu.settings.gyroEnabled = 1;
@@ -152,7 +163,8 @@ void updateFieldControls() {
     !FlashWriteTest::diagnosticsAllowed() || startAttempt;
   ble.faulted = Tcb3Session::faulted();
   ble.startHold = action == PhysicalButton::Action::Start;
-  const bool eligible = !ble.recording && !ble.sessionBusy && !ble.faulted && !BleRuntime::active();
+  const bool eligible = !ble.recording && !ble.sessionBusy && !ble.faulted &&
+    !BleRuntime::active() && !FlashDiagnostics::factoryActive();
   ble.doubleTap = bleGesture.update(pressed, now, eligible) == BleGesture::Event::DoubleTap;
   if (ble.doubleTap && !standbyPolicy.inStandby() && !enterStandby()) {
     ble.doubleTap = false;
@@ -165,7 +177,7 @@ void updateFieldControls() {
     return; // In particular, never forward an advertising-cancel hold to recording.
   }
 #endif
-  if (action == PhysicalButton::Action::Start) {
+  if (action == PhysicalButton::Action::Start && !FlashDiagnostics::factoryActive()) {
     setUserLed(userLed.update(now, Tcb3Session::faulted(), Tcb3Session::recording(), true));
     // Peripherals are awake and the flash is released BEFORE the recorder is asked to start.
     if (standbyPolicy.inStandby()) leaveStandby(now);
@@ -502,8 +514,8 @@ bool identityRead(void*,uint8_t command,uint32_t address,uint8_t* out,unsigned n
   digitalWrite(kFlashCsPin,HIGH);SPI.endTransaction();return true;
 }
 bool identityIdle(){
-  return FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() && !Tcb3Session::busy() &&
-    !GpsReceiver::uartScanBusy() && !RamObservations::fastImu() && !CompactRecorder::capturing();
+  return FlashWriteTest::diagnosticsAllowed() && (!Recorder::exclusive() || Recorder::faulted()) && !Tcb3Session::flashOwned() &&
+    !RamObservations::fastImu() && !CompactRecorder::capturing();
 }
 void updateIdentity(){
   if(!identityRunning)return;
@@ -518,7 +530,7 @@ void updateIdentity(){
   auto append=[&](const char* p){while(*p && size+1<sizeof(line))line[size++]=*p++;};
   auto hex=[&](uint8_t b){const char* digits="0123456789ABCDEF";line[size++]=digits[b>>4];line[size++]=digits[b&15];};
   const auto& s=identityReader.data;
-  if(identityReader.error){append("FLASH ID ERROR ");append(identityReader.error);}
+  if(identityReader.error){append("FLASH ID ERROR ");append(identityReader.error);append(" SR1=");hex(s.sr1Before);}
   else if(identityOutput==0)append("BEGIN_FLASH_ID v1 SPI=1000000 MODE=0 read_only=YES SFDP_bytes=256 passes=2");
   else if(identityOutput<=5){append("FLASH ID JEDEC ");hex(identityOutput);append(" ");for(auto b:s.jedec[identityOutput-1])hex(b);}
   else if(identityOutput==6){append("FLASH ID SR1 before=");hex(s.sr1Before);append(" after=");hex(s.sr1After);append(" SR2=");hex(s.sr2);}
@@ -535,9 +547,180 @@ void updateIdentity(){
   Serial.write(reinterpret_cast<const uint8_t*>(line),size);
   if(identityReader.error || identityOutput==40)identityRunning=false;else ++identityOutput;
 }
+
+struct FactorySnapshot {
+  DeviceIdentity::Id id{};
+  bool idAvailable=false, imu=false, spiAttempted=false, flashComplete=false;
+  int imuResult=-1;
+  GpsReceiver::DiagnosticStatus gps{};
+  const char* recorderStage=nullptr;
+  const char* recorderFault=nullptr;
+  const char* startupFault=nullptr;
+  bool tcbFault=false;
+#if TACTICPOD_REUSABLE
+  BatteryRuntime::Report battery{};
+#endif
+};
+FactorySnapshot factory;
+unsigned factoryLine=0;
+
+struct FactoryWriter {
+  char line[220];
+  unsigned size=0;
+  bool overflow=false;
+  void text(const char* p) {
+    while(*p) {
+      if(size==sizeof(line)) { overflow=true; return; }
+      line[size++]=*p++;
+    }
+  }
+  void number(uint64_t value) {
+    char digits[21]; unsigned at=sizeof(digits); digits[--at]=0;
+    do { digits[--at]=char('0'+value%10); value/=10; } while(value);
+    text(digits+at);
+  }
+  void hex(uint8_t value) {
+    const char digits[]="0123456789ABCDEF";
+    char b[]={digits[value>>4],digits[value&15],0};text(b);
+  }
+};
+
+void updateFactory() {
+  if (!factoryOutputActive) return;
+  if (!Serial) { factoryOutputActive=false; return; }
+  FactoryWriter w;
+  const auto& s=identityReader.data;
+  switch(factoryLine) {
+    case 0:
+      w.text("BEGIN_FACTORY_DIAG v1 read_only=YES\n"); break;
+    case 1: {
+      char uid[17]="unavailable";
+      if(factory.idAvailable)DeviceIdentity::hex(factory.id,uid);
+      w.text("FACTORY MCU ");w.text(factory.idAvailable?"PASS":"UNVERIFIED");
+      w.text(" model=nRF52840 uid=");w.text(uid);w.text("\n");break;
+    }
+    case 2:
+      w.text("FACTORY FIRMWARE ");w.text(strcmp(TACTICPOD_BUILD_COMMIT,"unknown") && !TACTICPOD_BUILD_DIRTY?"PASS":"UNVERIFIED");
+      w.text(" version=factory-diagnostics-1 commit=");w.text(TACTICPOD_BUILD_COMMIT);
+      w.text(" dirty=");w.number(TACTICPOD_BUILD_DIRTY);w.text(" env=");w.text(TACTICPOD_BUILD_ENV);w.text("\n");break;
+    case 3:
+      w.text("FACTORY IMU ");w.text(factory.imu?"PASS":"FAIL");w.text(" model=LSM6DS3TR-C init_status=");
+      if(factory.imuResult<0){w.text("-");w.number(uint64_t(-int64_t(factory.imuResult)));}
+      else w.number(factory.imuResult);
+      w.text("\n");break;
+    case 4:
+      w.text("FACTORY GPS ");w.text(factory.gps.fresh?"PASS":"UNVERIFIED");
+      w.text(" uart=Serial1 baud=38400 bytes=");w.number(factory.gps.bytes);
+      w.text(" checksum_ok=");w.number(factory.gps.checksumOk);
+      w.text(" checksum_fail=");w.number(factory.gps.checksumFail);w.text("\n");break;
+    case 5:
+      w.text("FACTORY FLASH_STATUS ");
+      if(!factory.spiAttempted)w.text("UNVERIFIED sr1=not_read sr2=not_read reason=ownership_busy\n");
+      else if(!factory.flashComplete) {
+        w.text("UNVERIFIED sr1=");w.hex(s.sr1Before);w.text(" sr2=");
+        if(identityReader.completed>=7)w.hex(s.sr2);else w.text("not_read");
+        if(identityReader.completed>=41){w.text(" sr1_after=");w.hex(s.sr1After);}
+        w.text(" reason=");
+        w.text(identityReader.error?identityReader.error:"capture_incomplete");w.text("\n");
+      } else {
+        w.text("PASS sr1_before=");w.hex(s.sr1Before);w.text(" sr1_after=");w.hex(s.sr1After);
+        w.text(" sr2=");w.hex(s.sr2);w.text("\n");
+      }
+      break;
+    case 6:
+      if(!factory.spiAttempted || identityReader.completed<6)w.text("FACTORY JEDEC UNVERIFIED raw=not_read expected=0B4018\n");
+      else {
+        bool same=true;
+        for(unsigned i=1;i<5;++i)same &= memcmp(s.jedec[0],s.jedec[i],3)==0;
+        const bool valid=same && s.jedec[0][0]==0x0b && s.jedec[0][1]==0x40 && s.jedec[0][2]==0x18;
+        w.text("FACTORY JEDEC ");w.text(!factory.flashComplete?"UNVERIFIED":valid?"PASS":"FAIL");w.text(" raw=");
+        for(auto b:s.jedec[0])w.hex(b);
+        w.text(" expected=0B4018 samples=");
+        for(unsigned i=0;i<5;++i){if(i)w.text(",");for(auto b:s.jedec[i])w.hex(b);}
+        w.text(" repeat=");w.text(same?"PASS":"FAIL");w.text("\n");
+      }
+      break;
+    case 7:
+      if(!factory.spiAttempted || identityReader.completed<40)w.text("FACTORY SFDP UNVERIFIED signature=not_read capacity_bytes=unknown\n");
+      else {
+        uint64_t bytes=0;
+        const bool signature=memcmp(s.sfdp[0],"SFDP",4)==0;
+        const bool stable=memcmp(s.sfdp[0],s.sfdp[1],256)==0;
+        const bool capacity=stable && FlashIdentity::capacityBytes(s.sfdp[0],bytes);
+        w.text("FACTORY SFDP ");w.text(!factory.flashComplete?"UNVERIFIED":!signature || !stable?"FAIL":capacity?"PASS":"UNVERIFIED");
+        w.text(" signature=");for(unsigned i=0;i<4;++i)w.hex(s.sfdp[0][i]);
+        w.text(" capacity_bytes=");if(capacity)w.number(bytes);else w.text("unknown");
+        w.text(" repeat=");w.text(stable?"PASS":"FAIL");w.text("\n");
+      }
+      break;
+    case 8:
+      w.text("FACTORY RECORDER ");
+      w.text(factory.recorderFault || factory.tcbFault?"FAIL":strcmp(factory.recorderStage,"Idle")?"UNVERIFIED":"PASS");
+      w.text(" stage=");w.text(factory.recorderStage);w.text(" tcb_fault=");w.number(factory.tcbFault);
+      w.text(" reason=\"");w.text(factory.recorderFault?factory.recorderFault:"none");
+      w.text("\" startup_fault=\"");w.text(factory.startupFault?factory.startupFault:"none");w.text("\"\n");break;
+    case 9:
+#if TACTICPOD_REUSABLE
+      w.text("FACTORY USB ");w.text(factory.battery.usb?"PASS":"UNVERIFIED");
+      w.text(" vbus=");w.number(factory.battery.usb);w.text("\n");
+#else
+      w.text("FACTORY USB UNVERIFIED vbus=unavailable\n");
+#endif
+      break;
+    case 10:
+#if TACTICPOD_REUSABLE
+      w.text("FACTORY BATTERY ");w.text(factory.battery.fresh?"PASS":"UNVERIFIED");
+      w.text(" valid=");w.number(factory.battery.fresh);w.text(" calibrated=");w.number(factory.battery.calibrated);
+      w.text(" trusted=");w.number(factory.battery.trusted);w.text(" cell_mode=");w.number(factory.battery.cell);
+      w.text(" protection=");w.text(factory.battery.trusted?"ARMED":"NOT_ARMED");
+      w.text(" raw_mv=");w.number(factory.battery.mv);w.text(" filtered_mv=");w.number(factory.battery.filteredMv);w.text("\n");
+#else
+      w.text("FACTORY BATTERY UNVERIFIED measurement=unavailable protection=unavailable\n");
+#endif
+      break;
+    default: w.text("END_FACTORY_DIAG\n"); break;
+  }
+  if(w.overflow) {
+    factoryOutputActive=false;
+    Serial.println("FACTORY DIAG ERROR: report formatting failed.");
+    return;
+  }
+  if(Serial.availableForWrite()<int(w.size))return;
+  if(Serial.write(reinterpret_cast<const uint8_t*>(w.line),w.size)!=w.size) {
+    factoryOutputActive=false;
+    if(Serial)Serial.println("FACTORY DIAG ERROR: short serial write.");
+    return;
+  }
+  if(factoryLine++==11)factoryOutputActive=false;
+}
 }
 
 namespace FlashDiagnostics {
+bool factoryActive() { return factoryOutputActive; }
+void requestFactory() {
+  if (factoryOutputActive || Recorder::recording() || Recorder::exporting() ||
+      Tcb3Session::recording() || Tcb3Session::exporting()) {
+    Serial.println("FACTORY DIAG refused: recording or export active."); return;
+  }
+  factory=FactorySnapshot{};
+  factory.idAvailable=DeviceIdentity::read(factory.id);
+  factory.imu=imuReady;factory.imuResult=imuStatus;
+  factory.gps=GpsReceiver::diagnosticStatus();
+  factory.recorderStage=Recorder::diagnosticStage();
+  factory.recorderFault=Recorder::faultReason();
+  factory.startupFault=Recorder::startupFaultReason();
+  factory.tcbFault=Tcb3Session::faulted();
+#if TACTICPOD_REUSABLE
+  BatteryRuntime::capture(factory.battery);
+#endif
+  if(!identityRequested && !identityRunning && identityIdle()) {
+    factory.spiAttempted=true;
+    identityReader.begin();
+    while(!identityReader.done())identityReader.step({nullptr,identityRead});
+    factory.flashComplete=!identityReader.error;
+  }
+  factoryLine=0;factoryOutputActive=true;
+}
 void request() {
   if (!FlashWriteTest::diagnosticsAllowed() || Recorder::exclusive() || Tcb3Session::exclusive()) {
     Serial.println("DIAG refused: flash is scanning, busy or faulted; try again when idle.");
@@ -629,6 +812,7 @@ void loop() {
     if(identityIdle() && Serial){identityReader.begin();identityOutput=0;identityRunning=true;}
   }
   updateIdentity();
+  updateFactory();
   const unsigned long now = millis();
 #if !TACTICPOD_REUSABLE
   if (now - lastLedMs >= kLedIntervalMs) {
@@ -640,7 +824,7 @@ void loop() {
 #endif
   if (!Serial) {
     imuFailureReported = false;
-  } else if (!identityRunning && FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() && !Tcb3Session::exclusive() && !GpsReceiver::uartScanBusy() &&
+  } else if (!identityRunning && !factoryOutputActive && FlashWriteTest::diagnosticsAllowed() && !Recorder::exclusive() && !Tcb3Session::exclusive() && !GpsReceiver::uartScanBusy() &&
              (!flashReportPrinted || flashReportRequested)) {
     reportFlashId();
     flashReportPrinted = true;

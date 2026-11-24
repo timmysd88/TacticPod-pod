@@ -23,9 +23,9 @@ for index,value in enumerate(values):
     assert metadata[16:24]==struct.pack('<Q',value) and struct.unpack_from('<I',metadata,68)[0]==1
 print('PASS: six UID patterns, leading zeros, exact uint64 decimal, bounded JSON, legacy metadata encoding and display collision semantics',flush=True)
 elf=build('console')
-for case in range(8):
+for case in range(9):
     result=Native(elf).call('identityConsole',case);assert not result,('console',case,result)
-print('PASS: real console parser, full identity, idle-only guards, backpressure, command cancellation, timeout, disconnect and clock wrap',flush=True)
+print('PASS: real console parser, fault-independent identity, export guards, factory fault reporting, backpressure, cancellation and timeout',flush=True)
 elf=build('ble',('tests/reusable/ble_transport','tests/flash_write'),('--specs=nosys.specs','-Wall','-Wextra','-Werror'))
 for device in range(2):
     result=Native(elf).call('identityBle',device);assert not result,('BLE',device,result)

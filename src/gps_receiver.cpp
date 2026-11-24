@@ -327,6 +327,10 @@ void reportLoopback() {
 }
 
 namespace GpsReceiver {
+DiagnosticStatus diagnosticStatus() {
+  return {receivedValid && uint32_t(millis() - lastValidAt) <= kFreshMs,
+          receivedByte, byteCount, gps.passedChecksum(), gps.failedChecksum()};
+}
 bool hasFreshFix() { return !suspended && liveFix(); }
 bool busy() {
   return startupPending ||
@@ -426,7 +430,8 @@ void update() {
   GpsUartScan::update();
   if (!GpsUartScan::ownsReceiver()) pollUart();
 #if TACTICPOD_REUSABLE
-  const bool sensorCapture=CompactRecorder::capturing() || Recorder::exclusive() || Tcb3Session::exporting();
+  const bool sensorCapture=CompactRecorder::capturing() ||
+    (Recorder::exclusive() && !Recorder::faulted()) || Tcb3Session::exporting();
   if(!Serial && !sensorCapture && !startupPending && !profileRequested && !profileRunning &&
      !profileFailed && uint32_t(millis()-GpsProfile::checkedAt())>=15000) {
     profileRequested=true;profileRequestedAt=millis();

@@ -361,6 +361,11 @@ bool exclusive(){return pending || owned || dumping || locked
 #endif
   ;}
 bool exporting(){return dumping;}
+bool flashOwned(){return pending || owned || dumping || pageOpen
+#if TACTICPOD_REUSABLE
+  || resetting
+#endif
+  ;}
 // Read-only identity reads need an idle chip. Only after a fault (locked store or failed reset) is the flash
 // polled, so an erase or program still running is never read through; normal idle behaviour is unchanged.
 bool busy(){return pending || owned || dumping || pageOpen || (locked && status(nullptr)!=0)
@@ -386,6 +391,7 @@ void observation(unsigned kind){
 void noteMissed(uint32_t n){if(owned && !finishing){storeMissed+=n;stop(Tcb3::Reason::Deadline);}}
 bool guardCommand(const char* p){
   if(dumping)return true; // Never inject text into framed binary output.
+  if(!strcmp(p,"DEVICE INFO"))return false;
   if(Tcb3Test::Guarded && (!strcmp(p,"RECORD START") || !strcmp(p,"RECORD ERASE") ||
      !strcmp(p,"RECORD ERASE CONFIRM") || !strcmp(p,"ERASE FFF000"))){
     storeReport("REFUSED: test build blocks V1 writes and all erases");return true;
@@ -396,6 +402,7 @@ bool guardCommand(const char* p){
 #endif
   // A latched fault must not hide the flash identity; identityIdle() still waits for the chip to be idle.
   if(!strcmp(p,"DIAG ID") && locked && !pending && !owned && !dumping)return false;
+  if(!strcmp(p,"FACTORY DIAG") && locked && !pending && !owned && !dumping)return false;
   if(!strcmp(p,"TCB STOP") || !strcmp(p,"TCB STATUS") || !strcmp(p,"COMP STATUS") ||
      !strcmp(p,"OBS STATUS") || !strcmp(p,"RECORD STATUS") || !strcmp(p,"GPS STATUS") || !strcmp(p,"IMU OFF"))return false;
   storeReport("REFUSED: flash/compressor owned");return true;

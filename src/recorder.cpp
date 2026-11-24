@@ -18,6 +18,8 @@ Stage stage = Stage::Idle;
 IO io = IO::None;
 bool enabled = false, imuAvailable = false, stopping = false, eraseArmed = false;
 bool identified = false;
+const char* retainedFault = nullptr;
+const char* retainedStartupFault = nullptr;
 bool scanNoticePending = false;
 // Reusable builds only: sector 0 shows a reset marker or an interrupted reset, so V1 sessions must stay hidden.
 bool exportHidden = false, sector0Blank = false, sector0Partial = false, lowData = false;
@@ -50,6 +52,8 @@ void read(uint32_t at, uint8_t* output, size_t length) {
   deselect();
 }
 void fault(const char* why) {
+  retainedFault = why;
+  if (stage == Stage::Scan && !retainedStartupFault) retainedStartupFault = why;
   Serial.print("RECORD ERROR: "); Serial.println(why);
   Serial.print("Committed samples="); Serial.print(committed);
   Serial.print("; uncommitted RAM samples="); Serial.println(qCount + pageSamples);
@@ -105,7 +109,10 @@ void statusReport() {
   Serial.print(" buffered_samples="); Serial.print(qCount + pageSamples);
   Serial.print(" dropped_samples="); Serial.print(lost);
   Serial.print(" missed_deadlines="); Serial.print(missed);
-  Serial.print(" next_sector=0x"); Serial.println(nextSector, HEX);
+  Serial.print(" next_sector=0x"); Serial.print(nextSector, HEX);
+  if (retainedFault) { Serial.print(" fault_reason=\""); Serial.print(retainedFault); Serial.print("\""); }
+  if (retainedStartupFault) { Serial.print(" startup_fault=\""); Serial.print(retainedStartupFault); Serial.print("\""); }
+  Serial.println();
 }
 void finishProgram() {
   if (stage == Stage::Header) { pageIndex = 1; stage = Stage::Record; }
@@ -151,6 +158,7 @@ void csvSample(const uint8_t* p) {
 namespace Recorder {
 void begin(bool ready) {
   imuAvailable = ready; enabled = false; identified = false;
+  retainedFault = nullptr;
   scanNoticePending = false; exportHidden = false; sector0Blank = false; sector0Partial = false; lowData = false; sector0Magic = 0;
   scanAt = 0; nextSector = 0; stage = Stage::Scan; io = IO::None;
   ioStarted = millis();
@@ -158,6 +166,9 @@ void begin(bool ready) {
 bool recording() { return enabled && !stopping; }
 bool exporting() { return stage == Stage::ExportHeader || stage == Stage::ExportPage || Tcb3Session::exporting(); }
 bool exclusive() { return stage != Stage::Idle; }
+bool faulted() { return stage == Stage::Fault; }
+const char* faultReason() { return retainedFault; }
+const char* startupFaultReason() { return retainedStartupFault; }
 const char* diagnosticStage() {
   switch (stage) {
     case Stage::Scan: return "Scan";
