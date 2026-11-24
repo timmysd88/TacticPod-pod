@@ -10,7 +10,7 @@ struct MockSPI {
 #ifdef FLASH_ID_TEST
   uint8_t sfdp[256]{},trace[80][24]{};
   unsigned traceSize[80]{},traceCount=0,sfdpReads=0;
-  bool unstableSfdp=false,unavailableStatus=false;
+  bool unstableSfdp=false,unavailableStatus=false,zeroJedec=false;
 #endif
   uint8_t memory[4096] = {};
   uint8_t tx[260] = {};
@@ -43,7 +43,12 @@ struct MockSPI {
     if(tx[0]==0x90 && index>=4)return index==4?0x0b:0x17;
     if(tx[0]==0x5a && index>=5){unsigned at=address()+index-5;if(at>=256){++violations;return 255;}return sfdp[at]^(unstableSfdp && sfdpReads>=16?1:0);}
 #endif
-    if (tx[0] == 0x9F) return index == 1 ? (wrongId ? 0xEF : 0x0B) : index == 2 ? 0x40 : 0x18;
+    if (tx[0] == 0x9F) {
+#ifdef FLASH_ID_TEST
+      if(zeroJedec)return 0;
+#endif
+      return index == 1 ? (wrongId ? 0xEF : 0x0B) : index == 2 ? 0x40 : 0x18;
+    }
     if (tx[0] == 0x05) return (stuckBusy || mockTime < busyUntil ? 1 : 0) | (wel ? 2 : 0);
     if (tx[0] == 0x03 && index >= 4) {
       const uint32_t offset = address() - 0xFFF000 + index - 4;

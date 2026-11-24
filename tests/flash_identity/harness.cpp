@@ -64,6 +64,7 @@ extern "C" unsigned factoryCase(unsigned scenario) {
   if(scenario==4)SPI.wel=true;
   if(scenario==5)state=State::Ready;
   if(scenario==6)Serial.freeSpace=0;
+  if(scenario==7){SPI.zeroJedec=true;memset(SPI.sfdp,0,256);}
   if(!SerialConsole::handleCommand("FACTORY DIAG"))return 1;
   if(!factoryOutputActive)return 2;
   for(unsigned i=0;i<30;++i)updateFactory();
@@ -83,6 +84,10 @@ extern "C" unsigned factoryCase(unsigned scenario) {
       strstr(Serial.output,"FACTORY JEDEC UNVERIFIED raw=not_read")?0:7;
   }
   if(scenario==5)return !SPI.traceCount && strstr(Serial.output,"reason=ownership_busy")?0:8;
+  if(scenario==7)return SPI.traceCount==41 &&
+    strstr(Serial.output,"FACTORY FLASH_STATUS UNVERIFIED sr1_before=00 sr1_after=00 sr2=42") &&
+    strstr(Serial.output,"FACTORY JEDEC FAIL raw=000000") &&
+    strstr(Serial.output,"FACTORY SFDP FAIL signature=00000000")?0:10;
   if(SPI.traceCount!=41 || !strstr(Serial.output,scenario==1?"FACTORY JEDEC FAIL raw=EF4018":"FACTORY JEDEC PASS raw=0B4018") ||
      !strstr(Serial.output,"FACTORY SFDP PASS signature=53464450 capacity_bytes=16777216"))return 9;
   return 0;

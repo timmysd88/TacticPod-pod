@@ -19,7 +19,8 @@ for case,name in enumerate(names):
 print(f'PASS: {len(names)} read-only identity scenarios')
 for case,name in enumerate(('faulted recorder with valid flash','raw mismatched JEDEC','busy status blocks reads',
                             'unavailable status reports raw FF','WEL blocks reads','ownership conflict',
-                            'factory output under USB backpressure')):
+                            'factory output under USB backpressure',
+                            'all-zero responses do not prove status communication')):
     result=Native(elf).call('factoryCase',case)
     assert result==0,(case,name,result)
     print('PASS: FACTORY DIAG',name)

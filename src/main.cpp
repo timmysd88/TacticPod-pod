@@ -623,7 +623,12 @@ void updateFactory() {
         w.text(" reason=");
         w.text(identityReader.error?identityReader.error:"capture_incomplete");w.text("\n");
       } else {
-        w.text("PASS sr1_before=");w.hex(s.sr1Before);w.text(" sr1_after=");w.hex(s.sr1After);
+        const bool allZero=s.jedec[0][0]==0 && s.jedec[0][1]==0 && s.jedec[0][2]==0;
+        const bool allFF=s.jedec[0][0]==0xff && s.jedec[0][1]==0xff && s.jedec[0][2]==0xff;
+        bool stable=true;
+        for(unsigned i=1;i<5;++i)stable &= memcmp(s.jedec[0],s.jedec[i],3)==0;
+        w.text(allZero || allFF || !stable?"UNVERIFIED sr1_before=":"PASS sr1_before=");
+        w.hex(s.sr1Before);w.text(" sr1_after=");w.hex(s.sr1After);
         w.text(" sr2=");w.hex(s.sr2);w.text("\n");
       }
       break;
