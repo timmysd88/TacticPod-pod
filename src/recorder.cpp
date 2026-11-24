@@ -5,6 +5,7 @@
 #include "recorder.h"
 #include "recorder_format.h"
 #include "flash_write_test.h"
+#include "flash_support.h"
 #include "tcb3_session.h"
 #include "tcb3_test_limits.h"
 #include "imu_config.h"
@@ -61,14 +62,10 @@ void fault(const char* why) {
   enabled = false; stopping = false; io = IO::None; stage = Stage::Fault; eraseArmed = false;
 }
 bool identity() {
-  for (unsigned i = 0; i < 5; ++i) {
-    select(); SPI.transfer(0x9F);
-    uint8_t a = SPI.transfer(0), b = SPI.transfer(0), c = SPI.transfer(0); deselect();
-    if (a != 0x0B || b != 0x40 || c != 0x18) return false;
-  }
-  return true;
+  return FlashSupport::identify();
 }
 bool wren() {
+  if (!FlashSupport::writable()) { fault("flash protection or status prevents writing"); return false; }
   uint8_t s = status();
   if (s == 0xFF || (s & 1)) { fault("flash busy/unresponsive before WREN"); return false; }
   select(); SPI.transfer(0x06); deselect();
@@ -262,7 +259,7 @@ void update() {
       const uint8_t s = status();
       if (s == 0xFF) { fault("flash unavailable during startup scan"); return; }
       if (s & 1) { if (uint32_t(millis() - ioStarted) >= 5000) fault("startup busy timeout"); return; }
-      if (!identity()) { fault("expected JEDEC 0B 40 18 not found"); return; }
+      if (!identity()) { fault(FlashSupport::error()); return; }
       identified = true;
     }
     // A nonblank header reserves the entire sector, even if its CRC is torn.

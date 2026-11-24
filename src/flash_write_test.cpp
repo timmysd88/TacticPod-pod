@@ -3,6 +3,7 @@
 #include <SPI.h>
 #include <string.h>
 #include "flash_write_test.h"
+#include "flash_support.h"
 #include "serial_console.h"
 #include "recorder.h"
 #include "tcb3_session.h"
@@ -106,6 +107,7 @@ void warning() {
 
 bool recheckIdentity() {
   bool matches = true;
+  FlashSupport::Manufacturer first = FlashSupport::Manufacturer::Unknown;
   for (uint8_t attempt = 0; attempt < 5; ++attempt) {
     selectFlash();
     SPI.transfer(0x9F);
@@ -122,9 +124,11 @@ bool recheckIdentity() {
     Serial.print(' ');
     hexByte(capacity);
     Serial.println();
-    matches = matches && manufacturer == 0x0B && type == 0x40 && capacity == 0x18;
+    const auto current = FlashSupport::manufacturer(manufacturer, type, capacity);
+    if (!attempt) first = current;
+    matches = matches && current != FlashSupport::Manufacturer::Unknown && current == first;
   }
-  return matches;
+  return matches && FlashSupport::qualify(first);
 }
 
 bool enableWrite() {
@@ -132,6 +136,10 @@ bool enableWrite() {
   const uint8_t before = readStatus();
   if (before == 0xFF || (before & 1)) {
     fail("flash unresponsive/busy before write-enable", true);
+    return false;
+  }
+  if (!FlashSupport::writable()) {
+    fail("flash protection or status prevents writing; no new erase/program issued");
     return false;
   }
   selectFlash();
@@ -177,7 +185,7 @@ void startTest() {
   // This function is reachable only through the exact serial confirmation.
   Serial.println("Confirmation consumed: ONE flash test requested.");
   if (!recheckIdentity()) {
-    fail("JEDEC is not consistently 0B 40 18; no erase/program issued");
+    fail("unsupported or inconsistent flash identity/SFDP; no erase/program issued");
     return;
   }
   state = State::Ready;

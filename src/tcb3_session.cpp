@@ -6,6 +6,7 @@
 #include "monotonic_clock.h"
 #include "recorder.h"
 #include "flash_write_test.h"
+#include "flash_support.h"
 #include "gps_receiver.h"
 #include "ram_observations.h"
 #include "battery_runtime.h"
@@ -137,7 +138,7 @@ bool beginPage(void*,uint32_t a){
   if(!store.stats.programOperations && (a!=store.initialAddress() || store.stats.session!=a/Tcb3::Sector+1 ||
      store.stats.sectorSequence || store.stats.next!=a+Tcb3::Sector))return false;
 #endif
-  if(status(nullptr)!=0)return false;
+  if(status(nullptr)!=0 || !FlashSupport::writable())return false;
   select();SPI.transfer(6);deselect();if(status(nullptr)!=2)return false;
   select();SPI.transfer(2);address(a);pageOpen=true;pageSent=0;return true;
 }
@@ -157,18 +158,18 @@ bool eraseStale(void*,uint32_t a){
   const Tcb3::State st=store.state();
   if(pageOpen || !(owned || pending) || locked || !store.resetEpoch() || (a&4095) || a<Tcb3::Sector || a>=Tcb3Test::WriteEnd ||
      a!=store.stats.next || (st!=Tcb3::State::Probe && st!=Tcb3::State::Blank))return false;
-  if(status(nullptr)!=0 || !writeEnable())return false;
+  if(status(nullptr)!=0 || !FlashSupport::writable() || !writeEnable())return false;
   select();SPI.transfer(0x20);address(a);deselect();return true;
 }
 // Reset primitives touch address 0 only (the marker sector) and only while RECORD RESET is running.
 bool resetErase(void*,uint32_t a){
   if(pageOpen || !resetting || a!=0)return false;
-  if(status(nullptr)!=0 || !writeEnable())return false;
+  if(status(nullptr)!=0 || !FlashSupport::writable() || !writeEnable())return false;
   select();SPI.transfer(0x20);address(0);deselect();return true;
 }
 bool resetProgram(void*,uint32_t a,const uint8_t* p,unsigned n){
   if(pageOpen || !resetting || a!=0 || !n || n>256)return false;
-  if(status(nullptr)!=0 || !writeEnable())return false;
+  if(status(nullptr)!=0 || !FlashSupport::writable() || !writeEnable())return false;
   select();SPI.transfer(2);address(0);for(unsigned i=0;i<n;++i)SPI.transfer(p[i]);deselect();return true;
 }
 Tcb3::Port resetPort{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,resetProgram,resetErase};
@@ -177,13 +178,12 @@ Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullpt
 Tcb3::Port port{nullptr,read,beginPage,pageBytes,endPage,abortPage,status,nullptr,nullptr,readPage};
 #endif
 bool storeIdentity(uint32_t* observedId=nullptr){
-  for(unsigned i=0;i<5;++i){select();SPI.transfer(0x9f);unsigned a=SPI.transfer(0),b=SPI.transfer(0),c=SPI.transfer(0);deselect();
-    if(observedId)*observedId=(a<<16)|(b<<8)|c;
-    if(a!=11 || b!=64 || c!=24)return false;}
+  if(!FlashSupport::identify(observedId))return false;
   if(Tcb3Test::Guarded){
     if(status(nullptr)!=0)return false;
     select();SPI.transfer(0x35);uint8_t sr2=SPI.transfer(0);deselect();
-    if(sr2!=2)return false; // The measured B-compatible protection/QE state only.
+    if(FlashSupport::active()==FlashSupport::Manufacturer::Xtx ? sr2!=2 : sr2==0xff || (sr2&0x80))
+      return false;
   }
   return true;
 }

@@ -13,7 +13,7 @@ extern "C" unsigned identityCase(unsigned scenario){
   if(scenario==8)SPI.unstableSfdp=true;
   if(scenario==9)memset(SPI.sfdp,255,256);
   if(scenario==10){
-    uint8_t b[16];const uint8_t forbidden[]={1,2,4,6,0x15,0x20,0x50,0x66,0x99,0xab,0x4b,0xc7};
+    uint8_t b[16];const uint8_t forbidden[]={1,2,4,6,0x20,0x50,0x66,0x99,0xab,0x4b,0xc7};
     for(auto c:forbidden)if(identityRead(nullptr,c,0,b,1))return 1;
     if(identityRead(nullptr,0x5a,256,b,1) || identityRead(nullptr,0x5a,250,b,16) || identityRead(nullptr,0x9f,1,b,3))return 2;
     return SPI.traceCount==0?0:3;
@@ -88,7 +88,42 @@ extern "C" unsigned factoryCase(unsigned scenario) {
     strstr(Serial.output,"FACTORY FLASH_STATUS UNVERIFIED sr1_before=00 sr1_after=00 sr2=42") &&
     strstr(Serial.output,"FACTORY JEDEC FAIL raw=000000") &&
     strstr(Serial.output,"FACTORY SFDP FAIL signature=00000000")?0:10;
-  if(SPI.traceCount!=41 || !strstr(Serial.output,scenario==1?"FACTORY JEDEC FAIL raw=EF4018":"FACTORY JEDEC PASS raw=0B4018") ||
+  if(SPI.traceCount!=(scenario==1?42:41) || !strstr(Serial.output,scenario==1?"FACTORY JEDEC PASS raw=EF4018":"FACTORY JEDEC PASS raw=0B4018") ||
      !strstr(Serial.output,"FACTORY SFDP PASS signature=53464450 capacity_bytes=16777216"))return 9;
+  return 0;
+}
+
+extern "C" unsigned compatibilityCase(unsigned scenario) {
+  memset(SPI.sfdp,0xff,256);
+  const uint8_t header[]={0x53,0x46,0x44,0x50,0,1,0,0xff,0,0,1,9,0x80,0,0,0xff};
+  const uint8_t table[]={0xe5,0x20,0xf1,0xff,0xff,0xff,0xff,0x07,0x44,0xeb,0x08,0x6b,
+    0x08,0x3b,0x42,0xbb,0xfe,0xff,0xff,0xff,0xff,0xff,0,0,0xff,0xff,0x21,0xeb,
+    0x0c,0x20,0x0f,0x52,0x10,0xd8,0,0};
+  memcpy(SPI.sfdp,header,sizeof(header));memcpy(SPI.sfdp+128,table,sizeof(table));
+  SPI.testSr2=2;SPI.wrongId=scenario!=0;
+  if(scenario==2)SPI.sfdp[135]=3;
+  if(scenario==3)SPI.sfdp[157]=0x21;
+  if(scenario==4)SPI.sfdp[130]|=4;
+  if(scenario==5)SPI.unstableSfdp=true;
+  if(scenario==6)SPI.zeroJedec=true;
+  if(scenario==7)SPI.extraStatus=4;
+  if(scenario==8)SPI.testSr2=0x42;
+  if(scenario==9)SPI.testSr3=0x64;
+  if(scenario==10)SPI.testSr3=0xff;
+  if(scenario==11)SPI.testSr2=0x82;
+  if(scenario==12)SPI.testSr3=0x61;
+  if(scenario==13 || scenario==14) {
+    SPI.sfdp[11]=11;SPI.sfdp[168]=scenario==13?0x80:0x90;
+    SPI.sfdp[169]=SPI.sfdp[170]=SPI.sfdp[171]=0;
+  }
+  const bool identified=FlashSupport::identify();
+  if(scenario>=2 && scenario<=6 || scenario==14) {
+    if(identified)return 1;
+  } else {
+    if(!identified)return 2;
+    const bool writable=FlashSupport::writable();
+    if(writable != (scenario==0 || scenario==1 || scenario==12 || scenario==13))return 3;
+  }
+  if(SPI.enableCount || SPI.programCount || SPI.eraseCount || SPI.violations)return 4;
   return 0;
 }

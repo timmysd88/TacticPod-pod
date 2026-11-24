@@ -120,6 +120,26 @@ capacity is not inferred from the expected ID. Battery validity is not a
 battery-presence test. `RECORD STATUS` retains the exact startup fault in RAM
 until reboot, even if a later recorder reinitialisation occurs.
 
+Supported flash IDs are XTX `0B4018` and Winbond `EF4018` (W25Q128FV
+family). Winbond admission additionally requires repeatable SFDP advertising
+16 MiB, three-byte addressing and 4 KiB erase opcode `20`; when a newer BFPT
+advertises page size, it must be 256 bytes. Older nine-DWORD BFPTs do not
+advertise page size, so the Winbond datasheet supplies that requirement; SFDP
+alone does not identify a package suffix. Both families use `03` read, `02`
+page program and `20` sector erase. The existing layout is unchanged.
+
+Before a program or erase, protection and suspension are checked without
+changing status registers. Winbond SR2 `02` is the quad-enable bit, not write
+protection; SR3 is checked for individual-lock selection. The supported Winbond
+SFDP profile must advertise three-byte-only addressing.
+Protected, suspended, busy or unresponsive flash is not written. Factory output
+reports the manufacturer, Winbond SR3, and the sampled write-status decision.
+The [W25Q128FV datasheet](https://www.pjrc.com/teensy/W25Q128FV.pdf) specifies
+a 3 ms maximum page program and 400 ms maximum 4 KiB erase; existing 1 s and
+3 s recorder limits exceed these. Its 3 us power-down/release timings are
+covered by the existing 5 us/100 us delays. The XTX timing limits remain those
+of the existing implementation.
+
 BAT STATUS is allowed during recording, queued into the same bounded nonblocking
 serial response buffer. Battery configuration is refused while busy. TPX3 export
 suppresses all command text, including BAT STATUS; wait for export END before
