@@ -11,6 +11,7 @@ struct MockSPI {
   uint8_t sfdp[256]{},trace[80][24]{};
   unsigned traceSize[80]{},traceCount=0,sfdpReads=0;
   bool unstableSfdp=false,unavailableStatus=false,zeroJedec=false;
+  uint8_t testSr2=0x42,testSr3=0x60,extraStatus=0;
 #endif
   uint8_t memory[4096] = {};
   uint8_t tx[260] = {};
@@ -29,9 +30,9 @@ struct MockSPI {
     if (index < sizeof(tx)) tx[index] = value; else ++violations;
     if (index == 0) {
       if (hz != 1000000 && value != 0x03) ++violations; // 4 MHz is only for export reads.
-      if (value != 0x9F && value != 0x5A && value != 0x05 && value != 0x06 && value != 0x20 && value != 0x02 && value != 0x03
+      if (value != 0x9F && value != 0x5A && value != 0x05 && value != 0x35 && value != 0x06 && value != 0x20 && value != 0x02 && value != 0x03
 #ifdef FLASH_ID_TEST
-          && value!=0x35 && value!=0x90
+          && value!=0x15 && value!=0x35 && value!=0x90
 #endif
           ) ++violations;
       if (value == 0x9F) ++jedecCount;
@@ -39,7 +40,8 @@ struct MockSPI {
     }
 #ifdef FLASH_ID_TEST
     if(tx[0]==5 && unavailableStatus)return 255;
-    if(tx[0]==0x35)return 0x42;
+    if(tx[0]==0x35)return testSr2;
+    if(tx[0]==0x15)return testSr3;
     if(tx[0]==0x90 && index>=4)return index==4?0x0b:0x17;
     if(tx[0]==0x5a && index>=5){unsigned at=address()+index-5;if(at>=256){++violations;return 255;}return sfdp[at]^(unstableSfdp && sfdpReads>=16?1:0);}
 #endif
@@ -49,7 +51,11 @@ struct MockSPI {
 #endif
       return index == 1 ? (wrongId ? 0xEF : 0x0B) : index == 2 ? 0x40 : 0x18;
     }
-    if (tx[0] == 0x05) return (stuckBusy || mockTime < busyUntil ? 1 : 0) | (wel ? 2 : 0);
+    if (tx[0] == 0x05) return (stuckBusy || mockTime < busyUntil ? 1 : 0) | (wel ? 2 : 0)
+#ifdef FLASH_ID_TEST
+      | extraStatus
+#endif
+      ;
     if (tx[0] == 0x03 && index >= 4) {
       const uint32_t offset = address() - 0xFFF000 + index - 4;
       if (offset >= 4096) { ++violations; return 0; }

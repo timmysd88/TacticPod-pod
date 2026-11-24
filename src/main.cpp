@@ -7,6 +7,7 @@
 #include "recorder.h"
 #include "flash_diagnostics.h"
 #include "flash_identity.h"
+#include "flash_support.h"
 #include "gps_receiver.h"
 #include "monotonic_clock.h"
 #include "ram_observations.h"
@@ -486,9 +487,10 @@ void reportFlashId() {
   }
   Serial.println(consistent ? "JEDEC consistency: PASS (5/5 identical)" :
                              "JEDEC consistency: FAIL (unstable SPI response)");
-  if (consistent && first.manufacturer == 0x0B &&
-      first.memoryType == 0x40 && first.capacity == 0x18) {
-    Serial.println("JEDEC 0B 40 18: possible XTX XT25F128B/F family; exact model/revision not confirmed by ID alone");
+  const auto manufacturer = FlashSupport::manufacturer(first.manufacturer, first.memoryType, first.capacity);
+  if (consistent && manufacturer != FlashSupport::Manufacturer::Unknown) {
+    Serial.print("JEDEC supported manufacturer: "); Serial.print(FlashSupport::name(manufacturer));
+    Serial.println("; exact model/revision not confirmed by ID alone");
   } else if (consistent &&
              ((first.manufacturer == 0xFF && first.memoryType == 0xFF && first.capacity == 0xFF) ||
               (first.manufacturer == 0 && first.memoryType == 0 && first.capacity == 0))) {
@@ -501,7 +503,7 @@ void reportFlashId() {
 // mutation. SFDP is bounded to its 256-byte register even for malformed headers.
 bool identityRead(void*,uint8_t command,uint32_t address,uint8_t* out,unsigned n){
   if(!n || n>16 || !out)return false;
-  if(command!=5 && command!=0x35 && command!=0x9f && command!=0x90 && command!=0x5a)return false;
+  if(command!=5 && command!=0x15 && command!=0x35 && command!=0x9f && command!=0x90 && command!=0x5a)return false;
   if(command==0x5a && (address>=256 || n>256-address))return false;
   if(command!=0x5a && address!=0)return false;
   SPI.beginTransaction(SPISettings(kFlashClockHz,MSBFIRST,SPI_MODE0));
@@ -557,6 +559,8 @@ struct FactorySnapshot {
   const char* recorderFault=nullptr;
   const char* startupFault=nullptr;
   bool tcbFault=false;
+  bool sr3Read=false;
+  uint8_t sr3=0;
 #if TACTICPOD_REUSABLE
   BatteryRuntime::Report battery{};
 #endif
@@ -629,18 +633,28 @@ void updateFactory() {
         for(unsigned i=1;i<5;++i)stable &= memcmp(s.jedec[0],s.jedec[i],3)==0;
         w.text(allZero || allFF || !stable?"UNVERIFIED sr1_before=":"PASS sr1_before=");
         w.hex(s.sr1Before);w.text(" sr1_after=");w.hex(s.sr1After);
-        w.text(" sr2=");w.hex(s.sr2);w.text("\n");
+        w.text(" sr2=");w.hex(s.sr2);
+        if(factory.sr3Read){w.text(" sr3=");w.hex(factory.sr3);}
+        const auto m=FlashSupport::manufacturer(s.jedec[0][0],s.jedec[0][1],s.jedec[0][2]);
+        if(stable && m!=FlashSupport::Manufacturer::Unknown &&
+           (m!=FlashSupport::Manufacturer::Winbond || factory.sr3Read)) {
+          w.text(" write_status=");
+          w.text(FlashSupport::writeAllowed(m,s.sr1After,s.sr2,factory.sr3)?"allowed":"refused");
+        }
+        w.text("\n");
       }
       break;
     case 6:
-      if(!factory.spiAttempted || identityReader.completed<6)w.text("FACTORY JEDEC UNVERIFIED raw=not_read expected=0B4018\n");
+      if(!factory.spiAttempted || identityReader.completed<6)w.text("FACTORY JEDEC UNVERIFIED raw=not_read expected=0B4018,EF4018\n");
       else {
         bool same=true;
         for(unsigned i=1;i<5;++i)same &= memcmp(s.jedec[0],s.jedec[i],3)==0;
-        const bool valid=same && s.jedec[0][0]==0x0b && s.jedec[0][1]==0x40 && s.jedec[0][2]==0x18;
+        const auto manufacturer=FlashSupport::manufacturer(s.jedec[0][0],s.jedec[0][1],s.jedec[0][2]);
+        const bool valid=same && manufacturer!=FlashSupport::Manufacturer::Unknown;
         w.text("FACTORY JEDEC ");w.text(!factory.flashComplete?"UNVERIFIED":valid?"PASS":"FAIL");w.text(" raw=");
         for(auto b:s.jedec[0])w.hex(b);
-        w.text(" expected=0B4018 samples=");
+        w.text(" manufacturer=");w.text(FlashSupport::name(manufacturer));
+        w.text(" expected=0B4018,EF4018 samples=");
         for(unsigned i=0;i<5;++i){if(i)w.text(",");for(auto b:s.jedec[i])w.hex(b);}
         w.text(" repeat=");w.text(same?"PASS":"FAIL");w.text("\n");
       }
@@ -655,7 +669,11 @@ void updateFactory() {
         w.text("FACTORY SFDP ");w.text(!factory.flashComplete?"UNVERIFIED":!signature || !stable?"FAIL":capacity?"PASS":"UNVERIFIED");
         w.text(" signature=");for(unsigned i=0;i<4;++i)w.hex(s.sfdp[0][i]);
         w.text(" capacity_bytes=");if(capacity)w.number(bytes);else w.text("unknown");
-        w.text(" repeat=");w.text(stable?"PASS":"FAIL");w.text("\n");
+        w.text(" repeat=");w.text(stable?"PASS":"FAIL");
+        if(stable && FlashSupport::manufacturer(s.jedec[0][0],s.jedec[0][1],s.jedec[0][2])==FlashSupport::Manufacturer::Winbond) {
+          w.text(" compatible=");w.text(FlashSupport::compatibleSfdp(s.sfdp[0])?"YES":"NO");
+        }
+        w.text("\n");
       }
       break;
     case 8:
@@ -723,6 +741,13 @@ void requestFactory() {
     identityReader.begin();
     while(!identityReader.done())identityReader.step({nullptr,identityRead});
     factory.flashComplete=!identityReader.error;
+    const auto& s=identityReader.data;
+    bool stable=true;
+    for(unsigned i=1;i<5;++i)stable &= memcmp(s.jedec[0],s.jedec[i],3)==0;
+    if(factory.flashComplete && stable &&
+       FlashSupport::manufacturer(s.jedec[0][0],s.jedec[0][1],s.jedec[0][2])==FlashSupport::Manufacturer::Winbond) {
+      factory.sr3Read=identityRead(nullptr,0x15,0,&factory.sr3,1);
+    }
   }
   factoryLine=0;factoryOutputActive=true;
 }

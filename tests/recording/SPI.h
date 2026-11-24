@@ -28,6 +28,8 @@ struct MockSPI {
   uint32_t highestProgramEnd=0;
 #endif
   bool wel = false, denyWel = false, stuckBusy = false, wrongId = false;
+  bool winbond = false;
+  uint8_t sfdp[256]{}, winbondSr3=0x60;
   bool rejectErase = false, corruptProgram = false;
   uint32_t busyUntil = 0;
   uint8_t& byte(uint32_t at) {
@@ -57,13 +59,15 @@ struct MockSPI {
       if (value == 0xB9 || value == 0xAB) return 0;
 #endif
       if (value != 0x03 && value != 0x05 && value != 0x06 && value != 0x02 && value != 0x20 &&
-          value != 0x9F && value != 0x5A && value != 0x35 && value != 0x90) ++violations;
+          value != 0x9F && value != 0x5A && value != 0x15 && value != 0x35 && value != 0x90) ++violations;
       return 0;
     }
 #if TACTICPOD_REUSABLE
     if (deepPower) return 0xFF;
 #endif
-    if (tx[0] == 0x9F) { if(i==1)++jedecReads;return i == 1 ? (wrongId ? 0 : 0x0B) : i == 2 ? 0x40 : 0x18; }
+    if (tx[0] == 0x9F) { if(i==1)++jedecReads;return i == 1 ? (wrongId ? 0 : winbond ? 0xef : 0x0B) : i == 2 ? 0x40 : 0x18; }
+    if (tx[0] == 0x15) return winbondSr3;
+    if (tx[0] == 0x5a && i >= 5) { const unsigned at=address()+i-5; return at<256?sfdp[at]:0xff; }
     if (tx[0] == 0x05) return ((stuckBusy || int32_t(mockTime - busyUntil) < 0) ? 1 : 0) | (wel ? 2 : 0);
 #if TACTICPOD_TCB3_TEST_BUILD || TACTICPOD_REUSABLE
     if(tx[0]==0x35)return testSr2;
