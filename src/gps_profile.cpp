@@ -379,7 +379,7 @@ void observeCurrent(uint32_t key, uint32_t value) {
 bool startCheck(bool recover) {
 #if TACTICPOD_REUSABLE
   using namespace Profile;
-  if(active() || GpsConfig::active() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed())return false;
+  if(active() || GpsConfig::active() || (Recorder::exclusive() && !Recorder::faulted()) || !FlashWriteTest::diagnosticsAllowed())return false;
   if(!supportedVersion)return startStartup();
   currentValid=false; currentDetail="UNVERIFIED (RAM audit pending)";
   auditRecover=recover;auditMismatch=false;keyIndex=0;failedKey=0;readRetries=0;
@@ -394,7 +394,7 @@ bool startCheck(bool recover) {
 const char* error() { return Profile::reason; }
 bool startTest() {
   using namespace Profile;
-  if (active() || GpsConfig::active() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed() || snapshotValid) return false;
+  if (active() || GpsConfig::active() || (Recorder::exclusive() && !Recorder::faulted()) || !FlashWriteTest::diagnosticsAllowed() || snapshotValid) return false;
   restoring = automatic = touched = verified = verificationFailed = testApplied = false;
   startup = false; readRetries = 0;
   keyIndex = chunk = 0; reason = outcome = ""; failedKey = mismatches = 0;
@@ -413,7 +413,7 @@ bool startStartup() {
 }
 bool startRestore() {
   using namespace Profile;
-  if (active() || GpsConfig::active() || Recorder::exclusive() || !FlashWriteTest::diagnosticsAllowed() || !snapshotValid) return false;
+  if (active() || GpsConfig::active() || (Recorder::exclusive() && !Recorder::faulted()) || !FlashWriteTest::diagnosticsAllowed() || !snapshotValid) return false;
   reason = outcome = ""; failedKey = 0;
   beginRollback(false); noticePending = true; return true;
 }

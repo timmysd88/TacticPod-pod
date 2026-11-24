@@ -13,10 +13,31 @@ struct Snapshot {
   uint8_t jedec[5][3],rems[2],sr1Before,sr1After,sr2;
   uint8_t sfdp[2][256];
 };
+inline bool capacityBytes(const uint8_t* s, uint64_t& bytes) {
+  if (memcmp(s, "SFDP", 4) || s[5] != 1 || s[7] != 0xff || s[6] >= 16) return false;
+  const unsigned end = 8 + (unsigned(s[6]) + 1) * 8;
+  for (unsigned i = 8; i < end; i += 8) {
+    const uint8_t* p = s + i;
+    if (p[0] != 0 || p[7] != 0xff || p[2] != 1 || p[3] < 9) continue;
+    const uint32_t at = uint32_t(p[4]) | uint32_t(p[5]) << 8 | uint32_t(p[6]) << 16;
+    if ((at & 3) || at < end || at > 248) continue;
+    const uint32_t density = uint32_t(s[at+4]) | uint32_t(s[at+5]) << 8 |
+      uint32_t(s[at+6]) << 16 | uint32_t(s[at+7]) << 24;
+    if (density == 0 || density == 0xffffffffU) return false;
+    const uint32_t exponent = density & 0x7fffffffU;
+    if ((density & 0x80000000U) && (exponent < 3 || exponent > 63)) return false;
+    const uint64_t bits = density & 0x80000000U ? uint64_t(1) << exponent : uint64_t(density) + 1;
+    if (bits < 8 || bits % 8) return false;
+    bytes = bits / 8;
+    return true;
+  }
+  return false;
+}
 class Reader {
 public:
   Snapshot data{};
-  void begin(){memset(&data,0,sizeof(data));stage=0;error=nullptr;}
+  unsigned completed=0;
+  void begin(){memset(&data,0,sizeof(data));stage=0;completed=0;error=nullptr;}
   void cancel(){error="cancelled: flash/diagnostic ownership changed";stage=42;}
   bool done() const {return stage>=42;}
   const char* error=nullptr;
@@ -32,6 +53,7 @@ public:
     if(!port.read(port.context,command,address,out,n)){
       error="read transaction failed";stage=42;return;
     }
+    ++completed;
     if((stage==0 && (data.sr1Before==255 || (data.sr1Before&3))) ||
        (stage==40 && (data.sr1After==255 || (data.sr1After&3)))){
       error="SR1 unavailable, BUSY or WEL set; no state change attempted";stage=42;return;

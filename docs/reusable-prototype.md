@@ -92,6 +92,9 @@ with explicit overflow/full accounting; it cannot bypass the fence.
 | `TCB STATUS` | State/session/counters, duration, drain deadline and fault lock |
 | `TCB READ` | Read-only raw TPX3 export of TCB3 sectors, all sessions |
 | `RECORD STATUS` / `RECORD READ` | Existing legacy status/IMU-only CSV support |
+| `DEVICE INFO` | Factory MCU identity, independent of flash and GPS health; suppressed during recording/export |
+| `FACTORY DIAG` | Independent MCU, build, IMU, GPS, flash, recorder and USB/battery reports |
+| `DIAG ID` | Read-only flash identity and SFDP evidence, including when the legacy recorder is faulted |
 | `BAT STATUS` | Source/trust/voltage/thresholds/calibration/invalid/timeout status |
 | `BAT CAL 3972` | Idle-only one-point calibration against an actual meter reading |
 | `BAT MODE CELL` | Idle-only explicit cell configuration; fresh warmup required |
@@ -105,6 +108,17 @@ unconfirmed, uncalibrated and no recording. Calibration commands require a fresh
 plausible reading, accept a 2500-4300mV meter reference and bounded 0.8-1.2 gain.
 They are not a substitute for a real reference measurement. USB mode must not be
 used to pretend a connected cell has automatic protection.
+
+`FACTORY DIAG` is framed by `BEGIN_FACTORY_DIAG` / `END_FACTORY_DIAG`.
+Its build commit, environment and dirty flag identify the source used by PlatformIO;
+`unknown` is reported if Git metadata was unavailable at build time. An idle
+flash is sampled using status, JEDEC and SFDP read commands only. An active
+owner, WIP, WEL or `FF` status prevents further identification reads; raw status
+is reported instead. No WREN, erase, program or storage reset is issued. Raw
+JEDEC samples and SFDP signature are shown when safely acquired; unknown
+capacity is not inferred from the expected ID. Battery validity is not a
+battery-presence test. `RECORD STATUS` retains the exact startup fault in RAM
+until reboot, even if a later recorder reinitialisation occurs.
 
 BAT STATUS is allowed during recording, queued into the same bounded nonblocking
 serial response buffer. Battery configuration is refused while busy. TPX3 export

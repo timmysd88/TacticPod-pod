@@ -5,4 +5,6 @@ namespace FlashDiagnostics {
 void request();
 // Explicit, incremental read-only identity evidence. Never runs automatically.
 void requestIdentity();
+void requestFactory();
+bool factoryActive();
 }

@@ -7,6 +7,7 @@ MockSerial Serial;
 MockSPI SPI;
 #include "../../src/gps_receiver.h"
 namespace GpsReceiver {
+DiagnosticStatus diagnosticStatus() { return {}; }
 void begin() {}
 void update() {}
 bool handleCommand(const char*) { return false; }

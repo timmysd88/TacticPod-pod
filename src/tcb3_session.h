@@ -16,6 +16,7 @@ void update(bool allowWork=true);
 bool exclusive();
 bool exporting();
 bool busy();
+bool flashOwned();
 bool recording();
 bool faulted();
 bool takeCleanCompletion();
@@ -56,6 +57,7 @@ inline void update(bool=true){}
 inline bool exclusive(){return false;}
 inline bool exporting(){return false;}
 inline bool busy(){return false;}
+inline bool flashOwned(){return false;}
 inline bool recording(){return false;}
 inline bool faulted(){return false;}
 inline bool takeCleanCompletion(){return false;}

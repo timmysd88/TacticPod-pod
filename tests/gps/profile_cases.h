@@ -211,8 +211,11 @@ int profileScenario(unsigned scenario) {
     return !GpsProfile::active() && !Serial1.writeCalls && contains("refused") ? 0 : 200;
   }
   if (scenario == 102) {
-    const Stage stages[] = {Stage::Scan,Stage::Record,Stage::Footer,Stage::Erase,Stage::ExportPage,Stage::Fault};
+    const Stage stages[] = {Stage::Scan,Stage::Record,Stage::Footer,Stage::Erase,Stage::ExportPage};
     for (Stage s : stages) { stage = s; SerialConsole::handleCommand("GPS 10HZ TEST"); if (GpsProfile::active()) return 201; }
+    stage = Stage::Fault; SerialConsole::handleCommand("GPS 10HZ TEST");
+    if (!GpsProfile::active() || Serial1.writeCalls) return 203;
+    Profile::phase = Profile::Phase::Idle;
     stage = Stage::Idle; gpsTestDiagnosticAvailable = false;
     SerialConsole::handleCommand("GPS 10HZ TEST");
     return !GpsProfile::active() && !Serial1.writeCalls ? 0 : 202;

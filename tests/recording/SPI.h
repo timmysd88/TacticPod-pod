@@ -56,11 +56,8 @@ struct MockSPI {
       if (deepPower && value != 0xAB) ++asleepAccesses, ++violations;
       if (value == 0xB9 || value == 0xAB) return 0;
 #endif
-      if (value != 0x03 && value != 0x05 && value != 0x06 && value != 0x02 && value != 0x20 && value != 0x9F && value != 0x5A
-#if TACTICPOD_TCB3_TEST_BUILD || TACTICPOD_REUSABLE
-          && value!=0x35
-#endif
-          ) ++violations;
+      if (value != 0x03 && value != 0x05 && value != 0x06 && value != 0x02 && value != 0x20 &&
+          value != 0x9F && value != 0x5A && value != 0x35 && value != 0x90) ++violations;
       return 0;
     }
 #if TACTICPOD_REUSABLE
